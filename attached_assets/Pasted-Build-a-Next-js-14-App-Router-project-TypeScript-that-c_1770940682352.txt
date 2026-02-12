@@ -1,0 +1,48 @@
+Build a Next.js 14+ App Router project (TypeScript) that creates programmatic SEO player pages on routes:
+
+/nfl/players/[slug]  (example: /nfl/players/malik-willis/)
+
+Use Sleeper API as the data source for player metadata:
+GET https://api.sleeper.app/v1/players/nfl
+
+Requirements:
+1) Create a script at scripts/buildPlayersIndex.js that fetches the Sleeper players map and writes a trimmed dataset to data/players.json.
+   - Include fields: id (player_id), name, slug, position, team, status, injury_status, age, height, weight.
+   - Build slug from player full_name (lowercase, hyphens, remove punctuation).
+   - Filter to fantasy-relevant positions: QB, RB, WR, TE, K, DEF.
+   - The script must NOT run on every page request. It’s a build-time / manual script.
+
+2) Create the page template at app/nfl/players/[slug]/page.tsx:
+   - Server-rendered HTML (no client-only rendering requirement for the main content).
+   - Load player data from data/players.json.
+   - If slug not found -> return Next.js notFound().
+   - Display: name, position, team, injury_status, and a “Player Snapshot” section with age/height/weight/status.
+   - Include internal links back to /rankings/, /tools/, and /articles/.
+
+3) Pre-render at least the first 300 player pages at build time:
+   - Implement generateStaticParams() to return the first 300 slugs from players.json.
+
+4) SEO:
+   - Implement generateMetadata() for each player page with unique title + description:
+     Title: “{Player Name} Fantasy Football Profile | StatChasers”
+     Description: “Fantasy profile for {Player Name} ({POS} - {TEAM}). Stats, trends, and StatChasers insights.”
+   - Set canonical URL to /nfl/players/{slug}/
+
+5) Add sitemap + robots:
+   - Create app/sitemap.ts that outputs a sitemap including:
+     - homepage, /rankings/, /tools/, /articles/
+     - the 300 player pages (/nfl/players/{slug}/)
+   - Create app/robots.ts that allows crawling and points to https://statchasers.com/sitemap.xml
+
+6) Create a simple player search page (UX only, not SEO-critical) at /nfl/players that:
+   - Lets a user type a name and filters players.json results client-side
+   - Links results to /nfl/players/{slug}/
+   - Keep it fast and styled simply.
+
+7) Add commands to package.json:
+   - "build:players": "node scripts/buildPlayersIndex.js"
+   - Make sure “build:players” is run before next build (either via docs or a prebuild script).
+
+8) Make sure the project runs locally with npm run dev and build succeeds.
+
+Deliver: all code files added/changed, and brief instructions for how to run build:players and then build.
