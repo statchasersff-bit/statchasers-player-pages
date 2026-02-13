@@ -1,16 +1,221 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import fs from "fs";
+import path from "path";
+import type { Player } from "@shared/playerTypes";
+
+let playersCache: Player[] | null = null;
+let playersBySlug: Map<string, Player> | null = null;
+
+function loadPlayers(): Player[] {
+  if (playersCache) return playersCache;
+  const filePath = path.resolve(process.cwd(), "data", "players.json");
+  if (!fs.existsSync(filePath)) {
+    console.warn("data/players.json not found. Run: node scripts/buildPlayersIndex.js");
+    playersCache = [];
+    playersBySlug = new Map();
+    return playersCache;
+  }
+  const raw = fs.readFileSync(filePath, "utf-8");
+  playersCache = JSON.parse(raw) as Player[];
+  playersBySlug = new Map();
+  for (const p of playersCache) {
+    playersBySlug.set(p.slug, p);
+  }
+  return playersCache;
+}
+
+function getPlayerBySlug(slug: string): Player | undefined {
+  if (!playersBySlug) loadPlayers();
+  return playersBySlug?.get(slug);
+}
+
+function generatePlayerMeta(player: Player): string {
+  const title = `${player.name} Fantasy Football Profile | StatChasers`;
+  const description = `Fantasy profile for ${player.name} (${player.position || "NFL"} - ${player.team || "FA"}). Stats, trends, and StatChasers insights.`;
+  const canonical = `https://statchasers.com/nfl/players/${player.slug}/`;
+  return [
+    `<title>${title}</title>`,
+    `<meta name="description" content="${description}" />`,
+    `<meta property="og:title" content="${title}" />`,
+    `<meta property="og:description" content="${description}" />`,
+    `<meta property="og:type" content="profile" />`,
+    `<meta property="og:url" content="${canonical}" />`,
+    `<link rel="canonical" href="${canonical}" />`,
+  ].join("\n    ");
+}
+
+export function injectSeoMeta(html: string, url: string): string {
+  const playerMatch = url.match(/^\/nfl\/players\/([^/?]+)\/?$/);
+  if (playerMatch) {
+    const slug = playerMatch[1];
+    const player = getPlayerBySlug(slug);
+    if (player) {
+      const title = `${player.name} Fantasy Football Profile | StatChasers`;
+      const description = `Fantasy profile for ${player.name} (${player.position || "NFL"} - ${player.team || "FA"}). Stats, trends, and StatChasers insights.`;
+      const canonical = `https://statchasers.com/nfl/players/${player.slug}/`;
+
+      html = html.replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`);
+      html = html.replace(
+        /<meta name="description" content="[^"]*"/,
+        `<meta name="description" content="${description}"`
+      );
+      html = html.replace(
+        /<meta property="og:title" content="[^"]*"/,
+        `<meta property="og:title" content="${title}"`
+      );
+      html = html.replace(
+        /<meta property="og:description" content="[^"]*"/,
+        `<meta property="og:description" content="${description}"`
+      );
+      html = html.replace(
+        /<meta property="og:type" content="[^"]*"/,
+        `<meta property="og:type" content="profile"`
+      );
+      html = html.replace(
+        /<meta property="og:url" content="[^"]*"/,
+        `<meta property="og:url" content="${canonical}"`
+      );
+      html = html.replace(
+        /<!-- SEO_META_PLACEHOLDER -->/,
+        `<link rel="canonical" href="${canonical}" />`
+      );
+      return html;
+    }
+  }
+
+  const pageSeo: Record<string, { title: string; description: string; canonical: string }> = {
+    rankings: {
+      title: "Fantasy Football Rankings | StatChasers",
+      description: "Weekly and season-long fantasy football rankings. Expert-curated player rankings for every position.",
+      canonical: "https://statchasers.com/rankings/",
+    },
+    tools: {
+      title: "Fantasy Football Tools | StatChasers",
+      description: "Trade analyzer, draft simulator, and advanced fantasy football tools to gain your competitive edge.",
+      canonical: "https://statchasers.com/tools/",
+    },
+    articles: {
+      title: "Fantasy Football Articles & Analysis | StatChasers",
+      description: "Expert fantasy football analysis, waiver wire targets, matchup breakdowns, and weekly insights.",
+      canonical: "https://statchasers.com/articles/",
+    },
+  };
+
+  const pageMatch = url.match(/^\/(rankings|tools|articles)\/?$/);
+  if (pageMatch) {
+    const info = pageSeo[pageMatch[1]];
+    if (info) {
+      html = html.replace(/<title>[^<]*<\/title>/, `<title>${info.title}</title>`);
+      html = html.replace(/<meta name="description" content="[^"]*"/, `<meta name="description" content="${info.description}"`);
+      html = html.replace(/<meta property="og:title" content="[^"]*"/, `<meta property="og:title" content="${info.title}"`);
+      html = html.replace(/<meta property="og:description" content="[^"]*"/, `<meta property="og:description" content="${info.description}"`);
+      html = html.replace(/<meta property="og:url" content="[^"]*"/, `<meta property="og:url" content="${info.canonical}"`);
+      html = html.replace(/<!-- SEO_META_PLACEHOLDER -->/, `<link rel="canonical" href="${info.canonical}" />`);
+      return html;
+    }
+  }
+
+  if (url === "/nfl/players" || url === "/nfl/players/") {
+    const title = "NFL Player Database | StatChasers";
+    const desc = "Search and browse fantasy football profiles for over 4,000 NFL players. Stats, trends, and insights.";
+    const canonical = "https://statchasers.com/nfl/players";
+    html = html.replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`);
+    html = html.replace(/<meta name="description" content="[^"]*"/, `<meta name="description" content="${desc}"`);
+    html = html.replace(/<meta property="og:title" content="[^"]*"/, `<meta property="og:title" content="${title}"`);
+    html = html.replace(/<meta property="og:description" content="[^"]*"/, `<meta property="og:description" content="${desc}"`);
+    html = html.replace(/<meta property="og:url" content="[^"]*"/, `<meta property="og:url" content="${canonical}"`);
+    html = html.replace(/<!-- SEO_META_PLACEHOLDER -->/, `<link rel="canonical" href="${canonical}" />`);
+    return html;
+  }
+
+  html = html.replace(/<!-- SEO_META_PLACEHOLDER -->/, "");
+  return html;
+}
 
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
-  // put application routes here
-  // prefix all routes with /api
+  loadPlayers();
 
-  // use storage to perform CRUD operations on the storage interface
-  // e.g. storage.insertUser(user) or storage.getUserByUsername(username)
+  app.get("/api/players", (_req, res) => {
+    const players = loadPlayers();
+    res.json(players);
+  });
+
+  app.get("/api/players/:slug", (req, res) => {
+    loadPlayers();
+    const player = getPlayerBySlug(req.params.slug);
+    if (!player) {
+      return res.status(404).json({ message: "Player not found" });
+    }
+    res.json(player);
+  });
+
+  app.get("/sitemap.xml", (_req, res) => {
+    const players = loadPlayers();
+    const baseUrl = "https://statchasers.com";
+    const staticPages = [
+      { loc: "/", priority: "1.0", changefreq: "daily" },
+      { loc: "/rankings/", priority: "0.8", changefreq: "daily" },
+      { loc: "/tools/", priority: "0.7", changefreq: "weekly" },
+      { loc: "/articles/", priority: "0.8", changefreq: "daily" },
+      { loc: "/nfl/players", priority: "0.7", changefreq: "weekly" },
+    ];
+
+    const playerPages = players.slice(0, 300).map((p) => ({
+      loc: `/nfl/players/${p.slug}/`,
+      priority: "0.6",
+      changefreq: "weekly",
+    }));
+
+    const allPages = [...staticPages, ...playerPages];
+    const today = new Date().toISOString().split("T")[0];
+
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+    xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+    for (const page of allPages) {
+      xml += `  <url>\n`;
+      xml += `    <loc>${baseUrl}${page.loc}</loc>\n`;
+      xml += `    <lastmod>${today}</lastmod>\n`;
+      xml += `    <changefreq>${page.changefreq}</changefreq>\n`;
+      xml += `    <priority>${page.priority}</priority>\n`;
+      xml += `  </url>\n`;
+    }
+    xml += `</urlset>`;
+
+    res.set("Content-Type", "application/xml");
+    res.send(xml);
+  });
+
+  app.get("/robots.txt", (_req, res) => {
+    const txt = [
+      "User-agent: *",
+      "Allow: /",
+      "",
+      "Sitemap: https://statchasers.com/sitemap.xml",
+    ].join("\n");
+    res.set("Content-Type", "text/plain");
+    res.send(txt);
+  });
+
+  app.use((req, res, next) => {
+    if (req.path.startsWith("/api") || req.path === "/sitemap.xml" || req.path === "/robots.txt") {
+      return next();
+    }
+
+    const originalEnd = res.end;
+    const reqPath = req.path;
+    res.end = function (chunk?: any, encoding?: any, cb?: any) {
+      const contentType = res.getHeader("Content-Type")?.toString() || "";
+      if (contentType.includes("text/html") && typeof chunk === "string") {
+        chunk = injectSeoMeta(chunk, reqPath);
+      }
+      return originalEnd.call(this, chunk, encoding, cb);
+    } as any;
+    next();
+  });
 
   return httpServer;
 }
