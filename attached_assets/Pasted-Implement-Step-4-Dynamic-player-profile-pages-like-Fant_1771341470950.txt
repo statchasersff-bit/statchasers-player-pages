@@ -1,0 +1,65 @@
+Implement Step 4: Dynamic player profile pages like FantasyPros.
+
+Context:
+- This is a Vite + Express app.
+- We already generate data/players.json from Sleeper via scripts/buildPlayersIndex.js.
+- We have an Express endpoint GET /api/players returning a lightweight list:
+  { id, name, slug, team, position }.
+
+Goal:
+When a user visits /nfl/players/tyreek-hill it should render a full player profile page (Tyreek-style layout) using the existing app header/footer (no separate site layout).
+
+Requirements:
+
+A) Server API improvement (recommended):
+1) Add a new endpoint:
+   GET /api/players/:slug
+   - It should load from data/players.json (cached in memory).
+   - Find the player by slug.
+   - If found, return full player object fields:
+     id, name, slug, position, team, status, injury_status, age, height, weight
+   - If not found, return 404 JSON { error: "not_found" }.
+   - Add Cache-Control: public, max-age=3600.
+
+B) Client route:
+2) Add a client route:
+   /nfl/players/:slug
+   pointing to a new page component (e.g. PlayerProfilePage.tsx).
+
+C) Player profile page UI:
+3) On page mount, read slug from the router params and fetch:
+   GET /api/players/:slug
+
+4) Render a premium StatChasers-style player profile page layout similar to FantasyPros:
+   - Top section: Player name (H1), position-team line, status/injury badge.
+   - “Player Snapshot” card with:
+     Team, Position, Age, Height, Weight, Status, Injury Status
+   - Add placeholder sections (for now):
+     - “Trends” (placeholder copy: coming soon)
+     - “Game Log” (placeholder table header)
+     - “Articles / News” (placeholder)
+     - “Rankings / Projections” (placeholder)
+   - Add internal links back to:
+     /nfl/players (directory)
+     /rankings
+     /tools
+     /articles
+
+5) Loading and errors:
+   - While loading, show a skeleton or “Loading player…”
+   - If 404, show “Player not found” and link back to /nfl/players
+
+D) SEO:
+6) Update the document title dynamically on the client:
+   "{Player Name} Fantasy Football Profile | StatChasers"
+   (If there’s an existing SEO/head utility in the project, use it.)
+
+E) Styling:
+7) Use the site’s existing UI system and Tailwind classes if Tailwind is already configured.
+   Do NOT create a new navbar/header/footer—must feel like the same website.
+
+After implementing, tell me:
+- Which server files you edited to add GET /api/players/:slug
+- Which client route file you edited to add /nfl/players/:slug
+- The new component file path for PlayerProfilePage
+- How to test with a known slug like /nfl/players/tyreek-hill

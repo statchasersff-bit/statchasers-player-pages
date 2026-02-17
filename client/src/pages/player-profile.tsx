@@ -19,7 +19,10 @@ import {
   AlertTriangle,
   TrendingUp,
   Search,
+  Newspaper,
+  Table,
 } from "lucide-react";
+import { useEffect } from "react";
 import type { Player } from "@shared/playerTypes";
 
 const POSITION_COLORS: Record<string, string> = {
@@ -79,6 +82,15 @@ export default function PlayerProfile() {
   const { data: player, isLoading, error } = useQuery<Player>({
     queryKey: ["/api/players", slug],
   });
+
+  useEffect(() => {
+    if (player) {
+      document.title = `${player.name} Fantasy Football Profile | StatChasers`;
+    }
+    return () => {
+      document.title = "StatChasers";
+    };
+  }, [player]);
 
   if (isLoading) {
     return (
@@ -227,16 +239,76 @@ export default function PlayerProfile() {
           <CardContent className="p-6">
             <div className="flex items-center gap-2 mb-4">
               <TrendingUp className="w-5 h-5 text-primary" />
-              <h2 className="text-lg font-semibold text-foreground">Fantasy Insights</h2>
+              <h2 className="text-lg font-semibold text-foreground" data-testid="text-trends-heading">Trends</h2>
             </div>
-            <p className="text-muted-foreground text-sm mb-4">
-              Detailed stats, trends, and projections for {player.name} are being compiled. 
-              Check back for updated analysis throughout the season.
-            </p>
-            <Separator className="my-4" />
-            <p className="text-sm text-muted-foreground">
-              Use the tools below to evaluate {player.name} in your fantasy leagues.
-            </p>
+            <div className="rounded-md border border-dashed border-muted-foreground/25 p-8 text-center">
+              <TrendingUp className="w-8 h-8 text-muted-foreground/40 mx-auto mb-3" />
+              <p className="text-muted-foreground text-sm font-medium">Trend data coming soon</p>
+              <p className="text-muted-foreground/70 text-xs mt-1">
+                Week-over-week fantasy scoring trends for {player.name} will appear here.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="mb-6">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Table className="w-5 h-5 text-primary" />
+              <h2 className="text-lg font-semibold text-foreground" data-testid="text-gamelog-heading">Game Log</h2>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b text-left">
+                    <th className="py-2 pr-4 text-muted-foreground font-medium">Week</th>
+                    <th className="py-2 pr-4 text-muted-foreground font-medium">Opp</th>
+                    <th className="py-2 pr-4 text-muted-foreground font-medium">Result</th>
+                    <th className="py-2 pr-4 text-muted-foreground font-medium">Fantasy Pts</th>
+                    <th className="py-2 text-muted-foreground font-medium">Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="py-6 text-center text-muted-foreground/70 text-xs" colSpan={5}>
+                      Game log data will be available once the season begins.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="mb-6">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Newspaper className="w-5 h-5 text-primary" />
+              <h2 className="text-lg font-semibold text-foreground" data-testid="text-news-heading">Articles & News</h2>
+            </div>
+            <div className="rounded-md border border-dashed border-muted-foreground/25 p-8 text-center">
+              <Newspaper className="w-8 h-8 text-muted-foreground/40 mx-auto mb-3" />
+              <p className="text-muted-foreground text-sm font-medium">No articles yet</p>
+              <p className="text-muted-foreground/70 text-xs mt-1">
+                News and analysis related to {player.name} will appear here as they are published.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="mb-6">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Trophy className="w-5 h-5 text-primary" />
+              <h2 className="text-lg font-semibold text-foreground" data-testid="text-rankings-heading">Rankings & Projections</h2>
+            </div>
+            <div className="rounded-md border border-dashed border-muted-foreground/25 p-8 text-center">
+              <BarChart3 className="w-8 h-8 text-muted-foreground/40 mx-auto mb-3" />
+              <p className="text-muted-foreground text-sm font-medium">Projections coming soon</p>
+              <p className="text-muted-foreground/70 text-xs mt-1">
+                Expert rankings and season projections for {player.name} will be available here.
+              </p>
+            </div>
           </CardContent>
         </Card>
 
