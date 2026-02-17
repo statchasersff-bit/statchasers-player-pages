@@ -23,6 +23,23 @@ type LightPlayer = {
   position: string;
 };
 
+type IndexedPlayer = {
+  id: string;
+  name: string;
+  slug: string;
+  team: string;
+  position: string;
+  rank_label: string;
+  depth_chart_order: number | null;
+  years_exp: number | null;
+  status: string | null;
+};
+
+type IndexedData = {
+  slugs: string[];
+  byTeam: Record<string, Record<string, IndexedPlayer[]>>;
+};
+
 const POSITION_COLORS: Record<string, string> = {
   QB: "bg-red-500/15 text-red-700 dark:text-red-400",
   RB: "bg-blue-500/15 text-blue-700 dark:text-blue-400",
@@ -31,6 +48,55 @@ const POSITION_COLORS: Record<string, string> = {
   K: "bg-purple-500/15 text-purple-700 dark:text-purple-400",
   DEF: "bg-gray-500/15 text-gray-700 dark:text-gray-400",
 };
+
+const NFL_DIVISIONS: { name: string; teams: string[] }[] = [
+  { name: "AFC East", teams: ["BUF", "MIA", "NE", "NYJ"] },
+  { name: "AFC North", teams: ["BAL", "CIN", "CLE", "PIT"] },
+  { name: "AFC South", teams: ["HOU", "IND", "JAX", "TEN"] },
+  { name: "AFC West", teams: ["DEN", "KC", "LAC", "LV"] },
+  { name: "NFC East", teams: ["DAL", "NYG", "PHI", "WAS"] },
+  { name: "NFC North", teams: ["CHI", "DET", "GB", "MIN"] },
+  { name: "NFC South", teams: ["ATL", "CAR", "NO", "TB"] },
+  { name: "NFC West", teams: ["ARI", "LAR", "SEA", "SF"] },
+];
+
+const POSITION_ORDER = ["QB", "RB", "WR", "TE", "K", "DEF"];
+
+function TeamRoster({ team, positions }: { team: string; positions: Record<string, IndexedPlayer[]> }) {
+  return (
+    <Card className="h-full" data-testid={`card-team-${team}`}>
+      <CardContent className="p-4">
+        <h3 className="font-bold text-foreground mb-3 text-base" data-testid={`text-team-name-${team}`}>{team}</h3>
+        <div className="space-y-2">
+          {POSITION_ORDER.map((pos) => {
+            const players = positions[pos];
+            if (!players || players.length === 0) return null;
+            return (
+              <div key={pos}>
+                {players.map((p) => (
+                  <Link key={p.slug} href={`/nfl/players/${p.slug}/`}>
+                    <div
+                      className="flex items-center gap-2 py-1 hover-elevate rounded px-1 cursor-pointer"
+                      data-testid={`link-indexed-player-${p.slug}`}
+                    >
+                      <Badge
+                        variant="secondary"
+                        className={`text-[10px] px-1.5 py-0 min-w-[36px] text-center ${POSITION_COLORS[pos] || ""}`}
+                      >
+                        {p.rank_label}
+                      </Badge>
+                      <span className="text-sm text-foreground truncate">{p.name}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function PlayerSearch() {
   const [search, setSearch] = useState("");
@@ -42,9 +108,15 @@ export default function PlayerSearch() {
   const listRef = useRef<HTMLDivElement>(null);
   const [, navigate] = useLocation();
 
-  const { data: players, isLoading } = useQuery<LightPlayer[]>({
+  const { data: players, isLoading: playersLoading } = useQuery<LightPlayer[]>({
     queryKey: ["/api/players"],
   });
+
+  const { data: indexedData, isLoading: indexedLoading } = useQuery<IndexedData>({
+    queryKey: ["/api/indexed-players"],
+  });
+
+  const isSearching = search.trim().length > 0 || posFilter !== "ALL";
 
   const autocompleteResults = useMemo(() => {
     if (!players || !search.trim()) return [];
@@ -159,11 +231,11 @@ export default function PlayerSearch() {
           <div className="flex items-center gap-2 mb-2">
             <Users className="w-6 h-6 text-primary" />
             <h1 className="text-2xl md:text-3xl font-bold text-foreground" data-testid="text-page-title">
-              NFL Player Database
+              NFL Player Directory
             </h1>
           </div>
           <p className="text-muted-foreground">
-            Search over 4,000 NFL players. Click any player for their full fantasy profile.
+            Browse key fantasy-relevant players by team, or search all 4,000+ NFL players.
           </p>
         </div>
 
@@ -257,78 +329,122 @@ export default function PlayerSearch() {
           </Select>
         </div>
 
-        {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <Card key={i}>
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <Skeleton className="w-10 h-10 rounded-md" />
-                    <div className="flex-1">
-                      <Skeleton className="h-4 w-32 mb-2" />
-                      <Skeleton className="h-3 w-20" />
+        {isSearching ? (
+          playersLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <Card key={i}>
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="w-10 h-10 rounded-md" />
+                      <div className="flex-1">
+                        <Skeleton className="h-4 w-32 mb-2" />
+                        <Skeleton className="h-3 w-20" />
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <>
-            <p className="text-sm text-muted-foreground mb-4" data-testid="text-results-count">
-              {filtered.length === 100 ? "Showing first 100 results" : `${filtered.length} player${filtered.length !== 1 ? "s" : ""} found`}
-              {search.trim() && ` for "${search}"`}
-            </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <>
+              <p className="text-sm text-muted-foreground mb-4" data-testid="text-results-count">
+                {filtered.length === 100 ? "Showing first 100 results" : `${filtered.length} player${filtered.length !== 1 ? "s" : ""} found`}
+                {search.trim() && ` for "${search}"`}
+              </p>
 
-            {filtered.length === 0 ? (
-              <Card>
-                <CardContent className="py-12 text-center">
-                  <Search className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-                  <p className="text-muted-foreground font-medium">No players found</p>
-                  <p className="text-sm text-muted-foreground mt-1">Try adjusting your search or filter</p>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {filtered.map((player) => (
-                  <Link key={player.id} href={`/nfl/players/${player.slug}/`}>
-                    <Card
-                      className="hover-elevate cursor-pointer transition-all h-full"
-                      data-testid={`card-player-${player.slug}`}
-                    >
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-3">
-                          <div className="flex-shrink-0 w-10 h-10 rounded-md bg-muted flex items-center justify-center">
-                            <span className="text-xs font-bold text-muted-foreground">
-                              {player.position || "?"}
-                            </span>
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-semibold text-foreground truncate" data-testid={`text-player-name-${player.slug}`}>
-                                {player.name}
+              {filtered.length === 0 ? (
+                <Card>
+                  <CardContent className="py-12 text-center">
+                    <Search className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-muted-foreground font-medium">No players found</p>
+                    <p className="text-sm text-muted-foreground mt-1">Try adjusting your search or filter</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {filtered.map((player) => (
+                    <Link key={player.id} href={`/nfl/players/${player.slug}/`}>
+                      <Card
+                        className="hover-elevate cursor-pointer transition-all h-full"
+                        data-testid={`card-player-${player.slug}`}
+                      >
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-3">
+                            <div className="flex-shrink-0 w-10 h-10 rounded-md bg-muted flex items-center justify-center">
+                              <span className="text-xs font-bold text-muted-foreground">
+                                {player.position || "?"}
                               </span>
                             </div>
-                            <div className="flex items-center gap-2 mt-1">
-                              <Badge
-                                variant="secondary"
-                                className={`text-xs ${POSITION_COLORS[player.position || ""] || ""}`}
-                              >
-                                {player.position}
-                              </Badge>
-                              <span className="text-xs text-muted-foreground">{player.team}</span>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="font-semibold text-foreground truncate" data-testid={`text-player-name-${player.slug}`}>
+                                  {player.name}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2 mt-1">
+                                <Badge
+                                  variant="secondary"
+                                  className={`text-xs ${POSITION_COLORS[player.position || ""] || ""}`}
+                                >
+                                  {player.position}
+                                </Badge>
+                                <span className="text-xs text-muted-foreground">{player.team}</span>
+                              </div>
                             </div>
+                            <TrendingUp className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                           </div>
-                          <TrendingUp className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </>
+          )
+        ) : indexedLoading ? (
+          <div className="space-y-8">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <div key={i}>
+                <Skeleton className="h-6 w-32 mb-4" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {Array.from({ length: 4 }).map((_, j) => (
+                    <Card key={j}>
+                      <CardContent className="p-4">
+                        <Skeleton className="h-5 w-12 mb-3" />
+                        <div className="space-y-2">
+                          {Array.from({ length: 8 }).map((_, k) => (
+                            <Skeleton key={k} className="h-4 w-full" />
+                          ))}
                         </div>
                       </CardContent>
                     </Card>
-                  </Link>
-                ))}
+                  ))}
+                </div>
               </div>
-            )}
-          </>
-        )}
+            ))}
+          </div>
+        ) : indexedData && indexedData.byTeam ? (
+          <div className="space-y-8">
+            <p className="text-sm text-muted-foreground" data-testid="text-indexed-count">
+              {indexedData.slugs.length} fantasy-relevant players across 32 NFL teams
+            </p>
+            {NFL_DIVISIONS.map((div) => (
+              <section key={div.name}>
+                <h2 className="text-lg font-bold text-foreground mb-3" data-testid={`text-division-${div.name.replace(/\s/g, "-").toLowerCase()}`}>
+                  {div.name}
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {div.teams.map((team) => {
+                    const teamData = indexedData.byTeam[team];
+                    if (!teamData) return null;
+                    return <TeamRoster key={team} team={team} positions={teamData} />;
+                  })}
+                </div>
+              </section>
+            ))}
+          </div>
+        ) : null}
       </main>
 
       <footer className="border-t bg-card mt-16">

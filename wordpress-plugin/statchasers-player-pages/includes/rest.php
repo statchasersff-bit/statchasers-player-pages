@@ -16,6 +16,12 @@ function sc_register_rest_routes() {
             ),
         ),
     ) );
+
+    register_rest_route( 'statchasers/v1', '/indexed-players', array(
+        'methods'             => 'GET',
+        'callback'            => 'sc_rest_indexed_players',
+        'permission_callback' => '__return_true',
+    ) );
 }
 
 function sc_rest_search_players( $request ) {
@@ -51,4 +57,14 @@ function sc_rest_search_players( $request ) {
     }
 
     return new WP_REST_Response( $results, 200 );
+}
+
+function sc_rest_indexed_players( $request ) {
+    $slugs   = sc_get_indexed_slugs();
+    $by_team = sc_get_indexed_by_team();
+
+    return new WP_REST_Response( array(
+        'slugs'  => $slugs,
+        'byTeam' => $by_team,
+    ), 200 );
 }

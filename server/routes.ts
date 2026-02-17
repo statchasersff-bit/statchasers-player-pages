@@ -10,6 +10,25 @@ let lastMtimeMs: number = 0;
 let lastFileCheck: number = 0;
 const FILE_CHECK_INTERVAL = 10 * 60 * 1000;
 const PLAYERS_FILE = path.resolve(process.cwd(), "data", "players.json");
+const INDEXED_FILE = path.resolve(process.cwd(), "data", "indexed_players.json");
+const INDEXED_BY_TEAM_FILE = path.resolve(process.cwd(), "data", "indexed_players_by_team.json");
+
+let indexedSlugs: string[] = [];
+let indexedByTeam: Record<string, Record<string, any[]>> = {};
+let indexedLoaded = false;
+
+function loadIndexedData() {
+  if (indexedLoaded) return;
+  indexedLoaded = true;
+  if (fs.existsSync(INDEXED_FILE)) {
+    const raw = JSON.parse(fs.readFileSync(INDEXED_FILE, "utf-8"));
+    indexedSlugs = raw.slugs || [];
+    console.log(`Loaded ${indexedSlugs.length} indexed player slugs`);
+  }
+  if (fs.existsSync(INDEXED_BY_TEAM_FILE)) {
+    indexedByTeam = JSON.parse(fs.readFileSync(INDEXED_BY_TEAM_FILE, "utf-8"));
+  }
+}
 
 function loadPlayers(): Player[] {
   const now = Date.now();
@@ -178,6 +197,13 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
   loadPlayers();
+  loadIndexedData();
+
+  app.get("/api/indexed-players", (_req, res) => {
+    loadIndexedData();
+    res.set("Cache-Control", "public, max-age=3600");
+    res.json({ slugs: indexedSlugs || [], byTeam: indexedByTeam || {} });
+  });
 
   app.get("/api/players", (_req, res) => {
     const players = loadPlayers();
@@ -226,18 +252,22 @@ export async function registerRoutes(
   });
 
   app.get("/sitemap.xml", (_req, res) => {
-    const players = loadPlayers();
+    loadIndexedData();
     const baseUrl = "https://statchasers.com";
     const staticPages = [
       { loc: "/", priority: "1.0", changefreq: "daily" },
       { loc: "/rankings/", priority: "0.8", changefreq: "daily" },
       { loc: "/tools/", priority: "0.7", changefreq: "weekly" },
       { loc: "/articles/", priority: "0.8", changefreq: "daily" },
-      { loc: "/nfl/players", priority: "0.7", changefreq: "weekly" },
+      { loc: "/nfl/players/", priority: "0.7", changefreq: "weekly" },
     ];
 
-    const playerPages = players.slice(0, 300).map((p) => ({
-      loc: `/nfl/players/${p.slug}/`,
+    const slugsToUse = indexedSlugs.length > 0
+      ? indexedSlugs
+      : loadPlayers().slice(0, 300).map((p) => p.slug);
+
+    const playerPages = slugsToUse.map((slug) => ({
+      loc: `/nfl/players/${slug}/`,
       priority: "0.6",
       changefreq: "weekly",
     }));

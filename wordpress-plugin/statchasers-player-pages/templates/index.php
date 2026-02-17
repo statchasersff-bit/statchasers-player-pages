@@ -73,7 +73,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 <script>
     window.scPlayersConfig = {
         restUrl: <?php echo wp_json_encode( rest_url( 'statchasers/v1/players' ) ); ?>,
-        baseUrl: <?php echo wp_json_encode( home_url( '/nfl/players/' ) ); ?>
+        baseUrl: <?php echo wp_json_encode( home_url( '/nfl/players/' ) ); ?>,
+        indexedUrl: <?php echo wp_json_encode( rest_url( 'statchasers/v1/indexed-players' ) ); ?>
     };
 </script>
 <script src="<?php echo esc_url( SC_PLUGIN_URL . 'assets/players.js' ); ?>"></script>
