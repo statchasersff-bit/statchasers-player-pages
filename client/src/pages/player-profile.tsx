@@ -21,9 +21,18 @@ import {
   Search,
   Newspaper,
   Table,
+  Users,
 } from "lucide-react";
 import { useEffect } from "react";
 import type { Player } from "@shared/playerTypes";
+
+type LightPlayer = {
+  id: string;
+  name: string;
+  slug: string;
+  team: string;
+  position: string;
+};
 
 const POSITION_COLORS: Record<string, string> = {
   QB: "bg-red-500/15 text-red-700 dark:text-red-400",
@@ -81,6 +90,11 @@ export default function PlayerProfile() {
 
   const { data: player, isLoading, error } = useQuery<Player>({
     queryKey: ["/api/players", slug],
+  });
+
+  const { data: relatedPlayers } = useQuery<LightPlayer[]>({
+    queryKey: ["/api/players", slug, "related"],
+    enabled: !!player,
   });
 
   useEffect(() => {
@@ -311,6 +325,44 @@ export default function PlayerProfile() {
             </div>
           </CardContent>
         </Card>
+
+        {relatedPlayers && relatedPlayers.length > 0 && (
+          <Card className="mb-6">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Users className="w-5 h-5 text-primary" />
+                <h2 className="text-lg font-semibold text-foreground" data-testid="text-related-heading">
+                  Related {player.position}s
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {relatedPlayers.map((rp) => (
+                  <Link key={rp.id} href={`/nfl/players/${rp.slug}/`}>
+                    <Card className="hover-elevate cursor-pointer h-full" data-testid={`card-related-${rp.slug}`}>
+                      <CardContent className="p-3 flex items-center gap-3">
+                        <div className="flex-shrink-0 w-9 h-9 rounded-md bg-muted flex items-center justify-center">
+                          <span className="text-[10px] font-bold text-muted-foreground">{rp.position}</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm text-foreground truncate">{rp.name}</p>
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <Badge
+                              variant="secondary"
+                              className={`text-[10px] px-1.5 py-0 ${POSITION_COLORS[rp.position || ""] || ""}`}
+                            >
+                              {rp.position}
+                            </Badge>
+                            <span className="text-xs text-muted-foreground">{rp.team}</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Link href="/rankings/">
