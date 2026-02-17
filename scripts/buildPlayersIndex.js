@@ -46,7 +46,7 @@ async function main() {
       name,
       slug,
       position: p.position || null,
-      team: p.team || null,
+      team: p.team || "FA",
       status: p.status || null,
       injury_status: p.injury_status || null,
       age: p.age || null,
