@@ -181,6 +181,27 @@ export async function registerRoutes(
     res.json(player);
   });
 
+  app.get("/api/players/:slug/related", (req, res) => {
+    const players = loadPlayers();
+    const player = getPlayerBySlug(req.params.slug);
+    if (!player) {
+      return res.status(404).json({ error: "not_found" });
+    }
+    const samePos = players.filter(
+      (p) => p.position === player.position && p.slug !== player.slug && p.team !== "FA"
+    );
+    const shuffled = samePos.sort(() => Math.random() - 0.5).slice(0, 6);
+    const lightweight = shuffled.map((p) => ({
+      id: p.id,
+      name: p.name,
+      slug: p.slug,
+      team: p.team,
+      position: p.position,
+    }));
+    res.set("Cache-Control", "public, max-age=3600");
+    res.json(lightweight);
+  });
+
   app.get("/sitemap.xml", (_req, res) => {
     const players = loadPlayers();
     const baseUrl = "https://statchasers.com";
