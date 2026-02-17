@@ -31,7 +31,7 @@ function sc_handle_admin_actions() {
         if ( ! check_admin_referer( 'sc_admin_nonce', 'sc_nonce' ) ) return;
         $page_id = isset( $_POST['scpp_container_page_id'] ) ? (int) $_POST['scpp_container_page_id'] : 0;
         update_option( 'scpp_container_page_id', $page_id );
-        add_settings_error( 'statchasers', 'container_saved', 'Container page saved.', 'success' );
+        add_settings_error( 'statchasers', 'container_saved', 'Container page saved. Now re-save Permalinks.', 'success' );
     }
 
     if ( isset( $_POST['sc_auto_create_pages'] ) ) {
@@ -42,6 +42,13 @@ function sc_handle_admin_actions() {
         } else {
             add_settings_error( 'statchasers', 'pages_exists', 'Container pages already exist or could not be created.', 'warning' );
         }
+    }
+
+    if ( isset( $_POST['sc_flush_rewrite'] ) ) {
+        if ( ! check_admin_referer( 'sc_admin_nonce', 'sc_nonce' ) ) return;
+        sc_register_rewrite_rules();
+        flush_rewrite_rules();
+        add_settings_error( 'statchasers', 'flush_success', 'Rewrite rules flushed successfully!', 'success' );
     }
 }
 
@@ -82,6 +89,7 @@ function sc_auto_create_container_pages() {
     }
 
     update_option( 'scpp_container_page_id', $players_id );
+    sc_register_rewrite_rules();
     flush_rewrite_rules();
     return true;
 }
@@ -95,13 +103,21 @@ function sc_render_admin_page() {
     $pages           = get_pages( array( 'post_status' => 'publish', 'sort_column' => 'post_title' ) );
     ?>
     <div class="wrap">
-        <h1>StatChasers Player Pages</h1>
+        <h1>StatChasers Player Pages <small style="font-size: 12px; color: #999;">v0.3.0</small></h1>
 
         <?php settings_errors( 'statchasers' ); ?>
 
-        <div class="card" style="max-width: 600px; padding: 20px;">
+        <?php if ( ! $container_id || ! $container_post ) : ?>
+            <div class="notice notice-error" style="padding: 12px;">
+                <strong>Container page is not set!</strong> Player pages will not render correctly.
+                Use the dropdown below to select a page, or click "Auto-Create NFL/Players Pages."
+            </div>
+        <?php endif; ?>
+
+        <!-- Container Page -->
+        <div class="card" style="max-width: 700px; padding: 20px;">
             <h2>Container Page</h2>
-            <p style="color: #666;">Select the WordPress page that will host player content. Plugin routes (<code>/nfl/players/</code>) render inside this page's template, so Divi uses the correct header/footer and full-width layout.</p>
+            <p style="color: #666;">Select the WordPress page that hosts player content. Plugin routes (<code>/nfl/players/</code>) render inside this page's template.</p>
             <form method="post">
                 <?php wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' ); ?>
                 <table class="form-table">
@@ -109,7 +125,7 @@ function sc_render_admin_page() {
                         <th><label for="scpp_container_page_id">Container Page</label></th>
                         <td>
                             <select name="scpp_container_page_id" id="scpp_container_page_id" style="min-width: 300px;">
-                                <option value="0">— Select a page —</option>
+                                <option value="0">&mdash; Select a page &mdash;</option>
                                 <?php foreach ( $pages as $pg ) : ?>
                                     <option value="<?php echo esc_attr( $pg->ID ); ?>" <?php selected( $container_id, $pg->ID ); ?>>
                                         <?php echo esc_html( $pg->post_title ); ?> (ID: <?php echo esc_html( $pg->ID ); ?>)
@@ -118,8 +134,8 @@ function sc_render_admin_page() {
                             </select>
                             <?php if ( $container_post ) : ?>
                                 <p class="description" style="margin-top: 6px;">
-                                    Currently using: <strong><?php echo esc_html( $container_post->post_title ); ?></strong>
-                                    (<?php echo esc_html( get_page_uri( $container_post ) ); ?>)
+                                    Currently: <strong><?php echo esc_html( $container_post->post_title ); ?></strong>
+                                    (type: <?php echo esc_html( $container_post->post_type ); ?>, status: <?php echo esc_html( $container_post->post_status ); ?>, ID: <?php echo esc_html( $container_post->ID ); ?>)
                                 </p>
                             <?php endif; ?>
                         </td>
@@ -132,14 +148,82 @@ function sc_render_admin_page() {
             <hr style="margin: 16px 0;" />
             <form method="post">
                 <?php wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' ); ?>
-                <p style="color: #666;">Or auto-create the required pages (NFL &rarr; Players):</p>
+                <p style="color: #666;">Or auto-create the required pages (NFL &rarr; Players) and set as container:</p>
                 <p>
-                    <input type="submit" name="sc_auto_create_pages" class="button" value="Auto-Create Container Pages" />
+                    <input type="submit" name="sc_auto_create_pages" class="button" value="Auto-Create NFL/Players Pages and Set Container" />
                 </p>
             </form>
         </div>
 
-        <div class="card" style="max-width: 600px; padding: 20px; margin-top: 20px;">
+        <!-- Routing Debug -->
+        <div class="card" style="max-width: 700px; padding: 20px; margin-top: 20px;">
+            <h2>Routing Debug</h2>
+            <?php
+            $sc_rules = sc_get_rewrite_diagnostics();
+            $permalink_structure = get_option( 'permalink_structure', '' );
+            ?>
+            <table class="form-table">
+                <tr>
+                    <th>Plugin Version</th>
+                    <td><code>0.3.0</code></td>
+                </tr>
+                <tr>
+                    <th>Container Page</th>
+                    <td>
+                        <?php if ( $container_post ) : ?>
+                            <code>ID=<?php echo esc_html( $container_id ); ?></code> &mdash;
+                            "<?php echo esc_html( $container_post->post_title ); ?>"
+                            (type: <?php echo esc_html( $container_post->post_type ); ?>, status: <?php echo esc_html( $container_post->post_status ); ?>)
+                        <?php elseif ( $container_id ) : ?>
+                            <span style="color:red;">ID=<?php echo esc_html( $container_id ); ?> NOT FOUND</span>
+                        <?php else : ?>
+                            <span style="color:red;">NOT SET</span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Permalink Structure</th>
+                    <td><code><?php echo esc_html( $permalink_structure ? $permalink_structure : '(Plain/Default)' ); ?></code></td>
+                </tr>
+                <tr>
+                    <th>Registered Rewrite Rules</th>
+                    <td>
+                        <?php if ( empty( $sc_rules ) ) : ?>
+                            <span style="color:red; font-weight:bold;">NO StatChasers rewrite rules found!</span><br/>
+                            <small>Click "Flush Rewrite Rules Now" below, or go to Settings &gt; Permalinks and Save.</small>
+                        <?php else : ?>
+                            <?php foreach ( $sc_rules as $pattern => $target ) : ?>
+                                <code style="background:#f0f0f0; padding: 2px 6px;"><?php echo esc_html( $pattern ); ?></code><br/>
+                                &rarr; <code><?php echo esc_html( $target ); ?></code><br/><br/>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Query Vars Registered</th>
+                    <td>
+                        <?php
+                        $public_vars = isset( $GLOBALS['wp'] ) ? $GLOBALS['wp']->public_query_vars : array();
+                        $has_slug  = in_array( 'sc_player_slug', $public_vars );
+                        $has_index = in_array( 'sc_players_index', $public_vars );
+                        ?>
+                        sc_player_slug: <code style="color:<?php echo $has_slug ? 'green' : 'red'; ?>;"><?php echo $has_slug ? 'YES' : 'NO'; ?></code><br/>
+                        sc_players_index: <code style="color:<?php echo $has_index ? 'green' : 'red'; ?>;"><?php echo $has_index ? 'YES' : 'NO'; ?></code>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Current Request URI</th>
+                    <td><code><?php echo esc_html( isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '(unknown)' ); ?></code></td>
+                </tr>
+            </table>
+            <form method="post" style="margin-top: 12px;">
+                <?php wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' ); ?>
+                <input type="submit" name="sc_flush_rewrite" class="button button-secondary" value="Flush Rewrite Rules Now" />
+            </form>
+        </div>
+
+        <!-- Player Index Status -->
+        <div class="card" style="max-width: 700px; padding: 20px; margin-top: 20px;">
             <h2>Player Index Status</h2>
             <table class="form-table">
                 <tr>
@@ -163,68 +247,25 @@ function sc_render_admin_page() {
             </form>
         </div>
 
-        <div class="card" style="max-width: 600px; padding: 20px; margin-top: 20px;">
+        <!-- Quick Links -->
+        <div class="card" style="max-width: 700px; padding: 20px; margin-top: 20px;">
             <h2>Quick Links</h2>
             <ul style="list-style: disc; padding-left: 20px;">
                 <li><a href="<?php echo esc_url( home_url( '/nfl/players/' ) ); ?>" target="_blank">Player Directory</a></li>
+                <li><a href="<?php echo esc_url( home_url( '/nfl/players/tyreek-hill/' ) ); ?>" target="_blank">Test Player Page (Tyreek Hill)</a></li>
                 <li><a href="<?php echo esc_url( home_url( '/sitemap-players.xml' ) ); ?>" target="_blank">Player Sitemap (XML)</a></li>
                 <li><a href="<?php echo esc_url( rest_url( 'statchasers/v1/players' ) ); ?>" target="_blank">Players REST Endpoint</a></li>
-                <li><a href="<?php echo esc_url( rest_url( 'statchasers/v1/players?q=mahomes' ) ); ?>" target="_blank">REST Search Example (?q=mahomes)</a></li>
             </ul>
         </div>
 
-        <div class="card" style="max-width: 600px; padding: 20px; margin-top: 20px;">
-            <h2>Rewrite Diagnostics</h2>
-            <p style="color: #666;">This shows whether WordPress has registered the plugin's rewrite rules. If empty, deactivate/reactivate the plugin and re-save Permalinks.</p>
-            <table class="form-table">
-                <tr>
-                    <th>Container Page ID</th>
-                    <td><code><?php echo esc_html( $container_id ? $container_id : 'NOT SET' ); ?></code>
-                    <?php if ( $container_post ) : ?>
-                        &mdash; <strong><?php echo esc_html( $container_post->post_title ); ?></strong>
-                        (type: <?php echo esc_html( $container_post->post_type ); ?>, status: <?php echo esc_html( $container_post->post_status ); ?>)
-                    <?php elseif ( $container_id ) : ?>
-                        &mdash; <span style="color: red;">Post ID <?php echo esc_html( $container_id ); ?> not found or invalid!</span>
-                    <?php endif; ?>
-                    </td>
-                </tr>
-                <?php
-                $sc_rules = sc_get_rewrite_diagnostics();
-                ?>
-                <tr>
-                    <th>Registered Rewrite Rules</th>
-                    <td>
-                        <?php if ( empty( $sc_rules ) ) : ?>
-                            <span style="color: red;">No StatChasers rewrite rules found! Deactivate/reactivate and re-save Permalinks.</span>
-                        <?php else : ?>
-                            <?php foreach ( $sc_rules as $pattern => $target ) : ?>
-                                <code><?php echo esc_html( $pattern ); ?></code><br/>
-                                &rarr; <code><?php echo esc_html( $target ); ?></code><br/><br/>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Query Vars Registered</th>
-                    <td>
-                        sc_player_slug: <code><?php echo in_array( 'sc_player_slug', $GLOBALS['wp']->public_query_vars ?? array() ) ? 'YES' : 'NO'; ?></code><br/>
-                        sc_players_index: <code><?php echo in_array( 'sc_players_index', $GLOBALS['wp']->public_query_vars ?? array() ) ? 'YES' : 'NO'; ?></code>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Permalink Structure</th>
-                    <td><code><?php echo esc_html( get_option( 'permalink_structure', '(default)' ) ); ?></code></td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="card" style="max-width: 600px; padding: 20px; margin-top: 20px;">
+        <!-- Setup Steps -->
+        <div class="card" style="max-width: 700px; padding: 20px; margin-top: 20px;">
             <h2>Setup Steps</h2>
             <ol style="padding-left: 20px;">
-                <li>Click <strong>Auto-Create Container Pages</strong> above (or select an existing page).</li>
-                <li>Go to <strong>Settings &gt; Permalinks</strong> and click <strong>Save Changes</strong>.</li>
+                <li>Click <strong>Auto-Create NFL/Players Pages and Set Container</strong> above (or select an existing page).</li>
+                <li>Click <strong>Flush Rewrite Rules Now</strong> above, OR go to <strong>Settings &gt; Permalinks</strong> and click <strong>Save Changes</strong>.</li>
                 <li>Visit <a href="<?php echo esc_url( home_url( '/nfl/players/' ) ); ?>" target="_blank">/nfl/players/</a> to verify.</li>
-                <li>Add <code>https://statchasers.com/sitemap-players.xml</code> to Google Search Console.</li>
+                <li>View page source and search for <code>&lt;!-- SCPP v0.3.0</code> to confirm new code is live.</li>
             </ol>
         </div>
     </div>

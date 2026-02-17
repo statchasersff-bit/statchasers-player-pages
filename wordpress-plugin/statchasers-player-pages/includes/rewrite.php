@@ -1,13 +1,92 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-add_action( 'init', 'sc_register_rewrite_rules' );
+/**
+ * Register rewrite rules at priority 9 (before default 10).
+ */
+add_action( 'init', 'sc_register_rewrite_rules', 9 );
+
+/**
+ * Register custom query vars.
+ */
 add_filter( 'query_vars', 'sc_register_query_vars' );
-add_action( 'parse_request', 'sc_parse_request_fallback', 1 );
+
+/**
+ * Intercept WP request parsing to force our query vars
+ * even when WP resolves to a real page slug like nfl/players.
+ */
+add_action( 'parse_request', 'sc_parse_request', 1 );
+
+/**
+ * Hijack the main query to load container page context.
+ */
 add_action( 'pre_get_posts', 'sc_hijack_query', 1 );
+
+/**
+ * Force posts array to container page after DB query runs.
+ */
 add_filter( 'the_posts', 'sc_force_container_posts', 10, 2 );
+
+/**
+ * Inject plugin HTML into the container page content.
+ */
 add_filter( 'the_content', 'sc_inject_content', 99 );
+
+/**
+ * Fix body classes for Divi.
+ */
 add_filter( 'body_class', 'sc_add_body_class' );
+
+
+/* ─── Rewrite Rules ─── */
+
+function sc_register_rewrite_rules() {
+    add_rewrite_rule( '^nfl/players/?$', 'index.php?sc_players_index=1', 'top' );
+    add_rewrite_rule( '^nfl/players/([^/]+)/?$', 'index.php?sc_player_slug=$matches[1]', 'top' );
+}
+
+function sc_register_query_vars( $vars ) {
+    $vars[] = 'sc_players_index';
+    $vars[] = 'sc_player_slug';
+    return $vars;
+}
+
+
+/* ─── Parse Request Fallback ─── */
+
+function sc_parse_request( $wp ) {
+    $path = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+    $path = trim( parse_url( $path, PHP_URL_PATH ), '/' );
+
+    if ( preg_match( '#^nfl/players/([^/]+)$#', $path, $m ) ) {
+        $wp->query_vars['sc_player_slug'] = sanitize_title( $m[1] );
+        unset(
+            $wp->query_vars['pagename'],
+            $wp->query_vars['name'],
+            $wp->query_vars['page_id'],
+            $wp->query_vars['p'],
+            $wp->query_vars['post_type'],
+            $wp->query_vars['attachment']
+        );
+        return;
+    }
+
+    if ( preg_match( '#^nfl/players/?$#', $path ) ) {
+        $wp->query_vars['sc_players_index'] = '1';
+        unset(
+            $wp->query_vars['pagename'],
+            $wp->query_vars['name'],
+            $wp->query_vars['page_id'],
+            $wp->query_vars['p'],
+            $wp->query_vars['post_type'],
+            $wp->query_vars['attachment']
+        );
+        return;
+    }
+}
+
+
+/* ─── Route Detection Helper ─── */
 
 function sc_detect_route() {
     $slug     = get_query_var( 'sc_player_slug', '' );
@@ -20,31 +99,11 @@ function sc_detect_route() {
         return array( 'route' => 'player', 'slug' => $slug );
     }
 
-    $request = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
-    $path    = trim( parse_url( $request, PHP_URL_PATH ), '/' );
-
-    if ( preg_match( '#^nfl/players/([^/]+)$#', $path, $m ) ) {
-        return array( 'route' => 'player', 'slug' => $m[1] );
-    }
-    if ( preg_match( '#^nfl/players/?$#', $path ) ) {
-        return array( 'route' => 'index', 'slug' => '' );
-    }
-
     return null;
 }
 
-function sc_parse_request_fallback( $wp ) {
-    $request = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
-    $path    = trim( parse_url( $request, PHP_URL_PATH ), '/' );
 
-    if ( preg_match( '#^nfl/players/([^/]+)$#', $path, $m ) ) {
-        $wp->query_vars['sc_player_slug'] = $m[1];
-        unset( $wp->query_vars['pagename'], $wp->query_vars['name'], $wp->query_vars['page_id'] );
-    } elseif ( preg_match( '#^nfl/players/?$#', $path ) ) {
-        $wp->query_vars['sc_players_index'] = '1';
-        unset( $wp->query_vars['pagename'], $wp->query_vars['name'], $wp->query_vars['page_id'] );
-    }
-}
+/* ─── Body Class ─── */
 
 function sc_add_body_class( $classes ) {
     $r = sc_detect_route();
@@ -61,24 +120,8 @@ function sc_add_body_class( $classes ) {
     return $classes;
 }
 
-function sc_register_rewrite_rules() {
-    add_rewrite_rule(
-        '^nfl/players/([^/]+)/?$',
-        'index.php?sc_player_slug=$matches[1]',
-        'top'
-    );
-    add_rewrite_rule(
-        '^nfl/players/?$',
-        'index.php?sc_players_index=1',
-        'top'
-    );
-}
 
-function sc_register_query_vars( $vars ) {
-    $vars[] = 'sc_player_slug';
-    $vars[] = 'sc_players_index';
-    return $vars;
-}
+/* ─── Query Hijacking ─── */
 
 function sc_hijack_query( $query ) {
     if ( is_admin() ) return;
@@ -87,21 +130,10 @@ function sc_hijack_query( $query ) {
     $r = sc_detect_route();
     if ( ! $r ) return;
 
-    if ( $r['route'] === 'player' && $r['slug'] ) {
-        $player = sc_get_player_by_slug( $r['slug'] );
-        if ( ! $player ) {
-            $query->set_404();
-            status_header( 404 );
-            return;
-        }
-    }
-
     $container_id = (int) get_option( 'scpp_container_page_id', 0 );
     $container_post = $container_id ? get_post( $container_id ) : null;
 
     if ( ! $container_post || $container_post->post_type !== 'page' || $container_post->post_status !== 'publish' ) {
-        $query->set_404();
-        status_header( 404 );
         return;
     }
 
@@ -130,6 +162,9 @@ function sc_hijack_query( $query ) {
     $query->queried_object_id = $container_post->ID;
 }
 
+
+/* ─── Force Container Posts ─── */
+
 function sc_force_container_posts( $posts, $query ) {
     if ( is_admin() ) return $posts;
     if ( ! $query->is_main_query() ) return $posts;
@@ -141,7 +176,6 @@ function sc_force_container_posts( $posts, $query ) {
     $container_post = $container_id ? get_post( $container_id ) : null;
 
     if ( ! $container_post || $container_post->post_type !== 'page' || $container_post->post_status !== 'publish' ) {
-        $query->set_404();
         return $posts;
     }
 
@@ -168,23 +202,26 @@ function sc_force_container_posts( $posts, $query ) {
     return array( $container_post );
 }
 
+
+/* ─── Content Injection ─── */
+
 function sc_inject_content( $content ) {
     $r = sc_detect_route();
     if ( ! $r ) return $content;
 
-    $container_id = (int) get_option( 'scpp_container_page_id', 0 );
-    if ( ! $container_id ) return $content;
-
-    if ( ! is_page() ) return $content;
-    if ( (int) get_queried_object_id() !== $container_id ) return $content;
     if ( ! in_the_loop() ) return $content;
+
+    $container_id = (int) get_option( 'scpp_container_page_id', 0 );
+    if ( $container_id && (int) get_queried_object_id() !== $container_id ) {
+        return $content;
+    }
 
     $route = $r['route'];
     $slug  = $r['slug'];
 
-    $debug = '<!-- SCPP v0.3.0: container page ID=' . $container_id . ', route=' . esc_html( $route );
+    $debug = '<!-- SCPP v0.3.0: container=' . $container_id . ' route=' . esc_html( $route );
     if ( $slug ) {
-        $debug .= ', slug=' . esc_html( $slug );
+        $debug .= ' slug=' . esc_html( $slug );
     }
     $debug .= ' -->';
 
@@ -198,14 +235,17 @@ function sc_inject_content( $content ) {
         $player = sc_get_player_by_slug( $slug );
         if ( $player ) {
             set_query_var( 'sc_player', $player );
-            ob_start();
-            include SC_PLUGIN_DIR . 'templates/player.php';
-            return $debug . "\n" . ob_get_clean();
         }
+        ob_start();
+        include SC_PLUGIN_DIR . 'templates/player.php';
+        return $debug . "\n" . ob_get_clean();
     }
 
     return $content;
 }
+
+
+/* ─── Rewrite Diagnostics Helper ─── */
 
 function sc_get_rewrite_diagnostics() {
     global $wp_rewrite;
