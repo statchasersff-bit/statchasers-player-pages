@@ -15,22 +15,84 @@ function sc_add_admin_page() {
 }
 
 function sc_handle_admin_actions() {
-    if ( ! isset( $_POST['sc_refresh_players'] ) ) return;
-    if ( ! check_admin_referer( 'sc_refresh_players_nonce', 'sc_nonce' ) ) return;
     if ( ! current_user_can( 'manage_options' ) ) return;
 
-    $result = sc_refresh_players_data();
-    if ( $result ) {
-        add_settings_error( 'statchasers', 'refresh_success', 'Player index refreshed successfully!', 'success' );
-    } else {
-        add_settings_error( 'statchasers', 'refresh_error', 'Failed to refresh player index. Check the error log.', 'error' );
+    if ( isset( $_POST['sc_refresh_players'] ) ) {
+        if ( ! check_admin_referer( 'sc_admin_nonce', 'sc_nonce' ) ) return;
+        $result = sc_refresh_players_data();
+        if ( $result ) {
+            add_settings_error( 'statchasers', 'refresh_success', 'Player index refreshed successfully!', 'success' );
+        } else {
+            add_settings_error( 'statchasers', 'refresh_error', 'Failed to refresh player index. Check the error log.', 'error' );
+        }
+    }
+
+    if ( isset( $_POST['sc_save_container_page'] ) ) {
+        if ( ! check_admin_referer( 'sc_admin_nonce', 'sc_nonce' ) ) return;
+        $page_id = isset( $_POST['scpp_container_page_id'] ) ? (int) $_POST['scpp_container_page_id'] : 0;
+        update_option( 'scpp_container_page_id', $page_id );
+        add_settings_error( 'statchasers', 'container_saved', 'Container page saved.', 'success' );
+    }
+
+    if ( isset( $_POST['sc_auto_create_pages'] ) ) {
+        if ( ! check_admin_referer( 'sc_admin_nonce', 'sc_nonce' ) ) return;
+        $created = sc_auto_create_container_pages();
+        if ( $created ) {
+            add_settings_error( 'statchasers', 'pages_created', 'Container pages created and saved. Please re-save your Permalinks.', 'success' );
+        } else {
+            add_settings_error( 'statchasers', 'pages_exists', 'Container pages already exist or could not be created.', 'warning' );
+        }
     }
 }
 
+function sc_auto_create_container_pages() {
+    $nfl_page = get_page_by_path( 'nfl' );
+    $nfl_id = 0;
+    if ( $nfl_page && $nfl_page->post_status === 'publish' ) {
+        $nfl_id = $nfl_page->ID;
+    } else {
+        $nfl_id = wp_insert_post( array(
+            'post_title'  => 'NFL',
+            'post_name'   => 'nfl',
+            'post_status' => 'publish',
+            'post_type'   => 'page',
+            'post_content' => '',
+        ) );
+        if ( is_wp_error( $nfl_id ) || ! $nfl_id ) {
+            return false;
+        }
+    }
+
+    $players_page = get_page_by_path( 'nfl/players' );
+    $players_id = 0;
+    if ( $players_page && $players_page->post_status === 'publish' ) {
+        $players_id = $players_page->ID;
+    } else {
+        $players_id = wp_insert_post( array(
+            'post_title'  => 'Players',
+            'post_name'   => 'players',
+            'post_status' => 'publish',
+            'post_type'   => 'page',
+            'post_parent' => $nfl_id,
+            'post_content' => '',
+        ) );
+        if ( is_wp_error( $players_id ) || ! $players_id ) {
+            return false;
+        }
+    }
+
+    update_option( 'scpp_container_page_id', $players_id );
+    flush_rewrite_rules();
+    return true;
+}
+
 function sc_render_admin_page() {
-    $last_refresh = get_option( SC_LAST_REFRESH_OPTION, 'Never' );
-    $player_count = get_option( SC_PLAYERS_COUNT_OPTION, 0 );
-    $next_cron = wp_next_scheduled( SC_CRON_HOOK );
+    $last_refresh    = get_option( SC_LAST_REFRESH_OPTION, 'Never' );
+    $player_count    = get_option( SC_PLAYERS_COUNT_OPTION, 0 );
+    $next_cron       = wp_next_scheduled( SC_CRON_HOOK );
+    $container_id    = (int) get_option( 'scpp_container_page_id', 0 );
+    $container_post  = $container_id ? get_post( $container_id ) : null;
+    $pages           = get_pages( array( 'post_status' => 'publish', 'sort_column' => 'post_title' ) );
     ?>
     <div class="wrap">
         <h1>StatChasers Player Pages</h1>
@@ -38,6 +100,46 @@ function sc_render_admin_page() {
         <?php settings_errors( 'statchasers' ); ?>
 
         <div class="card" style="max-width: 600px; padding: 20px;">
+            <h2>Container Page</h2>
+            <p style="color: #666;">Select the WordPress page that will host player content. Plugin routes (<code>/nfl/players/</code>) render inside this page's template, so Divi uses the correct header/footer and full-width layout.</p>
+            <form method="post">
+                <?php wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' ); ?>
+                <table class="form-table">
+                    <tr>
+                        <th><label for="scpp_container_page_id">Container Page</label></th>
+                        <td>
+                            <select name="scpp_container_page_id" id="scpp_container_page_id" style="min-width: 300px;">
+                                <option value="0">— Select a page —</option>
+                                <?php foreach ( $pages as $pg ) : ?>
+                                    <option value="<?php echo esc_attr( $pg->ID ); ?>" <?php selected( $container_id, $pg->ID ); ?>>
+                                        <?php echo esc_html( $pg->post_title ); ?> (ID: <?php echo esc_html( $pg->ID ); ?>)
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php if ( $container_post ) : ?>
+                                <p class="description" style="margin-top: 6px;">
+                                    Currently using: <strong><?php echo esc_html( $container_post->post_title ); ?></strong>
+                                    (<?php echo esc_html( get_page_uri( $container_post ) ); ?>)
+                                </p>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                </table>
+                <p>
+                    <input type="submit" name="sc_save_container_page" class="button button-primary" value="Save Container Page" />
+                </p>
+            </form>
+            <hr style="margin: 16px 0;" />
+            <form method="post">
+                <?php wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' ); ?>
+                <p style="color: #666;">Or auto-create the required pages (NFL &rarr; Players):</p>
+                <p>
+                    <input type="submit" name="sc_auto_create_pages" class="button" value="Auto-Create Container Pages" />
+                </p>
+            </form>
+        </div>
+
+        <div class="card" style="max-width: 600px; padding: 20px; margin-top: 20px;">
             <h2>Player Index Status</h2>
             <table class="form-table">
                 <tr>
@@ -54,7 +156,7 @@ function sc_render_admin_page() {
                 </tr>
             </table>
             <form method="post">
-                <?php wp_nonce_field( 'sc_refresh_players_nonce', 'sc_nonce' ); ?>
+                <?php wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' ); ?>
                 <p>
                     <input type="submit" name="sc_refresh_players" class="button button-primary" value="Refresh Player Index" />
                 </p>
@@ -72,11 +174,11 @@ function sc_render_admin_page() {
         </div>
 
         <div class="card" style="max-width: 600px; padding: 20px; margin-top: 20px;">
-            <h2>Installation Notes</h2>
+            <h2>Setup Steps</h2>
             <ol style="padding-left: 20px;">
-                <li>After activating, go to <strong>Settings &gt; Permalinks</strong> and click <strong>Save Changes</strong> to flush rewrite rules.</li>
-                <li>Player data is fetched automatically on activation and refreshed daily.</li>
-                <li>Data is stored in <code>wp-content/uploads/statchasers/players.json</code>.</li>
+                <li>Click <strong>Auto-Create Container Pages</strong> above (or select an existing page).</li>
+                <li>Go to <strong>Settings &gt; Permalinks</strong> and click <strong>Save Changes</strong>.</li>
+                <li>Visit <a href="<?php echo esc_url( home_url( '/nfl/players/' ) ); ?>" target="_blank">/nfl/players/</a> to verify.</li>
                 <li>Add <code>https://statchasers.com/sitemap-players.xml</code> to Google Search Console.</li>
             </ol>
         </div>
