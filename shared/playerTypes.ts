@@ -1,9 +1,29 @@
+export interface GameLogStats {
+  pts_ppr: number;
+  pts_half_ppr?: number | null;
+  pass_att?: number;
+  pass_cmp?: number;
+  pass_yd?: number;
+  pass_td?: number;
+  pass_int?: number;
+  rush_att?: number;
+  rush_yd?: number;
+  rush_td?: number;
+  rec_tgt?: number;
+  rec?: number;
+  rec_yd?: number;
+  rec_td?: number;
+  fgm?: number;
+  fga?: number;
+  fgm_lng?: number;
+  xpm?: number;
+  xpa?: number;
+}
+
 export interface GameLogEntry {
   week: number;
   opp: string;
-  result: string;
-  fantasyPts: number;
-  detailsUrl?: string;
+  stats: GameLogStats;
 }
 
 export interface NewsEntry {
