@@ -3,143 +3,131 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 $player = get_query_var( 'sc_player' );
 if ( ! $player ) {
-    global $wp_query;
-    $wp_query->set_404();
-    status_header( 404 );
-    nocache_headers();
-    include get_404_template();
-    exit;
+    echo '<p>Player not found.</p>';
+    return;
 }
-
-get_header();
 ?>
 <!-- StatChasers Player Pages Template -->
-<div id="main-content">
-  <article id="post-0" <?php post_class('et_pb_post'); ?>>
-    <div class="entry-content">
-      <div class="sc-players">
+<div class="sc-players">
 
-        <nav class="sc-breadcrumb">
-          <a href="<?php echo esc_url( home_url( '/nfl/players/' ) ); ?>">&larr; Back to Player Search</a>
-        </nav>
+  <nav class="sc-breadcrumb">
+    <a href="<?php echo esc_url( home_url( '/nfl/players/' ) ); ?>">&larr; Back to Player Search</a>
+  </nav>
 
-        <header class="sc-player-header">
-          <h1 class="sc-page-title"><?php echo esc_html( $player['name'] ); ?></h1>
-          <p class="sc-player-meta-line">
-            <?php
-            $parts = array();
-            if ( $player['position'] ) $parts[] = $player['position'];
-            $parts[] = $player['team'] ? $player['team'] : 'Free Agent';
-            echo esc_html( implode( ' — ', $parts ) );
-            ?>
-          </p>
-          <?php if ( $player['status'] ) : ?>
-            <span class="sc-badge sc-badge-status"><?php echo esc_html( $player['status'] ); ?></span>
-          <?php endif; ?>
-          <?php if ( $player['injury_status'] ) : ?>
-            <span class="sc-badge sc-badge-injury"><?php echo esc_html( $player['injury_status'] ); ?></span>
-          <?php endif; ?>
-        </header>
+  <header class="sc-player-header">
+    <h1 class="sc-page-title"><?php echo esc_html( $player['name'] ); ?></h1>
+    <p class="sc-player-meta-line">
+      <?php
+      $parts = array();
+      if ( $player['position'] ) $parts[] = $player['position'];
+      $parts[] = $player['team'] ? $player['team'] : 'Free Agent';
+      echo esc_html( implode( ' — ', $parts ) );
+      ?>
+    </p>
+    <?php if ( $player['status'] ) : ?>
+      <span class="sc-badge sc-badge-status"><?php echo esc_html( $player['status'] ); ?></span>
+    <?php endif; ?>
+    <?php if ( $player['injury_status'] ) : ?>
+      <span class="sc-badge sc-badge-injury"><?php echo esc_html( $player['injury_status'] ); ?></span>
+    <?php endif; ?>
+  </header>
 
-        <?php if ( $player['injury_status'] ) : ?>
-          <div class="sc-injury-alert">
-            <strong>Injury Status:</strong>
-            <span><?php echo esc_html( $player['injury_status'] ); ?></span>
-            <p>This player is currently listed with an injury designation.</p>
-          </div>
-        <?php endif; ?>
-
-        <div class="sc-card sc-snapshot">
-          <h2 class="sc-card-title">Player Snapshot</h2>
-          <div class="sc-snapshot-grid">
-            <?php
-            $snapshot_items = array(
-                'Team'     => $player['team'] ? $player['team'] : 'FA',
-                'Position' => $player['position'] ? $player['position'] : 'N/A',
-                'Age'      => $player['age'] ? $player['age'] : 'N/A',
-                'Height'   => $player['height'] ? $player['height'] : 'N/A',
-                'Weight'   => $player['weight'] ? $player['weight'] . ' lbs' : 'N/A',
-                'Status'   => $player['status'] ? $player['status'] : 'N/A',
-            );
-            foreach ( $snapshot_items as $label => $value ) :
-            ?>
-              <div class="sc-snapshot-item">
-                <span class="sc-snapshot-label"><?php echo esc_html( $label ); ?></span>
-                <span class="sc-snapshot-value"><?php echo esc_html( $value ); ?></span>
-              </div>
-            <?php endforeach; ?>
-          </div>
-        </div>
-
-        <div class="sc-sections-grid">
-          <div class="sc-card">
-            <h2 class="sc-card-title">Trends</h2>
-            <p class="sc-card-placeholder">Week-over-week fantasy scoring trends for <?php echo esc_html( $player['name'] ); ?> coming soon.</p>
-          </div>
-          <div class="sc-card">
-            <h2 class="sc-card-title">Game Log</h2>
-            <p class="sc-card-placeholder">Game-by-game stats for <?php echo esc_html( $player['name'] ); ?> will be available once the season begins.</p>
-          </div>
-          <div class="sc-card">
-            <h2 class="sc-card-title">Rankings &amp; Projections</h2>
-            <p class="sc-card-placeholder">Expert rankings and season projections for <?php echo esc_html( $player['name'] ); ?> coming soon.</p>
-          </div>
-          <div class="sc-card">
-            <h2 class="sc-card-title">News &amp; Articles</h2>
-            <p class="sc-card-placeholder">News and analysis related to <?php echo esc_html( $player['name'] ); ?> will appear here as published.</p>
-          </div>
-        </div>
-
-        <?php
-        $players_all = sc_get_players();
-        $related = array();
-        foreach ( $players_all as $rp ) {
-            if ( $rp['position'] === $player['position'] && $rp['slug'] !== $player['slug'] && $rp['team'] !== 'FA' ) {
-                $related[] = $rp;
-            }
-        }
-        shuffle( $related );
-        $related = array_slice( $related, 0, 6 );
-        if ( ! empty( $related ) ) :
-        ?>
-        <div class="sc-card sc-related">
-          <h2 class="sc-card-title">Related <?php echo esc_html( $player['position'] ); ?>s</h2>
-          <div class="sc-related-grid">
-            <?php foreach ( $related as $rp ) : ?>
-              <a href="<?php echo esc_url( home_url( '/nfl/players/' . $rp['slug'] . '/' ) ); ?>" class="sc-related-link">
-                <div class="sc-related-icon"><span><?php echo esc_html( $rp['position'] ); ?></span></div>
-                <div>
-                  <strong class="sc-related-name"><?php echo esc_html( $rp['name'] ); ?></strong>
-                  <span class="sc-related-team"><?php echo esc_html( $rp['team'] ); ?></span>
-                </div>
-              </a>
-            <?php endforeach; ?>
-          </div>
-        </div>
-        <?php endif; ?>
-
-        <div class="sc-nav-grid">
-          <a href="<?php echo esc_url( home_url( '/nfl/players/' ) ); ?>" class="sc-nav-link">
-            <strong>Player Directory</strong>
-            <span>Search all players</span>
-          </a>
-          <a href="<?php echo esc_url( home_url( '/rankings/' ) ); ?>" class="sc-nav-link">
-            <strong>Rankings</strong>
-            <span>Fantasy football rankings</span>
-          </a>
-          <a href="<?php echo esc_url( home_url( '/tools/' ) ); ?>" class="sc-nav-link">
-            <strong>Tools</strong>
-            <span>Analysis tools</span>
-          </a>
-          <a href="<?php echo esc_url( home_url( '/articles/' ) ); ?>" class="sc-nav-link">
-            <strong>Articles</strong>
-            <span>Expert analysis</span>
-          </a>
-        </div>
-
-      </div>
+  <?php if ( $player['injury_status'] ) : ?>
+    <div class="sc-injury-alert">
+      <strong>Injury Status:</strong>
+      <span><?php echo esc_html( $player['injury_status'] ); ?></span>
+      <p>This player is currently listed with an injury designation.</p>
     </div>
-  </article>
+  <?php endif; ?>
+
+  <div class="sc-card sc-snapshot">
+    <h2 class="sc-card-title">Player Snapshot</h2>
+    <div class="sc-snapshot-grid">
+      <?php
+      $snapshot_items = array(
+          'Team'     => $player['team'] ? $player['team'] : 'FA',
+          'Position' => $player['position'] ? $player['position'] : 'N/A',
+          'Age'      => $player['age'] ? $player['age'] : 'N/A',
+          'Height'   => $player['height'] ? $player['height'] : 'N/A',
+          'Weight'   => $player['weight'] ? $player['weight'] . ' lbs' : 'N/A',
+          'Status'   => $player['status'] ? $player['status'] : 'N/A',
+      );
+      foreach ( $snapshot_items as $label => $value ) :
+      ?>
+        <div class="sc-snapshot-item">
+          <span class="sc-snapshot-label"><?php echo esc_html( $label ); ?></span>
+          <span class="sc-snapshot-value"><?php echo esc_html( $value ); ?></span>
+        </div>
+      <?php endforeach; ?>
+    </div>
+  </div>
+
+  <div class="sc-sections-grid">
+    <div class="sc-card">
+      <h2 class="sc-card-title">Trends</h2>
+      <p class="sc-card-placeholder">Week-over-week fantasy scoring trends for <?php echo esc_html( $player['name'] ); ?> coming soon.</p>
+    </div>
+    <div class="sc-card">
+      <h2 class="sc-card-title">Game Log</h2>
+      <p class="sc-card-placeholder">Game-by-game stats for <?php echo esc_html( $player['name'] ); ?> will be available once the season begins.</p>
+    </div>
+    <div class="sc-card">
+      <h2 class="sc-card-title">Rankings &amp; Projections</h2>
+      <p class="sc-card-placeholder">Expert rankings and season projections for <?php echo esc_html( $player['name'] ); ?> coming soon.</p>
+    </div>
+    <div class="sc-card">
+      <h2 class="sc-card-title">News &amp; Articles</h2>
+      <p class="sc-card-placeholder">News and analysis related to <?php echo esc_html( $player['name'] ); ?> will appear here as published.</p>
+    </div>
+  </div>
+
+  <?php
+  $players_all = sc_get_players();
+  $related = array();
+  foreach ( $players_all as $rp ) {
+      if ( $rp['position'] === $player['position'] && $rp['slug'] !== $player['slug'] && $rp['team'] !== 'FA' ) {
+          $related[] = $rp;
+      }
+  }
+  shuffle( $related );
+  $related = array_slice( $related, 0, 6 );
+  if ( ! empty( $related ) ) :
+  ?>
+  <div class="sc-card sc-related">
+    <h2 class="sc-card-title">Related <?php echo esc_html( $player['position'] ); ?>s</h2>
+    <div class="sc-related-grid">
+      <?php foreach ( $related as $rp ) : ?>
+        <a href="<?php echo esc_url( home_url( '/nfl/players/' . $rp['slug'] . '/' ) ); ?>" class="sc-related-link">
+          <div class="sc-related-icon"><span><?php echo esc_html( $rp['position'] ); ?></span></div>
+          <div>
+            <strong class="sc-related-name"><?php echo esc_html( $rp['name'] ); ?></strong>
+            <span class="sc-related-team"><?php echo esc_html( $rp['team'] ); ?></span>
+          </div>
+        </a>
+      <?php endforeach; ?>
+    </div>
+  </div>
+  <?php endif; ?>
+
+  <div class="sc-nav-grid">
+    <a href="<?php echo esc_url( home_url( '/nfl/players/' ) ); ?>" class="sc-nav-link">
+      <strong>Player Directory</strong>
+      <span>Search all players</span>
+    </a>
+    <a href="<?php echo esc_url( home_url( '/rankings/' ) ); ?>" class="sc-nav-link">
+      <strong>Rankings</strong>
+      <span>Fantasy football rankings</span>
+    </a>
+    <a href="<?php echo esc_url( home_url( '/tools/' ) ); ?>" class="sc-nav-link">
+      <strong>Tools</strong>
+      <span>Analysis tools</span>
+    </a>
+    <a href="<?php echo esc_url( home_url( '/articles/' ) ); ?>" class="sc-nav-link">
+      <strong>Articles</strong>
+      <span>Expert analysis</span>
+    </a>
+  </div>
+
 </div>
 
 <style>
@@ -189,5 +177,3 @@ get_header();
     .sc-players .sc-nav-link strong { display: block; color: #111827; }
     .sc-players .sc-nav-link span { font-size: 0.85em; color: #6b7280; }
 </style>
-
-<?php get_footer(); ?>

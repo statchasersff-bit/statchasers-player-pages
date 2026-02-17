@@ -45,3 +45,13 @@ function sc_deactivate() {
 }
 
 add_action( SC_CRON_HOOK, 'sc_refresh_players_data' );
+
+add_action( 'admin_notices', function() {
+    if ( ! current_user_can( 'manage_options' ) ) return;
+    $container_id = (int) get_option( 'scpp_container_page_id', 0 );
+    if ( $container_id ) return;
+    echo '<div class="notice notice-warning"><p>';
+    echo '<strong>StatChasers Player Pages:</strong> No container page is set. ';
+    echo 'Player pages will return 404 until you <a href="' . esc_url( admin_url( 'tools.php?page=statchasers-players' ) ) . '">configure a container page</a>.';
+    echo '</p></div>';
+} );

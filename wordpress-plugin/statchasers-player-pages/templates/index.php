@@ -1,37 +1,30 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
-get_header();
 ?>
 <!-- StatChasers Player Pages Template -->
-<div id="main-content">
-  <article id="post-0" <?php post_class('et_pb_post'); ?>>
-    <div class="entry-content">
-      <div class="sc-players">
+<div class="sc-players">
 
-        <header class="sc-header">
-          <h1 class="sc-page-title">NFL Player Database</h1>
-          <p class="sc-page-subtitle">
-            Search over 4,000 NFL players. Click any player for their full fantasy profile.
-          </p>
-        </header>
+  <header class="sc-header">
+    <h1 class="sc-page-title">NFL Player Database</h1>
+    <p class="sc-page-subtitle">
+      Search over 4,000 NFL players. Click any player for their full fantasy profile.
+    </p>
+  </header>
 
-        <div class="sc-search-wrap">
-          <input
-            type="search"
-            id="sc-search-input"
-            placeholder="Search players (e.g., Tyreek Hill)"
-            autocomplete="off"
-            class="sc-search-input"
-          />
-        </div>
+  <div class="sc-search-wrap">
+    <input
+      type="search"
+      id="sc-search-input"
+      placeholder="Search players (e.g., Tyreek Hill)"
+      autocomplete="off"
+      class="sc-search-input"
+    />
+  </div>
 
-        <p id="sc-results-count" class="sc-results-count">Type a name or team to search</p>
+  <p id="sc-results-count" class="sc-results-count">Type a name or team to search</p>
 
-        <div id="sc-results"></div>
+  <div id="sc-results"></div>
 
-      </div>
-    </div>
-  </article>
 </div>
 
 <style>
@@ -84,5 +77,3 @@ get_header();
     };
 </script>
 <script src="<?php echo esc_url( SC_PLUGIN_URL . 'assets/players.js' ); ?>"></script>
-
-<?php get_footer(); ?>
