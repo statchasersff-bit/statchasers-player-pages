@@ -4,49 +4,39 @@ get_header();
 ?>
 <!-- StatChasers Player Pages Template -->
 <div id="main-content">
-  <div class="container">
-    <div id="content-area" class="clearfix">
-      <div id="left-area">
+  <article id="post-0" <?php post_class('et_pb_post'); ?>>
+    <div class="entry-content">
+      <div class="sc-players">
 
-        <div class="sc-players">
+        <header class="sc-header">
+          <h1 class="sc-page-title">NFL Player Database</h1>
+          <p class="sc-page-subtitle">
+            Search over 4,000 NFL players. Click any player for their full fantasy profile.
+          </p>
+        </header>
 
-          <header class="sc-header">
-            <h1 class="sc-page-title">NFL Player Database</h1>
-            <p class="sc-page-subtitle">
-              Search over 4,000 NFL players. Click any player for their full fantasy profile.
-            </p>
-          </header>
-
-          <div class="sc-search-wrap">
-            <input
-              type="search"
-              id="sc-search-input"
-              placeholder="Search players (e.g., Tyreek Hill)"
-              autocomplete="off"
-              class="sc-search-input"
-            />
-          </div>
-
-          <p id="sc-results-count" class="sc-results-count">Type a name or team to search</p>
-
-          <div id="sc-results"></div>
-
+        <div class="sc-search-wrap">
+          <input
+            type="search"
+            id="sc-search-input"
+            placeholder="Search players (e.g., Tyreek Hill)"
+            autocomplete="off"
+            class="sc-search-input"
+          />
         </div>
+
+        <p id="sc-results-count" class="sc-results-count">Type a name or team to search</p>
+
+        <div id="sc-results"></div>
 
       </div>
     </div>
-  </div>
+  </article>
 </div>
 
 <style>
-    body.sc-players-page #main-content { padding-top: 0 !important; margin-top: 0 !important; }
-    body.sc-players-page #main-content .container { width: 100% !important; max-width: 1200px !important; padding-left: 30px !important; padding-right: 30px !important; }
-    body.sc-players-page #content-area { width: 100% !important; float: none !important; }
-    body.sc-players-page #left-area { width: 100% !important; float: none !important; padding: 0 !important; margin: 0 !important; }
-    body.sc-players-page #sidebar { display: none !important; }
-    body.sc-players-page .et_pb_gutters3 .et_pb_column { width: 100% !important; }
-
-    .sc-players { max-width: 960px; margin: 0 auto; padding: 30px 0; box-sizing: border-box; }
+    .sc-players { max-width: 1100px; margin: 0 auto; padding: 24px 16px; box-sizing: border-box; }
+    @media (min-width: 1200px) { .sc-players { max-width: 1200px; } }
     .sc-players .sc-header { margin-bottom: 32px; }
     .sc-players .sc-page-title { font-size: 2em; margin: 0 0 8px 0; padding: 0; line-height: 1.3; }
     .sc-players .sc-page-subtitle { color: #6b7280; margin: 0; font-size: 1em; }
