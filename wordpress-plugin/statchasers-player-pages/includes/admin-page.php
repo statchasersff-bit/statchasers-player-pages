@@ -174,6 +174,51 @@ function sc_render_admin_page() {
         </div>
 
         <div class="card" style="max-width: 600px; padding: 20px; margin-top: 20px;">
+            <h2>Rewrite Diagnostics</h2>
+            <p style="color: #666;">This shows whether WordPress has registered the plugin's rewrite rules. If empty, deactivate/reactivate the plugin and re-save Permalinks.</p>
+            <table class="form-table">
+                <tr>
+                    <th>Container Page ID</th>
+                    <td><code><?php echo esc_html( $container_id ? $container_id : 'NOT SET' ); ?></code>
+                    <?php if ( $container_post ) : ?>
+                        &mdash; <strong><?php echo esc_html( $container_post->post_title ); ?></strong>
+                        (type: <?php echo esc_html( $container_post->post_type ); ?>, status: <?php echo esc_html( $container_post->post_status ); ?>)
+                    <?php elseif ( $container_id ) : ?>
+                        &mdash; <span style="color: red;">Post ID <?php echo esc_html( $container_id ); ?> not found or invalid!</span>
+                    <?php endif; ?>
+                    </td>
+                </tr>
+                <?php
+                $sc_rules = sc_get_rewrite_diagnostics();
+                ?>
+                <tr>
+                    <th>Registered Rewrite Rules</th>
+                    <td>
+                        <?php if ( empty( $sc_rules ) ) : ?>
+                            <span style="color: red;">No StatChasers rewrite rules found! Deactivate/reactivate and re-save Permalinks.</span>
+                        <?php else : ?>
+                            <?php foreach ( $sc_rules as $pattern => $target ) : ?>
+                                <code><?php echo esc_html( $pattern ); ?></code><br/>
+                                &rarr; <code><?php echo esc_html( $target ); ?></code><br/><br/>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Query Vars Registered</th>
+                    <td>
+                        sc_player_slug: <code><?php echo in_array( 'sc_player_slug', $GLOBALS['wp']->public_query_vars ?? array() ) ? 'YES' : 'NO'; ?></code><br/>
+                        sc_players_index: <code><?php echo in_array( 'sc_players_index', $GLOBALS['wp']->public_query_vars ?? array() ) ? 'YES' : 'NO'; ?></code>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Permalink Structure</th>
+                    <td><code><?php echo esc_html( get_option( 'permalink_structure', '(default)' ) ); ?></code></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card" style="max-width: 600px; padding: 20px; margin-top: 20px;">
             <h2>Setup Steps</h2>
             <ol style="padding-left: 20px;">
                 <li>Click <strong>Auto-Create Container Pages</strong> above (or select an existing page).</li>

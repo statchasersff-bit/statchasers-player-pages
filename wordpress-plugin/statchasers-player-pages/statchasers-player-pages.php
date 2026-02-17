@@ -3,7 +3,7 @@
  * Plugin Name: StatChasers Player Pages
  * Plugin URI:  https://statchasers.com
  * Description: Programmatic SEO-friendly NFL player pages powered by the Sleeper API. Adds /nfl/players/ directory and /nfl/players/{slug}/ profile pages using your theme's header/footer.
- * Version:     0.2.0
+ * Version:     0.3.0
  * Author:      StatChasers
  * Author URI:  https://statchasers.com
  * License:     GPL-2.0+
