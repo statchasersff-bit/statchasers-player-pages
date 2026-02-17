@@ -14,12 +14,27 @@ const POSITION_LIMITS = {
   DEF: 1,
 };
 
+const TEAM_ALIAS_MAP = {
+  JAC: 'JAX',
+  WSH: 'WAS',
+  OAK: 'LV',
+  STL: 'LAR',
+  SD: 'LAC',
+  LA: 'LAR',
+};
+
 const NFL_TEAMS = [
   'ARI','ATL','BAL','BUF','CAR','CHI','CIN','CLE',
   'DAL','DEN','DET','GB','HOU','IND','JAX','KC',
   'LAC','LAR','LV','MIA','MIN','NE','NO','NYG',
   'NYJ','PHI','PIT','SEA','SF','TB','TEN','WAS',
 ];
+
+function normalizeTeam(abbr) {
+  if (!abbr) return 'FA';
+  const upper = abbr.toUpperCase().trim();
+  return TEAM_ALIAS_MAP[upper] || upper;
+}
 
 function rankPlayers(players) {
   return players.sort((a, b) => {
@@ -63,7 +78,7 @@ function main() {
   }
 
   for (const player of allPlayers) {
-    const team = player.team;
+    const team = normalizeTeam(player.team);
     const pos = player.position;
     if (!team || team === 'FA' || !pos) continue;
     if (!NFL_TEAMS.includes(team)) continue;
@@ -87,7 +102,7 @@ function main() {
         id: p.id,
         name: p.name,
         slug: p.slug,
-        team: p.team,
+        team: normalizeTeam(p.team),
         position: p.position,
         depth_chart_order: p.depth_chart_order,
         years_exp: p.years_exp,

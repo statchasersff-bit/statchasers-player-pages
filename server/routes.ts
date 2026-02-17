@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import fs from "fs";
 import path from "path";
 import type { Player } from "@shared/playerTypes";
+import { normalizeTeamAbbr, TEAM_ALIAS_MAP } from "@shared/teamMappings";
 
 let playersCache: Player[] | null = null;
 let playersBySlug: Map<string, Player> | null = null;
@@ -54,6 +55,9 @@ function loadPlayers(): Player[] {
   playersCache = JSON.parse(raw) as Player[];
   playersBySlug = new Map();
   for (const p of playersCache) {
+    if (p.team) {
+      p.team = normalizeTeamAbbr(p.team);
+    }
     playersBySlug.set(p.slug, p);
   }
   lastMtimeMs = stat.mtimeMs;
