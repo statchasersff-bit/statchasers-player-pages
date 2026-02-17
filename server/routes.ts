@@ -175,8 +175,9 @@ export async function registerRoutes(
     loadPlayers();
     const player = getPlayerBySlug(req.params.slug);
     if (!player) {
-      return res.status(404).json({ message: "Player not found" });
+      return res.status(404).json({ error: "not_found" });
     }
+    res.set("Cache-Control", "public, max-age=3600");
     res.json(player);
   });
 
