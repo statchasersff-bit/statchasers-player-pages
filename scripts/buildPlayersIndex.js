@@ -52,6 +52,8 @@ async function main() {
       age: p.age || null,
       height: p.height || null,
       weight: p.weight || null,
+      depth_chart_order: p.depth_chart_order ?? null,
+      years_exp: p.years_exp ?? null,
     });
   }
 

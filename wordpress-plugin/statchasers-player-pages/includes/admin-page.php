@@ -50,6 +50,16 @@ function sc_handle_admin_actions() {
         flush_rewrite_rules();
         add_settings_error( 'statchasers', 'flush_success', 'Rewrite rules flushed successfully!', 'success' );
     }
+
+    if ( isset( $_POST['sc_generate_indexed'] ) ) {
+        if ( ! check_admin_referer( 'sc_admin_nonce', 'sc_nonce' ) ) return;
+        $result = sc_generate_indexed_players();
+        if ( $result ) {
+            add_settings_error( 'statchasers', 'indexed_success', 'Indexed player list generated successfully!', 'success' );
+        } else {
+            add_settings_error( 'statchasers', 'indexed_error', 'Failed to generate indexed player list. Check the error log.', 'error' );
+        }
+    }
 }
 
 function sc_auto_create_container_pages() {
@@ -243,6 +253,51 @@ function sc_render_admin_page() {
                 <?php wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' ); ?>
                 <p>
                     <input type="submit" name="sc_refresh_players" class="button button-primary" value="Refresh Player Index" />
+                </p>
+            </form>
+        </div>
+
+        <!-- Indexed Players -->
+        <div class="card" style="max-width: 700px; padding: 20px; margin-top: 20px;">
+            <h2>Indexed Players</h2>
+            <?php
+            $indexed_path = sc_get_indexed_json_path();
+            $indexed_data = null;
+            if ( file_exists( $indexed_path ) ) {
+                $indexed_raw = file_get_contents( $indexed_path );
+                $indexed_data = json_decode( $indexed_raw, true );
+            }
+            $indexed_count = ( $indexed_data && isset( $indexed_data['counts']['total'] ) ) ? $indexed_data['counts']['total'] : 0;
+            $indexed_generated = ( $indexed_data && isset( $indexed_data['generated_at'] ) ) ? $indexed_data['generated_at'] : 'Never';
+            ?>
+            <table class="form-table">
+                <tr>
+                    <th>Indexed Player Count</th>
+                    <td><strong><?php echo esc_html( number_format( $indexed_count ) ); ?></strong></td>
+                </tr>
+                <tr>
+                    <th>Last Generated</th>
+                    <td><strong><?php echo esc_html( $indexed_generated ); ?></strong></td>
+                </tr>
+                <?php if ( $indexed_data && isset( $indexed_data['counts'] ) ) : ?>
+                <tr>
+                    <th>Position Breakdown</th>
+                    <td>
+                        <?php
+                        $positions = array( 'QB', 'RB', 'WR', 'TE', 'K', 'DEF' );
+                        foreach ( $positions as $pos ) :
+                            $pos_count = isset( $indexed_data['counts'][ $pos ] ) ? $indexed_data['counts'][ $pos ] : 0;
+                        ?>
+                            <strong><?php echo esc_html( $pos ); ?>:</strong> <?php echo esc_html( $pos_count ); ?>&nbsp;&nbsp;
+                        <?php endforeach; ?>
+                    </td>
+                </tr>
+                <?php endif; ?>
+            </table>
+            <form method="post">
+                <?php wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' ); ?>
+                <p>
+                    <input type="submit" name="sc_generate_indexed" class="button button-primary" value="Generate Indexed Player List" />
                 </p>
             </form>
         </div>
