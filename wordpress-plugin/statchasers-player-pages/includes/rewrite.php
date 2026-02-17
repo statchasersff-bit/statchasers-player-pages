@@ -3,6 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 add_action( 'init', 'sc_register_rewrite_rules' );
 add_filter( 'query_vars', 'sc_register_query_vars' );
+add_action( 'parse_request', 'sc_parse_request_fallback', 1 );
 add_action( 'pre_get_posts', 'sc_hijack_query', 1 );
 add_filter( 'the_posts', 'sc_force_container_posts', 10, 2 );
 add_filter( 'the_content', 'sc_inject_content', 99 );
@@ -30,6 +31,19 @@ function sc_detect_route() {
     }
 
     return null;
+}
+
+function sc_parse_request_fallback( $wp ) {
+    $request = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+    $path    = trim( parse_url( $request, PHP_URL_PATH ), '/' );
+
+    if ( preg_match( '#^nfl/players/([^/]+)$#', $path, $m ) ) {
+        $wp->query_vars['sc_player_slug'] = $m[1];
+        unset( $wp->query_vars['pagename'], $wp->query_vars['name'], $wp->query_vars['page_id'] );
+    } elseif ( preg_match( '#^nfl/players/?$#', $path ) ) {
+        $wp->query_vars['sc_players_index'] = '1';
+        unset( $wp->query_vars['pagename'], $wp->query_vars['name'], $wp->query_vars['page_id'] );
+    }
 }
 
 function sc_add_body_class( $classes ) {
@@ -97,6 +111,8 @@ function sc_hijack_query( $query ) {
     $query->set( 'name', '' );
     $query->set( 'p', '' );
     $query->set( 'pagename', '' );
+    $query->set( 'category_name', '' );
+    $query->set( 'tag', '' );
     $query->set( 'post__in', array( $container_id ) );
 
     $query->is_page     = true;
@@ -166,7 +182,7 @@ function sc_inject_content( $content ) {
     $route = $r['route'];
     $slug  = $r['slug'];
 
-    $debug = '<!-- SCPP: container page ID=' . $container_id . ', route=' . esc_html( $route );
+    $debug = '<!-- SCPP v0.3.0: container page ID=' . $container_id . ', route=' . esc_html( $route );
     if ( $slug ) {
         $debug .= ', slug=' . esc_html( $slug );
     }
@@ -189,4 +205,18 @@ function sc_inject_content( $content ) {
     }
 
     return $content;
+}
+
+function sc_get_rewrite_diagnostics() {
+    global $wp_rewrite;
+    $rules = $wp_rewrite->wp_rewrite_rules();
+    $sc_rules = array();
+    if ( is_array( $rules ) ) {
+        foreach ( $rules as $pattern => $target ) {
+            if ( strpos( $target, 'sc_player' ) !== false || strpos( $pattern, 'nfl/players' ) !== false ) {
+                $sc_rules[ $pattern ] = $target;
+            }
+        }
+    }
+    return $sc_rules;
 }
