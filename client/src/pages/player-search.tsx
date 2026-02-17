@@ -30,6 +30,9 @@ import {
   X,
   ChevronRight,
   Zap,
+  ArrowLeftRight,
+  ClipboardCheck,
+  Wand2,
 } from "lucide-react";
 
 type LightPlayer = {
@@ -523,14 +526,49 @@ export default function PlayerSearch() {
                 Search, filter, and analyze every fantasy-relevant starter across all 32 NFL teams.
               </p>
             </div>
-            <div
-              className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-md px-4 py-2.5 flex items-center gap-2"
-              data-testid="badge-player-count"
-            >
-              <Activity className="w-4 h-4 text-amber-400" />
-              <div>
-                <p className="text-xl font-bold text-white font-mono leading-none">{totalPlayers}</p>
-                <p className="text-[10px] text-gray-400 uppercase tracking-wider">Fantasy Starters</p>
+            <div className="flex flex-col items-end gap-3">
+              <div
+                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-md px-4 py-2.5 flex items-center gap-2"
+                data-testid="badge-player-count"
+              >
+                <Activity className="w-4 h-4 text-amber-400" />
+                <div>
+                  <p className="text-xl font-bold text-white font-mono leading-none">{totalPlayers}</p>
+                  <p className="text-[10px] text-gray-400 uppercase tracking-wider">Fantasy Starters</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5 flex-wrap" data-testid="tools-button-group">
+                <span className="text-[10px] text-gray-500 uppercase tracking-wider mr-1">Use in Tools</span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled
+                  className="border-white/15 text-gray-400 bg-white/5 gap-1.5 opacity-60"
+                  data-testid="button-tradechasers"
+                >
+                  <ArrowLeftRight className="w-3.5 h-3.5" />
+                  TradeChasers
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled
+                  className="border-white/15 text-gray-400 bg-white/5 gap-1.5 opacity-60"
+                  data-testid="button-report-card"
+                >
+                  <ClipboardCheck className="w-3.5 h-3.5" />
+                  Report Card
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled
+                  className="border-white/15 text-gray-400 bg-white/5 gap-1.5 opacity-60"
+                  data-testid="button-waiver-wizard"
+                >
+                  <Wand2 className="w-3.5 h-3.5" />
+                  Waiver Wizard
+                </Button>
               </div>
             </div>
           </div>
