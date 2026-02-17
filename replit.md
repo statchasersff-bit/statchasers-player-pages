@@ -50,6 +50,7 @@ Located in `wordpress-plugin/statchasers-player-pages/`
 - Supports: Generate Indexed Players, Refresh Sleeper Cache, Flush Rewrites
 
 ## Recent Changes
+- 2026-02-17: Major UX redesign of player directory: dark gradient hero with gold accents, AFC/NFC conference tabs with division sub-tabs, team color left borders on cards, position section headers, slide-over player preview panel (Sheet), Starters Only toggle, sticky mini filter bar, keyboard shortcut (/) for search, rank label badges
 - 2026-02-17: Team abbreviation mapping (JAC/WSH/OAK/STL/SD→canonical), DEF fallback for all 32 teams, name normalization (smart quotes, hyphens)
 - 2026-02-17: Added indexed player system (352 players), updated directory page, sitemap, JSON-LD, SEO enhancements
 - 2026-02-17: Enhanced SEO: dynamic titles, meta descriptions, JSON-LD Person schema, canonical URLs, H1 update
