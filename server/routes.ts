@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import fs from "fs";
 import path from "path";
-import type { Player } from "@shared/playerTypes";
+import type { Player, GameLogEntry } from "@shared/playerTypes";
 import { normalizeTeamAbbr, TEAM_ALIAS_MAP } from "@shared/teamMappings";
 
 let playersCache: Player[] | null = null;
@@ -13,6 +13,27 @@ const FILE_CHECK_INTERVAL = 10 * 60 * 1000;
 const PLAYERS_FILE = path.resolve(process.cwd(), "data", "players.json");
 const INDEXED_FILE = path.resolve(process.cwd(), "data", "indexed_players.json");
 const INDEXED_BY_TEAM_FILE = path.resolve(process.cwd(), "data", "indexed_players_by_team.json");
+const GAME_LOGS_DIR = path.resolve(process.cwd(), "data", "game_logs");
+
+const gameLogsCache: Map<number, Record<string, GameLogEntry[]>> = new Map();
+
+function loadGameLogs(season: number): Record<string, GameLogEntry[]> {
+  if (gameLogsCache.has(season)) return gameLogsCache.get(season)!;
+  const file = path.resolve(GAME_LOGS_DIR, `${season}.json`);
+  if (!fs.existsSync(file)) return {};
+  const data = JSON.parse(fs.readFileSync(file, "utf-8"));
+  gameLogsCache.set(season, data);
+  return data;
+}
+
+function getAvailableSeasons(): number[] {
+  if (!fs.existsSync(GAME_LOGS_DIR)) return [];
+  return fs.readdirSync(GAME_LOGS_DIR)
+    .filter(f => f.endsWith(".json"))
+    .map(f => parseInt(f.replace(".json", ""), 10))
+    .filter(n => !isNaN(n))
+    .sort((a, b) => b - a);
+}
 
 let indexedSlugs: string[] = [];
 let indexedByTeam: Record<string, Record<string, any[]>> = {};
@@ -230,13 +251,23 @@ export async function registerRoutes(
     if (!player) {
       return res.status(404).json({ error: "not_found" });
     }
+    const seasons = getAvailableSeasons();
+    const latestSeason = seasons[0] || new Date().getFullYear();
+    const logs = loadGameLogs(latestSeason);
+    const playerLogs = logs[player.id] || [];
+
+    const weeklyPts = playerLogs.map(e => e.stats.pts_ppr);
+    const trends: import("@shared/playerTypes").PlayerTrends | null =
+      weeklyPts.length > 0 ? { weeklyFantasyPoints: weeklyPts } : null;
+
     const enriched = {
       ...player,
       headshotUrl: player.headshotUrl ?? null,
-      season: new Date().getFullYear(),
-      trends: player.trends ?? null,
-      gameLog: player.gameLog ?? [],
+      season: latestSeason,
+      trends,
+      gameLog: playerLogs,
       news: player.news ?? [],
+      availableSeasons: seasons,
     };
     res.set("Cache-Control", "public, max-age=3600");
     res.json(enriched);
@@ -258,8 +289,13 @@ export async function registerRoutes(
     if (!player) {
       return res.status(404).json({ error: "not_found" });
     }
+    const seasons = getAvailableSeasons();
+    const seasonParam = parseInt(req.query.season as string, 10);
+    const season = !isNaN(seasonParam) && seasons.includes(seasonParam) ? seasonParam : (seasons[0] || new Date().getFullYear());
+    const logs = loadGameLogs(season);
+    const playerLogs = logs[player.id] || [];
     res.set("Cache-Control", "public, max-age=3600");
-    res.json([]);
+    res.json(playerLogs);
   });
 
   app.get("/api/players/:slug/related", (req, res) => {

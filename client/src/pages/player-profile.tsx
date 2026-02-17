@@ -24,7 +24,14 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { Player, GameLogEntry, NewsEntry } from "@shared/playerTypes";
+import type { Player, GameLogEntry, NewsEntry, GameLogStats } from "@shared/playerTypes";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type LightPlayer = {
   id: string;
@@ -89,45 +96,92 @@ function SnapshotItem({
   );
 }
 
-function GameLogTable({ entries = [] }: { entries?: GameLogEntry[] }) {
+type ColumnDef = { key: string; label: string; abbr?: string };
+
+function getPositionColumns(position: string | null): ColumnDef[] {
+  switch (position) {
+    case "QB":
+      return [
+        { key: "pass_cmp", label: "CMP" },
+        { key: "pass_att", label: "ATT" },
+        { key: "pass_yd", label: "YDS", abbr: "Pass" },
+        { key: "pass_td", label: "TD", abbr: "Pass" },
+        { key: "pass_int", label: "INT" },
+        { key: "rush_att", label: "CAR" },
+        { key: "rush_yd", label: "Rush YDS" },
+        { key: "rush_td", label: "Rush TD" },
+      ];
+    case "RB":
+      return [
+        { key: "rush_att", label: "CAR" },
+        { key: "rush_yd", label: "YDS", abbr: "Rush" },
+        { key: "rush_td", label: "TD", abbr: "Rush" },
+        { key: "rec_tgt", label: "TGT" },
+        { key: "rec", label: "REC" },
+        { key: "rec_yd", label: "Rec YDS" },
+        { key: "rec_td", label: "Rec TD" },
+      ];
+    case "WR":
+    case "TE":
+      return [
+        { key: "rec_tgt", label: "TGT" },
+        { key: "rec", label: "REC" },
+        { key: "rec_yd", label: "YDS", abbr: "Rec" },
+        { key: "rec_td", label: "TD", abbr: "Rec" },
+        { key: "rush_att", label: "CAR" },
+        { key: "rush_yd", label: "Rush YDS" },
+      ];
+    case "K":
+      return [
+        { key: "fgm", label: "FGM" },
+        { key: "fga", label: "FGA" },
+        { key: "fgm_lng", label: "FG LNG" },
+        { key: "xpm", label: "XPM" },
+        { key: "xpa", label: "XPA" },
+      ];
+    default:
+      return [];
+  }
+}
+
+function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; position: string | null }) {
+  const columns = getPositionColumns(position);
+  const colCount = 3 + columns.length;
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm" data-testid="table-game-log">
         <thead>
           <tr className="border-b text-left">
-            <th className="py-2 pr-4 text-muted-foreground font-medium">Week</th>
-            <th className="py-2 pr-4 text-muted-foreground font-medium">Opp</th>
-            <th className="py-2 pr-4 text-muted-foreground font-medium">Result</th>
-            <th className="py-2 pr-4 text-muted-foreground font-medium">Fantasy Pts</th>
-            <th className="py-2 text-muted-foreground font-medium">Details</th>
+            <th className="py-2 pr-3 text-muted-foreground font-medium whitespace-nowrap">WK</th>
+            <th className="py-2 pr-3 text-muted-foreground font-medium whitespace-nowrap">OPP</th>
+            {columns.map((col) => (
+              <th key={col.key} className="py-2 pr-3 text-muted-foreground font-medium text-right whitespace-nowrap">
+                {col.label}
+              </th>
+            ))}
+            <th className="py-2 text-muted-foreground font-medium text-right whitespace-nowrap">FPTS</th>
           </tr>
         </thead>
         <tbody>
           {entries.length > 0 ? (
             entries.map((entry, i) => (
               <tr key={i} className="border-b last:border-0" data-testid={`row-gamelog-week-${entry.week}`}>
-                <td className="py-2.5 pr-4 text-foreground font-medium">{entry.week}</td>
-                <td className="py-2.5 pr-4 text-foreground">{entry.opp}</td>
-                <td className="py-2.5 pr-4 text-foreground">{entry.result}</td>
-                <td className="py-2.5 pr-4 text-foreground font-medium">{entry.fantasyPts.toFixed(1)}</td>
-                <td className="py-2.5">
-                  {entry.detailsUrl ? (
-                    <a href={entry.detailsUrl} target="_blank" rel="noopener noreferrer">
-                      <Button variant="ghost" size="sm" data-testid={`button-details-week-${entry.week}`}>
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </Button>
-                    </a>
-                  ) : (
-                    <Button variant="ghost" size="sm" disabled data-testid={`button-details-week-${entry.week}`}>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </Button>
-                  )}
+                <td className="py-2 pr-3 text-foreground font-medium">{entry.week}</td>
+                <td className="py-2 pr-3 text-foreground whitespace-nowrap">{entry.opp}</td>
+                {columns.map((col) => (
+                  <td key={col.key} className="py-2 pr-3 text-foreground text-right tabular-nums">
+                    {(entry.stats as unknown as Record<string, number>)[col.key] ?? 0}
+                  </td>
+                ))}
+                <td className="py-2 text-right font-semibold text-foreground tabular-nums">
+                  {entry.stats.pts_ppr.toFixed(1)}
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={5} className="py-8">
+              <td colSpan={colCount} className="py-8">
                 <div className="text-center">
                   <Table className="w-8 h-8 text-muted-foreground/30 mx-auto mb-3" />
                   <p className="text-muted-foreground text-sm font-medium">No game log data yet</p>
@@ -139,6 +193,22 @@ function GameLogTable({ entries = [] }: { entries?: GameLogEntry[] }) {
             </tr>
           )}
         </tbody>
+        {entries.length > 0 && (
+          <tfoot>
+            <tr className="border-t font-semibold">
+              <td className="py-2 pr-3 text-foreground">TOT</td>
+              <td className="py-2 pr-3"></td>
+              {columns.map((col) => (
+                <td key={col.key} className="py-2 pr-3 text-foreground text-right tabular-nums">
+                  {entries.reduce((sum, e) => sum + ((e.stats as unknown as Record<string, number>)[col.key] ?? 0), 0)}
+                </td>
+              ))}
+              <td className="py-2 text-right text-foreground tabular-nums">
+                {entries.reduce((sum, e) => sum + e.stats.pts_ppr, 0).toFixed(1)}
+              </td>
+            </tr>
+          </tfoot>
+        )}
       </table>
     </div>
   );
@@ -220,6 +290,67 @@ function TrendsSection({ trends, playerName }: { trends: Player["trends"]; playe
         Week-over-week fantasy scoring trends for {playerName} will appear here.
       </p>
     </div>
+  );
+}
+
+type PlayerWithSeasons = Player & { availableSeasons?: number[] };
+
+function GameLogCard({ player }: { player: PlayerWithSeasons }) {
+  const availableSeasons = player.availableSeasons || (player.season ? [player.season] : []);
+  const [selectedSeason, setSelectedSeason] = useState<number>(availableSeasons[0] || new Date().getFullYear());
+
+  const isDefaultSeason = selectedSeason === availableSeasons[0];
+
+  const { data: seasonGameLog, isLoading: isSeasonLoading } = useQuery<GameLogEntry[]>({
+    queryKey: ["/api/players", player.slug, "game-log", selectedSeason],
+    queryFn: async () => {
+      const res = await fetch(`/api/players/${player.slug}/game-log?season=${selectedSeason}`);
+      if (!res.ok) throw new Error("Failed to fetch game log");
+      return res.json();
+    },
+    enabled: !isDefaultSeason,
+  });
+
+  const entries = isDefaultSeason ? (player.gameLog || []) : (seasonGameLog || []);
+
+  return (
+    <Card className="mb-6">
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between gap-2 mb-4 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Table className="w-5 h-5 text-primary" />
+            <h2 className="text-lg font-semibold text-foreground" data-testid="text-gamelog-heading">
+              Game Log
+            </h2>
+          </div>
+          {availableSeasons.length > 1 && (
+            <Select value={String(selectedSeason)} onValueChange={(v) => setSelectedSeason(Number(v))}>
+              <SelectTrigger className="w-28" data-testid="select-season">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {availableSeasons.map((s) => (
+                  <SelectItem key={s} value={String(s)} data-testid={`option-season-${s}`}>
+                    {s}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+          {availableSeasons.length === 1 && (
+            <span className="text-sm text-muted-foreground">{selectedSeason}</span>
+          )}
+        </div>
+        {isSeasonLoading && !isDefaultSeason ? (
+          <div className="py-8 text-center">
+            <Skeleton className="h-4 w-48 mx-auto mb-2" />
+            <Skeleton className="h-4 w-32 mx-auto" />
+          </div>
+        ) : (
+          <GameLogTable entries={entries} position={player.position} />
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
@@ -470,17 +601,7 @@ export default function PlayerProfile() {
           </CardContent>
         </Card>
 
-        <Card className="mb-6">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-2 mb-4 flex-wrap">
-              <Table className="w-5 h-5 text-primary" />
-              <h2 className="text-lg font-semibold text-foreground" data-testid="text-gamelog-heading">
-                Game Log {player.season ? `(${player.season})` : ""}
-              </h2>
-            </div>
-            <GameLogTable entries={player.gameLog} />
-          </CardContent>
-        </Card>
+        <GameLogCard player={player} />
 
         <Card className="mb-6">
           <CardContent className="p-6">
