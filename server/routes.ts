@@ -6,22 +6,39 @@ import type { Player } from "@shared/playerTypes";
 
 let playersCache: Player[] | null = null;
 let playersBySlug: Map<string, Player> | null = null;
+let lastMtimeMs: number = 0;
+let lastFileCheck: number = 0;
+const FILE_CHECK_INTERVAL = 10 * 60 * 1000;
+const PLAYERS_FILE = path.resolve(process.cwd(), "data", "players.json");
 
 function loadPlayers(): Player[] {
-  if (playersCache) return playersCache;
-  const filePath = path.resolve(process.cwd(), "data", "players.json");
-  if (!fs.existsSync(filePath)) {
+  const now = Date.now();
+  if (playersCache && now - lastFileCheck < FILE_CHECK_INTERVAL) {
+    return playersCache;
+  }
+
+  if (!fs.existsSync(PLAYERS_FILE)) {
     console.warn("data/players.json not found. Run: node scripts/buildPlayersIndex.js");
     playersCache = [];
     playersBySlug = new Map();
     return playersCache;
   }
-  const raw = fs.readFileSync(filePath, "utf-8");
+
+  const stat = fs.statSync(PLAYERS_FILE);
+  lastFileCheck = now;
+
+  if (playersCache && stat.mtimeMs === lastMtimeMs) {
+    return playersCache;
+  }
+
+  const raw = fs.readFileSync(PLAYERS_FILE, "utf-8");
   playersCache = JSON.parse(raw) as Player[];
   playersBySlug = new Map();
   for (const p of playersCache) {
     playersBySlug.set(p.slug, p);
   }
+  lastMtimeMs = stat.mtimeMs;
+  console.log(`Loaded ${playersCache.length} players from data/players.json`);
   return playersCache;
 }
 
