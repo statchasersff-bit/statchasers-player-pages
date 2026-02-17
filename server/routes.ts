@@ -141,7 +141,17 @@ export async function registerRoutes(
 
   app.get("/api/players", (_req, res) => {
     const players = loadPlayers();
-    res.json(players);
+    const lightweight = players
+      .map((p) => ({
+        id: p.id,
+        name: p.name,
+        slug: p.slug,
+        team: p.team,
+        position: p.position,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+    res.set("Cache-Control", "public, max-age=3600");
+    res.json(lightweight);
   });
 
   app.get("/api/players/:slug", (req, res) => {
