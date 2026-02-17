@@ -1,0 +1,50 @@
+My Divi page is still rendering as a blog post (type-post post-885) with et_right_sidebar even after refactoring away template_redirect.
+
+Update includes/rewrite.php (or wherever pre_get_posts is implemented) to FORCE the main query to the selected Container Page and prevent any other post context.
+
+Requirements:
+
+1) Only run on the front-end MAIN query:
+- if ( is_admin() ) return;
+- if ( ! $query->is_main_query() ) return;
+
+2) Detect our routes robustly:
+- directory route: query var sc_players_index == 1 OR request path matches ^nfl/players/?$
+- player route: sc_player_slug is set OR request path matches ^nfl/players/([^/]+)/?$
+
+3) Load container page post object by saved option scpp_container_page_id.
+If missing, do NOT modify query.
+
+4) Hard override the WP_Query object so it becomes that PAGE:
+- $query->set('page_id', $container_id);
+- $query->set('post_type', 'page');
+- $query->set('posts_per_page', 1);
+- $query->set('name', '');
+- $query->set('p', '');
+
+Then explicitly set flags:
+- $query->is_page = true;
+- $query->is_singular = true;
+- $query->is_home = false;
+- $query->is_archive = false;
+- $query->is_single = false;
+- $query->is_404 = false;
+
+5) Add a 'the_posts' filter (or hook into 'wp') to ensure the posts array is the container page:
+- Replace $posts with array($container_post)
+- Ensure $query->post and global $post are set to container_post
+- call setup_postdata($post)
+
+6) Add debug markers:
+- Add an HTML comment at the top of injected content:
+  <!-- SCPP: container page ID=XXX, route=player, slug=tyreek-hill -->
+so I can confirm the new code is live.
+
+7) In the_content filter:
+- Only replace content when is_page() AND get_queried_object_id() == container_id
+- This avoids affecting other pages.
+
+Also:
+- Add plugin header Version: 0.2.0 in statchasers-player-pages.php so I can confirm deployment.
+
+After changes, tell me exactly which hooks you used and paste the updated pre_get_posts + the_posts/the_content logic.
