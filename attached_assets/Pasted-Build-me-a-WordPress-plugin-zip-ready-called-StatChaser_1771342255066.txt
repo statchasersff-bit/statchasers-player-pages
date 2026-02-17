@@ -1,0 +1,80 @@
+Build me a WordPress plugin (zip-ready) called "StatChasers Player Pages" that creates SEO-friendly programmatic NFL player pages inside my existing WordPress/Divi site.
+
+Target URLs:
+1) /nfl/players/                 -> directory/search page
+2) /nfl/players/{slug}/          -> player profile page (example: /nfl/players/tyreek-hill/)
+
+Critical requirement:
+These pages MUST use my existing WordPress theme header/footer (Divi). Do NOT output a separate navbar/header/footer. Templates must call get_header() and get_footer().
+
+Data source:
+Use Sleeper Players API ONLY to build the player index (cached):
+GET https://api.sleeper.app/v1/players/nfl
+
+Caching requirements (very important):
+- Do NOT call Sleeper on every page load.
+- Store a trimmed players array as a JSON file in wp-content/uploads/statchasers/players.json.
+- Provide an admin page under Tools -> StatChasers Players with:
+  - "Refresh Player Index" button
+  - shows last refresh time + number of players
+- Also schedule WP-Cron to refresh daily.
+- Filter positions: QB, RB, WR, TE, K, DEF
+- Slugify full_name: lowercase, remove punctuation, spaces -> hyphens
+- Save fields: id, name, slug, position, team (default FA), status, injury_status, age, height, weight.
+
+Routing requirements:
+- Add rewrite rules:
+  - ^nfl/players/?$ => index page
+  - ^nfl/players/([^/]+)/?$ => player slug page
+- Register query vars:
+  - sc_players_index
+  - sc_player_slug
+- On template_redirect, load plugin templates:
+  - templates/index.php for directory
+  - templates/player.php for player page
+- Return proper 404 if slug not found.
+
+Directory/search page behavior (/nfl/players/):
+- Show a search input and results list similar to FantasyPros.
+- For performance: do NOT print all 4000+ players in HTML.
+- Create a REST endpoint:
+  GET /wp-json/statchasers/v1/players?q=
+  which returns top 20 matches (id,name,slug,team,position) based on query parameter q.
+- The directory page uses JS fetch to that endpoint and renders results.
+- Clicking a result navigates to /nfl/players/{slug}/
+
+Player page behavior (/nfl/players/{slug}/):
+- Render an H1: player name
+- Show position — team line
+- Show status/injury badge if present
+- Render a "Player Snapshot" section listing age/height/weight/status/injury
+- Add placeholder sections: Trends, Game Log, Rankings/Projections, News (coming soon)
+- Add internal links back to /nfl/players, /rankings, /tools, /articles
+
+SEO requirements:
+- Hook wp_head to output dynamic:
+  - <title>{Player Name} Fantasy Football Profile | StatChasers</title> (only on player pages)
+  - <meta name="description" content="Fantasy profile for {Player Name} ({POS} - {TEAM}). Stats, trends, and StatChasers insights.">
+  - <link rel="canonical" href="https://statchasers.com/nfl/players/{slug}/">
+- Add JSON-LD SportsPerson structured data.
+- Add a player sitemap endpoint:
+  GET /sitemap-players.xml
+  that outputs a valid XML sitemap of the first 300 player URLs on statchasers.com.
+
+Deliverables:
+- Full plugin folder structure:
+  statchasers-player-pages/
+    statchasers-player-pages.php
+    includes/
+      admin-page.php
+      cache.php
+      rewrite.php
+      rest.php
+      sitemap.php
+      seo.php
+    templates/
+      index.php
+      player.php
+    assets/
+      players.js
+- Provide simple install steps: zip plugin folder, upload to WP, activate, flush permalinks.
