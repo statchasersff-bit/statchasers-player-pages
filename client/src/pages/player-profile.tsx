@@ -89,7 +89,7 @@ function SnapshotItem({
   );
 }
 
-function GameLogTable({ entries }: { entries: GameLogEntry[] }) {
+function GameLogTable({ entries = [] }: { entries?: GameLogEntry[] }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm" data-testid="table-game-log">
@@ -144,7 +144,7 @@ function GameLogTable({ entries }: { entries: GameLogEntry[] }) {
   );
 }
 
-function NewsSection({ entries, playerName }: { entries: NewsEntry[]; playerName: string }) {
+function NewsSection({ entries = [], playerName }: { entries?: NewsEntry[]; playerName: string }) {
   if (entries.length > 0) {
     return (
       <div className="space-y-3" data-testid="news-list">
