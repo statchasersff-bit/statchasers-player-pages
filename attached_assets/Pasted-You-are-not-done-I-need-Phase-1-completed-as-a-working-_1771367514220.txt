@@ -1,0 +1,81 @@
+You are not done. I need Phase 1 completed as a working, production-ready baseline.
+
+ASSUME:
+- We already have player-profile.tsx and some APIs wired.
+- The problem is: pages are shells, not fully populated, not linked, and not SEO-ready.
+- Your job is to IMPLEMENT the missing pieces and verify end-to-end functionality.
+
+DO NOT ASK ME QUESTIONS. Inspect the repo and make the changes below.
+
+PHASE 1 ACCEPTANCE CRITERIA (must all pass):
+
+A) DATA CONTRACT (single source of truth)
+1. Create a single normalized Player DTO returned by GET /api/players/:slug:
+   {
+     slug, fullName, teamAbbr, position,
+     age, heightIn, weightLb, status,
+     headshotUrl,
+     lastUpdated,
+     season, // current season year
+     trends: { weeklyFantasyPoints: number[] } | null,
+     gameLog: Array<{ week, opp, result, fantasyPts, detailsUrl? }>,
+     news: Array<{ title, source, publishedAt, url, summary? }>
+   }
+2. Update player-profile.tsx to ONLY depend on this DTO (no reading local JSON directly in the component).
+3. If any section has no data, show a premium empty state (not raw text).
+
+B) REAL PLAYER DATA (not placeholder)
+1. For Snapshot: ensure age/height/weight/status/team/position always render.
+2. If Sleeper data is missing height/weight, add fallback mapping or allow null and show “—”.
+3. Headshot:
+   - If there is no headshotUrl, render a default silhouette image from /public.
+
+C) GAME LOG (wired for current season)
+1. /api/players/:slug must return gameLog as an array (can be empty).
+2. Game log UI must show:
+   - Table headers always
+   - If empty: show designed empty state with icon + copy
+3. Add “Details” column with a disabled button if detailsUrl is missing.
+
+D) ARTICLES & NEWS (wired and future-proof)
+1. Implement /api/players/:slug/news returning an array (can be empty).
+2. UI should support list items with title/source/date and link.
+3. If empty: show premium empty state.
+
+E) TRENDS SECTION (chart-ready)
+1. Trends must have a chart container and accept weeklyFantasyPoints[] when available.
+2. If trends is null/empty: show premium placeholder state.
+3. Add TODO for Phase 2 to populate weeklyFantasyPoints.
+
+F) INTERNAL LINKING + DISCOVERABILITY (THIS IS THE BIG ONE)
+1. Create a new index page:
+   - /nfl/players/ (players index)
+   - Shows a searchable/sortable table of players (name, team, pos, status)
+   - Each row links to /nfl/players/:slug/
+2. Ensure there is NO 404 for /nfl/players/ and /nfl/players/:slug/
+3. Add a sitemap endpoint or generation step:
+   - /sitemap.xml must include /nfl/players/ and all player slugs
+4. Add internal links on:
+   - homepage or navbar -> Players
+   - player page -> “Back to Players” link
+
+G) SEO BASICS
+1. Player pages must set:
+   - <title> like “Josh Allen Fantasy Football Outlook | StatChasers”
+   - meta description
+   - canonical URL
+2. Add JSON-LD schema (Person or SportsPerson) for player pages.
+
+DELIVERABLES (show me results)
+1. List files changed with brief explanation.
+2. Provide the exact URLs to test locally.
+3. Confirm /nfl/players/ is NOT 404 and lists at least 20 seeded players.
+4. Confirm /nfl/players/josh-allen/ shows real snapshot data and all sections render.
+
+IMPORTANT CONSTRAINTS
+- Do not use paid APIs.
+- Do not scrape.
+- Use existing Sleeper data and/or local JSON cache, but expose it through the DTO.
+- Keep styling consistent with StatChasers premium look, light + dark modes.
+
+Now implement.

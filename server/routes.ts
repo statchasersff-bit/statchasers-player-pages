@@ -230,8 +230,36 @@ export async function registerRoutes(
     if (!player) {
       return res.status(404).json({ error: "not_found" });
     }
+    const enriched = {
+      ...player,
+      headshotUrl: player.headshotUrl ?? null,
+      season: new Date().getFullYear(),
+      trends: player.trends ?? null,
+      gameLog: player.gameLog ?? [],
+      news: player.news ?? [],
+    };
     res.set("Cache-Control", "public, max-age=3600");
-    res.json(player);
+    res.json(enriched);
+  });
+
+  app.get("/api/players/:slug/news", (req, res) => {
+    loadPlayers();
+    const player = getPlayerBySlug(req.params.slug);
+    if (!player) {
+      return res.status(404).json({ error: "not_found" });
+    }
+    res.set("Cache-Control", "public, max-age=3600");
+    res.json([]);
+  });
+
+  app.get("/api/players/:slug/game-log", (req, res) => {
+    loadPlayers();
+    const player = getPlayerBySlug(req.params.slug);
+    if (!player) {
+      return res.status(404).json({ error: "not_found" });
+    }
+    res.set("Cache-Control", "public, max-age=3600");
+    res.json([]);
   });
 
   app.get("/api/players/:slug/related", (req, res) => {
