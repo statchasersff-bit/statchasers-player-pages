@@ -238,19 +238,48 @@ export async function registerRoutes(
     res.send(xml);
   });
 
+  app.get("/sitemap-players.xml", (_req, res) => {
+    const players = loadPlayers();
+    const baseUrl = "https://statchasers.com";
+    const today = new Date().toISOString().split("T")[0];
+
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+    xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+    const subset = players.slice(0, 300);
+    for (const p of subset) {
+      xml += `  <url>\n`;
+      xml += `    <loc>${baseUrl}/nfl/players/${p.slug}/</loc>\n`;
+      xml += `    <lastmod>${today}</lastmod>\n`;
+      xml += `    <changefreq>weekly</changefreq>\n`;
+      xml += `    <priority>0.6</priority>\n`;
+      xml += `  </url>\n`;
+    }
+    xml += `</urlset>`;
+
+    res.set("Content-Type", "application/xml");
+    res.set("Cache-Control", "public, max-age=3600");
+    res.send(xml);
+  });
+
   app.get("/robots.txt", (_req, res) => {
     const txt = [
       "User-agent: *",
       "Allow: /",
       "",
       "Sitemap: https://statchasers.com/sitemap.xml",
+      "Sitemap: https://statchasers.com/sitemap-players.xml",
     ].join("\n");
     res.set("Content-Type", "text/plain");
     res.send(txt);
   });
 
   app.use((req, res, next) => {
-    if (req.path.startsWith("/api") || req.path === "/sitemap.xml" || req.path === "/robots.txt") {
+    if (
+      req.path.startsWith("/api") ||
+      req.path === "/sitemap.xml" ||
+      req.path === "/sitemap-players.xml" ||
+      req.path === "/robots.txt"
+    ) {
       return next();
     }
 

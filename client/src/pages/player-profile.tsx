@@ -98,11 +98,55 @@ export default function PlayerProfile() {
   });
 
   useEffect(() => {
-    if (player) {
-      document.title = `${player.name} Fantasy Football Profile | StatChasers`;
+    if (!player) return;
+
+    document.title = `${player.name} Fantasy Football Profile | StatChasers`;
+
+    const pos = player.position || "NFL";
+    const team = player.team || "FA";
+    const desc = `Fantasy profile for ${player.name} (${pos} - ${team}). Stats, trends, and StatChasers insights.`;
+    const canonical = `https://statchasers.com/nfl/players/${player.slug}/`;
+
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+      metaDesc = document.createElement("meta");
+      metaDesc.setAttribute("name", "description");
+      document.head.appendChild(metaDesc);
     }
+    metaDesc.setAttribute("content", desc);
+
+    let linkCanonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!linkCanonical) {
+      linkCanonical = document.createElement("link");
+      linkCanonical.setAttribute("rel", "canonical");
+      document.head.appendChild(linkCanonical);
+    }
+    linkCanonical.setAttribute("href", canonical);
+
+    const jsonLd: Record<string, unknown> = {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      name: player.name,
+      sport: "American Football",
+      url: canonical,
+    };
+    if (player.team && player.team !== "FA") {
+      jsonLd.affiliation = { "@type": "SportsTeam", name: player.team };
+    }
+    let scriptTag = document.getElementById("sc-jsonld");
+    if (!scriptTag) {
+      scriptTag = document.createElement("script");
+      scriptTag.id = "sc-jsonld";
+      scriptTag.setAttribute("type", "application/ld+json");
+      document.head.appendChild(scriptTag);
+    }
+    scriptTag.textContent = JSON.stringify(jsonLd);
+
     return () => {
       document.title = "StatChasers";
+      metaDesc?.setAttribute("content", "");
+      linkCanonical?.setAttribute("href", "");
+      scriptTag?.remove();
     };
   }, [player]);
 
