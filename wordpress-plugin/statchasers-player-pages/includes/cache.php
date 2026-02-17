@@ -55,9 +55,60 @@ function sc_get_player_by_slug( $slug ) {
     return isset( $map[ $slug ] ) ? $map[ $slug ] : null;
 }
 
+function sc_get_team_alias_map() {
+    return array(
+        'JAC' => 'JAX',
+        'WSH' => 'WAS',
+        'OAK' => 'LV',
+        'STL' => 'LAR',
+        'SD'  => 'LAC',
+        'LA'  => 'LAR',
+    );
+}
+
+function sc_normalize_team( $abbr ) {
+    if ( empty( $abbr ) ) return 'FA';
+    $upper = strtoupper( trim( $abbr ) );
+    $aliases = sc_get_team_alias_map();
+    return isset( $aliases[ $upper ] ) ? $aliases[ $upper ] : $upper;
+}
+
+function sc_get_team_full_names() {
+    return array(
+        'ARI' => 'Arizona Cardinals', 'ATL' => 'Atlanta Falcons', 'BAL' => 'Baltimore Ravens',
+        'BUF' => 'Buffalo Bills', 'CAR' => 'Carolina Panthers', 'CHI' => 'Chicago Bears',
+        'CIN' => 'Cincinnati Bengals', 'CLE' => 'Cleveland Browns', 'DAL' => 'Dallas Cowboys',
+        'DEN' => 'Denver Broncos', 'DET' => 'Detroit Lions', 'GB' => 'Green Bay Packers',
+        'HOU' => 'Houston Texans', 'IND' => 'Indianapolis Colts', 'JAX' => 'Jacksonville Jaguars',
+        'KC' => 'Kansas City Chiefs', 'LAC' => 'Los Angeles Chargers', 'LAR' => 'Los Angeles Rams',
+        'LV' => 'Las Vegas Raiders', 'MIA' => 'Miami Dolphins', 'MIN' => 'Minnesota Vikings',
+        'NE' => 'New England Patriots', 'NO' => 'New Orleans Saints', 'NYG' => 'New York Giants',
+        'NYJ' => 'New York Jets', 'PHI' => 'Philadelphia Eagles', 'PIT' => 'Pittsburgh Steelers',
+        'SEA' => 'Seattle Seahawks', 'SF' => 'San Francisco 49ers', 'TB' => 'Tampa Bay Buccaneers',
+        'TEN' => 'Tennessee Titans', 'WAS' => 'Washington Commanders',
+    );
+}
+
+function sc_normalize_name( $name ) {
+    if ( empty( $name ) ) return '';
+    $name = str_replace(
+        array( "\xE2\x80\x98", "\xE2\x80\x99", "\xE2\x80\x9A", "\xE2\x80\x9B", "\x60", "\xC2\xB4" ),
+        "'",
+        $name
+    );
+    $name = str_replace(
+        array( "\xE2\x80\x9C", "\xE2\x80\x9D", "\xE2\x80\x9E", "\xE2\x80\x9F" ),
+        '"',
+        $name
+    );
+    $name = str_replace( array( "\xE2\x80\x93", "\xE2\x80\x94" ), '-', $name );
+    return trim( $name );
+}
+
 function sc_build_slug( $name ) {
     if ( empty( $name ) ) return '';
     $slug = strtolower( $name );
+    $slug = preg_replace( "/[''`\xC2\xB4\xE2\x80\x98\xE2\x80\x99\xE2\x80\x9A\xE2\x80\x9B]/", '', $slug );
     $slug = preg_replace( '/[^a-z0-9\s-]/', '', $slug );
     $slug = preg_replace( '/\s+/', '-', $slug );
     $slug = preg_replace( '/-+/', '-', $slug );
@@ -85,6 +136,7 @@ function sc_refresh_players_data() {
     $valid_positions = array( 'QB', 'RB', 'WR', 'TE', 'K', 'DEF' );
     $players = array();
     $slug_set = array();
+    $teams_with_def = array();
 
     foreach ( $players_map as $player_id => $p ) {
         if ( empty( $p['full_name'] ) && ( ! isset( $p['position'] ) || $p['position'] !== 'DEF' ) ) {
@@ -94,7 +146,8 @@ function sc_refresh_players_data() {
             continue;
         }
 
-        $name = isset( $p['full_name'] ) ? $p['full_name'] : trim( ( isset( $p['first_name'] ) ? $p['first_name'] : '' ) . ' ' . ( isset( $p['last_name'] ) ? $p['last_name'] : '' ) );
+        $raw_name = isset( $p['full_name'] ) ? $p['full_name'] : trim( ( isset( $p['first_name'] ) ? $p['first_name'] : '' ) . ' ' . ( isset( $p['last_name'] ) ? $p['last_name'] : '' ) );
+        $name = sc_normalize_name( $raw_name );
         $slug = sc_build_slug( $name );
         if ( empty( $slug ) ) continue;
 
@@ -103,12 +156,18 @@ function sc_refresh_players_data() {
         }
         $slug_set[ $slug ] = true;
 
+        $team = sc_normalize_team( isset( $p['team'] ) ? $p['team'] : '' );
+
+        if ( $p['position'] === 'DEF' && $team !== 'FA' ) {
+            $teams_with_def[ $team ] = true;
+        }
+
         $players[] = array(
             'id'            => (string) $player_id,
             'name'          => $name,
             'slug'          => $slug,
             'position'      => isset( $p['position'] ) ? $p['position'] : null,
-            'team'          => isset( $p['team'] ) ? $p['team'] : 'FA',
+            'team'          => $team,
             'status'        => isset( $p['status'] ) ? $p['status'] : null,
             'injury_status' => isset( $p['injury_status'] ) ? $p['injury_status'] : null,
             'age'              => isset( $p['age'] ) ? $p['age'] : null,
@@ -117,6 +176,32 @@ function sc_refresh_players_data() {
             'depth_chart_order' => isset( $p['depth_chart_order'] ) ? $p['depth_chart_order'] : null,
             'years_exp'        => isset( $p['years_exp'] ) ? $p['years_exp'] : null,
         );
+    }
+
+    $nfl_teams_list = array_keys( sc_get_team_full_names() );
+    $full_names = sc_get_team_full_names();
+    foreach ( $nfl_teams_list as $t ) {
+        if ( ! isset( $teams_with_def[ $t ] ) ) {
+            $def_name = isset( $full_names[ $t ] ) ? $full_names[ $t ] : $t;
+            $def_slug = sc_build_slug( $def_name );
+            if ( ! isset( $slug_set[ $def_slug ] ) ) {
+                $slug_set[ $def_slug ] = true;
+                $players[] = array(
+                    'id'               => 'DEF-' . $t,
+                    'name'             => $def_name,
+                    'slug'             => $def_slug,
+                    'position'         => 'DEF',
+                    'team'             => $t,
+                    'status'           => 'Active',
+                    'injury_status'    => null,
+                    'age'              => null,
+                    'height'           => null,
+                    'weight'           => null,
+                    'depth_chart_order' => 1,
+                    'years_exp'        => null,
+                );
+            }
+        }
     }
 
     usort( $players, function ( $a, $b ) {
@@ -218,16 +303,11 @@ function sc_generate_indexed_players() {
         'DEF' => 1,
     );
 
-    $nfl_teams = array(
-        'ARI','ATL','BAL','BUF','CAR','CHI','CIN','CLE',
-        'DAL','DEN','DET','GB','HOU','IND','JAX','KC',
-        'LAC','LAR','LV','MIA','MIN','NE','NO','NYG',
-        'NYJ','PHI','PIT','SEA','SF','TB','TEN','WAS',
-    );
+    $nfl_teams = array_keys( sc_get_team_full_names() );
 
     $team_players = array();
     foreach ( $players as $p ) {
-        $team = isset( $p['team'] ) ? $p['team'] : '';
+        $team = sc_normalize_team( isset( $p['team'] ) ? $p['team'] : '' );
         $pos  = isset( $p['position'] ) ? $p['position'] : '';
         if ( empty( $team ) || $team === 'FA' || ! in_array( $team, $nfl_teams, true ) ) {
             continue;
