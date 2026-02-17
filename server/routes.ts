@@ -48,9 +48,20 @@ function getPlayerBySlug(slug: string): Player | undefined {
 }
 
 function generatePlayerMeta(player: Player): string {
-  const title = `${player.name} Fantasy Football Profile | StatChasers`;
-  const description = `Fantasy profile for ${player.name} (${player.position || "NFL"} - ${player.team || "FA"}). Stats, trends, and StatChasers insights.`;
+  const title = `${player.name} Fantasy Football Stats, Rankings & Analysis | StatChasers`;
+  const description = `View ${player.name} fantasy football stats, trends, rankings, projections, and analysis. Updated for 2026 NFL season.`;
   const canonical = `https://statchasers.com/nfl/players/${player.slug}/`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: player.name,
+    jobTitle: "NFL Player",
+    sport: "American Football",
+    url: canonical,
+    ...(player.team && player.team !== "FA"
+      ? { affiliation: { "@type": "SportsTeam", name: player.team, sport: "American Football" } }
+      : {}),
+  };
   return [
     `<title>${title}</title>`,
     `<meta name="description" content="${description}" />`,
@@ -59,6 +70,7 @@ function generatePlayerMeta(player: Player): string {
     `<meta property="og:type" content="profile" />`,
     `<meta property="og:url" content="${canonical}" />`,
     `<link rel="canonical" href="${canonical}" />`,
+    `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`,
   ].join("\n    ");
 }
 
@@ -68,8 +80,8 @@ export function injectSeoMeta(html: string, url: string): string {
     const slug = playerMatch[1];
     const player = getPlayerBySlug(slug);
     if (player) {
-      const title = `${player.name} Fantasy Football Profile | StatChasers`;
-      const description = `Fantasy profile for ${player.name} (${player.position || "NFL"} - ${player.team || "FA"}). Stats, trends, and StatChasers insights.`;
+      const title = `${player.name} Fantasy Football Stats, Rankings & Analysis | StatChasers`;
+      const description = `View ${player.name} fantasy football stats, trends, rankings, projections, and analysis. Updated for 2026 NFL season.`;
       const canonical = `https://statchasers.com/nfl/players/${player.slug}/`;
 
       html = html.replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`);
@@ -93,9 +105,20 @@ export function injectSeoMeta(html: string, url: string): string {
         /<meta property="og:url" content="[^"]*"/,
         `<meta property="og:url" content="${canonical}"`
       );
+      const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: player.name,
+        jobTitle: "NFL Player",
+        sport: "American Football",
+        url: canonical,
+        ...(player.team && player.team !== "FA"
+          ? { affiliation: { "@type": "SportsTeam", name: player.team, sport: "American Football" } }
+          : {}),
+      };
       html = html.replace(
         /<!-- SEO_META_PLACEHOLDER -->/,
-        `<link rel="canonical" href="${canonical}" />`
+        `<link rel="canonical" href="${canonical}" />\n    <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`
       );
       return html;
     }

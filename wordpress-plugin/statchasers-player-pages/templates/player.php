@@ -15,7 +15,7 @@ if ( ! $player ) {
   </nav>
 
   <header class="sc-player-header">
-    <h1 class="sc-page-title"><?php echo esc_html( $player['name'] ); ?></h1>
+    <h1 class="sc-page-title"><?php echo esc_html( $player['name'] ); ?> Fantasy Football Outlook</h1>
     <p class="sc-player-meta-line">
       <?php
       $parts = array();

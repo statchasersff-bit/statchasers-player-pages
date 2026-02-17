@@ -5,12 +5,20 @@ add_action( 'wp_head', 'sc_inject_seo_meta', 1 );
 add_filter( 'pre_get_document_title', 'sc_filter_document_title', 999 );
 add_filter( 'document_title_parts', 'sc_filter_title_parts', 999 );
 
+function sc_build_player_title( $player ) {
+    return $player['name'] . ' Fantasy Football Stats, Rankings & Analysis | StatChasers';
+}
+
+function sc_build_player_description( $player ) {
+    return 'View ' . $player['name'] . ' fantasy football stats, trends, rankings, projections, and analysis. Updated for 2026 NFL season.';
+}
+
 function sc_filter_document_title( $title ) {
     $slug = get_query_var( 'sc_player_slug' );
     if ( $slug ) {
         $player = sc_get_player_by_slug( $slug );
         if ( $player ) {
-            return $player['name'] . ' Fantasy Football Profile | StatChasers';
+            return sc_build_player_title( $player );
         }
     }
     if ( get_query_var( 'sc_players_index' ) ) {
@@ -24,7 +32,7 @@ function sc_filter_title_parts( $parts ) {
     if ( $slug ) {
         $player = sc_get_player_by_slug( $slug );
         if ( $player ) {
-            $parts['title'] = $player['name'] . ' Fantasy Football Profile | StatChasers';
+            $parts['title'] = sc_build_player_title( $player );
             unset( $parts['site'] );
             unset( $parts['tagline'] );
         }
@@ -44,12 +52,9 @@ function sc_inject_seo_meta() {
         $player = sc_get_player_by_slug( $slug );
         if ( ! $player ) return;
 
-        $pos  = $player['position'] ? $player['position'] : 'NFL';
-        $team = $player['team'] ? $player['team'] : 'FA';
-        $name = esc_attr( $player['name'] );
-        $desc = esc_attr( "Fantasy profile for {$player['name']} ({$pos} - {$team}). Stats, trends, and StatChasers insights." );
-        $canonical = esc_url( 'https://statchasers.com/nfl/players/' . $player['slug'] . '/' );
-        $title = esc_attr( "{$player['name']} Fantasy Football Profile | StatChasers" );
+        $title     = esc_attr( sc_build_player_title( $player ) );
+        $desc      = esc_attr( sc_build_player_description( $player ) );
+        $canonical = esc_url( home_url( '/nfl/players/' . $player['slug'] . '/' ) );
 
         echo '<meta name="description" content="' . $desc . '" />' . "\n";
         echo '<meta property="og:title" content="' . $title . '" />' . "\n";
@@ -59,16 +64,18 @@ function sc_inject_seo_meta() {
         echo '<link rel="canonical" href="' . $canonical . '" />' . "\n";
 
         $json_ld = array(
-            '@context' => 'https://schema.org',
-            '@type'    => 'Person',
-            'name'     => $player['name'],
-            'sport'    => 'American Football',
-            'url'      => 'https://statchasers.com/nfl/players/' . $player['slug'] . '/',
+            '@context'    => 'https://schema.org',
+            '@type'       => 'Person',
+            'name'        => $player['name'],
+            'jobTitle'    => 'NFL Player',
+            'sport'       => 'American Football',
+            'url'         => home_url( '/nfl/players/' . $player['slug'] . '/' ),
         );
         if ( $player['team'] && $player['team'] !== 'FA' ) {
             $json_ld['affiliation'] = array(
                 '@type' => 'SportsTeam',
                 'name'  => $player['team'],
+                'sport' => 'American Football',
             );
         }
         echo '<script type="application/ld+json">' . wp_json_encode( $json_ld, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT ) . '</script>' . "\n";
@@ -77,8 +84,8 @@ function sc_inject_seo_meta() {
 
     if ( get_query_var( 'sc_players_index' ) ) {
         $idx_title = 'NFL Player Database | StatChasers';
-        $desc = 'Search and browse fantasy football profiles for over 4,000 NFL players. Stats, trends, and insights.';
-        $canonical = esc_url( 'https://statchasers.com/nfl/players/' );
+        $desc      = 'Search and browse fantasy football profiles for over 4,000 NFL players. Stats, trends, and insights.';
+        $canonical = esc_url( home_url( '/nfl/players/' ) );
         echo '<meta name="description" content="' . esc_attr( $desc ) . '" />' . "\n";
         echo '<meta property="og:title" content="' . esc_attr( $idx_title ) . '" />' . "\n";
         echo '<meta property="og:description" content="' . esc_attr( $desc ) . '" />' . "\n";

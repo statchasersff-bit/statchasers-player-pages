@@ -100,11 +100,9 @@ export default function PlayerProfile() {
   useEffect(() => {
     if (!player) return;
 
-    document.title = `${player.name} Fantasy Football Profile | StatChasers`;
+    document.title = `${player.name} Fantasy Football Stats, Rankings & Analysis | StatChasers`;
 
-    const pos = player.position || "NFL";
-    const team = player.team || "FA";
-    const desc = `Fantasy profile for ${player.name} (${pos} - ${team}). Stats, trends, and StatChasers insights.`;
+    const desc = `View ${player.name} fantasy football stats, trends, rankings, projections, and analysis. Updated for 2026 NFL season.`;
     const canonical = `https://statchasers.com/nfl/players/${player.slug}/`;
 
     let metaDesc = document.querySelector('meta[name="description"]');
@@ -238,7 +236,7 @@ export default function PlayerProfile() {
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-2 flex-wrap">
             <h1 className="text-2xl md:text-3xl font-bold text-foreground" data-testid="text-player-name">
-              {player.name}
+              {player.name} Fantasy Football Outlook
             </h1>
             {player.position && (
               <Badge
