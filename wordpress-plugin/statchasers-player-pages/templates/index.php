@@ -39,10 +39,17 @@ get_header();
 </div>
 
 <style>
-    .sc-players { max-width: 960px; padding: 20px 0; }
+    body.sc-players-page #main-content { padding-top: 0 !important; margin-top: 0 !important; }
+    body.sc-players-page #main-content .container { width: 100% !important; max-width: 1200px !important; padding-left: 30px !important; padding-right: 30px !important; }
+    body.sc-players-page #content-area { width: 100% !important; float: none !important; }
+    body.sc-players-page #left-area { width: 100% !important; float: none !important; padding: 0 !important; margin: 0 !important; }
+    body.sc-players-page #sidebar { display: none !important; }
+    body.sc-players-page .et_pb_gutters3 .et_pb_column { width: 100% !important; }
+
+    .sc-players { max-width: 960px; margin: 0 auto; padding: 30px 0; box-sizing: border-box; }
     .sc-players .sc-header { margin-bottom: 32px; }
-    .sc-players .sc-page-title { font-size: 2em; margin: 0 0 8px 0; padding: 0; }
-    .sc-players .sc-page-subtitle { color: #6b7280; margin: 0; }
+    .sc-players .sc-page-title { font-size: 2em; margin: 0 0 8px 0; padding: 0; line-height: 1.3; }
+    .sc-players .sc-page-subtitle { color: #6b7280; margin: 0; font-size: 1em; }
     .sc-players .sc-search-wrap { margin-bottom: 24px; }
     .sc-players .sc-search-input {
         width: 100%; padding: 12px 16px; border: 1px solid #d1d5db;

@@ -147,7 +147,14 @@ get_header();
 </div>
 
 <style>
-    .sc-players { max-width: 960px; padding: 20px 0; }
+    body.sc-players-page #main-content { padding-top: 0 !important; margin-top: 0 !important; }
+    body.sc-players-page #main-content .container { width: 100% !important; max-width: 1200px !important; padding-left: 30px !important; padding-right: 30px !important; }
+    body.sc-players-page #content-area { width: 100% !important; float: none !important; }
+    body.sc-players-page #left-area { width: 100% !important; float: none !important; padding: 0 !important; margin: 0 !important; }
+    body.sc-players-page #sidebar { display: none !important; }
+    body.sc-players-page .et_pb_gutters3 .et_pb_column { width: 100% !important; }
+
+    .sc-players { max-width: 960px; margin: 0 auto; padding: 30px 0; box-sizing: border-box; }
     .sc-players .sc-breadcrumb { margin-bottom: 24px; }
     .sc-players .sc-breadcrumb a { text-decoration: none; color: #2563eb; font-size: 14px; }
     .sc-players .sc-player-header { margin-bottom: 32px; }

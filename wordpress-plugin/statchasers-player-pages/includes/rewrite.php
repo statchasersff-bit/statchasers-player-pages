@@ -4,6 +4,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 add_action( 'init', 'sc_register_rewrite_rules' );
 add_filter( 'query_vars', 'sc_register_query_vars' );
 add_action( 'template_redirect', 'sc_load_custom_template' );
+add_filter( 'body_class', 'sc_add_body_class' );
+
+function sc_add_body_class( $classes ) {
+    if ( get_query_var( 'sc_player_slug' ) || get_query_var( 'sc_players_index' ) ) {
+        $classes[] = 'sc-players-page';
+    }
+    return $classes;
+}
 
 function sc_register_rewrite_rules() {
     add_rewrite_rule(
