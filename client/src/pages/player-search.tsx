@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { Link } from "wouter";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
+import { Link, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search, ArrowLeft, Users, TrendingUp } from "lucide-react";
-import type { Player } from "@shared/playerTypes";
+
+type LightPlayer = {
+  id: string;
+  name: string;
+  slug: string;
+  team: string;
+  position: string;
+};
 
 const POSITION_COLORS: Record<string, string> = {
   QB: "bg-red-500/15 text-red-700 dark:text-red-400",
@@ -28,10 +35,28 @@ const POSITION_COLORS: Record<string, string> = {
 export default function PlayerSearch() {
   const [search, setSearch] = useState("");
   const [posFilter, setPosFilter] = useState("ALL");
+  const [showAutocomplete, setShowAutocomplete] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const searchRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const [, navigate] = useLocation();
 
-  const { data: players, isLoading } = useQuery<Player[]>({
+  const { data: players, isLoading } = useQuery<LightPlayer[]>({
     queryKey: ["/api/players"],
   });
+
+  const autocompleteResults = useMemo(() => {
+    if (!players || !search.trim()) return [];
+    const q = search.toLowerCase().trim();
+    return players
+      .filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.team.toLowerCase().includes(q)
+      )
+      .slice(0, 8);
+  }, [players, search]);
 
   const filtered = useMemo(() => {
     if (!players) return [];
@@ -44,11 +69,60 @@ export default function PlayerSearch() {
       result = result.filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
-          (p.team && p.team.toLowerCase().includes(q))
+          p.team.toLowerCase().includes(q)
       );
     }
     return result.slice(0, 100);
   }, [players, search, posFilter]);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setShowAutocomplete(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    setActiveIndex(-1);
+  }, [search]);
+
+  useEffect(() => {
+    if (activeIndex >= 0 && listRef.current) {
+      const item = listRef.current.children[activeIndex] as HTMLElement;
+      if (item) {
+        item.scrollIntoView({ block: "nearest" });
+      }
+    }
+  }, [activeIndex]);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (!showAutocomplete || autocompleteResults.length === 0) return;
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setActiveIndex((prev) =>
+          prev < autocompleteResults.length - 1 ? prev + 1 : 0
+        );
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setActiveIndex((prev) =>
+          prev > 0 ? prev - 1 : autocompleteResults.length - 1
+        );
+      } else if (e.key === "Enter" && activeIndex >= 0) {
+        e.preventDefault();
+        const player = autocompleteResults[activeIndex];
+        setShowAutocomplete(false);
+        navigate(`/nfl/players/${player.slug}/`);
+      } else if (e.key === "Escape") {
+        setShowAutocomplete(false);
+      }
+    },
+    [showAutocomplete, autocompleteResults, activeIndex, navigate]
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -94,16 +168,78 @@ export default function PlayerSearch() {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <div className="relative flex-1" ref={searchRef}>
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10" />
             <Input
+              ref={inputRef}
               type="search"
               placeholder="Search by name or team..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setShowAutocomplete(true);
+              }}
+              onFocus={() => {
+                if (search.trim()) setShowAutocomplete(true);
+              }}
+              onKeyDown={handleKeyDown}
               className="pl-10"
+              autoComplete="off"
+              role="combobox"
+              aria-expanded={showAutocomplete && autocompleteResults.length > 0}
+              aria-controls="autocomplete-list"
+              aria-activedescendant={activeIndex >= 0 ? `autocomplete-item-${activeIndex}` : undefined}
               data-testid="input-player-search"
             />
+
+            {showAutocomplete && search.trim() && autocompleteResults.length > 0 && (
+              <div
+                id="autocomplete-list"
+                ref={listRef}
+                role="listbox"
+                className="absolute top-full left-0 right-0 mt-1 bg-card border rounded-md shadow-lg z-50 overflow-hidden max-h-80 overflow-y-auto"
+                data-testid="autocomplete-dropdown"
+              >
+                {autocompleteResults.map((player, i) => (
+                  <Link key={player.id} href={`/nfl/players/${player.slug}/`}>
+                    <div
+                      id={`autocomplete-item-${i}`}
+                      role="option"
+                      aria-selected={i === activeIndex}
+                      className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors ${
+                        i === activeIndex
+                          ? "bg-accent"
+                          : "hover-elevate"
+                      }`}
+                      onMouseEnter={() => setActiveIndex(i)}
+                      onClick={() => setShowAutocomplete(false)}
+                      data-testid={`autocomplete-item-${player.slug}`}
+                    >
+                      <div className="flex-shrink-0 w-8 h-8 rounded-md bg-muted flex items-center justify-center">
+                        <span className="text-[10px] font-bold text-muted-foreground">
+                          {player.position || "?"}
+                        </span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <span className="font-medium text-sm text-foreground truncate block">
+                          {player.name}
+                        </span>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <Badge
+                            variant="secondary"
+                            className={`text-[10px] px-1.5 py-0 ${POSITION_COLORS[player.position || ""] || ""}`}
+                          >
+                            {player.position}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">{player.team}</span>
+                        </div>
+                      </div>
+                      <TrendingUp className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
           <Select value={posFilter} onValueChange={setPosFilter}>
             <SelectTrigger className="w-full sm:w-[140px]" data-testid="select-position-filter">
@@ -172,11 +308,6 @@ export default function PlayerSearch() {
                               <span className="font-semibold text-foreground truncate" data-testid={`text-player-name-${player.slug}`}>
                                 {player.name}
                               </span>
-                              {player.injury_status && (
-                                <Badge variant="destructive" className="text-xs" data-testid={`badge-injury-${player.slug}`}>
-                                  {player.injury_status}
-                                </Badge>
-                              )}
                             </div>
                             <div className="flex items-center gap-2 mt-1">
                               <Badge
@@ -185,9 +316,7 @@ export default function PlayerSearch() {
                               >
                                 {player.position}
                               </Badge>
-                              {player.team && (
-                                <span className="text-xs text-muted-foreground">{player.team}</span>
-                              )}
+                              <span className="text-xs text-muted-foreground">{player.team}</span>
                             </div>
                           </div>
                           <TrendingUp className="w-4 h-4 text-muted-foreground flex-shrink-0" />
