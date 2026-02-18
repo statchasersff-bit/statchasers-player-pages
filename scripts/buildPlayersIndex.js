@@ -106,6 +106,7 @@ async function main() {
       age: p.age || null,
       height: p.height || null,
       weight: p.weight || null,
+      number: p.number ?? null,
       depth_chart_order: p.depth_chart_order ?? null,
       years_exp: p.years_exp ?? null,
     });
@@ -128,6 +129,7 @@ async function main() {
           age: null,
           height: null,
           weight: null,
+          number: null,
           depth_chart_order: 1,
           years_exp: null,
         });
