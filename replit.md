@@ -63,10 +63,12 @@ Located in `wordpress-plugin/statchasers-player-pages/`
   - Bust thresholds: WR >36, RB >30, QB >18, TE >18
   - Pos1% + Pos2% + (Pos3%) + Bust% ≈ 100% (unranked weeks excluded)
 - **Volatility**: Sample standard deviation of weekly PPR points across played games
-- **Consistency Score**: `round(100 / (1 + (cv / 0.6)^2))` where cv = stdev/ppg. Labels: 70+ Very Consistent, 45-69 Average, <45 Boom/Bust
+- **Reliability Score**: `round(100 / (1 + (cv / 0.6)^2))` where cv = stdev/ppg. Labels: 70+ Very Reliable, 45-69 Average, <45 Boom/Bust
+- **Role Grade**: Starter (pos1+pos2 >= 60%), Flex (>= 35%), Depth (< 35%)
 - **Goose Egg %**: (# played weeks with pts==0) / games_played
 
 ## Recent Changes
+- 2026-02-18: UX polish: fixed microcopy (proper en-dash formatting), visual hierarchy (primary/secondary emphasis), tighter card density, stacked tier distribution bar, Consistency→Reliability rename, color psychology (Pos2=teal, Pos3=gray), Role Grade badge (Starter/Flex/Depth)
 - 2026-02-18: Tier-finish rate system: replaced Elite/Starter with position-specific tiers (WR1/WR2/WR3, QB1/QB2, RB1/RB2/RB3, TE1/TE2), all sum to ~100%
 - 2026-02-18: Fixed metric calculations: participation-based GP (includes 0-point games), weekly rank pool filters inactive players, smooth consistency curve (replaces CV*1.5), added Goose Egg % risk metric
 - 2026-02-18: Player profile 5-tab layout: Overview (PPG stats, trend indicator, weekly chart, stat summary, outlook), Game Log (summary bar + table), Usage & Trends (position-specific usage charts with 3-week rolling averages), Rankings & Value (placeholder rank cards, trade CTA), News & Analysis (articles/empty state)
