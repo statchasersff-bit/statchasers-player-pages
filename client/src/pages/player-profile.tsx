@@ -422,6 +422,107 @@ function MiniBarChart({ data, height = 80, color = "bg-primary/60" }: { data: nu
   );
 }
 
+function computeRollingAvg(data: number[], window: number = 3): number[] {
+  return data.map((_, i) => {
+    const start = Math.max(0, i - window + 1);
+    const slice = data.slice(start, i + 1);
+    return slice.reduce((a, b) => a + b, 0) / slice.length;
+  });
+}
+
+function TrendArrow({ data }: { data: number[] }) {
+  if (data.length < 4) return null;
+  const recent = data.slice(-3);
+  const earlier = data.slice(-6, -3);
+  if (earlier.length === 0) return null;
+  const recentAvg = recent.reduce((a, b) => a + b, 0) / recent.length;
+  const earlierAvg = earlier.reduce((a, b) => a + b, 0) / earlier.length;
+  const pct = earlierAvg > 0 ? ((recentAvg - earlierAvg) / earlierAvg) * 100 : 0;
+
+  if (Math.abs(pct) < 5) {
+    return (
+      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground font-medium" data-testid="text-trend-arrow">
+        <Minus className="w-3.5 h-3.5" /> Stable
+      </span>
+    );
+  }
+  if (pct > 0) {
+    return (
+      <span className="inline-flex items-center gap-1 text-xs text-green-600 dark:text-green-400 font-medium" data-testid="text-trend-arrow">
+        <ArrowUpRight className="w-3.5 h-3.5" /> Trending Up
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1 text-xs text-red-500 dark:text-red-400 font-medium" data-testid="text-trend-arrow">
+      <ArrowDownRight className="w-3.5 h-3.5" /> Trending Down
+    </span>
+  );
+}
+
+function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentColor = "hsl(var(--primary))", fillColor = "hsl(var(--primary) / 0.08)" }: {
+  data: number[];
+  rollingAvg?: number[];
+  bestIdx?: number;
+  height?: number;
+  label?: string;
+  accentColor?: string;
+  fillColor?: string;
+}) {
+  if (data.length < 2) return null;
+  const max = Math.max(...data, 1);
+  const padding = { top: 10, bottom: 24, left: 0, right: 0 };
+  const chartH = height - padding.top - padding.bottom;
+  const viewW = 400;
+
+  const toPoint = (val: number, i: number) => {
+    const x = padding.left + (i / (data.length - 1)) * (viewW - padding.left - padding.right);
+    const y = padding.top + chartH - (val / max) * chartH;
+    return { x, y };
+  };
+
+  const points = data.map((v, i) => toPoint(v, i));
+  const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ');
+  const areaPath = `${linePath} L${points[points.length - 1].x},${padding.top + chartH} L${points[0].x},${padding.top + chartH} Z`;
+
+  let rollingPath = '';
+  if (rollingAvg) {
+    const rPoints = rollingAvg.map((v, i) => toPoint(v, i));
+    rollingPath = rPoints.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ');
+  }
+
+  const bestPoint = bestIdx != null && bestIdx >= 0 ? points[bestIdx] : null;
+
+  return (
+    <div data-testid="chart-line-svg">
+      <svg viewBox={`0 0 ${viewW} ${height}`} className="w-full" style={{ height }} preserveAspectRatio="none">
+        <defs>
+          <linearGradient id={`fill-${label || 'default'}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={accentColor} stopOpacity="0.15" />
+            <stop offset="100%" stopColor={accentColor} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d={areaPath} fill={`url(#fill-${label || 'default'})`} />
+        <path d={linePath} fill="none" stroke={accentColor} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" opacity="0.5" />
+        {rollingPath && (
+          <path d={rollingPath} fill="none" stroke={accentColor} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+        )}
+        {bestPoint && (
+          <>
+            <circle cx={bestPoint.x} cy={bestPoint.y} r="8" fill={accentColor} opacity="0.12" />
+            <circle cx={bestPoint.x} cy={bestPoint.y} r="4" fill={accentColor} stroke="white" strokeWidth="1.5" />
+          </>
+        )}
+        {points.map((p, i) => (
+          <circle key={i} cx={p.x} cy={p.y} r="2" fill={accentColor} opacity="0.4" />
+        ))}
+        <text x={points[0].x} y={height - 4} textAnchor="start" className="fill-muted-foreground" fontSize="10">Wk 1</text>
+        <text x={points[points.length - 1].x} y={height - 4} textAnchor="end" className="fill-muted-foreground" fontSize="10">Wk {data.length}</text>
+      </svg>
+    </div>
+  );
+}
+
 function TrendIndicator({ current, previous }: { current: number; previous: number }) {
   const diff = current - previous;
   const pct = previous > 0 ? ((diff / previous) * 100) : 0;
@@ -570,25 +671,75 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
             </div>
           </div>
 
-          {seasonPpg > 0 && (
-            <div className="flex items-center gap-4 flex-wrap">
-              <span className="text-xs text-muted-foreground font-medium">Trend:</span>
-              <TrendIndicator current={last4Ppg} previous={seasonPpg} />
-            </div>
-          )}
+          {weeklyPts.length > 1 && (() => {
+            const rollingPts = computeRollingAvg(weeklyPts);
+            const bestIdx = weeklyPts.indexOf(Math.max(...weeklyPts));
+            const bestVal = weeklyPts[bestIdx];
+            const bestEntry = activeEntries[bestIdx];
 
-          {weeklyPts.length > 0 && (
-            <Card>
-              <CardContent className="p-4">
-                <p className="text-xs text-muted-foreground font-medium mb-3">Weekly Fantasy Points</p>
-                <MiniBarChart data={weeklyPts} height={100} />
-                <div className="flex items-center justify-between gap-2 mt-2 flex-wrap">
-                  <span className="text-[10px] text-muted-foreground">Wk 1</span>
-                  <span className="text-[10px] text-muted-foreground">Wk {weeklyPts.length}</span>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+            const secondaryLabel = player.position === 'QB' ? 'Rush Attempts' :
+              player.position === 'RB' ? 'Touches/Game' :
+              (player.position === 'WR' || player.position === 'TE') ? 'Targets/Game' : null;
+            const secondaryData = player.position === 'QB'
+              ? activeEntries.map(e => (e.stats as unknown as Record<string, number>).rush_att ?? 0)
+              : player.position === 'RB'
+              ? activeEntries.map(e => ((e.stats as unknown as Record<string, number>).rush_att ?? 0) + ((e.stats as unknown as Record<string, number>).rec_tgt ?? 0))
+              : (player.position === 'WR' || player.position === 'TE')
+              ? activeEntries.map(e => (e.stats as unknown as Record<string, number>).rec_tgt ?? 0)
+              : null;
+            const secondaryRolling = secondaryData ? computeRollingAvg(secondaryData) : null;
+
+            return (
+              <Card>
+                <CardContent className="p-4 space-y-5">
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="text-xs text-muted-foreground font-medium">Weekly Fantasy Points</p>
+                        <span className="text-[10px] text-muted-foreground/60">(3-wk rolling avg)</span>
+                      </div>
+                      <div className="flex items-center gap-3 flex-wrap">
+                        {bestEntry && (
+                          <span className="text-[10px] text-muted-foreground">
+                            Best: <span className="font-semibold text-foreground">{bestVal.toFixed(1)}</span>
+                            <span className="text-muted-foreground/60 ml-0.5">Wk {bestEntry.week}</span>
+                          </span>
+                        )}
+                        <TrendArrow data={weeklyPts} />
+                      </div>
+                    </div>
+                    <LineChartSVG
+                      data={weeklyPts}
+                      rollingAvg={rollingPts}
+                      bestIdx={bestIdx}
+                      height={130}
+                      label="fpts"
+                      accentColor="hsl(var(--primary))"
+                    />
+                  </div>
+
+                  {secondaryData && secondaryData.length > 1 && secondaryLabel && (
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="text-xs text-muted-foreground font-medium">{secondaryLabel}</p>
+                          <span className="text-[10px] text-muted-foreground/60">(3-wk rolling avg)</span>
+                        </div>
+                        <TrendArrow data={secondaryData} />
+                      </div>
+                      <LineChartSVG
+                        data={secondaryData}
+                        rollingAvg={secondaryRolling || undefined}
+                        height={90}
+                        label="secondary"
+                        accentColor="hsl(var(--chart-2))"
+                      />
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })()}
 
           {keyStats.length > 0 && (
             <Card>
