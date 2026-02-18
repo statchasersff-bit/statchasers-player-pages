@@ -241,7 +241,13 @@ function computeGameLogStats(entries: GameLogEntry[], position: string | null = 
   const starterPct = gamesPlayed > 0 ? (starterGames / gamesPlayed) * 100 : 0;
   const bustPct = gamesPlayed > 0 ? (bustGames / gamesPlayed) * 100 : 0;
 
-  return { gamesPlayed, totalPts, ppg, bestWeek, last4Ppg, elitePct, starterPct, bustPct, eliteGames, starterGames, bustGames };
+  const ptsArr = playedEntries.map(e => e.stats.pts_ppr);
+  const mean = ptsArr.length > 0 ? ptsArr.reduce((a, b) => a + b, 0) / ptsArr.length : 0;
+  const volatility = ptsArr.length > 1
+    ? Math.sqrt(ptsArr.reduce((s, v) => s + (v - mean) ** 2, 0) / (ptsArr.length - 1))
+    : 0;
+
+  return { gamesPlayed, totalPts, ppg, bestWeek, last4Ppg, elitePct, starterPct, bustPct, eliteGames, starterGames, bustGames, volatility };
 }
 
 function getRankColor(rank: number | null | undefined): string {
@@ -647,27 +653,40 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
 
       {hasData ? (
         <>
-          <div className="grid grid-cols-5 gap-2" data-testid="overview-stat-boxes">
-            <StatBox label="PPG" value={seasonPpg.toFixed(1)} sub={`${stats.gamesPlayed} games`} />
-            <StatBox
-              label="Rank"
-              value={player.seasonRank ? `${posLabel}${player.seasonRank}` : '\u2014'}
-              sub="Season"
-            />
-            <div className="p-3 rounded-md bg-green-500/10 dark:bg-green-900/20 text-center">
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-2" data-testid="overview-stat-boxes">
+            <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60 text-center">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">PPG</p>
+              <p className="text-xl font-bold text-foreground tabular-nums mt-0.5">{seasonPpg.toFixed(1)}</p>
+              <p className="text-[10px] text-muted-foreground/70">
+                {player.seasonRank ? `${posLabel}${player.seasonRank} Overall` : `${stats.gamesPlayed} GP`}
+              </p>
+            </div>
+            {player.seasonRank ? (
+              <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60 text-center">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Rank</p>
+                <p className="text-xl font-bold text-foreground tabular-nums mt-0.5">{posLabel}{player.seasonRank}</p>
+                <p className="text-[10px] text-muted-foreground/70">{stats.gamesPlayed} GP</p>
+              </div>
+            ) : null}
+            <div className="p-3 rounded-md bg-amber-500/8 dark:bg-amber-900/15 text-center">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Elite %</p>
-              <p className="text-lg font-bold text-green-600 dark:text-green-400 tabular-nums mt-0.5">{stats.elitePct.toFixed(0)}%</p>
-              <p className="text-[10px] text-muted-foreground/70">Top {thresholds.elite} {posLabel}</p>
+              <p className="text-lg font-bold text-amber-600 dark:text-amber-400 tabular-nums mt-0.5">{stats.elitePct.toFixed(0)}%</p>
+              <p className="text-[10px] text-muted-foreground/70">Top {thresholds.elite} Weekly Finishes</p>
             </div>
-            <div className="p-3 rounded-md bg-blue-500/10 dark:bg-blue-900/20 text-center">
+            <div className="p-3 rounded-md bg-sky-500/8 dark:bg-sky-900/15 text-center">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Starter %</p>
-              <p className="text-lg font-bold text-blue-600 dark:text-blue-400 tabular-nums mt-0.5">{stats.starterPct.toFixed(0)}%</p>
-              <p className="text-[10px] text-muted-foreground/70">Top 12 {posLabel}</p>
+              <p className="text-lg font-bold text-sky-600 dark:text-sky-400 tabular-nums mt-0.5">{stats.starterPct.toFixed(0)}%</p>
+              <p className="text-[10px] text-muted-foreground/70">Top 12 Weekly Finishes</p>
             </div>
-            <div className="p-3 rounded-md bg-red-500/10 dark:bg-red-900/20 text-center">
+            <div className="p-3 rounded-md bg-red-500/8 dark:bg-red-900/15 text-center">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Bust %</p>
               <p className="text-lg font-bold text-red-500 dark:text-red-400 tabular-nums mt-0.5">{stats.bustPct.toFixed(0)}%</p>
-              <p className="text-[10px] text-muted-foreground/70">{posLabel}{thresholds.bust}+</p>
+              <p className="text-[10px] text-muted-foreground/70">Outside Top {thresholds.bust}</p>
+            </div>
+            <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60 text-center">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Volatility</p>
+              <p className="text-lg font-bold text-foreground tabular-nums mt-0.5">{stats.volatility.toFixed(1)}</p>
+              <p className="text-[10px] text-muted-foreground/70">Std Dev FPTS</p>
             </div>
           </div>
 
