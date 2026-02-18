@@ -856,6 +856,149 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
             );
           })()}
 
+          {activeEntries.length >= 3 && (() => {
+            const pos = player.position;
+            const getStat = (e: GameLogEntry, key: string) => (e.stats as unknown as Record<string, number>)[key] ?? 0;
+            const last3 = activeEntries.slice(-3);
+            const gp = activeEntries.length;
+            const roleSznAvg = weeklyPts.reduce((a, b) => a + b, 0) / weeklyPts.length;
+            const roleLast3Avg = weeklyPts.slice(-3).reduce((a, b) => a + b, 0) / Math.min(3, weeklyPts.length);
+            const rolePpgPct = roleSznAvg > 0 ? ((roleLast3Avg - roleSznAvg) / roleSznAvg) * 100 : 0;
+
+            type RoleCard = { label: string; season: number; recent: number; pct: number; fmt: (v: number) => string };
+            const cards: RoleCard[] = [];
+            let signal = '';
+
+            const buildCard = (label: string, seasonSum: number, recentSum: number, perGame: boolean, fmt?: (v: number) => string): RoleCard => {
+              const sVal = perGame ? seasonSum / gp : seasonSum;
+              const rVal = perGame ? recentSum / 3 : recentSum;
+              const pct = sVal > 0 ? ((rVal - sVal) / sVal) * 100 : 0;
+              return { label, season: sVal, recent: rVal, pct, fmt: fmt || (v => v.toFixed(1)) };
+            };
+
+            if (pos === 'WR' || pos === 'TE') {
+              const sTgt = activeEntries.reduce((s, e) => s + getStat(e, 'rec_tgt'), 0);
+              const rTgt = last3.reduce((s, e) => s + getStat(e, 'rec_tgt'), 0);
+              const sYd = activeEntries.reduce((s, e) => s + getStat(e, 'rec_yd'), 0);
+              const rYd = last3.reduce((s, e) => s + getStat(e, 'rec_yd'), 0);
+              const sRec = activeEntries.reduce((s, e) => s + getStat(e, 'rec'), 0);
+              const rRec = last3.reduce((s, e) => s + getStat(e, 'rec'), 0);
+              const sTd = activeEntries.reduce((s, e) => s + getStat(e, 'rec_td'), 0);
+              const rTd = last3.reduce((s, e) => s + getStat(e, 'rec_td'), 0);
+
+              cards.push(buildCard('Targets/G', sTgt, rTgt, true));
+              cards.push(buildCard('Yards/G', sYd, rYd, true));
+              const sCatch = sTgt > 0 ? (sRec / sTgt) * 100 : 0;
+              const rCatch = rTgt > 0 ? (rRec / rTgt) * 100 : 0;
+              const catchPct = sCatch > 0 ? ((rCatch - sCatch) / sCatch) * 100 : 0;
+              cards.push({ label: 'Catch %', season: sCatch, recent: rCatch, pct: catchPct, fmt: v => `${v.toFixed(0)}%` });
+              const sYpt = sTgt > 0 ? sYd / sTgt : 0;
+              const rYpt = rTgt > 0 ? rYd / rTgt : 0;
+              const yptPct = sYpt > 0 ? ((rYpt - sYpt) / sYpt) * 100 : 0;
+              cards.push({ label: 'Yds/Target', season: sYpt, recent: rYpt, pct: yptPct, fmt: v => v.toFixed(1) });
+              cards.push(buildCard('TD Rate', sTd, rTd, true));
+              cards.push({ label: 'Starter %', season: stats.starterPct, recent: stats.starterPct, pct: 0, fmt: v => `${v.toFixed(0)}%` });
+
+              const tgtPct = cards[0].pct;
+              if (rolePpgPct < -5) {
+                if (tgtPct < -15) signal = 'Usage-driven dip \u2014 target volume declining.';
+                else if (Math.abs(tgtPct) <= 10) signal = 'Efficiency-driven dip \u2014 targets stable, production falling.';
+                else if (tgtPct > 10) signal = 'Positive usage, low conversion \u2014 targets up but output down.';
+              } else if (rolePpgPct > 5) {
+                if (tgtPct > 10) signal = 'Rising usage fueling production gains.';
+                else signal = 'Efficiency-driven surge \u2014 doing more with similar opportunities.';
+              }
+
+            } else if (pos === 'RB') {
+              const sCarr = activeEntries.reduce((s, e) => s + getStat(e, 'rush_att'), 0);
+              const rCarr = last3.reduce((s, e) => s + getStat(e, 'rush_att'), 0);
+              const sRYd = activeEntries.reduce((s, e) => s + getStat(e, 'rush_yd'), 0);
+              const rRYd = last3.reduce((s, e) => s + getStat(e, 'rush_yd'), 0);
+              const sTgt = activeEntries.reduce((s, e) => s + getStat(e, 'rec_tgt'), 0);
+              const rTgt = last3.reduce((s, e) => s + getStat(e, 'rec_tgt'), 0);
+              const sTd = activeEntries.reduce((s, e) => s + getStat(e, 'rush_td'), 0) + activeEntries.reduce((s, e) => s + getStat(e, 'rec_td'), 0);
+              const rTd = last3.reduce((s, e) => s + getStat(e, 'rush_td'), 0) + last3.reduce((s, e) => s + getStat(e, 'rec_td'), 0);
+
+              cards.push(buildCard('Carries/G', sCarr, rCarr, true));
+              cards.push(buildCard('Rush Yds/G', sRYd, rRYd, true));
+              const sYpc = sCarr > 0 ? sRYd / sCarr : 0;
+              const rYpc = rCarr > 0 ? rRYd / rCarr : 0;
+              const ypcPct = sYpc > 0 ? ((rYpc - sYpc) / sYpc) * 100 : 0;
+              cards.push({ label: 'YPC', season: sYpc, recent: rYpc, pct: ypcPct, fmt: v => v.toFixed(1) });
+              cards.push(buildCard('Targets/G', sTgt, rTgt, true));
+              cards.push(buildCard('Total TD/G', sTd, rTd, true));
+              cards.push({ label: 'Starter %', season: stats.starterPct, recent: stats.starterPct, pct: 0, fmt: v => `${v.toFixed(0)}%` });
+
+              const carrPct = cards[0].pct;
+              if (rolePpgPct < -5) {
+                if (carrPct < -15) signal = 'Usage-driven dip \u2014 carry volume declining.';
+                else if (Math.abs(carrPct) <= 10) signal = 'Efficiency-driven dip \u2014 carries stable, production falling.';
+                else if (carrPct > 10) signal = 'Positive usage, low conversion \u2014 carries up but output down.';
+              } else if (rolePpgPct > 5) {
+                if (carrPct > 10) signal = 'Rising workload fueling production gains.';
+                else signal = 'Efficiency-driven surge \u2014 doing more with similar volume.';
+              }
+
+            } else if (pos === 'QB') {
+              const sCmp = activeEntries.reduce((s, e) => s + getStat(e, 'pass_cmp'), 0);
+              const rCmp = last3.reduce((s, e) => s + getStat(e, 'pass_cmp'), 0);
+              const sAtt = activeEntries.reduce((s, e) => s + getStat(e, 'pass_att'), 0);
+              const rAtt = last3.reduce((s, e) => s + getStat(e, 'pass_att'), 0);
+              const sYd = activeEntries.reduce((s, e) => s + getStat(e, 'pass_yd'), 0);
+              const rYd = last3.reduce((s, e) => s + getStat(e, 'pass_yd'), 0);
+              const sTd = activeEntries.reduce((s, e) => s + getStat(e, 'pass_td'), 0);
+              const rTd = last3.reduce((s, e) => s + getStat(e, 'pass_td'), 0);
+              const sInt = activeEntries.reduce((s, e) => s + getStat(e, 'pass_int'), 0);
+              const rInt = last3.reduce((s, e) => s + getStat(e, 'pass_int'), 0);
+              const sRush = activeEntries.reduce((s, e) => s + getStat(e, 'rush_yd'), 0);
+              const rRush = last3.reduce((s, e) => s + getStat(e, 'rush_yd'), 0);
+
+              cards.push(buildCard('Pass Yds/G', sYd, rYd, true));
+              cards.push(buildCard('TD/G', sTd, rTd, true));
+              const sPct = sAtt > 0 ? (sCmp / sAtt) * 100 : 0;
+              const rPctVal = rAtt > 0 ? (rCmp / rAtt) * 100 : 0;
+              const cmpPctDelta = sPct > 0 ? ((rPctVal - sPct) / sPct) * 100 : 0;
+              cards.push({ label: 'Cmp %', season: sPct, recent: rPctVal, pct: cmpPctDelta, fmt: v => `${v.toFixed(0)}%` });
+              cards.push(buildCard('INT/G', sInt, rInt, true));
+              cards.push(buildCard('Rush Yds/G', sRush, rRush, true));
+              cards.push({ label: 'Starter %', season: stats.starterPct, recent: stats.starterPct, pct: 0, fmt: v => `${v.toFixed(0)}%` });
+
+              if (rolePpgPct < -5) signal = 'Production declining \u2014 monitor passing efficiency and turnovers.';
+              else if (rolePpgPct > 5) signal = 'QB trending upward \u2014 elevated production vs season baseline.';
+            }
+
+            if (cards.length === 0) return null;
+
+            return (
+              <Card>
+                <CardContent className="p-4">
+                  <p className="text-xs text-muted-foreground font-medium mb-3">Role Snapshot</p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2" data-testid="role-snapshot-grid">
+                    {cards.map(c => (
+                      <div key={c.label} className="p-2.5 rounded-md bg-muted/30 dark:bg-slate-800/40 text-center">
+                        <p className="text-[10px] text-muted-foreground font-medium mb-1">{c.label}</p>
+                        <p className="text-sm font-bold text-foreground tabular-nums">{c.fmt(c.recent)}</p>
+                        <div className="flex items-center justify-center gap-1.5 mt-0.5">
+                          <span className="text-[9px] text-muted-foreground/60">Szn: {c.fmt(c.season)}</span>
+                          {Math.abs(c.pct) >= 1 && (
+                            <span className={`text-[9px] font-medium ${getTrendColor(c.pct)}`}>
+                              {c.pct > 0 ? '+' : ''}{c.pct.toFixed(0)}%
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {signal && (
+                    <p className="text-[10px] text-muted-foreground/60 italic mt-2.5" data-testid="text-role-signal">
+                      Signal: {signal}
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })()}
+
           {keyStats.length > 0 && (
             <Card>
               <CardContent className="p-4">
