@@ -1119,9 +1119,13 @@ export default function PlayerProfile() {
         </div>
       </section>
 
-      <div className="sticky top-[53px] z-40 bg-background border-b">
+      <div className="sticky top-[53px] z-40 bg-background/95 backdrop-blur-sm border-b">
         <div className="max-w-4xl mx-auto px-4">
-          <nav className="flex gap-1 overflow-x-auto -mb-px" data-testid="profile-tabs">
+          <nav
+            className="flex gap-1 overflow-x-auto -mb-px scrollbar-hide"
+            style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            data-testid="profile-tabs"
+          >
             {TAB_CONFIG.map(tab => {
               const isActive = activeTab === tab.key;
               const Icon = tab.icon;
@@ -1129,16 +1133,26 @@ export default function PlayerProfile() {
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`flex items-center gap-1.5 px-3 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
+                  className={`relative flex items-center gap-1.5 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors duration-200 ${
                     isActive
-                      ? 'border-primary text-primary'
-                      : 'border-transparent text-muted-foreground'
+                      ? 'text-foreground'
+                      : 'text-muted-foreground'
                   }`}
                   data-testid={`tab-${tab.key}`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-[#D4A843]' : ''}`} />
                   <span className="hidden sm:inline">{tab.label}</span>
                   <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
+                  <span
+                    className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full transition-all duration-300"
+                    style={{
+                      background: isActive
+                        ? 'linear-gradient(90deg, #D4A843, #F5D36E, #D4A843)'
+                        : 'transparent',
+                      opacity: isActive ? 1 : 0,
+                      transform: isActive ? 'scaleX(1)' : 'scaleX(0)',
+                    }}
+                  />
                 </button>
               );
             })}
@@ -1163,21 +1177,27 @@ export default function PlayerProfile() {
           </Card>
         )}
 
-        {activeTab === "overview" && (
-          <OverviewTab player={playerWithSeasons} entries={defaultEntries} />
-        )}
-        {activeTab === "gamelog" && (
-          <GameLogTab player={playerWithSeasons} />
-        )}
-        {activeTab === "usage" && (
-          <UsageTrendsTab player={playerWithSeasons} entries={defaultEntries} />
-        )}
-        {activeTab === "rankings" && (
-          <RankingsTab player={player} />
-        )}
-        {activeTab === "news" && (
-          <NewsTab player={player} />
-        )}
+        <div
+          key={activeTab}
+          className="animate-in fade-in duration-300"
+          style={{ animation: 'fadeSlideIn 0.3s ease-out' }}
+        >
+          {activeTab === "overview" && (
+            <OverviewTab player={playerWithSeasons} entries={defaultEntries} />
+          )}
+          {activeTab === "gamelog" && (
+            <GameLogTab player={playerWithSeasons} />
+          )}
+          {activeTab === "usage" && (
+            <UsageTrendsTab player={playerWithSeasons} entries={defaultEntries} />
+          )}
+          {activeTab === "rankings" && (
+            <RankingsTab player={player} />
+          )}
+          {activeTab === "news" && (
+            <NewsTab player={player} />
+          )}
+        </div>
 
         {relatedPlayers && relatedPlayers.length > 0 && (
           <div className="mt-8">
