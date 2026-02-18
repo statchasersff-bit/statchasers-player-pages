@@ -436,44 +436,47 @@ function computeRollingAvg(data: number[], window: number = 3): number[] {
   });
 }
 
-function TrendArrow({ data }: { data: number[] }) {
+function TrendArrow({ data, unit = 'PPG' }: { data: number[]; unit?: string }) {
   if (data.length < 4) return null;
   const recent = data.slice(-3);
   const earlier = data.slice(-6, -3);
   if (earlier.length === 0) return null;
   const recentAvg = recent.reduce((a, b) => a + b, 0) / recent.length;
   const earlierAvg = earlier.reduce((a, b) => a + b, 0) / earlier.length;
-  const pct = earlierAvg > 0 ? ((recentAvg - earlierAvg) / earlierAvg) * 100 : 0;
+  const diff = recentAvg - earlierAvg;
+  const pct = earlierAvg > 0 ? ((diff) / earlierAvg) * 100 : 0;
+  const delta = `${diff > 0 ? '+' : ''}${diff.toFixed(1)} ${unit}`;
 
   if (Math.abs(pct) < 5) {
     return (
       <span className="inline-flex items-center gap-1 text-xs text-muted-foreground font-medium" data-testid="text-trend-arrow">
-        <Minus className="w-3.5 h-3.5" /> Stable
+        <Minus className="w-3.5 h-3.5" /> Stable <span className="text-muted-foreground/60">{delta}</span>
       </span>
     );
   }
   if (pct > 0) {
     return (
       <span className="inline-flex items-center gap-1 text-xs text-green-600 dark:text-green-400 font-medium" data-testid="text-trend-arrow">
-        <ArrowUpRight className="w-3.5 h-3.5" /> Trending Up
+        <ArrowUpRight className="w-3.5 h-3.5" /> {delta} <span className="opacity-70">({pct > 0 ? '+' : ''}{pct.toFixed(0)}%)</span>
       </span>
     );
   }
   return (
     <span className="inline-flex items-center gap-1 text-xs text-red-500 dark:text-red-400 font-medium" data-testid="text-trend-arrow">
-      <ArrowDownRight className="w-3.5 h-3.5" /> Trending Down
+      <ArrowDownRight className="w-3.5 h-3.5" /> {delta} <span className="opacity-70">({pct.toFixed(0)}%)</span>
     </span>
   );
 }
 
-function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentColor = "hsl(var(--primary))", fillColor = "hsl(var(--primary) / 0.08)" }: {
+function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentColor = "hsl(var(--primary))", showAvgLine = false, highlightLast = 0 }: {
   data: number[];
   rollingAvg?: number[];
   bestIdx?: number;
   height?: number;
   label?: string;
   accentColor?: string;
-  fillColor?: string;
+  showAvgLine?: boolean;
+  highlightLast?: number;
 }) {
   if (data.length < 2) return null;
   const max = Math.max(...data, 1);
@@ -499,16 +502,44 @@ function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentCo
 
   const bestPoint = bestIdx != null && bestIdx >= 0 ? points[bestIdx] : null;
 
+  const avg = data.reduce((a, b) => a + b, 0) / data.length;
+  const avgY = padding.top + chartH - (avg / max) * chartH;
+
+  const hlStart = highlightLast > 0 && data.length >= highlightLast
+    ? points[data.length - highlightLast].x
+    : null;
+
+  const uid = label || 'default';
+
   return (
     <div data-testid="chart-line-svg">
       <svg viewBox={`0 0 ${viewW} ${height}`} className="w-full" style={{ height }} preserveAspectRatio="none">
         <defs>
-          <linearGradient id={`fill-${label || 'default'}`} x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id={`fill-${uid}`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor={accentColor} stopOpacity="0.15" />
             <stop offset="100%" stopColor={accentColor} stopOpacity="0" />
           </linearGradient>
+          {hlStart != null && (
+            <linearGradient id={`hl-${uid}`} x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor={accentColor} stopOpacity="0" />
+              <stop offset="30%" stopColor={accentColor} stopOpacity="0.06" />
+              <stop offset="100%" stopColor={accentColor} stopOpacity="0.1" />
+            </linearGradient>
+          )}
         </defs>
-        <path d={areaPath} fill={`url(#fill-${label || 'default'})`} />
+
+        {hlStart != null && (
+          <rect x={hlStart} y={padding.top} width={viewW - hlStart} height={chartH} fill={`url(#hl-${uid})`} rx="4" />
+        )}
+
+        {showAvgLine && (
+          <>
+            <line x1={0} y1={avgY} x2={viewW} y2={avgY} stroke="currentColor" strokeWidth="1" strokeDasharray="4 3" opacity="0.15" />
+            <text x={viewW - 2} y={avgY - 4} textAnchor="end" className="fill-muted-foreground" fontSize="9" opacity="0.5">avg {avg.toFixed(1)}</text>
+          </>
+        )}
+
+        <path d={areaPath} fill={`url(#fill-${uid})`} />
         <path d={linePath} fill="none" stroke={accentColor} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" opacity="0.5" />
         {rollingPath && (
           <path d={rollingPath} fill="none" stroke={accentColor} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
@@ -716,10 +747,13 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
             const bestIdx = weeklyPts.indexOf(Math.max(...weeklyPts));
             const bestVal = weeklyPts[bestIdx];
             const bestEntry = activeEntries[bestIdx];
+            const seasonAvg = weeklyPts.reduce((a, b) => a + b, 0) / weeklyPts.length;
+            const last3Avg = weeklyPts.slice(-3).reduce((a, b) => a + b, 0) / Math.min(3, weeklyPts.length);
+            const last3Pct = seasonAvg > 0 ? ((last3Avg - seasonAvg) / seasonAvg) * 100 : 0;
 
-            const secondaryLabel = player.position === 'QB' ? 'Rush Attempts' :
-              player.position === 'RB' ? 'Touches/Game' :
-              (player.position === 'WR' || player.position === 'TE') ? 'Targets/Game' : null;
+            const secondaryMetric = player.position === 'QB' ? { label: 'Rush Attempts', unit: 'att' } :
+              player.position === 'RB' ? { label: 'Touches/Game', unit: 'tch' } :
+              (player.position === 'WR' || player.position === 'TE') ? { label: 'Targets/Game', unit: 'tgt' } : null;
             const secondaryData = player.position === 'QB'
               ? activeEntries.map(e => (e.stats as unknown as Record<string, number>).rush_att ?? 0)
               : player.position === 'RB'
@@ -728,6 +762,15 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
               ? activeEntries.map(e => (e.stats as unknown as Record<string, number>).rec_tgt ?? 0)
               : null;
             const secondaryRolling = secondaryData ? computeRollingAvg(secondaryData) : null;
+            const sec3Avg = secondaryData && secondaryData.length >= 3
+              ? secondaryData.slice(-3).reduce((a, b) => a + b, 0) / 3
+              : null;
+            const secSeasonAvg = secondaryData && secondaryData.length > 0
+              ? secondaryData.reduce((a, b) => a + b, 0) / secondaryData.length
+              : null;
+            const sec3Pct = sec3Avg != null && secSeasonAvg && secSeasonAvg > 0
+              ? ((sec3Avg - secSeasonAvg) / secSeasonAvg) * 100
+              : null;
 
             return (
               <Card>
@@ -735,7 +778,7 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
                   <div>
                     <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <p className="text-xs text-muted-foreground font-medium">Weekly Fantasy Points</p>
+                        <p className="text-xs text-muted-foreground font-medium">Points Trend</p>
                         <span className="text-[10px] text-muted-foreground/60">(3-wk rolling avg)</span>
                       </div>
                       <div className="flex items-center gap-3 flex-wrap">
@@ -745,7 +788,7 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
                             <span className="text-muted-foreground/60 ml-0.5">Wk {bestEntry.week}</span>
                           </span>
                         )}
-                        <TrendArrow data={weeklyPts} />
+                        <TrendArrow data={weeklyPts} unit="PPG" />
                       </div>
                     </div>
                     <LineChartSVG
@@ -755,17 +798,27 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
                       height={130}
                       label="fpts"
                       accentColor="hsl(var(--primary))"
+                      showAvgLine
+                      highlightLast={3}
                     />
+                    <p className="text-[10px] text-muted-foreground/70 mt-1.5" data-testid="text-points-insight">
+                      Averaging <span className="font-medium text-foreground/80">{last3Avg.toFixed(1)} PPG</span> over last 3 weeks
+                      {Math.abs(last3Pct) >= 1 && (
+                        <span className={last3Pct > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}>
+                          {' '}({last3Pct > 0 ? '+' : ''}{last3Pct.toFixed(0)}% vs season avg)
+                        </span>
+                      )}
+                    </p>
                   </div>
 
-                  {secondaryData && secondaryData.length > 1 && secondaryLabel && (
+                  {secondaryData && secondaryData.length > 1 && secondaryMetric && (
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <p className="text-xs text-muted-foreground font-medium">{secondaryLabel}</p>
-                          <span className="text-[10px] text-muted-foreground/60">(3-wk rolling avg)</span>
+                          <p className="text-xs text-muted-foreground font-medium">Usage Trend</p>
+                          <span className="text-[10px] text-muted-foreground/60">{secondaryMetric.label} (3-wk avg)</span>
                         </div>
-                        <TrendArrow data={secondaryData} />
+                        <TrendArrow data={secondaryData} unit={secondaryMetric.unit} />
                       </div>
                       <LineChartSVG
                         data={secondaryData}
@@ -773,7 +826,19 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
                         height={90}
                         label="secondary"
                         accentColor="hsl(var(--chart-2))"
+                        showAvgLine
+                        highlightLast={3}
                       />
+                      {sec3Avg != null && secSeasonAvg != null && (
+                        <p className="text-[10px] text-muted-foreground/70 mt-1.5" data-testid="text-usage-insight">
+                          Averaging <span className="font-medium text-foreground/80">{sec3Avg.toFixed(1)} {secondaryMetric.unit}/gm</span> over last 3 weeks
+                          {sec3Pct != null && Math.abs(sec3Pct) >= 1 && (
+                            <span className={sec3Pct > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}>
+                              {' '}({sec3Pct > 0 ? '+' : ''}{sec3Pct.toFixed(0)}% vs season avg)
+                            </span>
+                          )}
+                        </p>
+                      )}
                     </div>
                   )}
                 </CardContent>
