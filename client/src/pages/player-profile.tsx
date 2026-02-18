@@ -698,11 +698,28 @@ interface SeasonStat {
   bustPct: number;
 }
 
+interface CareerProfile {
+  ppg: number;
+  gamesPlayed: number;
+  maxGames: number;
+  durabilityPct: number;
+  pos1Pct: number;
+  pos2Pct: number;
+  pos3Pct: number;
+  bustPct: number;
+  volatility: number;
+  volatilityLabel: string;
+  seasons: number;
+  seasonPpgs: { season: number; ppg: number }[];
+  smallSample: boolean;
+}
+
 type PlayerWithSeasons = Player & {
   availableSeasons?: number[];
   seasonLabel?: string | null;
   seasonRank?: number | null;
   multiSeasonStats?: SeasonStat[];
+  careerProfile?: CareerProfile | null;
 };
 
 function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: GameLogEntry[] }) {
@@ -716,25 +733,7 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
   const seasonPpg = stats?.ppg ?? 0;
   const last4Ppg = stats?.last4Ppg ?? 0;
 
-  const multi = player.multiSeasonStats || [];
-  const hasMultiSeason = multi.length > 1;
-  const multiYearAvg = hasMultiSeason ? (() => {
-    const totalGames = multi.reduce((s, m) => s + m.gamesPlayed, 0);
-    const totalPts = multi.reduce((s, m) => s + m.ppg * m.gamesPlayed, 0);
-    const wPos1 = multi.reduce((s, m) => s + m.pos1Pct * m.gamesPlayed, 0);
-    const wPos2 = multi.reduce((s, m) => s + m.pos2Pct * m.gamesPlayed, 0);
-    const wPos3 = multi.reduce((s, m) => s + m.pos3Pct * m.gamesPlayed, 0);
-    const wBust = multi.reduce((s, m) => s + m.bustPct * m.gamesPlayed, 0);
-    return {
-      ppg: totalGames > 0 ? totalPts / totalGames : 0,
-      pos1Pct: totalGames > 0 ? wPos1 / totalGames : 0,
-      pos2Pct: totalGames > 0 ? wPos2 / totalGames : 0,
-      pos3Pct: totalGames > 0 ? wPos3 / totalGames : 0,
-      bustPct: totalGames > 0 ? wBust / totalGames : 0,
-      seasons: multi.length,
-      games: totalGames,
-    };
-  })() : null;
+  const cp = player.careerProfile || null;
 
   const thresholds = getTierThresholds(player.position);
   const posLabel = player.position || '';
@@ -1175,40 +1174,90 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
             </Card>
           )}
 
-          {multiYearAvg && (
+          {cp && (() => {
+            const durColor = cp.durabilityPct >= 90 ? 'text-green-600 dark:text-green-400' : cp.durabilityPct >= 70 ? 'text-foreground' : 'text-red-500 dark:text-red-400';
+            const volColor = cp.volatilityLabel === 'Low' ? 'text-green-600 dark:text-green-400' : cp.volatilityLabel === 'Moderate' ? 'text-foreground' : 'text-red-500 dark:text-red-400';
+            const ppgs = cp.seasonPpgs;
+            const maxPpg = Math.max(...ppgs.map(p => p.ppg), 1);
+            const chartH = 40;
+
+            return (
             <Card>
-              <CardContent className="p-4">
-                <p className="text-xs text-muted-foreground font-medium mb-3">
-                  {multiYearAvg.seasons}-Year Career Averages
-                  <span className="text-muted-foreground/60 ml-1">({multiYearAvg.games} games)</span>
-                </p>
-                <div className={`grid gap-3 ${thresholds.hasTier3 ? 'grid-cols-2 md:grid-cols-5' : 'grid-cols-4'}`} data-testid="multi-season-averages">
-                  <div className="text-center p-2 rounded-md bg-muted/30 dark:bg-slate-800/40">
-                    <p className="text-lg font-bold text-foreground tabular-nums">{multiYearAvg.ppg.toFixed(1)}</p>
-                    <p className="text-[10px] text-muted-foreground">PPG</p>
+              <CardContent className="p-3.5" data-testid="section-career-profile">
+                {cp.smallSample && (
+                  <Badge variant="secondary" className="text-[9px] px-1.5 py-0 mb-2 bg-amber-500/15 text-amber-700 dark:text-amber-400" data-testid="badge-small-sample">Small Sample</Badge>
+                )}
+                <div className="flex items-center gap-2 mb-3 flex-wrap">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium" data-testid="text-career-profile-label">
+                    3-Year Performance <span className="normal-case tracking-normal">({cp.gamesPlayed} Games)</span>
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-3" data-testid="career-profile-stats">
+                  <div>
+                    <span className="text-[9px] uppercase tracking-wider text-muted-foreground/40 font-medium">PPG</span>
+                    <p className="text-lg font-bold text-foreground tabular-nums">{cp.ppg.toFixed(1)}</p>
                   </div>
-                  <div className="text-center p-2 rounded-md bg-green-500/10 dark:bg-green-900/20">
-                    <p className="text-lg font-bold text-green-600 dark:text-green-400 tabular-nums">{multiYearAvg.pos1Pct.toFixed(0)}%</p>
-                    <p className="text-[10px] text-muted-foreground">{getTierLabel(player.position, 1)} %</p>
-                  </div>
-                  <div className="text-center p-2 rounded-md bg-teal-500/10 dark:bg-teal-900/20">
-                    <p className="text-lg font-bold text-teal-600 dark:text-teal-400 tabular-nums">{multiYearAvg.pos2Pct.toFixed(0)}%</p>
-                    <p className="text-[10px] text-muted-foreground">{getTierLabel(player.position, 2)} %</p>
-                  </div>
-                  {thresholds.hasTier3 && (
-                    <div className="text-center p-2 rounded-md bg-slate-500/10 dark:bg-slate-700/20">
-                      <p className="text-lg font-bold text-slate-500 dark:text-slate-400 tabular-nums">{multiYearAvg.pos3Pct.toFixed(0)}%</p>
-                      <p className="text-[10px] text-muted-foreground">{getTierLabel(player.position, 3)} %</p>
-                    </div>
-                  )}
-                  <div className="text-center p-2 rounded-md bg-red-500/10 dark:bg-red-900/20">
-                    <p className="text-lg font-bold text-red-500 dark:text-red-400 tabular-nums">{multiYearAvg.bustPct.toFixed(0)}%</p>
-                    <p className="text-[10px] text-muted-foreground">Bust %</p>
+                  <div>
+                    <span className="text-[9px] uppercase tracking-wider text-muted-foreground/40 font-medium">Durability</span>
+                    <p className={`text-lg font-bold tabular-nums ${durColor}`}>{cp.durabilityPct.toFixed(0)}%</p>
+                    <span className="text-[9px] text-muted-foreground/40">{cp.gamesPlayed} of {cp.maxGames} games</span>
                   </div>
                 </div>
+
+                <div className="mb-3">
+                  <span className="text-[9px] uppercase tracking-wider text-muted-foreground/40 font-medium">Tier Breakdown</span>
+                  <div className={`grid gap-1.5 mt-1.5 ${thresholds.hasTier3 ? 'grid-cols-4' : 'grid-cols-3'}`} data-testid="career-tier-breakdown">
+                    <div className="text-center p-1.5 rounded-md bg-green-500/10 dark:bg-green-900/20">
+                      <p className="text-sm font-bold text-green-600 dark:text-green-400 tabular-nums">{cp.pos1Pct.toFixed(0)}%</p>
+                      <p className="text-[9px] text-muted-foreground">{getTierLabel(player.position, 1)}</p>
+                    </div>
+                    <div className="text-center p-1.5 rounded-md bg-teal-500/10 dark:bg-teal-900/20">
+                      <p className="text-sm font-bold text-teal-600 dark:text-teal-400 tabular-nums">{cp.pos2Pct.toFixed(0)}%</p>
+                      <p className="text-[9px] text-muted-foreground">{getTierLabel(player.position, 2)}</p>
+                    </div>
+                    {thresholds.hasTier3 && (
+                      <div className="text-center p-1.5 rounded-md bg-slate-500/10 dark:bg-slate-700/20">
+                        <p className="text-sm font-bold text-slate-500 dark:text-slate-400 tabular-nums">{cp.pos3Pct.toFixed(0)}%</p>
+                        <p className="text-[9px] text-muted-foreground">{getTierLabel(player.position, 3)}</p>
+                      </div>
+                    )}
+                    <div className="text-center p-1.5 rounded-md bg-red-500/10 dark:bg-red-900/20">
+                      <p className="text-sm font-bold text-red-500 dark:text-red-400 tabular-nums">{cp.bustPct.toFixed(0)}%</p>
+                      <p className="text-[9px] text-muted-foreground">Bust</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-baseline gap-1.5 mb-3 flex-wrap">
+                  <span className="text-[9px] text-muted-foreground/40 font-medium">Volatility:</span>
+                  <span className={`text-xs font-semibold ${volColor}`}>{cp.volatility.toFixed(1)} ({cp.volatilityLabel})</span>
+                </div>
+
+                {ppgs.length > 1 && (
+                  <div>
+                    <span className="text-[9px] uppercase tracking-wider text-muted-foreground/40 font-medium">Career Arc</span>
+                    <div className="mt-1.5 flex items-end gap-1" data-testid="career-arc-chart" style={{ height: chartH + 16 }}>
+                      {ppgs.map((sp, i) => {
+                        const barH = Math.max(4, (sp.ppg / maxPpg) * chartH);
+                        return (
+                          <div key={sp.season} className="flex-1 flex flex-col items-center gap-0.5">
+                            <span className="text-[8px] tabular-nums text-muted-foreground/60 font-medium">{sp.ppg.toFixed(1)}</span>
+                            <div
+                              className={`w-full rounded-sm ${i === ppgs.length - 1 ? 'bg-primary/60' : 'bg-muted-foreground/20'}`}
+                              style={{ height: barH }}
+                            />
+                            <span className="text-[8px] tabular-nums text-muted-foreground/40">{String(sp.season).slice(2)}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
-          )}
+            );
+          })()}
         </>
         );
       })() : (
