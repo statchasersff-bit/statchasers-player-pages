@@ -347,37 +347,11 @@ function GameLogTable({ entries = [], position, filter }: { entries?: GameLogEnt
           {displayEntries.length > 0 ? (
             <>
               {displayEntries.map((entry, i) => {
-                const participated = hasParticipation(entry.stats, position);
                 const isExpanded = expandedRows.has(i);
                 const rank = entry.pos_rank;
                 const tierBadge = getTierBadge(rank, position);
                 const oppRank = entry.opp_rank_vs_pos;
                 const oppRankSuffix = oppRank ? `${oppRank}${oppRank === 1 ? 'st' : oppRank === 2 ? 'nd' : oppRank === 3 ? 'rd' : 'th'}` : null;
-
-                if (!participated) {
-                  return (
-                    <tr key={i} className="border-b last:border-0 opacity-50" data-testid={`row-gamelog-week-${entry.week}`}>
-                      <td className="py-2 pr-2 text-foreground font-medium">{entry.week}</td>
-                      <td className="py-2 pr-2 text-foreground whitespace-nowrap">
-                        <div className="flex flex-col">
-                          <span>{entry.opp}</span>
-                          {oppRankSuffix && <span className={`text-[10px] ${getOppRankColor(oppRank)}`}>{oppRankSuffix} vs {posLabel}</span>}
-                        </div>
-                      </td>
-                      <td className="py-2 pr-2 text-center">
-                        <Badge variant="secondary" className="text-[9px] px-1.5 py-0 bg-muted text-muted-foreground" data-testid={`badge-status-${entry.week}`}>
-                          OUT
-                        </Badge>
-                      </td>
-                      {primary.map((col) => (
-                        <td key={col.key} className="py-2 pr-2 text-right text-muted-foreground">{'\u2014'}</td>
-                      ))}
-                      <td className="py-2 pr-2 text-right text-muted-foreground">{'\u2014'}</td>
-                      <td className="py-2 text-right text-muted-foreground">{'\u2014'}</td>
-                      {hasDetail && <td className="py-2 pl-2"></td>}
-                    </tr>
-                  );
-                }
 
                 return (
                   <Fragment key={i}>
