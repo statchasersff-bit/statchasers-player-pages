@@ -53,7 +53,8 @@ Located in `wordpress-plugin/statchasers-player-pages/`
 - Supports: Generate Indexed Players, Refresh Sleeper Cache, Flush Rewrites
 
 ## Recent Changes
-- 2026-02-17: Game log ingestion from Sleeper stats API (2023-2024 seasons), position-specific stat tables (QB: CMP/ATT/YDS/TD/INT/CAR/Rush, WR/TE: TGT/REC/YDS/TD/CAR, RB: CAR/YDS/TD/TGT/REC, K: FGM/FGA/XPM/XPA), season dropdown selector, totals row, trends bar chart from real weekly fantasy points
+- 2026-02-18: Added 2025 season game log data (677 players, 7474 week entries)
+- 2026-02-17: Game log ingestion from Sleeper stats API (2023-2025 seasons), position-specific stat tables (QB: CMP/ATT/YDS/TD/INT/CAR/Rush, WR/TE: TGT/REC/YDS/TD/CAR, RB: CAR/YDS/TD/TGT/REC, K: FGM/FGA/XPM/XPA), season dropdown selector, totals row, trends bar chart from real weekly fantasy points
 - 2026-02-17: Major UX redesign of player directory: dark gradient hero with gold accents, AFC/NFC conference tabs with division sub-tabs, team color left borders on cards, position section headers, slide-over player preview panel (Sheet), Starters Only toggle, sticky mini filter bar, keyboard shortcut (/) for search, rank label badges
 - 2026-02-17: Team abbreviation mapping (JAC/WSH/OAK/STL/SD→canonical), DEF fallback for all 32 teams, name normalization (smart quotes, hyphens)
 - 2026-02-17: Added indexed player system (352 players), updated directory page, sitemap, JSON-LD, SEO enhancements
