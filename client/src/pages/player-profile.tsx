@@ -262,6 +262,15 @@ function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; po
   const getStat = (entry: GameLogEntry, key: string) =>
     (entry.stats as unknown as Record<string, number>)[key] ?? 0;
 
+  const activeEntries = entries.filter(e => e.stats.pts_ppr > 0 || Object.values(e.stats as unknown as Record<string, number>).some(v => typeof v === 'number' && v > 0));
+  const inactiveWeeks = entries.filter(e => e.stats.pts_ppr === 0 && !Object.values(e.stats as unknown as Record<string, number>).some(v => typeof v === 'number' && v > 0));
+  const gamesPlayed = activeEntries.length;
+
+  const rankedEntries = activeEntries.filter(e => e.pos_rank != null);
+  const avgFinish = rankedEntries.length > 0
+    ? rankedEntries.reduce((s, e) => s + (e.pos_rank ?? 0), 0) / rankedEntries.length
+    : null;
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm" data-testid="table-game-log">
@@ -280,55 +289,64 @@ function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; po
           </tr>
         </thead>
         <tbody>
-          {entries.length > 0 ? (
-            entries.map((entry, i) => {
-              const isExpanded = expandedRows.has(i);
-              const rank = entry.pos_rank;
-              return (
-                <Fragment key={i}>
-                  <tr
-                    className={`border-b last:border-0 ${hasDetail ? 'cursor-pointer' : ''} ${isExpanded ? 'bg-muted/30 dark:bg-slate-800/30' : ''}`}
-                    onClick={hasDetail ? () => toggleRow(i) : undefined}
-                    data-testid={`row-gamelog-week-${entry.week}`}
-                  >
-                    <td className="py-2 pr-3 text-foreground font-medium">{entry.week}</td>
-                    <td className="py-2 pr-3 text-foreground whitespace-nowrap">{entry.opp}</td>
-                    {primary.map((col) => (
-                      <td key={col.key} className="py-2 pr-3 text-foreground text-right tabular-nums">
-                        {getStat(entry, col.key)}
+          {activeEntries.length > 0 ? (
+            <>
+              {activeEntries.map((entry, i) => {
+                const isExpanded = expandedRows.has(i);
+                const rank = entry.pos_rank;
+                return (
+                  <Fragment key={i}>
+                    <tr
+                      className={`border-b last:border-0 ${hasDetail ? 'cursor-pointer' : ''} ${isExpanded ? 'bg-muted/30 dark:bg-slate-800/30' : ''}`}
+                      onClick={hasDetail ? () => toggleRow(i) : undefined}
+                      data-testid={`row-gamelog-week-${entry.week}`}
+                    >
+                      <td className="py-2 pr-3 text-foreground font-medium">{entry.week}</td>
+                      <td className="py-2 pr-3 text-foreground whitespace-nowrap">{entry.opp}</td>
+                      {primary.map((col) => (
+                        <td key={col.key} className="py-2 pr-3 text-foreground text-right tabular-nums">
+                          {getStat(entry, col.key)}
+                        </td>
+                      ))}
+                      <td className="py-2 pr-3 text-right font-semibold text-foreground tabular-nums">
+                        {entry.stats.pts_ppr.toFixed(1)}
                       </td>
-                    ))}
-                    <td className="py-2 pr-3 text-right font-semibold text-foreground tabular-nums">
-                      {entry.stats.pts_ppr.toFixed(1)}
-                    </td>
-                    <td className={`py-2 text-right tabular-nums text-xs ${getRankColor(rank)}`} data-testid={`text-finish-week-${entry.week}`}>
-                      {rank ? `${posLabel}${rank}` : '\u2014'}
-                    </td>
-                    {hasDetail && (
-                      <td className="py-2 pl-2 text-center">
-                        <ChevronRight
-                          className={`w-3.5 h-3.5 text-muted-foreground/50 transition-transform duration-200 inline-block ${isExpanded ? 'rotate-90' : ''}`}
-                        />
+                      <td className={`py-2 text-right tabular-nums text-xs ${getRankColor(rank)}`} data-testid={`text-finish-week-${entry.week}`}>
+                        {rank ? `${posLabel}${rank}` : '\u2014'}
                       </td>
-                    )}
-                  </tr>
-                  {hasDetail && isExpanded && (
-                    <tr className="bg-muted/20 dark:bg-slate-800/20" data-testid={`row-gamelog-detail-${entry.week}`}>
-                      <td colSpan={colCount} className="py-2 px-3">
-                        <div className="flex items-center gap-4 flex-wrap pl-2">
-                          {detail.map((col) => (
-                            <div key={col.key} className="flex items-center gap-1.5">
-                              <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{col.label}</span>
-                              <span className="text-sm font-semibold text-foreground tabular-nums">{getStat(entry, col.key)}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </td>
+                      {hasDetail && (
+                        <td className="py-2 pl-2 text-center">
+                          <ChevronRight
+                            className={`w-3.5 h-3.5 text-muted-foreground/50 transition-transform duration-200 inline-block ${isExpanded ? 'rotate-90' : ''}`}
+                          />
+                        </td>
+                      )}
                     </tr>
-                  )}
-                </Fragment>
-              );
-            })
+                    {hasDetail && isExpanded && (
+                      <tr className="bg-muted/20 dark:bg-slate-800/20" data-testid={`row-gamelog-detail-${entry.week}`}>
+                        <td colSpan={colCount} className="py-2 px-3">
+                          <div className="flex items-center gap-4 flex-wrap pl-2">
+                            {detail.map((col) => (
+                              <div key={col.key} className="flex items-center gap-1.5">
+                                <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{col.label}</span>
+                                <span className="text-sm font-semibold text-foreground tabular-nums">{getStat(entry, col.key)}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </Fragment>
+                );
+              })}
+              {inactiveWeeks.length > 0 && (
+                <tr className="border-t" data-testid="row-gamelog-inactive">
+                  <td colSpan={colCount} className="py-2 text-center text-xs text-muted-foreground/60 italic">
+                    {inactiveWeeks.length} week{inactiveWeeks.length > 1 ? 's' : ''} inactive (Wk {inactiveWeeks.map(e => e.week).join(', ')})
+                  </td>
+                </tr>
+              )}
+            </>
           ) : (
             <tr>
               <td colSpan={colCount} className="py-8">
@@ -343,20 +361,32 @@ function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; po
             </tr>
           )}
         </tbody>
-        {entries.length > 0 && (
+        {activeEntries.length > 0 && (
           <tfoot>
-            <tr className="border-t font-semibold">
-              <td className="py-2 pr-3 text-foreground">TOT</td>
-              <td className="py-2 pr-3"></td>
-              {primary.map((col) => (
-                <td key={col.key} className="py-2 pr-3 text-foreground text-right tabular-nums">
-                  {entries.reduce((sum, e) => sum + getStat(e, col.key), 0)}
-                </td>
-              ))}
-              <td className="py-2 pr-3 text-right text-foreground tabular-nums">
-                {entries.reduce((sum, e) => sum + e.stats.pts_ppr, 0).toFixed(1)}
+            <tr className="border-t-2 border-foreground/20">
+              <td className="py-2 pr-3 text-foreground font-bold text-xs uppercase tracking-wider" colSpan={2} data-testid="text-totals-label">
+                <div className="flex flex-col">
+                  <span>AVG/G</span>
+                  <span className="text-[10px] text-muted-foreground font-normal normal-case tracking-normal">{gamesPlayed} games</span>
+                </div>
               </td>
-              <td className="py-2"></td>
+              {primary.map((col) => {
+                const total = activeEntries.reduce((sum, e) => sum + getStat(e, col.key), 0);
+                const avg = gamesPlayed > 0 ? total / gamesPlayed : 0;
+                return (
+                  <td key={col.key} className="py-2 pr-3 text-foreground text-right tabular-nums font-semibold">
+                    {avg % 1 === 0 ? avg.toFixed(0) : avg.toFixed(1)}
+                  </td>
+                );
+              })}
+              <td className="py-2 pr-3 text-right text-foreground tabular-nums font-bold">
+                {gamesPlayed > 0
+                  ? (activeEntries.reduce((sum, e) => sum + e.stats.pts_ppr, 0) / gamesPlayed).toFixed(1)
+                  : '0.0'}
+              </td>
+              <td className={`py-2 text-right tabular-nums text-xs font-semibold ${avgFinish ? getRankColor(Math.round(avgFinish)) : ''}`} data-testid="text-avg-finish">
+                {avgFinish ? `${posLabel}${Math.round(avgFinish)}` : '\u2014'}
+              </td>
               {hasDetail && <td className="py-2 pl-2"></td>}
             </tr>
           </tfoot>
