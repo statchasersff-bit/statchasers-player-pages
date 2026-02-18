@@ -72,6 +72,60 @@ function attachRanks(entries: GameLogEntry[], playerId: string, ranks: Map<strin
   return entries.map(e => ({ ...e, pos_rank: playerRanks.get(e.week) ?? null }));
 }
 
+const oppRanksCache: Map<number, Map<string, number>> = new Map();
+
+function buildOppRanks(season: number, logs: Record<string, GameLogEntry[]>, players: Player[]): Map<string, number> {
+  if (oppRanksCache.has(season)) return oppRanksCache.get(season)!;
+
+  const playerPosMap = new Map<string, { position: string; team: string }>();
+  for (const p of players) {
+    if (p.position && p.team) playerPosMap.set(p.id, { position: p.position, team: p.team });
+  }
+
+  const oppPtsAllowed: Map<string, number[]> = new Map();
+
+  for (const [playerId, entries] of Object.entries(logs)) {
+    const info = playerPosMap.get(playerId);
+    if (!info) continue;
+    const pos = info.position;
+    for (const entry of entries) {
+      if (!hasParticipation(entry.stats, pos)) continue;
+      const normalizedOpp = normalizeTeamAbbr(entry.opp);
+      const key = `${normalizedOpp}:${pos}`;
+      if (!oppPtsAllowed.has(key)) oppPtsAllowed.set(key, []);
+      oppPtsAllowed.get(key)!.push(entry.stats.pts_ppr);
+    }
+  }
+
+  const posGroups: Map<string, { team: string; avgPtsAllowed: number }[]> = new Map();
+  oppPtsAllowed.forEach((pts: number[], key: string) => {
+    const [team, pos] = key.split(':');
+    const avg = pts.reduce((s: number, v: number) => s + v, 0) / pts.length;
+    if (!posGroups.has(pos)) posGroups.set(pos, []);
+    posGroups.get(pos)!.push({ team, avgPtsAllowed: avg });
+  });
+
+  const rankMap = new Map<string, number>();
+  posGroups.forEach((teams: { team: string; avgPtsAllowed: number }[], pos: string) => {
+    teams.sort((a: { team: string; avgPtsAllowed: number }, b: { team: string; avgPtsAllowed: number }) => a.avgPtsAllowed - b.avgPtsAllowed);
+    for (let i = 0; i < teams.length; i++) {
+      rankMap.set(`${teams[i].team}:${pos}`, i + 1);
+    }
+  });
+
+  oppRanksCache.set(season, rankMap);
+  return rankMap;
+}
+
+function attachOppRanks(entries: GameLogEntry[], position: string | null, oppRanks: Map<string, number>): GameLogEntry[] {
+  if (!position) return entries;
+  return entries.map(e => {
+    const normalizedOpp = normalizeTeamAbbr(e.opp);
+    const key = `${normalizedOpp}:${position}`;
+    return { ...e, opp_rank_vs_pos: oppRanks.get(key) ?? null };
+  });
+}
+
 function loadGameLogs(season: number): Record<string, GameLogEntry[]> {
   if (gameLogsCache.has(season)) return gameLogsCache.get(season)!;
   const file = path.resolve(GAME_LOGS_DIR, `${season}.json`);
@@ -319,6 +373,8 @@ export async function registerRoutes(
         activeSeason = s;
         const ranks = buildWeeklyRanks(s, sLogs, allPlayers);
         playerLogs = attachRanks(pLogs, player.id, ranks);
+        const oppRanks = buildOppRanks(s, sLogs, allPlayers);
+        playerLogs = attachOppRanks(playerLogs, player.position, oppRanks);
         break;
       }
     }
@@ -487,7 +543,9 @@ export async function registerRoutes(
     const season = !isNaN(seasonParam) && seasons.includes(seasonParam) ? seasonParam : (seasons[0] || new Date().getFullYear());
     const logs = loadGameLogs(season);
     const ranks = buildWeeklyRanks(season, logs, allPlayers);
-    const playerLogs = attachRanks(logs[player.id] || [], player.id, ranks);
+    let playerLogs = attachRanks(logs[player.id] || [], player.id, ranks);
+    const oppRanks = buildOppRanks(season, logs, allPlayers);
+    playerLogs = attachOppRanks(playerLogs, player.position, oppRanks);
     res.set("Cache-Control", "public, max-age=3600");
     res.json(playerLogs);
   });

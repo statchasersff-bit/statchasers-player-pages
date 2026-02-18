@@ -276,10 +276,28 @@ function getRankColor(rank: number | null | undefined): string {
   return 'text-muted-foreground';
 }
 
-function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; position: string | null }) {
+function getTierBadge(rank: number | null | undefined, position: string | null): { label: string; className: string } | null {
+  if (!rank) return null;
+  const pos = position || 'FLEX';
+  const { bust, hasTier3 } = getTierThresholds(position);
+  if (rank <= 12) return { label: `${pos}1`, className: 'bg-green-500/15 text-green-700 dark:text-green-400' };
+  const pos2End = hasTier3 ? 24 : bust;
+  if (rank <= pos2End) return { label: `${pos}2`, className: 'bg-blue-500/15 text-blue-700 dark:text-blue-400' };
+  if (hasTier3 && rank <= bust) return { label: `${pos}3`, className: 'bg-orange-500/15 text-orange-700 dark:text-orange-400' };
+  return { label: 'Bust', className: 'bg-red-500/15 text-red-600 dark:text-red-400' };
+}
+
+function getOppRankColor(rank: number | null | undefined): string {
+  if (!rank) return 'text-muted-foreground';
+  if (rank <= 8) return 'text-red-500 dark:text-red-400';
+  if (rank >= 25) return 'text-green-600 dark:text-green-400';
+  return 'text-muted-foreground';
+}
+
+function GameLogTable({ entries = [], position, filter }: { entries?: GameLogEntry[]; position: string | null; filter: 'full' | 'last5' }) {
   const { primary, detail } = getPositionColumns(position);
   const posLabel = position || '';
-  const colCount = 4 + primary.length + (detail.length > 0 ? 1 : 0);
+  const colCount = 5 + primary.length + (detail.length > 0 ? 1 : 0);
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
   const hasDetail = detail.length > 0;
 
@@ -295,11 +313,14 @@ function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; po
   const getStat = (entry: GameLogEntry, key: string) =>
     (entry.stats as unknown as Record<string, number>)[key] ?? 0;
 
-  const activeEntries = entries.filter(e => hasParticipation(e.stats, position));
+  const allActiveEntries = entries.filter(e => hasParticipation(e.stats, position));
   const inactiveWeeks = entries.filter(e => !hasParticipation(e.stats, position));
-  const gamesPlayed = activeEntries.length;
 
-  const rankedEntries = activeEntries.filter(e => e.pos_rank != null);
+  const displayEntries = filter === 'last5' ? allActiveEntries.slice(-5) : entries;
+  const activeInDisplay = displayEntries.filter(e => hasParticipation(e.stats, position));
+  const gamesPlayed = activeInDisplay.length;
+
+  const rankedEntries = activeInDisplay.filter(e => e.pos_rank != null);
   const avgFinish = rankedEntries.length > 0
     ? rankedEntries.reduce((s, e) => s + (e.pos_rank ?? 0), 0) / rankedEntries.length
     : null;
@@ -309,24 +330,55 @@ function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; po
       <table className="w-full text-sm" data-testid="table-game-log">
         <thead>
           <tr className="border-b text-left">
-            <th className="py-2 pr-3 text-muted-foreground font-medium whitespace-nowrap">WK</th>
-            <th className="py-2 pr-3 text-muted-foreground font-medium whitespace-nowrap">OPP</th>
+            <th className="py-2 pr-2 text-muted-foreground font-medium whitespace-nowrap">WK</th>
+            <th className="py-2 pr-2 text-muted-foreground font-medium whitespace-nowrap">OPP</th>
+            <th className="py-2 pr-2 text-muted-foreground font-medium whitespace-nowrap text-center">STATUS</th>
             {primary.map((col) => (
-              <th key={col.key} className="py-2 pr-3 text-muted-foreground font-medium text-right whitespace-nowrap">
+              <th key={col.key} className="py-2 pr-2 text-muted-foreground font-medium text-right whitespace-nowrap">
                 {col.label}
               </th>
             ))}
-            <th className="py-2 pr-3 text-muted-foreground font-medium text-right whitespace-nowrap">FPTS</th>
-            <th className="py-2 text-muted-foreground font-medium text-right whitespace-nowrap">FIN</th>
+            <th className="py-2 pr-2 text-muted-foreground font-medium text-right whitespace-nowrap">FPTS</th>
+            <th className="py-2 text-muted-foreground font-medium text-right whitespace-nowrap">FINISH</th>
             {hasDetail && <th className="py-2 pl-2 w-8"></th>}
           </tr>
         </thead>
         <tbody>
-          {activeEntries.length > 0 ? (
+          {displayEntries.length > 0 ? (
             <>
-              {activeEntries.map((entry, i) => {
+              {displayEntries.map((entry, i) => {
+                const participated = hasParticipation(entry.stats, position);
                 const isExpanded = expandedRows.has(i);
                 const rank = entry.pos_rank;
+                const tierBadge = getTierBadge(rank, position);
+                const oppRank = entry.opp_rank_vs_pos;
+                const oppRankSuffix = oppRank ? `${oppRank}${oppRank === 1 ? 'st' : oppRank === 2 ? 'nd' : oppRank === 3 ? 'rd' : 'th'}` : null;
+
+                if (!participated) {
+                  return (
+                    <tr key={i} className="border-b last:border-0 opacity-50" data-testid={`row-gamelog-week-${entry.week}`}>
+                      <td className="py-2 pr-2 text-foreground font-medium">{entry.week}</td>
+                      <td className="py-2 pr-2 text-foreground whitespace-nowrap">
+                        <div className="flex flex-col">
+                          <span>{entry.opp}</span>
+                          {oppRankSuffix && <span className={`text-[10px] ${getOppRankColor(oppRank)}`}>{oppRankSuffix} vs {posLabel}</span>}
+                        </div>
+                      </td>
+                      <td className="py-2 pr-2 text-center">
+                        <Badge variant="secondary" className="text-[9px] px-1.5 py-0 bg-muted text-muted-foreground" data-testid={`badge-status-${entry.week}`}>
+                          OUT
+                        </Badge>
+                      </td>
+                      {primary.map((col) => (
+                        <td key={col.key} className="py-2 pr-2 text-right text-muted-foreground">{'\u2014'}</td>
+                      ))}
+                      <td className="py-2 pr-2 text-right text-muted-foreground">{'\u2014'}</td>
+                      <td className="py-2 text-right text-muted-foreground">{'\u2014'}</td>
+                      {hasDetail && <td className="py-2 pl-2"></td>}
+                    </tr>
+                  );
+                }
+
                 return (
                   <Fragment key={i}>
                     <tr
@@ -334,18 +386,34 @@ function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; po
                       onClick={hasDetail ? () => toggleRow(i) : undefined}
                       data-testid={`row-gamelog-week-${entry.week}`}
                     >
-                      <td className="py-2 pr-3 text-foreground font-medium">{entry.week}</td>
-                      <td className="py-2 pr-3 text-foreground whitespace-nowrap">{entry.opp}</td>
+                      <td className="py-2 pr-2 text-foreground font-medium">{entry.week}</td>
+                      <td className="py-2 pr-2 text-foreground whitespace-nowrap">
+                        <div className="flex flex-col">
+                          <span>{entry.opp}</span>
+                          {oppRankSuffix && <span className={`text-[10px] ${getOppRankColor(oppRank)}`}>{oppRankSuffix} vs {posLabel}</span>}
+                        </div>
+                      </td>
+                      <td className="py-2 pr-2 text-center">
+                        <Badge variant="secondary" className="text-[9px] px-1.5 py-0 bg-green-500/10 text-green-700 dark:text-green-400" data-testid={`badge-status-${entry.week}`}>
+                          Active
+                        </Badge>
+                      </td>
                       {primary.map((col) => (
-                        <td key={col.key} className="py-2 pr-3 text-foreground text-right tabular-nums">
+                        <td key={col.key} className="py-2 pr-2 text-foreground text-right tabular-nums">
                           {getStat(entry, col.key)}
                         </td>
                       ))}
-                      <td className="py-2 pr-3 text-right font-semibold text-foreground tabular-nums">
+                      <td className="py-2 pr-2 text-right font-semibold text-foreground tabular-nums">
                         {entry.stats.pts_ppr.toFixed(1)}
                       </td>
-                      <td className={`py-2 text-right tabular-nums text-xs ${getRankColor(rank)}`} data-testid={`text-finish-week-${entry.week}`}>
-                        {rank ? `${posLabel}${rank}` : '\u2014'}
+                      <td className="py-2 text-right" data-testid={`text-finish-week-${entry.week}`}>
+                        {tierBadge ? (
+                          <Badge variant="secondary" className={`text-[9px] px-1.5 py-0 ${tierBadge.className}`}>
+                            {tierBadge.label}
+                          </Badge>
+                        ) : rank ? (
+                          <span className={`tabular-nums text-xs ${getRankColor(rank)}`}>{posLabel}{rank}</span>
+                        ) : '\u2014'}
                       </td>
                       {hasDetail && (
                         <td className="py-2 pl-2 text-center">
@@ -372,13 +440,6 @@ function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; po
                   </Fragment>
                 );
               })}
-              {inactiveWeeks.length > 0 && (
-                <tr className="border-t" data-testid="row-gamelog-inactive">
-                  <td colSpan={colCount} className="py-2 text-center text-xs text-muted-foreground/60 italic">
-                    {inactiveWeeks.length} week{inactiveWeeks.length > 1 ? 's' : ''} inactive (Wk {inactiveWeeks.map(e => e.week).join(', ')})
-                  </td>
-                </tr>
-              )}
             </>
           ) : (
             <tr>
@@ -394,27 +455,27 @@ function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; po
             </tr>
           )}
         </tbody>
-        {activeEntries.length > 0 && (
+        {activeInDisplay.length > 0 && (
           <tfoot>
             <tr className="border-t-2 border-foreground/20">
-              <td className="py-2 pr-3 text-foreground font-bold text-xs uppercase tracking-wider" colSpan={2} data-testid="text-totals-label">
+              <td className="py-2 pr-2 text-foreground font-bold text-xs uppercase tracking-wider" colSpan={3} data-testid="text-totals-label">
                 <div className="flex flex-col">
                   <span>AVG/G</span>
                   <span className="text-[10px] text-muted-foreground font-normal normal-case tracking-normal">{gamesPlayed} games</span>
                 </div>
               </td>
               {primary.map((col) => {
-                const total = activeEntries.reduce((sum, e) => sum + getStat(e, col.key), 0);
+                const total = activeInDisplay.reduce((sum, e) => sum + getStat(e, col.key), 0);
                 const avg = gamesPlayed > 0 ? total / gamesPlayed : 0;
                 return (
-                  <td key={col.key} className="py-2 pr-3 text-foreground text-right tabular-nums font-semibold">
+                  <td key={col.key} className="py-2 pr-2 text-foreground text-right tabular-nums font-semibold">
                     {avg % 1 === 0 ? avg.toFixed(0) : avg.toFixed(1)}
                   </td>
                 );
               })}
-              <td className="py-2 pr-3 text-right text-foreground tabular-nums font-bold">
+              <td className="py-2 pr-2 text-right text-foreground tabular-nums font-bold">
                 {gamesPlayed > 0
-                  ? (activeEntries.reduce((sum, e) => sum + e.stats.pts_ppr, 0) / gamesPlayed).toFixed(1)
+                  ? (activeInDisplay.reduce((sum, e) => sum + e.stats.pts_ppr, 0) / gamesPlayed).toFixed(1)
                   : '0.0'}
               </td>
               <td className={`py-2 text-right tabular-nums text-xs font-semibold ${avgFinish ? getRankColor(Math.round(avgFinish)) : ''}`} data-testid="text-avg-finish">
@@ -1309,9 +1370,45 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
   );
 }
 
+function GameDistributionBar({ entries, position }: { entries: GameLogEntry[]; position: string | null }) {
+  const played = entries.filter(e => hasParticipation(e.stats, position));
+  if (played.length === 0) return null;
+  const bins = [
+    { label: '15+', count: played.filter(e => e.stats.pts_ppr >= 15).length, color: 'bg-green-500 dark:bg-green-400' },
+    { label: '10\u201314.9', count: played.filter(e => e.stats.pts_ppr >= 10 && e.stats.pts_ppr < 15).length, color: 'bg-teal-500 dark:bg-teal-400' },
+    { label: '5\u20139.9', count: played.filter(e => e.stats.pts_ppr >= 5 && e.stats.pts_ppr < 10).length, color: 'bg-amber-500 dark:bg-amber-400' },
+    { label: '<5', count: played.filter(e => e.stats.pts_ppr < 5).length, color: 'bg-red-500 dark:bg-red-400' },
+  ];
+  const total = played.length;
+  return (
+    <div data-testid="gamelog-distribution">
+      <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-1.5">Game Distribution</p>
+      <div className="flex rounded-md overflow-hidden h-3 mb-1.5">
+        {bins.map(bin => bin.count > 0 ? (
+          <div
+            key={bin.label}
+            className={`${bin.color} transition-all`}
+            style={{ width: `${(bin.count / total) * 100}%` }}
+            title={`${bin.label}: ${bin.count} games`}
+          />
+        ) : null)}
+      </div>
+      <div className="flex items-center gap-3 flex-wrap">
+        {bins.map(bin => (
+          <div key={bin.label} className="flex items-center gap-1">
+            <div className={`w-2 h-2 rounded-full ${bin.color}`} />
+            <span className="text-[10px] text-muted-foreground tabular-nums">{bin.label}: {bin.count}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function GameLogTab({ player }: { player: PlayerWithSeasons }) {
   const availableSeasons = player.availableSeasons || (player.season ? [player.season] : []);
   const [selectedSeason, setSelectedSeason] = useState<number>(availableSeasons[0] || new Date().getFullYear());
+  const [gameFilter, setGameFilter] = useState<'full' | 'last5'>('full');
   const isDefaultSeason = selectedSeason === availableSeasons[0];
 
   const { data: seasonGameLog, isLoading: isSeasonLoading } = useQuery<GameLogEntry[]>({
@@ -1326,8 +1423,13 @@ function GameLogTab({ player }: { player: PlayerWithSeasons }) {
 
   const entries = isDefaultSeason ? (player.gameLog || []) : (seasonGameLog || []);
   const stats = computeGameLogStats(entries, player.position);
-  const thresholds = getTierThresholds(player.position);
   const posLabel = player.position || '';
+  const played = entries.filter(e => hasParticipation(e.stats, player.position));
+
+  const bestWeek = played.length > 0 ? played.reduce((best, e) => e.stats.pts_ppr > best.stats.pts_ppr ? e : best, played[0]) : null;
+  const worstWeek = played.length > 0 ? played.reduce((worst, e) => e.stats.pts_ppr < worst.stats.pts_ppr ? e : worst, played[0]) : null;
+  const bestTier = bestWeek ? getTierBadge(bestWeek.pos_rank, player.position) : null;
+  const worstTier = worstWeek ? getTierBadge(worstWeek.pos_rank, player.position) : null;
 
   return (
     <div className="space-y-4">
@@ -1335,52 +1437,82 @@ function GameLogTab({ player }: { player: PlayerWithSeasons }) {
         <h2 className="text-lg font-semibold text-foreground" data-testid="text-gamelog-heading">
           Game Log
         </h2>
-        {availableSeasons.length > 1 && (
-          <Select value={String(selectedSeason)} onValueChange={(v) => setSelectedSeason(Number(v))}>
-            <SelectTrigger className="w-28" data-testid="select-season">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {availableSeasons.map((s) => (
-                <SelectItem key={s} value={String(s)} data-testid={`option-season-${s}`}>
-                  {s}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )}
-        {availableSeasons.length === 1 && (
-          <span className="text-sm text-muted-foreground">{selectedSeason}</span>
-        )}
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex rounded-md border border-border overflow-visible" data-testid="filter-game-range">
+            <button
+              className={`px-3 py-1 text-xs font-medium transition-colors ${gameFilter === 'full' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
+              onClick={() => setGameFilter('full')}
+              data-testid="button-filter-full"
+            >
+              Full Season
+            </button>
+            <button
+              className={`px-3 py-1 text-xs font-medium transition-colors ${gameFilter === 'last5' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
+              onClick={() => setGameFilter('last5')}
+              data-testid="button-filter-last5"
+            >
+              Last 5
+            </button>
+          </div>
+          {availableSeasons.length > 1 && (
+            <Select value={String(selectedSeason)} onValueChange={(v) => setSelectedSeason(Number(v))}>
+              <SelectTrigger className="w-28" data-testid="select-season">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {availableSeasons.map((s) => (
+                  <SelectItem key={s} value={String(s)} data-testid={`option-season-${s}`}>
+                    {s}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+          {availableSeasons.length === 1 && (
+            <span className="text-sm text-muted-foreground">{selectedSeason}</span>
+          )}
+        </div>
       </div>
 
       {stats && (
-        <div className={`grid gap-2 ${thresholds.hasTier3 ? 'grid-cols-3 md:grid-cols-6' : 'grid-cols-5'}`} data-testid="gamelog-summary-bar">
-          <StatBox label="Games" value={stats.gamesPlayed} />
-          <StatBox label="PPG" value={stats.ppg.toFixed(1)} />
-          <div className="p-3 rounded-md bg-green-500/10 dark:bg-green-900/20 text-center">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 1)} %</p>
-            <p className="text-lg font-bold text-green-600 dark:text-green-400 tabular-nums mt-0.5" data-testid="text-pos1-pct">{stats.pos1Pct.toFixed(0)}%</p>
-            <p className="text-[10px] text-muted-foreground/70">{posLabel}1{'\u2013'}{posLabel}12</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2" data-testid="gamelog-summary-bar">
+          <StatBox label="Games Played" value={stats.gamesPlayed} />
+          <StatBox label="Season PPG" value={stats.ppg.toFixed(1)} />
+          <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Best Week</p>
+            <p className="text-xl font-bold text-foreground tabular-nums mt-0.5" data-testid="text-best-week-pts">
+              {bestWeek ? bestWeek.stats.pts_ppr.toFixed(1) : '\u2014'}
+            </p>
+            {bestWeek && bestTier && (
+              <div className="flex items-center gap-1 mt-0.5 flex-wrap">
+                <span className="text-[10px] text-muted-foreground">Wk {bestWeek.week}</span>
+                <Badge variant="secondary" className={`text-[8px] px-1 py-0 ${bestTier.className}`}>{bestTier.label}</Badge>
+              </div>
+            )}
+            {bestWeek && !bestTier && bestWeek.pos_rank && (
+              <span className="text-[10px] text-muted-foreground mt-0.5 block">Wk {bestWeek.week} ({posLabel}{bestWeek.pos_rank})</span>
+            )}
           </div>
-          <div className="p-3 rounded-md bg-teal-500/10 dark:bg-teal-900/20 text-center">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 2)} %</p>
-            <p className="text-lg font-bold text-teal-600 dark:text-teal-400 tabular-nums mt-0.5" data-testid="text-pos2-pct">{stats.pos2Pct.toFixed(0)}%</p>
-            <p className="text-[10px] text-muted-foreground/70">{posLabel}13{'\u2013'}{posLabel}{thresholds.hasTier3 ? 24 : thresholds.bust}</p>
-          </div>
-          {thresholds.hasTier3 && (
-            <div className="p-3 rounded-md bg-slate-500/10 dark:bg-slate-700/20 text-center">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 3)} %</p>
-              <p className="text-lg font-bold text-slate-500 dark:text-slate-400 tabular-nums mt-0.5" data-testid="text-pos3-pct">{stats.pos3Pct.toFixed(0)}%</p>
-              <p className="text-[10px] text-muted-foreground/70">{posLabel}25{'\u2013'}{posLabel}{thresholds.bust}</p>
-            </div>
-          )}
-          <div className="p-3 rounded-md bg-red-500/10 dark:bg-red-900/20 text-center">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Bust %</p>
-            <p className="text-lg font-bold text-red-500 dark:text-red-400 tabular-nums mt-0.5" data-testid="text-bust-pct">{stats.bustPct.toFixed(0)}%</p>
-            <p className="text-[10px] text-muted-foreground/70">{posLabel}{thresholds.bust + 1}+</p>
+          <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Worst Week</p>
+            <p className="text-xl font-bold text-foreground tabular-nums mt-0.5" data-testid="text-worst-week-pts">
+              {worstWeek ? worstWeek.stats.pts_ppr.toFixed(1) : '\u2014'}
+            </p>
+            {worstWeek && worstTier && (
+              <div className="flex items-center gap-1 mt-0.5 flex-wrap">
+                <span className="text-[10px] text-muted-foreground">Wk {worstWeek.week}</span>
+                <Badge variant="secondary" className={`text-[8px] px-1 py-0 ${worstTier.className}`}>{worstTier.label}</Badge>
+              </div>
+            )}
+            {worstWeek && !worstTier && worstWeek.pos_rank && (
+              <span className="text-[10px] text-muted-foreground mt-0.5 block">Wk {worstWeek.week} ({posLabel}{worstWeek.pos_rank})</span>
+            )}
           </div>
         </div>
+      )}
+
+      {stats && gameFilter === 'full' && (
+        <GameDistributionBar entries={entries} position={player.position} />
       )}
 
       <Card>
@@ -1391,7 +1523,7 @@ function GameLogTab({ player }: { player: PlayerWithSeasons }) {
               <Skeleton className="h-4 w-32 mx-auto" />
             </div>
           ) : (
-            <GameLogTable entries={entries} position={player.position} />
+            <GameLogTable entries={entries} position={player.position} filter={gameFilter} />
           )}
         </CardContent>
       </Card>
