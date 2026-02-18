@@ -462,32 +462,35 @@ function getTrendColor(pct: number): string {
   return 'text-red-600 dark:text-red-500';
 }
 
-function TrendArrow({ data, unit = 'PPG' }: { data: number[]; unit?: string }) {
+function MomentumBadge({ data, unit = 'PPG' }: { data: number[]; unit?: string }) {
   if (data.length < 3) return null;
   const recent = data.slice(-3);
   const recentAvg = recent.reduce((a, b) => a + b, 0) / recent.length;
   const seasonAvg = data.reduce((a, b) => a + b, 0) / data.length;
   const diff = recentAvg - seasonAvg;
   const pct = seasonAvg > 0 ? (diff / seasonAvg) * 100 : 0;
-  const delta = `${diff > 0 ? '+' : ''}${diff.toFixed(1)} ${unit}`;
+  const delta = `${diff > 0 ? '+' : ''}${diff.toFixed(1)} ${unit} (${pct > 0 ? '+' : ''}${pct.toFixed(0)}%)`;
 
-  if (Math.abs(pct) < 5) {
-    return (
-      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground font-medium" data-testid="text-trend-arrow" title="vs season average">
-        <Minus className="w-3.5 h-3.5" /> Stable <span className="text-muted-foreground/60">{delta}</span>
-      </span>
-    );
-  }
-  const color = getTrendColor(pct);
-  const Icon = pct > 0 ? ArrowUpRight : ArrowDownRight;
+  const momentum = Math.abs(pct) < 5 ? 'Stable' : pct > 0 ? 'Up' : 'Down';
+  const color = Math.abs(pct) < 5
+    ? 'text-muted-foreground'
+    : pct > 0
+    ? 'text-green-600 dark:text-green-400'
+    : 'text-red-500 dark:text-red-400';
+  const Icon = Math.abs(pct) < 5 ? Minus : pct > 0 ? ArrowUpRight : ArrowDownRight;
+
   return (
-    <span className={`inline-flex items-center gap-1 text-xs font-medium ${color}`} data-testid="text-trend-arrow" title="vs season average">
-      <Icon className="w-3.5 h-3.5" /> {delta} <span className="opacity-70">({pct > 0 ? '+' : ''}{pct.toFixed(0)}%)</span>
-    </span>
+    <div className="text-right" data-testid="badge-momentum">
+      <p className="text-[9px] uppercase tracking-wider text-muted-foreground/50 font-medium leading-none">Momentum</p>
+      <span className={`inline-flex items-center gap-0.5 text-xs font-semibold ${color}`}>
+        <Icon className="w-3.5 h-3.5" /> {momentum}
+      </span>
+      <p className={`text-[10px] ${color} opacity-70 tabular-nums`}>{delta}</p>
+    </div>
   );
 }
 
-function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentColor = "hsl(var(--primary))", showAvgLine = false, highlightLast = 0 }: {
+function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentColor = "hsl(var(--primary))", showAvgLine = false, highlightLast = 0, showRecentFormLabel = false }: {
   data: number[];
   rollingAvg?: number[];
   bestIdx?: number;
@@ -496,6 +499,7 @@ function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentCo
   accentColor?: string;
   showAvgLine?: boolean;
   highlightLast?: number;
+  showRecentFormLabel?: boolean;
 }) {
   if (data.length < 2) return null;
   const max = Math.max(...data, 1);
@@ -548,13 +552,18 @@ function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentCo
         </defs>
 
         {hlStart != null && (
-          <rect x={hlStart} y={padding.top} width={viewW - hlStart} height={chartH} fill={`url(#hl-${uid})`} rx="4" />
+          <>
+            <rect x={hlStart} y={padding.top} width={viewW - hlStart} height={chartH} fill={`url(#hl-${uid})`} rx="4" />
+            {showRecentFormLabel && (
+              <text x={viewW - 6} y={padding.top + 10} textAnchor="end" className="fill-muted-foreground" fontSize="8" opacity="0.35" fontWeight="500" letterSpacing="0.5">Recent Form</text>
+            )}
+          </>
         )}
 
         {showAvgLine && (
           <>
-            <line x1={0} y1={avgY} x2={viewW} y2={avgY} stroke="currentColor" strokeWidth="1" strokeDasharray="4 3" opacity="0.12" />
-            <text x={viewW - 8} y={avgY - 4} textAnchor="end" className="fill-muted-foreground" fontSize="9" opacity="0.35">avg {avg.toFixed(1)}</text>
+            <line x1={0} y1={avgY} x2={viewW} y2={avgY} stroke="currentColor" strokeWidth="1" strokeDasharray="4 3" opacity="0.08" />
+            <text x={viewW - 8} y={avgY - 4} textAnchor="end" className="fill-muted-foreground" fontSize="9" opacity="0.2">avg {avg.toFixed(1)}</text>
           </>
         )}
 
@@ -853,24 +862,40 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
               ? ((sec3Avg - secSeasonAvg) / secSeasonAvg) * 100
               : null;
 
+            const buildPointsInsight = () => {
+              if (Math.abs(last3Pct) < 5) return `Averaging ${last3Avg.toFixed(1)} PPG over last 3 \u2014 in line with season baseline.`;
+              const dir = last3Pct > 0 ? 'up' : 'down';
+              return `Recent output ${dir} ${Math.abs(last3Pct).toFixed(0)}% vs season \u2014 ${last3Avg.toFixed(1)} PPG over last 3 weeks.`;
+            };
+
+            const buildUsageInsight = () => {
+              if (sec3Avg == null || secSeasonAvg == null || sec3Pct == null) return '';
+              if (Math.abs(sec3Pct) < 5) return `${secondaryMetric!.label} holding steady at ${sec3Avg.toFixed(1)}/gm vs ${secSeasonAvg.toFixed(1)} season avg.`;
+              const dir = sec3Pct > 0 ? 'up' : 'down';
+              return `${secondaryMetric!.label} ${dir} ${Math.abs(sec3Pct).toFixed(0)}% \u2014 ${sec3Avg.toFixed(1)}/gm vs ${secSeasonAvg.toFixed(1)} season avg.`;
+            };
+
+            const buildDiagnosticInsight = () => {
+              if (sec3Pct == null || (Math.abs(last3Pct) < 5 && Math.abs(sec3Pct) < 5)) return '';
+              if (Math.abs(sec3Pct) > Math.abs(last3Pct) * 1.5)
+                return `Usage-driven ${last3Pct < 0 ? 'decline' : 'shift'} \u2014 opportunity ${sec3Pct > 0 ? 'up' : 'down'} ${Math.abs(sec3Pct).toFixed(0)}% vs season.`;
+              if (Math.abs(last3Pct) > Math.abs(sec3Pct) * 1.5)
+                return `Efficiency-driven ${last3Pct < 0 ? 'decline' : 'surge'} \u2014 usage stable, production ${last3Pct > 0 ? 'up' : 'down'} ${Math.abs(last3Pct).toFixed(0)}%.`;
+              return `Production and usage trending ${last3Pct > 0 ? 'up' : 'down'} together \u2014 ${Math.abs(last3Pct).toFixed(0)}% shift across both.`;
+            };
+
             return (
               <Card>
-                <CardContent className="p-4 space-y-5">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium" data-testid="text-trend-diagnostics-label">Trend Diagnostics</p>
+                    <MomentumBadge data={weeklyPts} unit="PPG" />
+                  </div>
+
                   <div>
-                    <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <p className="text-xs text-muted-foreground font-medium">Points Trend</p>
-                        <span className="text-[10px] text-muted-foreground/60">(3-wk rolling avg)</span>
-                      </div>
-                      <div className="flex items-center gap-3 flex-wrap">
-                        {bestEntry && (
-                          <span className="text-[10px] text-muted-foreground">
-                            Best: <span className="font-semibold text-foreground">{bestVal.toFixed(1)}</span>
-                            <span className="text-muted-foreground/60 ml-0.5">Wk {bestEntry.week}</span>
-                          </span>
-                        )}
-                        <TrendArrow data={weeklyPts} unit="PPG" />
-                      </div>
+                    <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                      <p className="text-xs text-muted-foreground font-medium">Points Trend</p>
+                      <span className="text-[10px] text-muted-foreground/40">(3-Week Rolling Average vs Weekly)</span>
                     </div>
                     <LineChartSVG
                       data={weeklyPts}
@@ -881,55 +906,44 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
                       accentColor="hsl(var(--primary))"
                       showAvgLine
                       highlightLast={3}
+                      showRecentFormLabel
                     />
-                    <p className="text-[10px] text-muted-foreground/70 mt-1.5" data-testid="text-points-insight">
-                      Averaging <span className="font-medium text-foreground/80">{last3Avg.toFixed(1)} PPG</span> over last 3 weeks
-                      {Math.abs(last3Pct) >= 1 && (
-                        <span className={getTrendColor(last3Pct)}>
-                          {' '}({last3Pct > 0 ? '+' : ''}{last3Pct.toFixed(0)}% vs season avg)
-                        </span>
-                      )}
+                    <p className="text-[10px] text-muted-foreground/60 mt-1.5" data-testid="text-points-insight">
+                      {buildPointsInsight()}
                     </p>
                   </div>
 
                   {secondaryData && secondaryData.length > 1 && secondaryMetric && (
-                    <div>
-                      <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
-                        <div className="flex items-center gap-2 flex-wrap">
+                    <>
+                      <div className="my-4 border-t border-border/40" />
+                      <div>
+                        <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                           <p className="text-xs text-muted-foreground font-medium">Usage Trend</p>
-                          <span className="text-[10px] text-muted-foreground/60">{secondaryMetric.label} (3-wk avg)</span>
+                          <span className="text-[10px] text-muted-foreground/40">{secondaryMetric.label} (3-Week Avg vs Weekly)</span>
                         </div>
-                        <TrendArrow data={secondaryData} unit={secondaryMetric.unit} />
+                        <LineChartSVG
+                          data={secondaryData}
+                          rollingAvg={secondaryRolling || undefined}
+                          height={90}
+                          label="secondary"
+                          accentColor="hsl(var(--chart-2))"
+                          showAvgLine
+                          highlightLast={3}
+                          showRecentFormLabel
+                        />
+                        <p className="text-[10px] text-muted-foreground/60 mt-1.5" data-testid="text-usage-insight">
+                          {buildUsageInsight()}
+                        </p>
+                        {(() => {
+                          const diag = buildDiagnosticInsight();
+                          return diag ? (
+                            <p className="text-[10px] text-foreground/60 font-medium mt-1" data-testid="text-diagnostic-insight">
+                              {diag}
+                            </p>
+                          ) : null;
+                        })()}
                       </div>
-                      <LineChartSVG
-                        data={secondaryData}
-                        rollingAvg={secondaryRolling || undefined}
-                        height={90}
-                        label="secondary"
-                        accentColor="hsl(var(--chart-2))"
-                        showAvgLine
-                        highlightLast={3}
-                      />
-                      {sec3Avg != null && secSeasonAvg != null && (
-                        <p className="text-[10px] text-muted-foreground/70 mt-1.5" data-testid="text-usage-insight">
-                          Averaging <span className="font-medium text-foreground/80">{sec3Avg.toFixed(1)} {secondaryMetric.unit}/gm</span> over last 3 weeks
-                          {sec3Pct != null && Math.abs(sec3Pct) >= 1 && (
-                            <span className={getTrendColor(sec3Pct)}>
-                              {' '}({sec3Pct > 0 ? '+' : ''}{sec3Pct.toFixed(0)}% vs season avg)
-                            </span>
-                          )}
-                        </p>
-                      )}
-                      {sec3Pct != null && Math.abs(last3Pct) >= 5 && Math.abs(sec3Pct) >= 5 && (
-                        <p className="text-[10px] text-muted-foreground/50 italic mt-0.5" data-testid="text-diagnostic-insight">
-                          {Math.abs(sec3Pct) > Math.abs(last3Pct) * 1.5
-                            ? `Decline appears usage-driven \u2014 opportunity share ${sec3Pct > 0 ? 'up' : 'down'} more than production.`
-                            : Math.abs(last3Pct) > Math.abs(sec3Pct) * 1.5
-                            ? `${last3Pct < 0 ? 'Decline' : 'Gain'} appears efficiency-driven \u2014 usage relatively stable.`
-                            : `Both production and usage trending ${last3Pct > 0 ? 'up' : 'down'} together.`}
-                        </p>
-                      )}
-                    </div>
+                    </>
                   )}
                 </CardContent>
               </Card>
