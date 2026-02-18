@@ -1,0 +1,109 @@
+Recommended handling (Sleeper-only friendly)
+1) Count as “played” if any of these are true
+
+For that week’s stat object, if any stat is present and > 0:
+
+WR/TE
+
+targets (rec_tgt or targets) > 0
+
+receptions (rec) > 0
+
+receiving yards (rec_yd) ≠ 0
+
+receiving TD (rec_td) > 0
+
+rushing attempts (rush_att) > 0 (end-arounds)
+
+RB
+
+rush_att > 0 OR rec_tgt/targets > 0 OR rec > 0
+
+QB
+
+pass_att > 0 OR rush_att > 0 OR sacks > 0
+
+This correctly counts “left in 1st quarter after 1 target” as played.
+
+What if they got injured before recording a stat?
+
+If they truly recorded no stats (no targets, no carries, no pass attempts), Sleeper often won’t give a meaningful row anyway. In that case, you can’t reliably know they played from Sleeper alone.
+
+So:
+
+If there is no stat row → treat as DNP / No Data
+
+If there is a stat row but everything is 0/null → treat as DNP (unless you add a different source later)
+
+This is the most honest approach with Sleeper constraints.
+
+2) Do we include “injury games” in PPG / volatility / bust?
+
+✅ Yes, if they “played” by the rule above.
+
+That’s how fantasy works.
+
+Otherwise you create inflated stats and people won’t trust the platform.
+
+3) But we can add a fairness improvement: “Full Games” vs “All Games”
+
+If you want to be extra premium:
+
+Show two PPGs (optional):
+
+PPG (All Games) — includes injury exits
+
+PPG (Full Games) — excludes games where opportunities were extremely low
+
+But with Sleeper-only data, you need a heuristic.
+
+4) Heuristic to flag “partial games” (no snap data required)
+For WR/TE (simple rule)
+
+Flag as “partial” if:
+
+targets ≤ 1 AND fantasy points < 3
+
+For RB
+
+touches (rush_att + targets) ≤ 3 AND fantasy points < 3
+
+For QB
+
+pass_att ≤ 10 AND fantasy points < 8
+
+This isn’t perfect, but it’s good enough and explainable.
+
+Then you can:
+
+keep your main metrics using All Games
+
+optionally show a small tooltip:
+“Includes 1 partial game”
+
+Premium + transparent.
+
+5) Weekly finish calculation with injury games
+
+✅ Keep them included.
+
+If a WR gets injured and scores 1.2 points, that should rank like WR78 for the week — that’s reality.
+
+Just make sure your ranking pool is still “players who played,” not all active rostered WRs.
+
+Copy/paste for Replit AI
+Handle in-game injuries fairly in “games played” logic.
+
+Rule:
+- A week counts as played if the player recorded any participation stats.
+  WR/TE: targets(rec_tgt/targets)>0 OR rec>0 OR rec_yd!=0 OR rush_att>0
+  RB: rush_att>0 OR targets>0 OR rec>0
+  QB: pass_att>0 OR rush_att>0 OR sacks>0
+- Include 0-point games IF the player had participation (e.g., 1 target, 0 catches).
+- If no weekly stat record exists, treat as DNP/no data (we cannot infer participation from Sleeper alone).
+
+Optional premium:
+- Flag “partial games” with heuristics (very low opportunities + low points) and show a tooltip count, but do not exclude them from core metrics by default.
+
+
+If you tell me which exact stat keys your Sleeper weekly objects contain (e.g., rec_tgt vs targets), I’ll tailor the played/partial rules to your real payload so it’s plug-and-play.

@@ -52,7 +52,16 @@ Located in `wordpress-plugin/statchasers-player-pages/`
 - Admin panel: Tools → StatChasers Players
 - Supports: Generate Indexed Players, Refresh Sleeper Cache, Flush Rewrites
 
+## Metric Calculation Logic
+- **Games Played**: Participation-based (any of rec_tgt/rec/rush_att/pass_att>0 for WR/RB/TE; pass_att/rush_att>0 for QB; fga/xpa>0 for K). Includes 0-point goose egg games.
+- **Weekly Positional Rank**: Only players who participated that week are ranked (prevents dilution by 200+ inactive players)
+- **Tier Thresholds**: Elite (Top 5, Top 3 for TE), Starter (Top 12), Bust (WR >36, RB >30, QB/TE >18)
+- **Volatility**: Sample standard deviation of weekly PPR points across played games
+- **Consistency Score**: `round(100 / (1 + (cv / 0.6)^2))` where cv = stdev/ppg. Labels: 70+ Very Consistent, 45-69 Average, <45 Boom/Bust
+- **Goose Egg %**: (# played weeks with pts==0) / games_played
+
 ## Recent Changes
+- 2026-02-18: Fixed metric calculations: participation-based GP (includes 0-point games), weekly rank pool filters inactive players, smooth consistency curve (replaces CV*1.5), added Goose Egg % risk metric
 - 2026-02-18: Player profile 5-tab layout: Overview (PPG stats, trend indicator, weekly chart, stat summary, outlook), Game Log (summary bar + table), Usage & Trends (position-specific usage charts with 3-week rolling averages), Rankings & Value (placeholder rank cards, trade CTA), News & Analysis (articles/empty state)
 - 2026-02-18: Added 2025 season game log data (677 players, 7474 week entries)
 - 2026-02-17: Game log ingestion from Sleeper stats API (2023-2025 seasons), position-specific stat tables (QB: CMP/ATT/YDS/TD/INT/CAR/Rush, WR/TE: TGT/REC/YDS/TD/CAR, RB: CAR/YDS/TD/TGT/REC, K: FGM/FGA/XPM/XPA), season dropdown selector, totals row, trends bar chart from real weekly fantasy points
