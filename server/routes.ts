@@ -331,7 +331,7 @@ export async function registerRoutes(
       ? (isSeasonComplete ? `${activeSeason} Season Final` : `${activeSeason} Season (Through Week ${maxWeek})`)
       : null;
 
-    const multiSeasonStats: { season: number; ppg: number; gamesPlayed: number; elitePct: number; starterPct: number; bustPct: number }[] = [];
+    const multiSeasonStats: { season: number; ppg: number; gamesPlayed: number; pos1Pct: number; pos2Pct: number; pos3Pct: number; bustPct: number }[] = [];
     for (const s of seasons) {
       const sLogs = loadGameLogs(s);
       const pLogs = sLogs[player.id] || [];
@@ -342,18 +342,22 @@ export async function registerRoutes(
       const gp = played.length;
       const totalPts = played.reduce((sum, e) => sum + e.stats.pts_ppr, 0);
       const pos = player.position || '';
-      const eliteThresh = pos === 'TE' ? 3 : 5;
       const bustThresh = (pos === 'QB' || pos === 'TE') ? 18 : pos === 'WR' ? 36 : 30;
+      const hasTier3 = bustThresh > 24;
       const rankedPlayed = rankedLogs.filter(e => hasParticipation(e.stats, player.position));
-      const eliteGames = rankedPlayed.filter(e => e.pos_rank != null && e.pos_rank <= eliteThresh).length;
-      const starterGames = rankedPlayed.filter(e => e.pos_rank != null && e.pos_rank <= 12).length;
-      const bustGames = rankedPlayed.filter(e => e.pos_rank != null && e.pos_rank > bustThresh).length;
+      const ranked = rankedPlayed.filter(e => e.pos_rank != null);
+      const pos1Games = ranked.filter(e => e.pos_rank! >= 1 && e.pos_rank! <= 12).length;
+      const pos2End = hasTier3 ? 24 : bustThresh;
+      const pos2Games = ranked.filter(e => e.pos_rank! >= 13 && e.pos_rank! <= pos2End).length;
+      const pos3Games = hasTier3 ? ranked.filter(e => e.pos_rank! >= 25 && e.pos_rank! <= bustThresh).length : 0;
+      const bustGames = ranked.filter(e => e.pos_rank! > bustThresh).length;
       multiSeasonStats.push({
         season: s,
         ppg: totalPts / gp,
         gamesPlayed: gp,
-        elitePct: (eliteGames / gp) * 100,
-        starterPct: (starterGames / gp) * 100,
+        pos1Pct: (pos1Games / gp) * 100,
+        pos2Pct: (pos2Games / gp) * 100,
+        pos3Pct: (pos3Games / gp) * 100,
         bustPct: (bustGames / gp) * 100,
       });
     }

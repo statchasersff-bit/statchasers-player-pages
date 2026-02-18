@@ -55,12 +55,19 @@ Located in `wordpress-plugin/statchasers-player-pages/`
 ## Metric Calculation Logic
 - **Games Played**: Participation-based (any of rec_tgt/rec/rush_att/pass_att>0 for WR/RB/TE; pass_att/rush_att>0 for QB; fga/xpa>0 for K). Includes 0-point goose egg games.
 - **Weekly Positional Rank**: Only players who participated that week are ranked (prevents dilution by 200+ inactive players)
-- **Tier Thresholds**: Elite (Top 5, Top 3 for TE), Starter (Top 12), Bust (WR >36, RB >30, QB/TE >18)
+- **Tier-Finish Rates** (position-specific):
+  - Pos1% = weeks ranked 1–12 / GP (e.g., WR1%, QB1%, RB1%)
+  - Pos2% = weeks ranked 13–24 / GP (or 13–bustThreshold for QB/TE)
+  - Pos3% = weeks ranked 25–bustThreshold / GP (WR/RB only, where bustThreshold > 24)
+  - Bust% = weeks ranked > bustThreshold / GP
+  - Bust thresholds: WR >36, RB >30, QB >18, TE >18
+  - Pos1% + Pos2% + (Pos3%) + Bust% ≈ 100% (unranked weeks excluded)
 - **Volatility**: Sample standard deviation of weekly PPR points across played games
 - **Consistency Score**: `round(100 / (1 + (cv / 0.6)^2))` where cv = stdev/ppg. Labels: 70+ Very Consistent, 45-69 Average, <45 Boom/Bust
 - **Goose Egg %**: (# played weeks with pts==0) / games_played
 
 ## Recent Changes
+- 2026-02-18: Tier-finish rate system: replaced Elite/Starter with position-specific tiers (WR1/WR2/WR3, QB1/QB2, RB1/RB2/RB3, TE1/TE2), all sum to ~100%
 - 2026-02-18: Fixed metric calculations: participation-based GP (includes 0-point games), weekly rank pool filters inactive players, smooth consistency curve (replaces CV*1.5), added Goose Egg % risk metric
 - 2026-02-18: Player profile 5-tab layout: Overview (PPG stats, trend indicator, weekly chart, stat summary, outlook), Game Log (summary bar + table), Usage & Trends (position-specific usage charts with 3-week rolling averages), Rankings & Value (placeholder rank cards, trade CTA), News & Analysis (articles/empty state)
 - 2026-02-18: Added 2025 season game log data (677 players, 7474 week entries)
