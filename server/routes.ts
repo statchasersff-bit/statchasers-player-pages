@@ -14,9 +14,73 @@ const PLAYERS_FILE = path.resolve(process.cwd(), "data", "players.json");
 const INDEXED_FILE = path.resolve(process.cwd(), "data", "indexed_players.json");
 const INDEXED_BY_TEAM_FILE = path.resolve(process.cwd(), "data", "indexed_players_by_team.json");
 const GAME_LOGS_DIR = path.resolve(process.cwd(), "data", "game_logs");
+const BYE_WEEKS_FILE = path.resolve(process.cwd(), "data", "bye_weeks.json");
 
 const gameLogsCache: Map<number, Record<string, GameLogEntry[]>> = new Map();
 const weeklyRanksCache: Map<number, Map<string, Map<number, number>>> = new Map();
+
+let byeWeeksData: Record<string, Record<string, number>> | null = null;
+function loadByeWeeks(): Record<string, Record<string, number>> {
+  if (byeWeeksData) return byeWeeksData;
+  try {
+    byeWeeksData = JSON.parse(fs.readFileSync(BYE_WEEKS_FILE, "utf-8"));
+  } catch {
+    byeWeeksData = {};
+  }
+  return byeWeeksData!;
+}
+
+function getByeWeek(season: number, team: string | null): number | null {
+  if (!team) return null;
+  const byes = loadByeWeeks();
+  const seasonByes = byes[String(season)];
+  if (!seasonByes) return null;
+  const normalizedTeam = normalizeTeamAbbr(team);
+  return seasonByes[normalizedTeam] ?? null;
+}
+
+const seasonMaxWeekCache: Map<number, number> = new Map();
+function getSeasonMaxWeek(season: number): number {
+  if (seasonMaxWeekCache.has(season)) return seasonMaxWeekCache.get(season)!;
+  const logs = loadGameLogs(season);
+  let max = 0;
+  for (const entries of Object.values(logs)) {
+    for (const e of entries) {
+      if (e.week > max) max = e.week;
+    }
+  }
+  const result = Math.max(max, season >= 2021 ? 18 : 17);
+  seasonMaxWeekCache.set(season, result);
+  return result;
+}
+
+function fillMissingWeeks(entries: GameLogEntry[], season: number, team: string | null): GameLogEntry[] {
+  if (entries.length === 0) return entries;
+  const byeWeek = getByeWeek(season, team);
+  const existingWeeks = new Set(entries.map(e => e.week));
+  const maxWeek = getSeasonMaxWeek(season);
+  const emptyStats: GameLogEntry['stats'] = { pts_ppr: 0 };
+  const filled: GameLogEntry[] = [...entries];
+
+  for (let w = 1; w <= maxWeek; w++) {
+    if (existingWeeks.has(w)) continue;
+    const isBye = byeWeek === w;
+    filled.push({
+      week: w,
+      opp: isBye ? 'BYE' : '\u2014',
+      stats: emptyStats,
+      game_status: isBye ? 'bye' : 'out',
+    });
+  }
+
+  filled.sort((a, b) => a.week - b.week);
+  for (const entry of filled) {
+    if (!entry.game_status) {
+      entry.game_status = 'active';
+    }
+  }
+  return filled;
+}
 
 function hasParticipation(stats: GameLogEntry['stats'], position: string | null): boolean {
   const s = stats as unknown as Record<string, number | null | undefined>;
@@ -375,11 +439,12 @@ export async function registerRoutes(
         playerLogs = attachRanks(pLogs, player.id, ranks);
         const oppRanks = buildOppRanks(s, sLogs, allPlayers);
         playerLogs = attachOppRanks(playerLogs, player.position, oppRanks);
+        playerLogs = fillMissingWeeks(playerLogs, s, player.team);
         break;
       }
     }
 
-    const playedLogs = playerLogs.filter(e => hasParticipation(e.stats, player.position));
+    const playedLogs = playerLogs.filter(e => e.game_status === 'active');
     const gamesPlayed = playedLogs.length;
     const maxWeek = playedLogs.length > 0 ? Math.max(...playedLogs.map(e => e.week)) : 0;
     const isSeasonComplete = maxWeek >= 17;
@@ -546,6 +611,7 @@ export async function registerRoutes(
     let playerLogs = attachRanks(logs[player.id] || [], player.id, ranks);
     const oppRanks = buildOppRanks(season, logs, allPlayers);
     playerLogs = attachOppRanks(playerLogs, player.position, oppRanks);
+    playerLogs = fillMissingWeeks(playerLogs, season, player.team);
     res.set("Cache-Control", "public, max-age=3600");
     res.json(playerLogs);
   });

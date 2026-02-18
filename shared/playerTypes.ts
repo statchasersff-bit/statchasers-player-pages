@@ -26,6 +26,7 @@ export interface GameLogEntry {
   stats: GameLogStats;
   pos_rank?: number | null;
   opp_rank_vs_pos?: number | null;
+  game_status?: 'active' | 'bye' | 'out' | null;
 }
 
 export interface NewsEntry {

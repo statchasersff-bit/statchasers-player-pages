@@ -235,11 +235,14 @@ function hasParticipation(stats: GameLogEntry['stats'], position: string | null)
 
 function computeGameLogStats(entries: GameLogEntry[], position: string | null = null) {
   if (entries.length === 0) return null;
-  const playedEntries = entries.filter(e => hasParticipation(e.stats, position));
+  const activeEntries = entries.filter(e => e.game_status === 'active');
+  const playedEntries = activeEntries.length > 0 ? activeEntries : entries.filter(e => hasParticipation(e.stats, position));
   const gamesPlayed = playedEntries.length;
   const totalPts = playedEntries.reduce((s, e) => s + e.stats.pts_ppr, 0);
   const ppg = gamesPlayed > 0 ? totalPts / gamesPlayed : 0;
-  const bestWeek = entries.reduce((best, e) => e.stats.pts_ppr > best.stats.pts_ppr ? e : best, entries[0]);
+  const bestWeek = playedEntries.length > 0
+    ? playedEntries.reduce((best, e) => e.stats.pts_ppr > best.stats.pts_ppr ? e : best, playedEntries[0])
+    : entries[0];
   const last4 = playedEntries.slice(-4);
   const last4Pts = last4.reduce((s, e) => s + e.stats.pts_ppr, 0);
   const last4Ppg = last4.length > 0 ? last4Pts / last4.length : 0;
@@ -313,11 +316,11 @@ function GameLogTable({ entries = [], position, filter }: { entries?: GameLogEnt
   const getStat = (entry: GameLogEntry, key: string) =>
     (entry.stats as unknown as Record<string, number>)[key] ?? 0;
 
-  const allActiveEntries = entries.filter(e => hasParticipation(e.stats, position));
-  const inactiveWeeks = entries.filter(e => !hasParticipation(e.stats, position));
+  const allActiveEntries = entries.filter(e => e.game_status === 'active');
+  const inactiveWeeks = entries.filter(e => e.game_status !== 'active');
 
   const displayEntries = filter === 'last5' ? allActiveEntries.slice(-5) : entries;
-  const activeInDisplay = displayEntries.filter(e => hasParticipation(e.stats, position));
+  const activeInDisplay = displayEntries.filter(e => e.game_status === 'active');
   const gamesPlayed = activeInDisplay.length;
 
   const rankedEntries = activeInDisplay.filter(e => e.pos_rank != null);
@@ -352,6 +355,29 @@ function GameLogTable({ entries = [], position, filter }: { entries?: GameLogEnt
                 const tierBadge = getTierBadge(rank, position);
                 const oppRank = entry.opp_rank_vs_pos;
                 const oppRankSuffix = oppRank ? `${oppRank}${oppRank === 1 ? 'st' : oppRank === 2 ? 'nd' : oppRank === 3 ? 'rd' : 'th'}` : null;
+                const isBye = entry.game_status === 'bye';
+                const isOut = entry.game_status === 'out';
+                const isInactive = isBye || isOut;
+
+                if (isInactive) {
+                  return (
+                    <tr key={i} className="border-b last:border-0 opacity-50" data-testid={`row-gamelog-week-${entry.week}`}>
+                      <td className="py-2 pr-2 text-foreground font-medium">{entry.week}</td>
+                      <td className="py-2 pr-2 text-muted-foreground">{isBye ? 'BYE' : '\u2014'}</td>
+                      <td className="py-2 pr-2 text-center">
+                        <Badge variant="secondary" className={`text-[9px] px-1.5 py-0 ${isBye ? 'bg-sky-500/10 text-sky-700 dark:text-sky-400' : 'bg-muted text-muted-foreground'}`} data-testid={`badge-status-${entry.week}`}>
+                          {isBye ? 'BYE' : 'OUT'}
+                        </Badge>
+                      </td>
+                      {primary.map((col) => (
+                        <td key={col.key} className="py-2 pr-2 text-right text-muted-foreground">{'\u2014'}</td>
+                      ))}
+                      <td className="py-2 pr-2 text-right text-muted-foreground">{'\u2014'}</td>
+                      <td className="py-2 text-right text-muted-foreground">{'\u2014'}</td>
+                      {hasDetail && <td className="py-2 pl-2"></td>}
+                    </tr>
+                  );
+                }
 
                 return (
                   <Fragment key={i}>
@@ -1345,7 +1371,7 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
 }
 
 function GameDistributionBar({ entries, position }: { entries: GameLogEntry[]; position: string | null }) {
-  const played = entries.filter(e => hasParticipation(e.stats, position));
+  const played = entries.filter(e => e.game_status === 'active');
   if (played.length === 0) return null;
   const bins = [
     { label: '15+', count: played.filter(e => e.stats.pts_ppr >= 15).length, color: 'bg-green-500 dark:bg-green-400' },
