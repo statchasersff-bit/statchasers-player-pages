@@ -296,10 +296,54 @@ export async function registerRoutes(
     }
     const allPlayers = loadPlayers();
     const seasons = getAvailableSeasons();
-    const latestSeason = seasons[0] || new Date().getFullYear();
-    const logs = loadGameLogs(latestSeason);
-    const ranks = buildWeeklyRanks(latestSeason, logs, allPlayers);
-    const playerLogs = attachRanks(logs[player.id] || [], player.id, ranks);
+
+    let activeSeason = seasons[0] || new Date().getFullYear();
+    let playerLogs: GameLogEntry[] = [];
+    for (const s of seasons) {
+      const sLogs = loadGameLogs(s);
+      const pLogs = sLogs[player.id] || [];
+      const hasStats = pLogs.some(e => e.stats.pts_ppr > 0);
+      if (hasStats) {
+        activeSeason = s;
+        const ranks = buildWeeklyRanks(s, sLogs, allPlayers);
+        playerLogs = attachRanks(pLogs, player.id, ranks);
+        break;
+      }
+    }
+
+    const gamesPlayed = playerLogs.filter(e => e.stats.pts_ppr > 0).length;
+    const maxWeek = playerLogs.length > 0 ? Math.max(...playerLogs.filter(e => e.stats.pts_ppr > 0).map(e => e.week)) : 0;
+    const isSeasonComplete = maxWeek >= 17;
+    const seasonLabel = gamesPlayed > 0
+      ? (isSeasonComplete ? `${activeSeason} Season Final` : `${activeSeason} Season (Through Week ${maxWeek})`)
+      : null;
+
+    const multiSeasonStats: { season: number; ppg: number; gamesPlayed: number; elitePct: number; starterPct: number; bustPct: number }[] = [];
+    for (const s of seasons) {
+      const sLogs = loadGameLogs(s);
+      const pLogs = sLogs[player.id] || [];
+      const played = pLogs.filter(e => e.stats.pts_ppr > 0);
+      if (played.length === 0) continue;
+      const ranks = buildWeeklyRanks(s, sLogs, allPlayers);
+      const rankedLogs = attachRanks(pLogs, player.id, ranks);
+      const gp = played.length;
+      const totalPts = played.reduce((sum, e) => sum + e.stats.pts_ppr, 0);
+      const pos = player.position || '';
+      const eliteThresh = pos === 'TE' ? 3 : 5;
+      const bustThresh = (pos === 'QB' || pos === 'TE') ? 18 : 24;
+      const rankedPlayed = rankedLogs.filter(e => e.stats.pts_ppr > 0);
+      const eliteGames = rankedPlayed.filter(e => e.pos_rank != null && e.pos_rank <= eliteThresh).length;
+      const starterGames = rankedPlayed.filter(e => e.pos_rank != null && e.pos_rank <= 12).length;
+      const bustGames = rankedPlayed.filter(e => e.pos_rank != null && e.pos_rank > bustThresh).length;
+      multiSeasonStats.push({
+        season: s,
+        ppg: totalPts / gp,
+        gamesPlayed: gp,
+        elitePct: (eliteGames / gp) * 100,
+        starterPct: (starterGames / gp) * 100,
+        bustPct: (bustGames / gp) * 100,
+      });
+    }
 
     const weeklyPts = playerLogs.map(e => e.stats.pts_ppr);
     const trends: import("@shared/playerTypes").PlayerTrends | null =
@@ -308,11 +352,13 @@ export async function registerRoutes(
     const enriched = {
       ...player,
       headshotUrl: player.headshotUrl ?? null,
-      season: latestSeason,
+      season: activeSeason,
+      seasonLabel,
       trends,
       gameLog: playerLogs,
       news: player.news ?? [],
       availableSeasons: seasons,
+      multiSeasonStats,
     };
     res.set("Cache-Control", "public, max-age=3600");
     res.json(enriched);
