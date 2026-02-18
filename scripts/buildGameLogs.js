@@ -8,7 +8,7 @@ const DATA_DIR = path.resolve(__dirname, '..', 'data');
 const GAME_LOGS_DIR = path.resolve(DATA_DIR, 'game_logs');
 const PLAYERS_FILE = path.resolve(DATA_DIR, 'players.json');
 
-const SEASONS = [2023, 2024];
+const SEASONS = [2023, 2024, 2025];
 const REGULAR_WEEKS = 18;
 const STATS_BASE = 'https://api.sleeper.com/stats/nfl';
 const DELAY_MS = 250;
