@@ -68,6 +68,7 @@ Located in `wordpress-plugin/statchasers-player-pages/`
 - **Goose Egg %**: (# played weeks with pts==0) / games_played
 
 ## Recent Changes
+- 2026-02-18: Role Snapshot redesign: grouped cards (Usage/Efficiency/Context), primary emphasis on usage cards, "Season:" labels, explicit 0% deltas with trend arrows, TDs/Game 2-decimal format, structured 2-line signal (title + detail), tighter spacing
 - 2026-02-18: Trend Diagnostics module: unified chart header, Momentum badge (Up/Down/Stable + delta), decisive analytical insights, "Recent Form" highlight label, faded avg reference, horizontal divider between charts, improved rolling avg subtitles
 - 2026-02-18: UX polish: fixed microcopy (proper en-dash formatting), visual hierarchy (primary/secondary emphasis), tighter card density, stacked tier distribution bar, Consistency→Reliability rename, color psychology (Pos2=teal, Pos3=gray), Role Grade badge (Starter/Flex/Depth)
 - 2026-02-18: Tier-finish rate system: replaced Elite/Starter with position-specific tiers (WR1/WR2/WR3, QB1/QB2, RB1/RB2/RB3, TE1/TE2), all sum to ~100%
