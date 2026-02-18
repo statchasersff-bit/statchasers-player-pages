@@ -16,6 +16,49 @@ const INDEXED_BY_TEAM_FILE = path.resolve(process.cwd(), "data", "indexed_player
 const GAME_LOGS_DIR = path.resolve(process.cwd(), "data", "game_logs");
 
 const gameLogsCache: Map<number, Record<string, GameLogEntry[]>> = new Map();
+const weeklyRanksCache: Map<number, Map<string, Map<number, number>>> = new Map();
+
+function buildWeeklyRanks(season: number, logs: Record<string, GameLogEntry[]>, players: Player[]): Map<string, Map<number, number>> {
+  if (weeklyRanksCache.has(season)) return weeklyRanksCache.get(season)!;
+
+  const playerPosMap = new Map<string, string>();
+  for (const p of players) {
+    if (p.position) playerPosMap.set(p.id, p.position);
+  }
+
+  const weekPosBuckets: Map<number, Map<string, { playerId: string; pts: number }[]>> = new Map();
+  for (const [playerId, entries] of Object.entries(logs)) {
+    const pos = playerPosMap.get(playerId);
+    if (!pos) continue;
+    for (const entry of entries) {
+      if (!weekPosBuckets.has(entry.week)) weekPosBuckets.set(entry.week, new Map());
+      const posBucket = weekPosBuckets.get(entry.week)!;
+      if (!posBucket.has(pos)) posBucket.set(pos, []);
+      posBucket.get(pos)!.push({ playerId, pts: entry.stats.pts_ppr });
+    }
+  }
+
+  const rankMap = new Map<string, Map<number, number>>();
+  weekPosBuckets.forEach((posBucket, week) => {
+    posBucket.forEach((bucket) => {
+      bucket.sort((a: { playerId: string; pts: number }, b: { playerId: string; pts: number }) => b.pts - a.pts);
+      for (let i = 0; i < bucket.length; i++) {
+        const pid = bucket[i].playerId;
+        if (!rankMap.has(pid)) rankMap.set(pid, new Map());
+        rankMap.get(pid)!.set(week, i + 1);
+      }
+    });
+  });
+
+  weeklyRanksCache.set(season, rankMap);
+  return rankMap;
+}
+
+function attachRanks(entries: GameLogEntry[], playerId: string, ranks: Map<string, Map<number, number>>): GameLogEntry[] {
+  const playerRanks = ranks.get(playerId);
+  if (!playerRanks) return entries;
+  return entries.map(e => ({ ...e, pos_rank: playerRanks.get(e.week) ?? null }));
+}
 
 function loadGameLogs(season: number): Record<string, GameLogEntry[]> {
   if (gameLogsCache.has(season)) return gameLogsCache.get(season)!;
@@ -251,10 +294,12 @@ export async function registerRoutes(
     if (!player) {
       return res.status(404).json({ error: "not_found" });
     }
+    const allPlayers = loadPlayers();
     const seasons = getAvailableSeasons();
     const latestSeason = seasons[0] || new Date().getFullYear();
     const logs = loadGameLogs(latestSeason);
-    const playerLogs = logs[player.id] || [];
+    const ranks = buildWeeklyRanks(latestSeason, logs, allPlayers);
+    const playerLogs = attachRanks(logs[player.id] || [], player.id, ranks);
 
     const weeklyPts = playerLogs.map(e => e.stats.pts_ppr);
     const trends: import("@shared/playerTypes").PlayerTrends | null =
@@ -289,11 +334,13 @@ export async function registerRoutes(
     if (!player) {
       return res.status(404).json({ error: "not_found" });
     }
+    const allPlayers = loadPlayers();
     const seasons = getAvailableSeasons();
     const seasonParam = parseInt(req.query.season as string, 10);
     const season = !isNaN(seasonParam) && seasons.includes(seasonParam) ? seasonParam : (seasons[0] || new Date().getFullYear());
     const logs = loadGameLogs(season);
-    const playerLogs = logs[player.id] || [];
+    const ranks = buildWeeklyRanks(season, logs, allPlayers);
+    const playerLogs = attachRanks(logs[player.id] || [], player.id, ranks);
     res.set("Cache-Control", "public, max-age=3600");
     res.json(playerLogs);
   });

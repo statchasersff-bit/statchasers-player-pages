@@ -24,6 +24,7 @@ export interface GameLogEntry {
   week: number;
   opp: string;
   stats: GameLogStats;
+  pos_rank?: number | null;
 }
 
 export interface NewsEntry {
