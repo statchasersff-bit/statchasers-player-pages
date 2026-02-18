@@ -202,7 +202,17 @@ function getPositionColumns(position: string | null): { primary: ColumnDef[]; de
   }
 }
 
-function computeGameLogStats(entries: GameLogEntry[]) {
+function getBoomBustThresholds(position: string | null): { boom: number; bust: number } {
+  switch (position) {
+    case 'QB': return { boom: 6, bust: 18 };
+    case 'RB': return { boom: 12, bust: 36 };
+    case 'WR': return { boom: 12, bust: 36 };
+    case 'TE': return { boom: 6, bust: 18 };
+    default: return { boom: 12, bust: 36 };
+  }
+}
+
+function computeGameLogStats(entries: GameLogEntry[], position: string | null = null) {
   if (entries.length === 0) return null;
   const gamesPlayed = entries.filter(e => e.stats.pts_ppr > 0).length;
   const totalPts = entries.reduce((s, e) => s + e.stats.pts_ppr, 0);
@@ -212,7 +222,15 @@ function computeGameLogStats(entries: GameLogEntry[]) {
   const last4Pts = last4.reduce((s, e) => s + e.stats.pts_ppr, 0);
   const last4Gp = last4.filter(e => e.stats.pts_ppr > 0).length;
   const last4Ppg = last4Gp > 0 ? last4Pts / last4Gp : 0;
-  return { gamesPlayed, totalPts, ppg, bestWeek, last4Ppg };
+
+  const { boom: boomThreshold, bust: bustThreshold } = getBoomBustThresholds(position);
+  const playedEntries = entries.filter(e => e.stats.pts_ppr > 0);
+  const boomGames = playedEntries.filter(e => e.pos_rank != null && e.pos_rank <= boomThreshold).length;
+  const bustGames = playedEntries.filter(e => e.pos_rank != null && e.pos_rank >= bustThreshold).length;
+  const boomPct = gamesPlayed > 0 ? (boomGames / gamesPlayed) * 100 : 0;
+  const bustPct = gamesPlayed > 0 ? (bustGames / gamesPlayed) * 100 : 0;
+
+  return { gamesPlayed, totalPts, ppg, bestWeek, last4Ppg, boomPct, bustPct, boomGames, bustGames };
 }
 
 function getRankColor(rank: number | null | undefined): string {
@@ -432,7 +450,7 @@ function getRollingAverage(entries: GameLogEntry[], key: string, window: number 
 type PlayerWithSeasons = Player & { availableSeasons?: number[] };
 
 function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: GameLogEntry[] }) {
-  const stats = computeGameLogStats(entries);
+  const stats = computeGameLogStats(entries, player.position);
   const keyStats = getKeyStatSummary(entries, player.position);
   const weeklyPts = entries.map(e => e.stats.pts_ppr);
   const outlook = getPositionOutlook(player, stats);
@@ -534,7 +552,9 @@ function GameLogTab({ player }: { player: PlayerWithSeasons }) {
   });
 
   const entries = isDefaultSeason ? (player.gameLog || []) : (seasonGameLog || []);
-  const stats = computeGameLogStats(entries);
+  const stats = computeGameLogStats(entries, player.position);
+  const { boom: boomThreshold, bust: bustThreshold } = getBoomBustThresholds(player.position);
+  const posLabel = player.position || '';
 
   return (
     <div className="space-y-4">
@@ -562,11 +582,30 @@ function GameLogTab({ player }: { player: PlayerWithSeasons }) {
       </div>
 
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3" data-testid="gamelog-summary-bar">
-          <StatBox label="Games" value={stats.gamesPlayed} />
-          <StatBox label="Total Pts" value={stats.totalPts.toFixed(1)} />
-          <StatBox label="PPG" value={stats.ppg.toFixed(1)} />
-          <StatBox label="Best Week" value={stats.bestWeek.stats.pts_ppr.toFixed(1)} sub={`Wk ${stats.bestWeek.week} vs ${stats.bestWeek.opp}`} />
+        <div className="space-y-3" data-testid="gamelog-summary-bar">
+          <div className="grid grid-cols-3 md:grid-cols-3 gap-3">
+            <StatBox label="Games" value={stats.gamesPlayed} />
+            <StatBox label="Total Pts" value={stats.totalPts.toFixed(1)} />
+            <StatBox label="PPG" value={stats.ppg.toFixed(1)} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="p-3 rounded-md bg-green-500/10 dark:bg-green-900/20">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Boom %</p>
+              <div className="flex items-baseline gap-2 mt-0.5 flex-wrap">
+                <p className="text-xl font-bold text-green-600 dark:text-green-400 tabular-nums" data-testid="text-boom-pct">{stats.boomPct.toFixed(0)}%</p>
+                <p className="text-[10px] text-muted-foreground">{stats.boomGames} of {stats.gamesPlayed} games</p>
+              </div>
+              <p className="text-[10px] text-muted-foreground/70 mt-0.5">Top {boomThreshold} {posLabel} finish</p>
+            </div>
+            <div className="p-3 rounded-md bg-red-500/10 dark:bg-red-900/20">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Bust %</p>
+              <div className="flex items-baseline gap-2 mt-0.5 flex-wrap">
+                <p className="text-xl font-bold text-red-500 dark:text-red-400 tabular-nums" data-testid="text-bust-pct">{stats.bustPct.toFixed(0)}%</p>
+                <p className="text-[10px] text-muted-foreground">{stats.bustGames} of {stats.gamesPlayed} games</p>
+              </div>
+              <p className="text-[10px] text-muted-foreground/70 mt-0.5">{posLabel}{bustThreshold}+ finish</p>
+            </div>
+          </div>
         </div>
       )}
 
