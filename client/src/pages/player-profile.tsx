@@ -215,9 +215,18 @@ function computeGameLogStats(entries: GameLogEntry[]) {
   return { gamesPlayed, totalPts, ppg, bestWeek, last4Ppg };
 }
 
+function getRankColor(rank: number | null | undefined): string {
+  if (!rank) return '';
+  if (rank <= 5) return 'text-green-600 dark:text-green-400 font-semibold';
+  if (rank <= 12) return 'text-emerald-600 dark:text-emerald-400';
+  if (rank <= 24) return 'text-foreground';
+  return 'text-muted-foreground';
+}
+
 function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; position: string | null }) {
   const { primary, detail } = getPositionColumns(position);
-  const colCount = 3 + primary.length + (detail.length > 0 ? 1 : 0);
+  const posLabel = position || '';
+  const colCount = 4 + primary.length + (detail.length > 0 ? 1 : 0);
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
   const hasDetail = detail.length > 0;
 
@@ -245,7 +254,8 @@ function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; po
                 {col.label}
               </th>
             ))}
-            <th className="py-2 text-muted-foreground font-medium text-right whitespace-nowrap">FPTS</th>
+            <th className="py-2 pr-3 text-muted-foreground font-medium text-right whitespace-nowrap">FPTS</th>
+            <th className="py-2 text-muted-foreground font-medium text-right whitespace-nowrap">FIN</th>
             {hasDetail && <th className="py-2 pl-2 w-8"></th>}
           </tr>
         </thead>
@@ -253,6 +263,7 @@ function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; po
           {entries.length > 0 ? (
             entries.map((entry, i) => {
               const isExpanded = expandedRows.has(i);
+              const rank = entry.pos_rank;
               return (
                 <Fragment key={i}>
                   <tr
@@ -267,8 +278,11 @@ function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; po
                         {getStat(entry, col.key)}
                       </td>
                     ))}
-                    <td className="py-2 text-right font-semibold text-foreground tabular-nums">
+                    <td className="py-2 pr-3 text-right font-semibold text-foreground tabular-nums">
                       {entry.stats.pts_ppr.toFixed(1)}
+                    </td>
+                    <td className={`py-2 text-right tabular-nums text-xs ${getRankColor(rank)}`} data-testid={`text-finish-week-${entry.week}`}>
+                      {rank ? `${posLabel}${rank}` : '\u2014'}
                     </td>
                     {hasDetail && (
                       <td className="py-2 pl-2 text-center">
@@ -319,9 +333,10 @@ function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; po
                   {entries.reduce((sum, e) => sum + getStat(e, col.key), 0)}
                 </td>
               ))}
-              <td className="py-2 text-right text-foreground tabular-nums">
+              <td className="py-2 pr-3 text-right text-foreground tabular-nums">
                 {entries.reduce((sum, e) => sum + e.stats.pts_ppr, 0).toFixed(1)}
               </td>
+              <td className="py-2"></td>
               {hasDetail && <td className="py-2 pl-2"></td>}
             </tr>
           </tfoot>
