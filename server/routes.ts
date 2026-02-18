@@ -332,6 +332,7 @@ export async function registerRoutes(
       : null;
 
     const multiSeasonStats: { season: number; ppg: number; gamesPlayed: number; pos1Pct: number; pos2Pct: number; pos3Pct: number; bustPct: number }[] = [];
+
     for (const s of seasons) {
       const sLogs = loadGameLogs(s);
       const pLogs = sLogs[player.id] || [];
@@ -351,6 +352,7 @@ export async function registerRoutes(
       const pos2Games = ranked.filter(e => e.pos_rank! >= 13 && e.pos_rank! <= pos2End).length;
       const pos3Games = hasTier3 ? ranked.filter(e => e.pos_rank! >= 25 && e.pos_rank! <= bustThresh).length : 0;
       const bustGames = ranked.filter(e => e.pos_rank! > bustThresh).length;
+
       multiSeasonStats.push({
         season: s,
         ppg: totalPts / gp,
@@ -360,6 +362,69 @@ export async function registerRoutes(
         pos3Pct: (pos3Games / gp) * 100,
         bustPct: (bustGames / gp) * 100,
       });
+    }
+
+    let careerProfile: {
+      ppg: number; gamesPlayed: number; maxGames: number; durabilityPct: number;
+      pos1Pct: number; pos2Pct: number; pos3Pct: number; bustPct: number;
+      volatility: number; volatilityLabel: string;
+      seasons: number; seasonPpgs: { season: number; ppg: number }[];
+      smallSample: boolean;
+    } | null = null;
+
+    const threeYearSeasons = [activeSeason, activeSeason - 1, activeSeason - 2];
+    const threeYearStats = multiSeasonStats.filter(m => threeYearSeasons.includes(m.season));
+    const threeYearPtsFiltered = (() => {
+      const pts: number[] = [];
+      let p1 = 0, p2 = 0, p3 = 0, bust = 0;
+      for (const s of threeYearSeasons) {
+        if (!multiSeasonStats.find(m => m.season === s)) continue;
+        const sLogs = loadGameLogs(s);
+        const pLogs = sLogs[player.id] || [];
+        const played = pLogs.filter(e => hasParticipation(e.stats, player.position));
+        played.forEach(e => pts.push(e.stats.pts_ppr));
+        const ranks = buildWeeklyRanks(s, sLogs, allPlayers);
+        const rankedLogs = attachRanks(pLogs, player.id, ranks);
+        const rankedPlayed = rankedLogs.filter(e => hasParticipation(e.stats, player.position) && e.pos_rank != null);
+        const pos = player.position || '';
+        const bustThresh = (pos === 'QB' || pos === 'TE') ? 18 : pos === 'WR' ? 36 : 30;
+        const hasTier3 = bustThresh > 24;
+        const pos2End = hasTier3 ? 24 : bustThresh;
+        p1 += rankedPlayed.filter(e => e.pos_rank! >= 1 && e.pos_rank! <= 12).length;
+        p2 += rankedPlayed.filter(e => e.pos_rank! >= 13 && e.pos_rank! <= pos2End).length;
+        p3 += hasTier3 ? rankedPlayed.filter(e => e.pos_rank! >= 25 && e.pos_rank! <= bustThresh).length : 0;
+        bust += rankedPlayed.filter(e => e.pos_rank! > bustThresh).length;
+      }
+      return { pts, p1, p2, p3, bust };
+    })();
+
+    if (threeYearStats.length > 1) {
+      const totalGp = threeYearPtsFiltered.pts.length;
+      const maxGames = threeYearStats.length * 17;
+      const totalPts = threeYearPtsFiltered.pts.reduce((a, b) => a + b, 0);
+      const ppg = totalGp > 0 ? totalPts / totalGp : 0;
+      const mean = ppg;
+      const variance = totalGp > 1
+        ? threeYearPtsFiltered.pts.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / (totalGp - 1)
+        : 0;
+      const vol = Math.sqrt(variance);
+      const volLabel = vol < 6 ? 'Low' : vol < 9 ? 'Moderate' : 'High';
+
+      careerProfile = {
+        ppg,
+        gamesPlayed: totalGp,
+        maxGames,
+        durabilityPct: maxGames > 0 ? (totalGp / maxGames) * 100 : 0,
+        pos1Pct: totalGp > 0 ? (threeYearPtsFiltered.p1 / totalGp) * 100 : 0,
+        pos2Pct: totalGp > 0 ? (threeYearPtsFiltered.p2 / totalGp) * 100 : 0,
+        pos3Pct: totalGp > 0 ? (threeYearPtsFiltered.p3 / totalGp) * 100 : 0,
+        bustPct: totalGp > 0 ? (threeYearPtsFiltered.bust / totalGp) * 100 : 0,
+        volatility: vol,
+        volatilityLabel: volLabel,
+        seasons: threeYearStats.length,
+        seasonPpgs: threeYearStats.map(m => ({ season: m.season, ppg: m.ppg })),
+        smallSample: totalGp < 8,
+      };
     }
 
     let seasonRank: number | null = null;
@@ -394,6 +459,7 @@ export async function registerRoutes(
       news: player.news ?? [],
       availableSeasons: seasons,
       multiSeasonStats,
+      careerProfile,
     };
     res.set("Cache-Control", "public, max-age=3600");
     res.json(enriched);
