@@ -68,6 +68,7 @@ Located in `wordpress-plugin/statchasers-player-pages/`
 - **Goose Egg %**: (# played weeks with pts==0) / games_played
 
 ## Recent Changes
+- 2026-02-18: Game Log tab redesign: outcome-focused summary bar (GP/PPG/Best Week/Worst Week with tier badges), Full Season/Last 5 filter toggle, Game Distribution bar (15+/10-14.9/5-9.9/<5), colored tier finish badges (Pos1=green/Pos2=blue/Pos3=orange/Bust=red), Status column (Active/OUT), Opponent Rank vs Position in OPP column (ordinal rank with color coding), server-side opp rank computation from season-wide game log data
 - 2026-02-18: Multi-Year Performance Profile: replaced career averages with 3-year window (S, S-1, S-2), shows PPG + durability %, tier breakdown (pos1/pos2/pos3/bust), volatility, career arc mini bar chart; computed server-side with raw weekly data
 - 2026-02-18: Quick Outlook restructured: paragraph → structured summary report (Current Form, Role, Volatility, Tier Profile stat lines + best-week sentence)
 - 2026-02-18: Role Snapshot redesign: grouped cards (Usage/Efficiency/Context), primary emphasis on usage cards, "Season:" labels, explicit 0% deltas with trend arrows, TDs/Game 2-decimal format, structured 2-line signal (title + detail), tighter spacing
