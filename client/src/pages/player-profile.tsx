@@ -211,14 +211,19 @@ function getPositionColumns(position: string | null): { primary: ColumnDef[]; de
   }
 }
 
-function getTierThresholds(position: string | null): { elite: number; starter: number; bust: number } {
+function getTierThresholds(position: string | null): { bust: number; hasTier3: boolean } {
   switch (position) {
-    case 'QB': return { elite: 5, starter: 12, bust: 18 };
-    case 'RB': return { elite: 5, starter: 12, bust: 30 };
-    case 'WR': return { elite: 5, starter: 12, bust: 36 };
-    case 'TE': return { elite: 3, starter: 12, bust: 18 };
-    default: return { elite: 5, starter: 12, bust: 30 };
+    case 'QB': return { bust: 18, hasTier3: false };
+    case 'RB': return { bust: 30, hasTier3: true };
+    case 'WR': return { bust: 36, hasTier3: true };
+    case 'TE': return { bust: 18, hasTier3: false };
+    default: return { bust: 30, hasTier3: true };
   }
+}
+
+function getTierLabel(position: string | null, tier: number): string {
+  const pos = position || 'FLEX';
+  return `${pos}${tier}`;
 }
 
 function hasParticipation(stats: GameLogEntry['stats'], position: string | null): boolean {
@@ -239,12 +244,16 @@ function computeGameLogStats(entries: GameLogEntry[], position: string | null = 
   const last4Pts = last4.reduce((s, e) => s + e.stats.pts_ppr, 0);
   const last4Ppg = last4.length > 0 ? last4Pts / last4.length : 0;
 
-  const { elite: eliteThreshold, starter: starterThreshold, bust: bustThreshold } = getTierThresholds(position);
-  const eliteGames = playedEntries.filter(e => e.pos_rank != null && e.pos_rank <= eliteThreshold).length;
-  const starterGames = playedEntries.filter(e => e.pos_rank != null && e.pos_rank <= starterThreshold).length;
-  const bustGames = playedEntries.filter(e => e.pos_rank != null && e.pos_rank > bustThreshold).length;
-  const elitePct = gamesPlayed > 0 ? (eliteGames / gamesPlayed) * 100 : 0;
-  const starterPct = gamesPlayed > 0 ? (starterGames / gamesPlayed) * 100 : 0;
+  const { bust: bustThreshold, hasTier3 } = getTierThresholds(position);
+  const ranked = playedEntries.filter(e => e.pos_rank != null);
+  const pos1Games = ranked.filter(e => e.pos_rank! >= 1 && e.pos_rank! <= 12).length;
+  const pos2End = hasTier3 ? 24 : bustThreshold;
+  const pos2Games = ranked.filter(e => e.pos_rank! >= 13 && e.pos_rank! <= pos2End).length;
+  const pos3Games = hasTier3 ? ranked.filter(e => e.pos_rank! >= 25 && e.pos_rank! <= bustThreshold).length : 0;
+  const bustGames = ranked.filter(e => e.pos_rank! > bustThreshold).length;
+  const pos1Pct = gamesPlayed > 0 ? (pos1Games / gamesPlayed) * 100 : 0;
+  const pos2Pct = gamesPlayed > 0 ? (pos2Games / gamesPlayed) * 100 : 0;
+  const pos3Pct = gamesPlayed > 0 ? (pos3Games / gamesPlayed) * 100 : 0;
   const bustPct = gamesPlayed > 0 ? (bustGames / gamesPlayed) * 100 : 0;
 
   const ptsArr = playedEntries.map(e => e.stats.pts_ppr);
@@ -256,7 +265,7 @@ function computeGameLogStats(entries: GameLogEntry[], position: string | null = 
   const gooseEggs = playedEntries.filter(e => e.stats.pts_ppr === 0).length;
   const gooseEggPct = gamesPlayed > 0 ? (gooseEggs / gamesPlayed) * 100 : 0;
 
-  return { gamesPlayed, totalPts, ppg, bestWeek, last4Ppg, elitePct, starterPct, bustPct, eliteGames, starterGames, bustGames, volatility, gooseEggPct };
+  return { gamesPlayed, totalPts, ppg, bestWeek, last4Ppg, pos1Pct, pos2Pct, pos3Pct, bustPct, pos1Games, pos2Games, pos3Games, bustGames, volatility, gooseEggPct };
 }
 
 function getRankColor(rank: number | null | undefined): string {
@@ -640,8 +649,9 @@ interface SeasonStat {
   season: number;
   ppg: number;
   gamesPlayed: number;
-  elitePct: number;
-  starterPct: number;
+  pos1Pct: number;
+  pos2Pct: number;
+  pos3Pct: number;
   bustPct: number;
 }
 
@@ -668,13 +678,15 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
   const multiYearAvg = hasMultiSeason ? (() => {
     const totalGames = multi.reduce((s, m) => s + m.gamesPlayed, 0);
     const totalPts = multi.reduce((s, m) => s + m.ppg * m.gamesPlayed, 0);
-    const wElite = multi.reduce((s, m) => s + m.elitePct * m.gamesPlayed, 0);
-    const wStarter = multi.reduce((s, m) => s + m.starterPct * m.gamesPlayed, 0);
+    const wPos1 = multi.reduce((s, m) => s + m.pos1Pct * m.gamesPlayed, 0);
+    const wPos2 = multi.reduce((s, m) => s + m.pos2Pct * m.gamesPlayed, 0);
+    const wPos3 = multi.reduce((s, m) => s + m.pos3Pct * m.gamesPlayed, 0);
     const wBust = multi.reduce((s, m) => s + m.bustPct * m.gamesPlayed, 0);
     return {
       ppg: totalGames > 0 ? totalPts / totalGames : 0,
-      elitePct: totalGames > 0 ? wElite / totalGames : 0,
-      starterPct: totalGames > 0 ? wStarter / totalGames : 0,
+      pos1Pct: totalGames > 0 ? wPos1 / totalGames : 0,
+      pos2Pct: totalGames > 0 ? wPos2 / totalGames : 0,
+      pos3Pct: totalGames > 0 ? wPos3 / totalGames : 0,
       bustPct: totalGames > 0 ? wBust / totalGames : 0,
       seasons: multi.length,
       games: totalGames,
@@ -712,7 +724,7 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
               </p>
             )}
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Performance</p>
-            <div className="grid grid-cols-3 gap-2">
+            <div className={`grid gap-2 ${thresholds.hasTier3 ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-3'}`}>
               <div className="p-3 rounded-md bg-muted/60 dark:bg-slate-800/70 text-center ring-1 ring-border/40">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">PPG</p>
                 <p className="text-xl font-bold text-foreground tabular-nums mt-0.5">{seasonPpg.toFixed(1)}</p>
@@ -720,24 +732,31 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
                   {player.seasonRank ? `${stats.gamesPlayed} GP \u00B7 ${posLabel}${player.seasonRank}` : `${stats.gamesPlayed} GP`}
                 </p>
               </div>
-              <div className="p-3 rounded-md bg-amber-500/8 dark:bg-amber-900/15 text-center">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Elite %</p>
-                <p className="text-lg font-bold text-amber-600 dark:text-amber-400 tabular-nums mt-0.5">{stats.elitePct.toFixed(0)}%</p>
-                <p className="text-[10px] text-muted-foreground/70">Top {thresholds.elite} Weekly Finishes</p>
+              <div className="p-3 rounded-md bg-green-500/8 dark:bg-green-900/15 text-center">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 1)} %</p>
+                <p className="text-lg font-bold text-green-600 dark:text-green-400 tabular-nums mt-0.5" data-testid="text-pos1-pct">{stats.pos1Pct.toFixed(0)}%</p>
+                <p className="text-[10px] text-muted-foreground/70">{posLabel}1\u2013{posLabel}12 Weeks</p>
               </div>
               <div className="p-3 rounded-md bg-sky-500/8 dark:bg-sky-900/15 text-center">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Starter %</p>
-                <p className="text-lg font-bold text-sky-600 dark:text-sky-400 tabular-nums mt-0.5">{stats.starterPct.toFixed(0)}%</p>
-                <p className="text-[10px] text-muted-foreground/70">Top 12 Weekly Finishes</p>
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 2)} %</p>
+                <p className="text-lg font-bold text-sky-600 dark:text-sky-400 tabular-nums mt-0.5" data-testid="text-pos2-pct">{stats.pos2Pct.toFixed(0)}%</p>
+                <p className="text-[10px] text-muted-foreground/70">{posLabel}13\u2013{posLabel}{thresholds.hasTier3 ? 24 : thresholds.bust} Weeks</p>
               </div>
+              {thresholds.hasTier3 && (
+                <div className="p-3 rounded-md bg-amber-500/8 dark:bg-amber-900/15 text-center">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 3)} %</p>
+                  <p className="text-lg font-bold text-amber-600 dark:text-amber-400 tabular-nums mt-0.5" data-testid="text-pos3-pct">{stats.pos3Pct.toFixed(0)}%</p>
+                  <p className="text-[10px] text-muted-foreground/70">{posLabel}25\u2013{posLabel}{thresholds.bust} Weeks</p>
+                </div>
+              )}
             </div>
 
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium pt-1">Risk</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               <div className="p-3 rounded-md bg-red-500/8 dark:bg-red-900/15 text-center">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Bust %</p>
-                <p className="text-lg font-bold text-red-500 dark:text-red-400 tabular-nums mt-0.5">{stats.bustPct.toFixed(0)}%</p>
-                <p className="text-[10px] text-muted-foreground/70">Outside Top {thresholds.bust}</p>
+                <p className="text-lg font-bold text-red-500 dark:text-red-400 tabular-nums mt-0.5" data-testid="text-bust-pct-risk">{stats.bustPct.toFixed(0)}%</p>
+                <p className="text-[10px] text-muted-foreground/70">{posLabel}{thresholds.bust + 1}+ Weeks</p>
               </div>
               <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60 text-center">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Volatility</p>
@@ -911,7 +930,7 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
               const yptPct = sYpt > 0 ? ((rYpt - sYpt) / sYpt) * 100 : 0;
               cards.push({ label: 'Yds/Target', season: sYpt, recent: rYpt, pct: yptPct, fmt: v => v.toFixed(1) });
               cards.push(buildCard('TD Rate', sTd, rTd, true));
-              cards.push({ label: 'Starter %', season: stats.starterPct, recent: stats.starterPct, pct: 0, fmt: v => `${v.toFixed(0)}%` });
+              cards.push({ label: `${getTierLabel(player.position, 1)} %`, season: stats.pos1Pct, recent: stats.pos1Pct, pct: 0, fmt: v => `${v.toFixed(0)}%` });
 
               const tgtPct = cards[0].pct;
               if (rolePpgPct < -5) {
@@ -941,7 +960,7 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
               cards.push({ label: 'YPC', season: sYpc, recent: rYpc, pct: ypcPct, fmt: v => v.toFixed(1) });
               cards.push(buildCard('Targets/G', sTgt, rTgt, true));
               cards.push(buildCard('Total TD/G', sTd, rTd, true));
-              cards.push({ label: 'Starter %', season: stats.starterPct, recent: stats.starterPct, pct: 0, fmt: v => `${v.toFixed(0)}%` });
+              cards.push({ label: `${getTierLabel(player.position, 1)} %`, season: stats.pos1Pct, recent: stats.pos1Pct, pct: 0, fmt: v => `${v.toFixed(0)}%` });
 
               const carrPct = cards[0].pct;
               if (rolePpgPct < -5) {
@@ -975,7 +994,7 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
               cards.push({ label: 'Cmp %', season: sPct, recent: rPctVal, pct: cmpPctDelta, fmt: v => `${v.toFixed(0)}%` });
               cards.push(buildCard('INT/G', sInt, rInt, true));
               cards.push(buildCard('Rush Yds/G', sRush, rRush, true));
-              cards.push({ label: 'Starter %', season: stats.starterPct, recent: stats.starterPct, pct: 0, fmt: v => `${v.toFixed(0)}%` });
+              cards.push({ label: `${getTierLabel(player.position, 1)} %`, season: stats.pos1Pct, recent: stats.pos1Pct, pct: 0, fmt: v => `${v.toFixed(0)}%` });
 
               if (rolePpgPct < -5) signal = 'Production declining \u2014 monitor passing efficiency and turnovers.';
               else if (rolePpgPct > 5) signal = 'QB trending upward \u2014 elevated production vs season baseline.';
@@ -1037,19 +1056,25 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
                   {multiYearAvg.seasons}-Year Career Averages
                   <span className="text-muted-foreground/60 ml-1">({multiYearAvg.games} games)</span>
                 </p>
-                <div className="grid grid-cols-4 gap-3" data-testid="multi-season-averages">
+                <div className={`grid gap-3 ${thresholds.hasTier3 ? 'grid-cols-2 md:grid-cols-5' : 'grid-cols-4'}`} data-testid="multi-season-averages">
                   <div className="text-center p-2 rounded-md bg-muted/30 dark:bg-slate-800/40">
                     <p className="text-lg font-bold text-foreground tabular-nums">{multiYearAvg.ppg.toFixed(1)}</p>
                     <p className="text-[10px] text-muted-foreground">PPG</p>
                   </div>
                   <div className="text-center p-2 rounded-md bg-green-500/10 dark:bg-green-900/20">
-                    <p className="text-lg font-bold text-green-600 dark:text-green-400 tabular-nums">{multiYearAvg.elitePct.toFixed(0)}%</p>
-                    <p className="text-[10px] text-muted-foreground">Elite %</p>
+                    <p className="text-lg font-bold text-green-600 dark:text-green-400 tabular-nums">{multiYearAvg.pos1Pct.toFixed(0)}%</p>
+                    <p className="text-[10px] text-muted-foreground">{getTierLabel(player.position, 1)} %</p>
                   </div>
                   <div className="text-center p-2 rounded-md bg-blue-500/10 dark:bg-blue-900/20">
-                    <p className="text-lg font-bold text-blue-600 dark:text-blue-400 tabular-nums">{multiYearAvg.starterPct.toFixed(0)}%</p>
-                    <p className="text-[10px] text-muted-foreground">Starter %</p>
+                    <p className="text-lg font-bold text-blue-600 dark:text-blue-400 tabular-nums">{multiYearAvg.pos2Pct.toFixed(0)}%</p>
+                    <p className="text-[10px] text-muted-foreground">{getTierLabel(player.position, 2)} %</p>
                   </div>
+                  {thresholds.hasTier3 && (
+                    <div className="text-center p-2 rounded-md bg-amber-500/10 dark:bg-amber-900/20">
+                      <p className="text-lg font-bold text-amber-600 dark:text-amber-400 tabular-nums">{multiYearAvg.pos3Pct.toFixed(0)}%</p>
+                      <p className="text-[10px] text-muted-foreground">{getTierLabel(player.position, 3)} %</p>
+                    </div>
+                  )}
                   <div className="text-center p-2 rounded-md bg-red-500/10 dark:bg-red-900/20">
                     <p className="text-lg font-bold text-red-500 dark:text-red-400 tabular-nums">{multiYearAvg.bustPct.toFixed(0)}%</p>
                     <p className="text-[10px] text-muted-foreground">Bust %</p>
@@ -1128,23 +1153,30 @@ function GameLogTab({ player }: { player: PlayerWithSeasons }) {
       </div>
 
       {stats && (
-        <div className="grid grid-cols-5 gap-2" data-testid="gamelog-summary-bar">
+        <div className={`grid gap-2 ${thresholds.hasTier3 ? 'grid-cols-3 md:grid-cols-6' : 'grid-cols-5'}`} data-testid="gamelog-summary-bar">
           <StatBox label="Games" value={stats.gamesPlayed} />
           <StatBox label="PPG" value={stats.ppg.toFixed(1)} />
           <div className="p-3 rounded-md bg-green-500/10 dark:bg-green-900/20 text-center">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Elite %</p>
-            <p className="text-lg font-bold text-green-600 dark:text-green-400 tabular-nums mt-0.5" data-testid="text-elite-pct">{stats.elitePct.toFixed(0)}%</p>
-            <p className="text-[10px] text-muted-foreground/70">Top {thresholds.elite} {posLabel}</p>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 1)} %</p>
+            <p className="text-lg font-bold text-green-600 dark:text-green-400 tabular-nums mt-0.5" data-testid="text-pos1-pct">{stats.pos1Pct.toFixed(0)}%</p>
+            <p className="text-[10px] text-muted-foreground/70">{posLabel}1\u2013{posLabel}12</p>
           </div>
           <div className="p-3 rounded-md bg-blue-500/10 dark:bg-blue-900/20 text-center">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Starter %</p>
-            <p className="text-lg font-bold text-blue-600 dark:text-blue-400 tabular-nums mt-0.5" data-testid="text-starter-pct">{stats.starterPct.toFixed(0)}%</p>
-            <p className="text-[10px] text-muted-foreground/70">Top 12 {posLabel}</p>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 2)} %</p>
+            <p className="text-lg font-bold text-blue-600 dark:text-blue-400 tabular-nums mt-0.5" data-testid="text-pos2-pct">{stats.pos2Pct.toFixed(0)}%</p>
+            <p className="text-[10px] text-muted-foreground/70">{posLabel}13\u2013{posLabel}{thresholds.hasTier3 ? 24 : thresholds.bust}</p>
           </div>
+          {thresholds.hasTier3 && (
+            <div className="p-3 rounded-md bg-amber-500/10 dark:bg-amber-900/20 text-center">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 3)} %</p>
+              <p className="text-lg font-bold text-amber-600 dark:text-amber-400 tabular-nums mt-0.5" data-testid="text-pos3-pct">{stats.pos3Pct.toFixed(0)}%</p>
+              <p className="text-[10px] text-muted-foreground/70">{posLabel}25\u2013{posLabel}{thresholds.bust}</p>
+            </div>
+          )}
           <div className="p-3 rounded-md bg-red-500/10 dark:bg-red-900/20 text-center">
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Bust %</p>
             <p className="text-lg font-bold text-red-500 dark:text-red-400 tabular-nums mt-0.5" data-testid="text-bust-pct">{stats.bustPct.toFixed(0)}%</p>
-            <p className="text-[10px] text-muted-foreground/70">{posLabel}{thresholds.bust}+</p>
+            <p className="text-[10px] text-muted-foreground/70">{posLabel}{thresholds.bust + 1}+</p>
           </div>
         </div>
       )}
