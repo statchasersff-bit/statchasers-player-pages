@@ -488,81 +488,157 @@ function getRollingAverage(entries: GameLogEntry[], key: string, window: number 
   return result;
 }
 
-type PlayerWithSeasons = Player & { availableSeasons?: number[] };
+interface SeasonStat {
+  season: number;
+  ppg: number;
+  gamesPlayed: number;
+  elitePct: number;
+  starterPct: number;
+  bustPct: number;
+}
+
+type PlayerWithSeasons = Player & {
+  availableSeasons?: number[];
+  seasonLabel?: string | null;
+  multiSeasonStats?: SeasonStat[];
+};
 
 function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: GameLogEntry[] }) {
   const stats = computeGameLogStats(entries, player.position);
   const keyStats = getKeyStatSummary(entries, player.position);
-  const weeklyPts = entries.map(e => e.stats.pts_ppr);
+  const activeEntries = entries.filter(e => e.stats.pts_ppr > 0);
+  const weeklyPts = activeEntries.map(e => e.stats.pts_ppr);
   const outlook = getPositionOutlook(player, stats);
+  const hasData = stats && stats.gamesPlayed > 0;
 
   const seasonPpg = stats?.ppg ?? 0;
   const last4Ppg = stats?.last4Ppg ?? 0;
 
+  const multi = player.multiSeasonStats || [];
+  const hasMultiSeason = multi.length > 1;
+  const multiYearAvg = hasMultiSeason ? (() => {
+    const totalGames = multi.reduce((s, m) => s + m.gamesPlayed, 0);
+    const totalPts = multi.reduce((s, m) => s + m.ppg * m.gamesPlayed, 0);
+    const wElite = multi.reduce((s, m) => s + m.elitePct * m.gamesPlayed, 0);
+    const wStarter = multi.reduce((s, m) => s + m.starterPct * m.gamesPlayed, 0);
+    const wBust = multi.reduce((s, m) => s + m.bustPct * m.gamesPlayed, 0);
+    return {
+      ppg: totalGames > 0 ? totalPts / totalGames : 0,
+      elitePct: totalGames > 0 ? wElite / totalGames : 0,
+      starterPct: totalGames > 0 ? wStarter / totalGames : 0,
+      bustPct: totalGames > 0 ? wBust / totalGames : 0,
+      seasons: multi.length,
+      games: totalGames,
+    };
+  })() : null;
+
+  const thresholds = getTierThresholds(player.position);
+  const posLabel = player.position || '';
+
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3" data-testid="overview-stat-boxes">
-        <StatBox label="Season PPG" value={seasonPpg.toFixed(1)} sub={stats ? `${stats.gamesPlayed} games` : undefined} />
-        <StatBox label="Last 4 PPG" value={last4Ppg.toFixed(1)} sub={seasonPpg > 0 ? undefined : undefined} />
-        <StatBox label="Total Points" value={stats?.totalPts.toFixed(1) ?? '0.0'} />
-        <StatBox
-          label="Best Week"
-          value={stats ? `${stats.bestWeek.stats.pts_ppr.toFixed(1)}` : '\u2014'}
-          sub={stats ? `Wk ${stats.bestWeek.week} vs ${stats.bestWeek.opp}` : undefined}
-        />
-      </div>
-
-      {seasonPpg > 0 && (
-        <div className="flex items-center gap-4 flex-wrap">
-          <span className="text-xs text-muted-foreground font-medium">Trend:</span>
-          <TrendIndicator current={last4Ppg} previous={seasonPpg} />
-        </div>
+      {player.seasonLabel && (
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider" data-testid="text-season-label">
+          {player.seasonLabel}
+        </p>
       )}
 
-      {weeklyPts.length > 0 && (
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-xs text-muted-foreground font-medium mb-3">Weekly Fantasy Points</p>
-            <MiniBarChart data={weeklyPts} height={100} />
-            <div className="flex items-center justify-between gap-2 mt-2 flex-wrap">
-              <span className="text-[10px] text-muted-foreground">Wk 1</span>
-              <span className="text-[10px] text-muted-foreground">Wk {weeklyPts.length}</span>
+      {hasData ? (
+        <>
+          <div className="grid grid-cols-5 gap-2" data-testid="overview-stat-boxes">
+            <StatBox label="PPG" value={seasonPpg.toFixed(1)} sub={`${stats.gamesPlayed} games`} />
+            <StatBox label="Total Pts" value={stats.totalPts.toFixed(1)} />
+            <div className="p-3 rounded-md bg-green-500/10 dark:bg-green-900/20 text-center">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Elite %</p>
+              <p className="text-lg font-bold text-green-600 dark:text-green-400 tabular-nums mt-0.5">{stats.elitePct.toFixed(0)}%</p>
+              <p className="text-[10px] text-muted-foreground/70">Top {thresholds.elite} {posLabel}</p>
             </div>
-          </CardContent>
-        </Card>
-      )}
+            <div className="p-3 rounded-md bg-blue-500/10 dark:bg-blue-900/20 text-center">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Starter %</p>
+              <p className="text-lg font-bold text-blue-600 dark:text-blue-400 tabular-nums mt-0.5">{stats.starterPct.toFixed(0)}%</p>
+              <p className="text-[10px] text-muted-foreground/70">Top 12 {posLabel}</p>
+            </div>
+            <div className="p-3 rounded-md bg-red-500/10 dark:bg-red-900/20 text-center">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Bust %</p>
+              <p className="text-lg font-bold text-red-500 dark:text-red-400 tabular-nums mt-0.5">{stats.bustPct.toFixed(0)}%</p>
+              <p className="text-[10px] text-muted-foreground/70">{posLabel}{thresholds.bust}+</p>
+            </div>
+          </div>
 
-      {keyStats.length > 0 && (
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-xs text-muted-foreground font-medium mb-3">Season Stat Summary</p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {keyStats.map(s => (
-                <div key={s.label} className="text-center p-2 rounded-md bg-muted/30 dark:bg-slate-800/40">
-                  <p className="text-lg font-bold text-foreground tabular-nums">{Number.isInteger(s.total) ? s.total : s.total.toFixed(1)}</p>
-                  <p className="text-[10px] text-muted-foreground">{s.label}</p>
-                  <p className="text-[10px] text-muted-foreground/70">{s.perGame.toFixed(1)}/g</p>
+          {seasonPpg > 0 && (
+            <div className="flex items-center gap-4 flex-wrap">
+              <span className="text-xs text-muted-foreground font-medium">Trend:</span>
+              <TrendIndicator current={last4Ppg} previous={seasonPpg} />
+            </div>
+          )}
+
+          {weeklyPts.length > 0 && (
+            <Card>
+              <CardContent className="p-4">
+                <p className="text-xs text-muted-foreground font-medium mb-3">Weekly Fantasy Points</p>
+                <MiniBarChart data={weeklyPts} height={100} />
+                <div className="flex items-center justify-between gap-2 mt-2 flex-wrap">
+                  <span className="text-[10px] text-muted-foreground">Wk 1</span>
+                  <span className="text-[10px] text-muted-foreground">Wk {weeklyPts.length}</span>
                 </div>
-              ))}
-            </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {keyStats.length > 0 && (
+            <Card>
+              <CardContent className="p-4">
+                <p className="text-xs text-muted-foreground font-medium mb-3">Season Stat Summary</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {keyStats.map(s => (
+                    <div key={s.label} className="text-center p-2 rounded-md bg-muted/30 dark:bg-slate-800/40">
+                      <p className="text-lg font-bold text-foreground tabular-nums">{Number.isInteger(s.total) ? s.total : s.total.toFixed(1)}</p>
+                      <p className="text-[10px] text-muted-foreground">{s.label}</p>
+                      <p className="text-[10px] text-muted-foreground/70">{s.perGame.toFixed(1)}/g</p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {multiYearAvg && (
+            <Card>
+              <CardContent className="p-4">
+                <p className="text-xs text-muted-foreground font-medium mb-3">
+                  {multiYearAvg.seasons}-Year Career Averages
+                  <span className="text-muted-foreground/60 ml-1">({multiYearAvg.games} games)</span>
+                </p>
+                <div className="grid grid-cols-4 gap-3" data-testid="multi-season-averages">
+                  <div className="text-center p-2 rounded-md bg-muted/30 dark:bg-slate-800/40">
+                    <p className="text-lg font-bold text-foreground tabular-nums">{multiYearAvg.ppg.toFixed(1)}</p>
+                    <p className="text-[10px] text-muted-foreground">PPG</p>
+                  </div>
+                  <div className="text-center p-2 rounded-md bg-green-500/10 dark:bg-green-900/20">
+                    <p className="text-lg font-bold text-green-600 dark:text-green-400 tabular-nums">{multiYearAvg.elitePct.toFixed(0)}%</p>
+                    <p className="text-[10px] text-muted-foreground">Elite %</p>
+                  </div>
+                  <div className="text-center p-2 rounded-md bg-blue-500/10 dark:bg-blue-900/20">
+                    <p className="text-lg font-bold text-blue-600 dark:text-blue-400 tabular-nums">{multiYearAvg.starterPct.toFixed(0)}%</p>
+                    <p className="text-[10px] text-muted-foreground">Starter %</p>
+                  </div>
+                  <div className="text-center p-2 rounded-md bg-red-500/10 dark:bg-red-900/20">
+                    <p className="text-lg font-bold text-red-500 dark:text-red-400 tabular-nums">{multiYearAvg.bustPct.toFixed(0)}%</p>
+                    <p className="text-[10px] text-muted-foreground">Bust %</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </>
+      ) : (
+        <Card>
+          <CardContent className="p-6 text-center">
+            <p className="text-muted-foreground text-sm">No season data available yet.</p>
+            <p className="text-muted-foreground/60 text-xs mt-1">Stats will appear once the season begins.</p>
           </CardContent>
         </Card>
       )}
-
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex items-center gap-2 mb-3 flex-wrap">
-            <Activity className="w-4 h-4 text-primary" />
-            <p className="text-xs text-muted-foreground font-medium">Player Snapshot</p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <SnapshotItem icon={Calendar} label="Age" value={player.age} />
-            <SnapshotItem icon={Ruler} label="Height" value={player.height} />
-            <SnapshotItem icon={Weight} label="Weight" value={player.weight ? `${player.weight} lbs` : null} />
-            <SnapshotItem icon={Shield} label="Status" value={player.status} />
-          </div>
-        </CardContent>
-      </Card>
 
       <Card>
         <CardContent className="p-4">
