@@ -345,6 +345,23 @@ export async function registerRoutes(
       });
     }
 
+    let seasonRank: number | null = null;
+    if (gamesPlayed > 0 && player.position) {
+      const seasonLogs = loadGameLogs(activeSeason);
+      const ppgByPlayer: { id: string; ppg: number }[] = [];
+      for (const [pid, pLogs] of Object.entries(seasonLogs)) {
+        const p = allPlayers.find(ap => ap.id === pid);
+        if (!p || p.position !== player.position) continue;
+        const played = pLogs.filter(e => e.stats.pts_ppr > 0);
+        if (played.length < 4) continue;
+        const totalPts = played.reduce((sum, e) => sum + e.stats.pts_ppr, 0);
+        ppgByPlayer.push({ id: pid, ppg: totalPts / played.length });
+      }
+      ppgByPlayer.sort((a, b) => b.ppg - a.ppg);
+      const idx = ppgByPlayer.findIndex(x => x.id === player.id);
+      if (idx >= 0) seasonRank = idx + 1;
+    }
+
     const weeklyPts = playerLogs.map(e => e.stats.pts_ppr);
     const trends: import("@shared/playerTypes").PlayerTrends | null =
       weeklyPts.length > 0 ? { weeklyFantasyPoints: weeklyPts } : null;
@@ -354,6 +371,7 @@ export async function registerRoutes(
       headshotUrl: player.headshotUrl ?? null,
       season: activeSeason,
       seasonLabel,
+      seasonRank,
       trends,
       gameLog: playerLogs,
       news: player.news ?? [],

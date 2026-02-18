@@ -500,6 +500,7 @@ interface SeasonStat {
 type PlayerWithSeasons = Player & {
   availableSeasons?: number[];
   seasonLabel?: string | null;
+  seasonRank?: number | null;
   multiSeasonStats?: SeasonStat[];
 };
 
@@ -547,7 +548,11 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
         <>
           <div className="grid grid-cols-5 gap-2" data-testid="overview-stat-boxes">
             <StatBox label="PPG" value={seasonPpg.toFixed(1)} sub={`${stats.gamesPlayed} games`} />
-            <StatBox label="Total Pts" value={stats.totalPts.toFixed(1)} />
+            <StatBox
+              label="Rank"
+              value={player.seasonRank ? `${posLabel}${player.seasonRank}` : '\u2014'}
+              sub="Season"
+            />
             <div className="p-3 rounded-md bg-green-500/10 dark:bg-green-900/20 text-center">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Elite %</p>
               <p className="text-lg font-bold text-green-600 dark:text-green-400 tabular-nums mt-0.5">{stats.elitePct.toFixed(0)}%</p>
