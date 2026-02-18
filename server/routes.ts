@@ -18,6 +18,17 @@ const GAME_LOGS_DIR = path.resolve(process.cwd(), "data", "game_logs");
 const gameLogsCache: Map<number, Record<string, GameLogEntry[]>> = new Map();
 const weeklyRanksCache: Map<number, Map<string, Map<number, number>>> = new Map();
 
+function hasParticipation(stats: GameLogEntry['stats'], position: string | null): boolean {
+  const s = stats as unknown as Record<string, number | null | undefined>;
+  if (position === 'QB') {
+    return (s.pass_att ?? 0) > 0 || (s.rush_att ?? 0) > 0;
+  }
+  if (position === 'K') {
+    return (s.fga ?? 0) > 0 || (s.xpa ?? 0) > 0;
+  }
+  return (s.rec_tgt ?? 0) > 0 || (s.rec ?? 0) > 0 || (s.rush_att ?? 0) > 0 || (s.pass_att ?? 0) > 0;
+}
+
 function buildWeeklyRanks(season: number, logs: Record<string, GameLogEntry[]>, players: Player[]): Map<string, Map<number, number>> {
   if (weeklyRanksCache.has(season)) return weeklyRanksCache.get(season)!;
 
@@ -31,6 +42,7 @@ function buildWeeklyRanks(season: number, logs: Record<string, GameLogEntry[]>, 
     const pos = playerPosMap.get(playerId);
     if (!pos) continue;
     for (const entry of entries) {
+      if (!hasParticipation(entry.stats, pos)) continue;
       if (!weekPosBuckets.has(entry.week)) weekPosBuckets.set(entry.week, new Map());
       const posBucket = weekPosBuckets.get(entry.week)!;
       if (!posBucket.has(pos)) posBucket.set(pos, []);
@@ -302,7 +314,7 @@ export async function registerRoutes(
     for (const s of seasons) {
       const sLogs = loadGameLogs(s);
       const pLogs = sLogs[player.id] || [];
-      const hasStats = pLogs.some(e => e.stats.pts_ppr > 0);
+      const hasStats = pLogs.some(e => hasParticipation(e.stats, player.position));
       if (hasStats) {
         activeSeason = s;
         const ranks = buildWeeklyRanks(s, sLogs, allPlayers);
@@ -311,8 +323,9 @@ export async function registerRoutes(
       }
     }
 
-    const gamesPlayed = playerLogs.filter(e => e.stats.pts_ppr > 0).length;
-    const maxWeek = playerLogs.length > 0 ? Math.max(...playerLogs.filter(e => e.stats.pts_ppr > 0).map(e => e.week)) : 0;
+    const playedLogs = playerLogs.filter(e => hasParticipation(e.stats, player.position));
+    const gamesPlayed = playedLogs.length;
+    const maxWeek = playedLogs.length > 0 ? Math.max(...playedLogs.map(e => e.week)) : 0;
     const isSeasonComplete = maxWeek >= 17;
     const seasonLabel = gamesPlayed > 0
       ? (isSeasonComplete ? `${activeSeason} Season Final` : `${activeSeason} Season (Through Week ${maxWeek})`)
@@ -322,7 +335,7 @@ export async function registerRoutes(
     for (const s of seasons) {
       const sLogs = loadGameLogs(s);
       const pLogs = sLogs[player.id] || [];
-      const played = pLogs.filter(e => e.stats.pts_ppr > 0);
+      const played = pLogs.filter(e => hasParticipation(e.stats, player.position));
       if (played.length === 0) continue;
       const ranks = buildWeeklyRanks(s, sLogs, allPlayers);
       const rankedLogs = attachRanks(pLogs, player.id, ranks);
@@ -331,7 +344,7 @@ export async function registerRoutes(
       const pos = player.position || '';
       const eliteThresh = pos === 'TE' ? 3 : 5;
       const bustThresh = (pos === 'QB' || pos === 'TE') ? 18 : pos === 'WR' ? 36 : 30;
-      const rankedPlayed = rankedLogs.filter(e => e.stats.pts_ppr > 0);
+      const rankedPlayed = rankedLogs.filter(e => hasParticipation(e.stats, player.position));
       const eliteGames = rankedPlayed.filter(e => e.pos_rank != null && e.pos_rank <= eliteThresh).length;
       const starterGames = rankedPlayed.filter(e => e.pos_rank != null && e.pos_rank <= 12).length;
       const bustGames = rankedPlayed.filter(e => e.pos_rank != null && e.pos_rank > bustThresh).length;
@@ -352,7 +365,7 @@ export async function registerRoutes(
       for (const [pid, pLogs] of Object.entries(seasonLogs)) {
         const p = allPlayers.find(ap => ap.id === pid);
         if (!p || p.position !== player.position) continue;
-        const played = pLogs.filter(e => e.stats.pts_ppr > 0);
+        const played = pLogs.filter(e => hasParticipation(e.stats, p.position));
         if (played.length < 4) continue;
         const totalPts = played.reduce((sum, e) => sum + e.stats.pts_ppr, 0);
         ppgByPlayer.push({ id: pid, ppg: totalPts / played.length });
@@ -362,7 +375,7 @@ export async function registerRoutes(
       if (idx >= 0) seasonRank = idx + 1;
     }
 
-    const weeklyPts = playerLogs.map(e => e.stats.pts_ppr);
+    const weeklyPts = playedLogs.map(e => e.stats.pts_ppr);
     const trends: import("@shared/playerTypes").PlayerTrends | null =
       weeklyPts.length > 0 ? { weeklyFantasyPoints: weeklyPts } : null;
 

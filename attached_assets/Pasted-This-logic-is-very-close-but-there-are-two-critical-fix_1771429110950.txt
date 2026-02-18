@@ -1,0 +1,187 @@
+This logic is very close, but there are two critical fixes you should make so the metrics don’t lie:
+
+Games Played should not be “pts_ppr > 0”
+
+Your Consistency score formula is too punitive and collapses to 0 too often
+
+Here’s the optimized, StatChasers-grade version.
+
+1) Games Played: don’t filter by pts_ppr > 0
+Why it’s wrong
+
+A player can play and score 0.0 (goose egg) — that’s exactly the kind of game that should count for:
+
+PPG
+
+Bust %
+
+Volatility
+
+Starter/Elite %
+
+Filtering out 0-point games artificially:
+
+boosts PPG
+
+lowers bust%
+
+lowers volatility
+
+makes the player look better than reality
+
+Correct rule
+
+Count a week as “played” if they had any opportunity / participation, not points.
+
+Best Sleeper-only approach (WR/TE/RB/QB):
+
+If any stat field exists for that week (targets, rec, rush_att, pass_att, etc.), it counts as played.
+
+For WR/TE specifically: targets >= 0 is not enough (could be missing). Use:
+
+targets OR rec OR rec_yd OR rush_att OR pass_att exists in the stat object.
+
+Practical implementation:
+
+If the player has a weekly stat object present for that week, count it as played.
+
+If the stat object is missing entirely, that’s “no game log entry” (didn’t play / no data).
+
+In short: include 0-point games whenever the player appeared.
+
+2) Weekly Finish: make sure you rank only relevant players that week
+
+Your approach is correct conceptually, but you must avoid ranking against dudes who didn’t play.
+
+Correct ranking pool
+
+For week W, position WR:
+
+include only WRs with a “played” flag true (as defined above)
+
+rank by weekly PPR points descending
+
+This prevents “WR90” weeks from being diluted by 200 inactive WRs.
+
+3) Thresholds: your Elite/Starter/Bust are good
+
+For WR:
+
+Elite = Top 5 ✅
+
+Starter = Top 12 ✅
+
+Bust = Outside Top 36 ✅
+
+These are fantasy-realistic.
+
+(For RB/QB/TE you can mirror later.)
+
+4) Volatility: correct, but compute it on the same “played games” set
+
+Std dev formula is good (sample std dev using n−1).
+Just make sure it uses the same games used in PPG and the finish metrics.
+
+5) Consistency score: replace CV * 1.5 (too harsh)
+
+Your current formula:
+
+CV = (stdev / mean) * 100
+
+Score = 100 − CV*1.5 (clamped)
+
+This will frequently slam good-but-swingy players to 0, which feels broken in UI.
+
+Better: use a soft curve with floor/ceiling
+
+Keep CV (it’s great), but map it smoothly.
+
+Recommended StatChasers mapping:
+
+Compute CV as a ratio (not percent): cv = stdev / mean
+
+Then:
+
+consistency = round(100 / (1 + (cv / 0.6)^2))
+
+
+What it does:
+
+cv = 0.3 → ~80–90 (very steady)
+
+cv = 0.6 → ~50 (average)
+
+cv = 1.0 → ~26 (boom/bust)
+
+never instantly hits 0 unless cv is extreme
+
+Labels (keep yours, slightly adjusted)
+
+70+ = Very Consistent
+
+45–69 = Average
+
+<45 = Boom or Bust
+
+This will feel “right” to users.
+
+6) Naming: “Consistency = 0” is emotionally jarring
+
+Even if mathematically “true,” a hard 0 looks like a bug.
+
+With the improved curve, you’ll rarely hit 0, and users will trust it more.
+
+7) Also add one sanity metric: “Goose Egg %”
+
+Sleeper-friendly and very informative:
+
+goose% = (# weeks with pts == 0 AND played) / games_played
+
+
+That pairs perfectly with Bust%.
+
+Updated Logic Summary (drop-in)
+Games Played
+
+Count a week as played if weekly stat object exists and indicates participation (any relevant stat field present). Include 0-point games.
+
+PPG
+
+ppg = total_pts / games_played
+
+Weekly Finish
+
+Rank only played players at that position for that week.
+
+Elite/Starter/Bust
+
+Same thresholds.
+
+Volatility
+
+Sample std dev across played weeks.
+
+Consistency Score (recommended)
+cv = stdev / ppg
+consistency = round(100 / (1 + (cv / 0.6)^2))
+
+If you want, here’s exactly what to tell Replit AI
+Fix player overview metric logic:
+
+1) Games played must NOT be filtered by pts_ppr > 0.
+Count a game as played if the weekly stats object exists and indicates participation (any of targets/rec/rec_yd/rush_att/pass_att or similar fields exist). Include 0.0 point games.
+
+2) Weekly finish calculations: when ranking all players for a given week+position, only include players who “played” that week (same participation rule). Rank by weekly PPR points.
+
+3) Keep thresholds:
+WR Elite <=5, Starter <=12, Bust >36.
+
+4) Volatility: sample std dev of weekly PPR across played games.
+
+5) Replace Consistency score formula with a smooth CV mapping:
+cv = stdev / ppg
+consistency = round(100 / (1 + (cv / 0.6)^2))
+Labels: 70+ Very Consistent, 45–69 Average, <45 Boom/Bust.
+
+6) Add Goose Egg %:
+(# played weeks with pts==0) / games_played.

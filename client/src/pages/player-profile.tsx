@@ -221,19 +221,25 @@ function getTierThresholds(position: string | null): { elite: number; starter: n
   }
 }
 
+function hasParticipation(stats: GameLogEntry['stats'], position: string | null): boolean {
+  const s = stats as unknown as Record<string, number | null | undefined>;
+  if (position === 'QB') return (s.pass_att ?? 0) > 0 || (s.rush_att ?? 0) > 0;
+  if (position === 'K') return (s.fga ?? 0) > 0 || (s.xpa ?? 0) > 0;
+  return (s.rec_tgt ?? 0) > 0 || (s.rec ?? 0) > 0 || (s.rush_att ?? 0) > 0 || (s.pass_att ?? 0) > 0;
+}
+
 function computeGameLogStats(entries: GameLogEntry[], position: string | null = null) {
   if (entries.length === 0) return null;
-  const gamesPlayed = entries.filter(e => e.stats.pts_ppr > 0).length;
-  const totalPts = entries.reduce((s, e) => s + e.stats.pts_ppr, 0);
+  const playedEntries = entries.filter(e => hasParticipation(e.stats, position));
+  const gamesPlayed = playedEntries.length;
+  const totalPts = playedEntries.reduce((s, e) => s + e.stats.pts_ppr, 0);
   const ppg = gamesPlayed > 0 ? totalPts / gamesPlayed : 0;
   const bestWeek = entries.reduce((best, e) => e.stats.pts_ppr > best.stats.pts_ppr ? e : best, entries[0]);
-  const last4 = entries.slice(-4);
+  const last4 = playedEntries.slice(-4);
   const last4Pts = last4.reduce((s, e) => s + e.stats.pts_ppr, 0);
-  const last4Gp = last4.filter(e => e.stats.pts_ppr > 0).length;
-  const last4Ppg = last4Gp > 0 ? last4Pts / last4Gp : 0;
+  const last4Ppg = last4.length > 0 ? last4Pts / last4.length : 0;
 
   const { elite: eliteThreshold, starter: starterThreshold, bust: bustThreshold } = getTierThresholds(position);
-  const playedEntries = entries.filter(e => e.stats.pts_ppr > 0);
   const eliteGames = playedEntries.filter(e => e.pos_rank != null && e.pos_rank <= eliteThreshold).length;
   const starterGames = playedEntries.filter(e => e.pos_rank != null && e.pos_rank <= starterThreshold).length;
   const bustGames = playedEntries.filter(e => e.pos_rank != null && e.pos_rank > bustThreshold).length;
@@ -247,7 +253,10 @@ function computeGameLogStats(entries: GameLogEntry[], position: string | null = 
     ? Math.sqrt(ptsArr.reduce((s, v) => s + (v - mean) ** 2, 0) / (ptsArr.length - 1))
     : 0;
 
-  return { gamesPlayed, totalPts, ppg, bestWeek, last4Ppg, elitePct, starterPct, bustPct, eliteGames, starterGames, bustGames, volatility };
+  const gooseEggs = playedEntries.filter(e => e.stats.pts_ppr === 0).length;
+  const gooseEggPct = gamesPlayed > 0 ? (gooseEggs / gamesPlayed) * 100 : 0;
+
+  return { gamesPlayed, totalPts, ppg, bestWeek, last4Ppg, elitePct, starterPct, bustPct, eliteGames, starterGames, bustGames, volatility, gooseEggPct };
 }
 
 function getRankColor(rank: number | null | undefined): string {
@@ -277,8 +286,8 @@ function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; po
   const getStat = (entry: GameLogEntry, key: string) =>
     (entry.stats as unknown as Record<string, number>)[key] ?? 0;
 
-  const activeEntries = entries.filter(e => e.stats.pts_ppr > 0 || Object.values(e.stats as unknown as Record<string, number>).some(v => typeof v === 'number' && v > 0));
-  const inactiveWeeks = entries.filter(e => e.stats.pts_ppr === 0 && !Object.values(e.stats as unknown as Record<string, number>).some(v => typeof v === 'number' && v > 0));
+  const activeEntries = entries.filter(e => hasParticipation(e.stats, position));
+  const inactiveWeeks = entries.filter(e => !hasParticipation(e.stats, position));
   const gamesPlayed = activeEntries.length;
 
   const rankedEntries = activeEntries.filter(e => e.pos_rank != null);
@@ -584,7 +593,7 @@ function getPositionOutlook(player: Player, stats: ReturnType<typeof computeGame
 function getKeyStatSummary(entries: GameLogEntry[], position: string | null) {
   if (entries.length === 0) return [];
   const stats: { label: string; total: number; perGame: number }[] = [];
-  const gp = entries.filter(e => e.stats.pts_ppr > 0).length || 1;
+  const gp = entries.filter(e => hasParticipation(e.stats, position)).length || 1;
   const sum = (key: string) => entries.reduce((s, e) => s + ((e.stats as unknown as Record<string, number>)[key] ?? 0), 0);
 
   if (position === 'QB') {
@@ -646,7 +655,7 @@ type PlayerWithSeasons = Player & {
 function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: GameLogEntry[] }) {
   const stats = computeGameLogStats(entries, player.position);
   const keyStats = getKeyStatSummary(entries, player.position);
-  const activeEntries = entries.filter(e => e.stats.pts_ppr > 0);
+  const activeEntries = entries.filter(e => hasParticipation(e.stats, player.position));
   const weeklyPts = activeEntries.map(e => e.stats.pts_ppr);
   const outlook = getPositionOutlook(player, stats);
   const hasData = stats && stats.gamesPlayed > 0;
@@ -685,8 +694,8 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
           ? 'text-amber-600 dark:text-amber-400'
           : 'text-red-500 dark:text-red-400';
 
-        const cv = seasonPpg > 0 ? (stats.volatility / seasonPpg) * 100 : 100;
-        const consistencyScore = Math.max(0, Math.min(100, Math.round(100 - cv * 1.5)));
+        const cvRatio = seasonPpg > 0 ? stats.volatility / seasonPpg : 2;
+        const consistencyScore = Math.round(100 / (1 + Math.pow(cvRatio / 0.6, 2)));
         const conLabel = consistencyScore >= 70 ? 'Very Consistent' : consistencyScore >= 45 ? 'Average' : 'Boom or Bust';
         const conColor = consistencyScore >= 70
           ? 'text-green-600 dark:text-green-400'
@@ -724,7 +733,7 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
             </div>
 
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium pt-1">Risk</p>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               <div className="p-3 rounded-md bg-red-500/8 dark:bg-red-900/15 text-center">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Bust %</p>
                 <p className="text-lg font-bold text-red-500 dark:text-red-400 tabular-nums mt-0.5">{stats.bustPct.toFixed(0)}%</p>
@@ -739,6 +748,11 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Consistency</p>
                 <p className={`text-lg font-bold tabular-nums mt-0.5 ${conColor}`}>{consistencyScore}</p>
                 <p className="text-[10px] text-muted-foreground/70">{conLabel}</p>
+              </div>
+              <div className="p-3 rounded-md bg-red-500/8 dark:bg-red-900/15 text-center">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Goose Egg</p>
+                <p className={`text-lg font-bold tabular-nums mt-0.5 ${stats.gooseEggPct > 0 ? 'text-red-500 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`} data-testid="text-goose-egg">{stats.gooseEggPct.toFixed(0)}%</p>
+                <p className="text-[10px] text-muted-foreground/70">0-Point Games</p>
               </div>
             </div>
           </div>
@@ -1189,7 +1203,7 @@ function UsageTrendsTab({ player, entries }: { player: PlayerWithSeasons; entrie
   const rollingPrimary = getRollingAverage(entries, primaryUsageKey, 3);
   const rollingSecondary = getRollingAverage(entries, secondaryUsageKey, 3);
 
-  const gp = entries.filter(e => e.stats.pts_ppr > 0).length || 1;
+  const gp = entries.filter(e => hasParticipation(e.stats, position)).length || 1;
   const avgPrimary = primaryData.reduce((a, b) => a + b, 0) / gp;
   const avgSecondary = secondaryData.reduce((a, b) => a + b, 0) / gp;
 
