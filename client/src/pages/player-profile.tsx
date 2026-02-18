@@ -959,15 +959,16 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
             const roleLast3Avg = weeklyPts.slice(-3).reduce((a, b) => a + b, 0) / Math.min(3, weeklyPts.length);
             const rolePpgPct = roleSznAvg > 0 ? ((roleLast3Avg - roleSznAvg) / roleSznAvg) * 100 : 0;
 
-            type RoleCard = { label: string; season: number; recent: number; pct: number; fmt: (v: number) => string };
+            type RoleCard = { label: string; season: number; recent: number; pct: number; fmt: (v: number) => string; group: 'usage' | 'efficiency' | 'context'; primary?: boolean };
             const cards: RoleCard[] = [];
-            let signal = '';
+            let signalTitle = '';
+            let signalDetail = '';
 
-            const buildCard = (label: string, seasonSum: number, recentSum: number, perGame: boolean, fmt?: (v: number) => string): RoleCard => {
+            const buildCard = (label: string, seasonSum: number, recentSum: number, perGame: boolean, group: 'usage' | 'efficiency' | 'context', fmt?: (v: number) => string, primary?: boolean): RoleCard => {
               const sVal = perGame ? seasonSum / gp : seasonSum;
               const rVal = perGame ? recentSum / 3 : recentSum;
               const pct = sVal > 0 ? ((rVal - sVal) / sVal) * 100 : 0;
-              return { label, season: sVal, recent: rVal, pct, fmt: fmt || (v => v.toFixed(1)) };
+              return { label, season: sVal, recent: rVal, pct, fmt: fmt || (v => v.toFixed(1)), group, primary };
             };
 
             if (pos === 'WR' || pos === 'TE') {
@@ -980,27 +981,27 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
               const sTd = activeEntries.reduce((s, e) => s + getStat(e, 'rec_td'), 0);
               const rTd = last3.reduce((s, e) => s + getStat(e, 'rec_td'), 0);
 
-              cards.push(buildCard('Targets/G', sTgt, rTgt, true));
-              cards.push(buildCard('Yards/G', sYd, rYd, true));
+              cards.push(buildCard('Targets/G', sTgt, rTgt, true, 'usage', undefined, true));
+              cards.push(buildCard('Yards/G', sYd, rYd, true, 'usage', undefined, true));
               const sCatch = sTgt > 0 ? (sRec / sTgt) * 100 : 0;
               const rCatch = rTgt > 0 ? (rRec / rTgt) * 100 : 0;
               const catchPct = sCatch > 0 ? ((rCatch - sCatch) / sCatch) * 100 : 0;
-              cards.push({ label: 'Catch %', season: sCatch, recent: rCatch, pct: catchPct, fmt: v => `${v.toFixed(0)}%` });
+              cards.push({ label: 'Catch %', season: sCatch, recent: rCatch, pct: catchPct, fmt: v => `${v.toFixed(0)}%`, group: 'efficiency' });
               const sYpt = sTgt > 0 ? sYd / sTgt : 0;
               const rYpt = rTgt > 0 ? rYd / rTgt : 0;
               const yptPct = sYpt > 0 ? ((rYpt - sYpt) / sYpt) * 100 : 0;
-              cards.push({ label: 'Yds/Target', season: sYpt, recent: rYpt, pct: yptPct, fmt: v => v.toFixed(1) });
-              cards.push(buildCard('TD Rate', sTd, rTd, true));
-              cards.push({ label: `${getTierLabel(player.position, 1)} %`, season: stats.pos1Pct, recent: stats.pos1Pct, pct: 0, fmt: v => `${v.toFixed(0)}%` });
+              cards.push({ label: 'Yds/Target', season: sYpt, recent: rYpt, pct: yptPct, fmt: v => v.toFixed(1), group: 'efficiency' });
+              cards.push(buildCard('TDs/Game', sTd, rTd, true, 'efficiency', v => v.toFixed(2)));
+              cards.push({ label: `${getTierLabel(player.position, 1)} %`, season: stats.pos1Pct, recent: stats.pos1Pct, pct: 0, fmt: v => `${v.toFixed(0)}%`, group: 'context' });
 
               const tgtPct = cards[0].pct;
               if (rolePpgPct < -5) {
-                if (tgtPct < -15) signal = 'Usage-driven dip \u2014 target volume declining.';
-                else if (Math.abs(tgtPct) <= 10) signal = 'Efficiency-driven dip \u2014 targets stable, production falling.';
-                else if (tgtPct > 10) signal = 'Positive usage, low conversion \u2014 targets up but output down.';
+                if (tgtPct < -15) { signalTitle = 'Usage-Driven Decline'; signalDetail = `Target volume down ${Math.abs(tgtPct).toFixed(0)}% vs season.`; }
+                else if (Math.abs(tgtPct) <= 10) { signalTitle = 'Efficiency-Driven Decline'; signalDetail = 'Targets stable, production falling.'; }
+                else if (tgtPct > 10) { signalTitle = 'Low Conversion'; signalDetail = `Targets up ${tgtPct.toFixed(0)}% but output declining.`; }
               } else if (rolePpgPct > 5) {
-                if (tgtPct > 10) signal = 'Rising usage fueling production gains.';
-                else signal = 'Efficiency-driven surge \u2014 doing more with similar opportunities.';
+                if (tgtPct > 10) { signalTitle = 'Rising Usage'; signalDetail = `Target volume up ${tgtPct.toFixed(0)}%, fueling production.`; }
+                else { signalTitle = 'Efficiency Surge'; signalDetail = 'Doing more with similar opportunity share.'; }
               }
 
             } else if (pos === 'RB') {
@@ -1013,24 +1014,24 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
               const sTd = activeEntries.reduce((s, e) => s + getStat(e, 'rush_td'), 0) + activeEntries.reduce((s, e) => s + getStat(e, 'rec_td'), 0);
               const rTd = last3.reduce((s, e) => s + getStat(e, 'rush_td'), 0) + last3.reduce((s, e) => s + getStat(e, 'rec_td'), 0);
 
-              cards.push(buildCard('Carries/G', sCarr, rCarr, true));
-              cards.push(buildCard('Rush Yds/G', sRYd, rRYd, true));
+              cards.push(buildCard('Carries/G', sCarr, rCarr, true, 'usage', undefined, true));
+              cards.push(buildCard('Rush Yds/G', sRYd, rRYd, true, 'usage', undefined, true));
               const sYpc = sCarr > 0 ? sRYd / sCarr : 0;
               const rYpc = rCarr > 0 ? rRYd / rCarr : 0;
               const ypcPct = sYpc > 0 ? ((rYpc - sYpc) / sYpc) * 100 : 0;
-              cards.push({ label: 'YPC', season: sYpc, recent: rYpc, pct: ypcPct, fmt: v => v.toFixed(1) });
-              cards.push(buildCard('Targets/G', sTgt, rTgt, true));
-              cards.push(buildCard('Total TD/G', sTd, rTd, true));
-              cards.push({ label: `${getTierLabel(player.position, 1)} %`, season: stats.pos1Pct, recent: stats.pos1Pct, pct: 0, fmt: v => `${v.toFixed(0)}%` });
+              cards.push({ label: 'YPC', season: sYpc, recent: rYpc, pct: ypcPct, fmt: v => v.toFixed(1), group: 'efficiency' });
+              cards.push(buildCard('Targets/G', sTgt, rTgt, true, 'efficiency'));
+              cards.push(buildCard('TDs/Game', sTd, rTd, true, 'efficiency', v => v.toFixed(2)));
+              cards.push({ label: `${getTierLabel(player.position, 1)} %`, season: stats.pos1Pct, recent: stats.pos1Pct, pct: 0, fmt: v => `${v.toFixed(0)}%`, group: 'context' });
 
               const carrPct = cards[0].pct;
               if (rolePpgPct < -5) {
-                if (carrPct < -15) signal = 'Usage-driven dip \u2014 carry volume declining.';
-                else if (Math.abs(carrPct) <= 10) signal = 'Efficiency-driven dip \u2014 carries stable, production falling.';
-                else if (carrPct > 10) signal = 'Positive usage, low conversion \u2014 carries up but output down.';
+                if (carrPct < -15) { signalTitle = 'Usage-Driven Decline'; signalDetail = `Carry volume down ${Math.abs(carrPct).toFixed(0)}% vs season.`; }
+                else if (Math.abs(carrPct) <= 10) { signalTitle = 'Efficiency-Driven Decline'; signalDetail = 'Carries stable, production falling.'; }
+                else if (carrPct > 10) { signalTitle = 'Low Conversion'; signalDetail = `Carries up ${carrPct.toFixed(0)}% but output declining.`; }
               } else if (rolePpgPct > 5) {
-                if (carrPct > 10) signal = 'Rising workload fueling production gains.';
-                else signal = 'Efficiency-driven surge \u2014 doing more with similar volume.';
+                if (carrPct > 10) { signalTitle = 'Rising Workload'; signalDetail = `Carry volume up ${carrPct.toFixed(0)}%, fueling production.`; }
+                else { signalTitle = 'Efficiency Surge'; signalDetail = 'Doing more with similar volume.'; }
               }
 
             } else if (pos === 'QB') {
@@ -1047,46 +1048,76 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
               const sRush = activeEntries.reduce((s, e) => s + getStat(e, 'rush_yd'), 0);
               const rRush = last3.reduce((s, e) => s + getStat(e, 'rush_yd'), 0);
 
-              cards.push(buildCard('Pass Yds/G', sYd, rYd, true));
-              cards.push(buildCard('TD/G', sTd, rTd, true));
+              cards.push(buildCard('Pass Yds/G', sYd, rYd, true, 'usage', undefined, true));
+              cards.push(buildCard('TDs/Game', sTd, rTd, true, 'usage', v => v.toFixed(2), true));
               const sPct = sAtt > 0 ? (sCmp / sAtt) * 100 : 0;
               const rPctVal = rAtt > 0 ? (rCmp / rAtt) * 100 : 0;
               const cmpPctDelta = sPct > 0 ? ((rPctVal - sPct) / sPct) * 100 : 0;
-              cards.push({ label: 'Cmp %', season: sPct, recent: rPctVal, pct: cmpPctDelta, fmt: v => `${v.toFixed(0)}%` });
-              cards.push(buildCard('INT/G', sInt, rInt, true));
-              cards.push(buildCard('Rush Yds/G', sRush, rRush, true));
-              cards.push({ label: `${getTierLabel(player.position, 1)} %`, season: stats.pos1Pct, recent: stats.pos1Pct, pct: 0, fmt: v => `${v.toFixed(0)}%` });
+              cards.push({ label: 'Cmp %', season: sPct, recent: rPctVal, pct: cmpPctDelta, fmt: v => `${v.toFixed(0)}%`, group: 'efficiency' });
+              cards.push(buildCard('INT/G', sInt, rInt, true, 'efficiency'));
+              cards.push(buildCard('Rush Yds/G', sRush, rRush, true, 'efficiency'));
+              cards.push({ label: `${getTierLabel(player.position, 1)} %`, season: stats.pos1Pct, recent: stats.pos1Pct, pct: 0, fmt: v => `${v.toFixed(0)}%`, group: 'context' });
 
-              if (rolePpgPct < -5) signal = 'Production declining \u2014 monitor passing efficiency and turnovers.';
-              else if (rolePpgPct > 5) signal = 'QB trending upward \u2014 elevated production vs season baseline.';
+              if (rolePpgPct < -5) { signalTitle = 'Production Declining'; signalDetail = 'Monitor passing efficiency and turnovers.'; }
+              else if (rolePpgPct > 5) { signalTitle = 'Trending Upward'; signalDetail = 'Elevated production vs season baseline.'; }
             }
 
             if (cards.length === 0) return null;
 
+            const usageCards = cards.filter(c => c.group === 'usage');
+            const effCards = cards.filter(c => c.group === 'efficiency');
+            const ctxCards = cards.filter(c => c.group === 'context');
+
+            const renderCard = (c: RoleCard) => {
+              const Icon = Math.abs(c.pct) < 1 ? null : c.pct > 0 ? ArrowUpRight : ArrowDownRight;
+              return (
+                <div key={c.label} className={`p-2 rounded-md text-center ${c.primary ? 'bg-muted/40 dark:bg-slate-800/50 ring-1 ring-border/30' : 'bg-muted/30 dark:bg-slate-800/40'}`}>
+                  <p className="text-[9px] text-muted-foreground font-medium mb-0.5">{c.label}</p>
+                  <p className={`${c.primary ? 'text-sm font-extrabold' : 'text-[13px] font-bold'} text-foreground tabular-nums`}>{c.fmt(c.recent)}</p>
+                  <div className="flex items-center justify-center gap-1 mt-0.5">
+                    <span className="text-[9px] text-muted-foreground/50 tabular-nums">Season: {c.fmt(c.season)}</span>
+                    <span className={`text-[9px] font-medium tabular-nums inline-flex items-center gap-px ${Math.abs(c.pct) < 1 ? 'text-muted-foreground/40' : getTrendColor(c.pct)}`}>
+                      {Icon && <Icon className="w-2.5 h-2.5" />}
+                      {Math.abs(c.pct) < 1 ? '0%' : `${c.pct > 0 ? '+' : ''}${c.pct.toFixed(0)}%`}
+                    </span>
+                  </div>
+                </div>
+              );
+            };
+
             return (
               <Card>
-                <CardContent className="p-4">
-                  <p className="text-xs text-muted-foreground font-medium mb-3">Role Snapshot</p>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2" data-testid="role-snapshot-grid">
-                    {cards.map(c => (
-                      <div key={c.label} className="p-2.5 rounded-md bg-muted/30 dark:bg-slate-800/40 text-center">
-                        <p className="text-[10px] text-muted-foreground font-medium mb-1">{c.label}</p>
-                        <p className="text-sm font-bold text-foreground tabular-nums">{c.fmt(c.recent)}</p>
-                        <div className="flex items-center justify-center gap-1.5 mt-0.5">
-                          <span className="text-[9px] text-muted-foreground/60">Szn: {c.fmt(c.season)}</span>
-                          {Math.abs(c.pct) >= 1 && (
-                            <span className={`text-[9px] font-medium ${getTrendColor(c.pct)}`}>
-                              {c.pct > 0 ? '+' : ''}{c.pct.toFixed(0)}%
-                            </span>
-                          )}
-                        </div>
+                <CardContent className="p-3.5">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium mb-2.5" data-testid="text-role-snapshot-label">Role Snapshot <span className="normal-case tracking-normal">(Season vs Recent)</span></p>
+                  {usageCards.length > 0 && (
+                    <>
+                      <p className="text-[9px] uppercase tracking-wider text-muted-foreground/40 font-medium mb-1.5">Usage</p>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5 mb-2" data-testid="role-snapshot-usage">
+                        {usageCards.map(renderCard)}
                       </div>
-                    ))}
-                  </div>
-                  {signal && (
-                    <p className="text-[10px] text-muted-foreground/60 italic mt-2.5" data-testid="text-role-signal">
-                      Signal: {signal}
-                    </p>
+                    </>
+                  )}
+                  {effCards.length > 0 && (
+                    <>
+                      <p className="text-[9px] uppercase tracking-wider text-muted-foreground/40 font-medium mb-1.5">Efficiency</p>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5 mb-2" data-testid="role-snapshot-efficiency">
+                        {effCards.map(renderCard)}
+                      </div>
+                    </>
+                  )}
+                  {ctxCards.length > 0 && (
+                    <>
+                      <p className="text-[9px] uppercase tracking-wider text-muted-foreground/40 font-medium mb-1.5">Context</p>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5" data-testid="role-snapshot-context">
+                        {ctxCards.map(renderCard)}
+                      </div>
+                    </>
+                  )}
+                  {signalTitle && (
+                    <div className="mt-2.5 pt-2 border-t border-border/30" data-testid="text-role-signal">
+                      <p className="text-[10px] font-semibold text-foreground/70">Signal: {signalTitle}</p>
+                      <p className="text-[10px] text-muted-foreground/60">{signalDetail}</p>
+                    </div>
                   )}
                 </CardContent>
               </Card>
