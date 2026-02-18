@@ -29,7 +29,7 @@ import {
   Minus,
   ChevronRight,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import type { Player, GameLogEntry, NewsEntry, GameLogStats } from "@shared/playerTypes";
 import { TEAM_FULL_NAMES, TEAM_PRIMARY_COLORS, POSITION_FULL_NAMES } from "@shared/teamMappings";
 import {
@@ -140,49 +140,65 @@ function SnapshotItem({
 
 type ColumnDef = { key: string; label: string; abbr?: string };
 
-function getPositionColumns(position: string | null): ColumnDef[] {
+function getPositionColumns(position: string | null): { primary: ColumnDef[]; detail: ColumnDef[] } {
   switch (position) {
     case "QB":
-      return [
-        { key: "pass_cmp", label: "CMP" },
-        { key: "pass_att", label: "ATT" },
-        { key: "pass_yd", label: "YDS", abbr: "Pass" },
-        { key: "pass_td", label: "TD", abbr: "Pass" },
-        { key: "pass_int", label: "INT" },
-        { key: "rush_att", label: "CAR" },
-        { key: "rush_yd", label: "Rush YDS" },
-        { key: "rush_td", label: "Rush TD" },
-      ];
+      return {
+        primary: [
+          { key: "pass_yd", label: "PASS YDS" },
+          { key: "pass_td", label: "PASS TD" },
+          { key: "pass_int", label: "INT" },
+          { key: "rush_yd", label: "RUSH YDS" },
+          { key: "rush_td", label: "RUSH TD" },
+        ],
+        detail: [
+          { key: "pass_cmp", label: "CMP" },
+          { key: "pass_att", label: "ATT" },
+          { key: "rush_att", label: "CAR" },
+        ],
+      };
     case "RB":
-      return [
-        { key: "rush_att", label: "CAR" },
-        { key: "rush_yd", label: "YDS", abbr: "Rush" },
-        { key: "rush_td", label: "TD", abbr: "Rush" },
-        { key: "rec_tgt", label: "TGT" },
-        { key: "rec", label: "REC" },
-        { key: "rec_yd", label: "Rec YDS" },
-        { key: "rec_td", label: "Rec TD" },
-      ];
+      return {
+        primary: [
+          { key: "rush_att", label: "CAR" },
+          { key: "rush_yd", label: "RUSH YDS" },
+          { key: "rush_td", label: "RUSH TD" },
+          { key: "rec", label: "REC" },
+          { key: "rec_yd", label: "REC YDS" },
+        ],
+        detail: [
+          { key: "rec_tgt", label: "TGT" },
+          { key: "rec_td", label: "REC TD" },
+        ],
+      };
     case "WR":
     case "TE":
-      return [
-        { key: "rec_tgt", label: "TGT" },
-        { key: "rec", label: "REC" },
-        { key: "rec_yd", label: "YDS", abbr: "Rec" },
-        { key: "rec_td", label: "TD", abbr: "Rec" },
-        { key: "rush_att", label: "CAR" },
-        { key: "rush_yd", label: "Rush YDS" },
-      ];
+      return {
+        primary: [
+          { key: "rec_tgt", label: "TGT" },
+          { key: "rec", label: "REC" },
+          { key: "rec_yd", label: "REC YDS" },
+          { key: "rec_td", label: "REC TD" },
+        ],
+        detail: [
+          { key: "rush_att", label: "CAR" },
+          { key: "rush_yd", label: "RUSH YDS" },
+        ],
+      };
     case "K":
-      return [
-        { key: "fgm", label: "FGM" },
-        { key: "fga", label: "FGA" },
-        { key: "fgm_lng", label: "FG LNG" },
-        { key: "xpm", label: "XPM" },
-        { key: "xpa", label: "XPA" },
-      ];
+      return {
+        primary: [
+          { key: "fgm", label: "FGM" },
+          { key: "fga", label: "FGA" },
+          { key: "xpm", label: "XPM" },
+          { key: "xpa", label: "XPA" },
+        ],
+        detail: [
+          { key: "fgm_lng", label: "FG LNG" },
+        ],
+      };
     default:
-      return [];
+      return { primary: [], detail: [] };
   }
 }
 
@@ -200,8 +216,22 @@ function computeGameLogStats(entries: GameLogEntry[]) {
 }
 
 function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; position: string | null }) {
-  const columns = getPositionColumns(position);
-  const colCount = 3 + columns.length;
+  const { primary, detail } = getPositionColumns(position);
+  const colCount = 3 + primary.length + (detail.length > 0 ? 1 : 0);
+  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
+  const hasDetail = detail.length > 0;
+
+  const toggleRow = (index: number) => {
+    setExpandedRows(prev => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
+      return next;
+    });
+  };
+
+  const getStat = (entry: GameLogEntry, key: string) =>
+    (entry.stats as unknown as Record<string, number>)[key] ?? 0;
 
   return (
     <div className="overflow-x-auto">
@@ -210,30 +240,61 @@ function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; po
           <tr className="border-b text-left">
             <th className="py-2 pr-3 text-muted-foreground font-medium whitespace-nowrap">WK</th>
             <th className="py-2 pr-3 text-muted-foreground font-medium whitespace-nowrap">OPP</th>
-            {columns.map((col) => (
+            {primary.map((col) => (
               <th key={col.key} className="py-2 pr-3 text-muted-foreground font-medium text-right whitespace-nowrap">
                 {col.label}
               </th>
             ))}
             <th className="py-2 text-muted-foreground font-medium text-right whitespace-nowrap">FPTS</th>
+            {hasDetail && <th className="py-2 pl-2 w-8"></th>}
           </tr>
         </thead>
         <tbody>
           {entries.length > 0 ? (
-            entries.map((entry, i) => (
-              <tr key={i} className="border-b last:border-0" data-testid={`row-gamelog-week-${entry.week}`}>
-                <td className="py-2 pr-3 text-foreground font-medium">{entry.week}</td>
-                <td className="py-2 pr-3 text-foreground whitespace-nowrap">{entry.opp}</td>
-                {columns.map((col) => (
-                  <td key={col.key} className="py-2 pr-3 text-foreground text-right tabular-nums">
-                    {(entry.stats as unknown as Record<string, number>)[col.key] ?? 0}
-                  </td>
-                ))}
-                <td className="py-2 text-right font-semibold text-foreground tabular-nums">
-                  {entry.stats.pts_ppr.toFixed(1)}
-                </td>
-              </tr>
-            ))
+            entries.map((entry, i) => {
+              const isExpanded = expandedRows.has(i);
+              return (
+                <Fragment key={i}>
+                  <tr
+                    className={`border-b last:border-0 ${hasDetail ? 'cursor-pointer' : ''} ${isExpanded ? 'bg-muted/30 dark:bg-slate-800/30' : ''}`}
+                    onClick={hasDetail ? () => toggleRow(i) : undefined}
+                    data-testid={`row-gamelog-week-${entry.week}`}
+                  >
+                    <td className="py-2 pr-3 text-foreground font-medium">{entry.week}</td>
+                    <td className="py-2 pr-3 text-foreground whitespace-nowrap">{entry.opp}</td>
+                    {primary.map((col) => (
+                      <td key={col.key} className="py-2 pr-3 text-foreground text-right tabular-nums">
+                        {getStat(entry, col.key)}
+                      </td>
+                    ))}
+                    <td className="py-2 text-right font-semibold text-foreground tabular-nums">
+                      {entry.stats.pts_ppr.toFixed(1)}
+                    </td>
+                    {hasDetail && (
+                      <td className="py-2 pl-2 text-center">
+                        <ChevronRight
+                          className={`w-3.5 h-3.5 text-muted-foreground/50 transition-transform duration-200 inline-block ${isExpanded ? 'rotate-90' : ''}`}
+                        />
+                      </td>
+                    )}
+                  </tr>
+                  {hasDetail && isExpanded && (
+                    <tr className="bg-muted/20 dark:bg-slate-800/20" data-testid={`row-gamelog-detail-${entry.week}`}>
+                      <td colSpan={colCount} className="py-2 px-3">
+                        <div className="flex items-center gap-4 flex-wrap pl-2">
+                          {detail.map((col) => (
+                            <div key={col.key} className="flex items-center gap-1.5">
+                              <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{col.label}</span>
+                              <span className="text-sm font-semibold text-foreground tabular-nums">{getStat(entry, col.key)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
+              );
+            })
           ) : (
             <tr>
               <td colSpan={colCount} className="py-8">
@@ -253,14 +314,15 @@ function GameLogTable({ entries = [], position }: { entries?: GameLogEntry[]; po
             <tr className="border-t font-semibold">
               <td className="py-2 pr-3 text-foreground">TOT</td>
               <td className="py-2 pr-3"></td>
-              {columns.map((col) => (
+              {primary.map((col) => (
                 <td key={col.key} className="py-2 pr-3 text-foreground text-right tabular-nums">
-                  {entries.reduce((sum, e) => sum + ((e.stats as unknown as Record<string, number>)[col.key] ?? 0), 0)}
+                  {entries.reduce((sum, e) => sum + getStat(e, col.key), 0)}
                 </td>
               ))}
               <td className="py-2 text-right text-foreground tabular-nums">
                 {entries.reduce((sum, e) => sum + e.stats.pts_ppr, 0).toFixed(1)}
               </td>
+              {hasDetail && <td className="py-2 pl-2"></td>}
             </tr>
           </tfoot>
         )}
