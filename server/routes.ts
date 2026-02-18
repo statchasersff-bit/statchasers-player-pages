@@ -330,7 +330,7 @@ export async function registerRoutes(
       const totalPts = played.reduce((sum, e) => sum + e.stats.pts_ppr, 0);
       const pos = player.position || '';
       const eliteThresh = pos === 'TE' ? 3 : 5;
-      const bustThresh = (pos === 'QB' || pos === 'TE') ? 18 : 24;
+      const bustThresh = (pos === 'QB' || pos === 'TE') ? 18 : pos === 'WR' ? 36 : 30;
       const rankedPlayed = rankedLogs.filter(e => e.stats.pts_ppr > 0);
       const eliteGames = rankedPlayed.filter(e => e.pos_rank != null && e.pos_rank <= eliteThresh).length;
       const starterGames = rankedPlayed.filter(e => e.pos_rank != null && e.pos_rank <= 12).length;

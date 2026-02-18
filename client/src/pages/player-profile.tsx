@@ -214,10 +214,10 @@ function getPositionColumns(position: string | null): { primary: ColumnDef[]; de
 function getTierThresholds(position: string | null): { elite: number; starter: number; bust: number } {
   switch (position) {
     case 'QB': return { elite: 5, starter: 12, bust: 18 };
-    case 'RB': return { elite: 5, starter: 12, bust: 24 };
-    case 'WR': return { elite: 5, starter: 12, bust: 24 };
+    case 'RB': return { elite: 5, starter: 12, bust: 30 };
+    case 'WR': return { elite: 5, starter: 12, bust: 36 };
     case 'TE': return { elite: 3, starter: 12, bust: 18 };
-    default: return { elite: 5, starter: 12, bust: 24 };
+    default: return { elite: 5, starter: 12, bust: 30 };
   }
 }
 
@@ -651,42 +651,50 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
         </p>
       )}
 
-      {hasData ? (
+      {hasData ? (() => {
+        const volLabel = stats.volatility < 6 ? 'Stable' : stats.volatility < 9 ? 'Moderate' : 'Volatile';
+        const volColor = stats.volatility < 6
+          ? 'text-green-600 dark:text-green-400'
+          : stats.volatility < 9
+          ? 'text-amber-600 dark:text-amber-400'
+          : 'text-red-500 dark:text-red-400';
+
+        return (
         <>
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-2" data-testid="overview-stat-boxes">
-            <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60 text-center">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">PPG</p>
-              <p className="text-xl font-bold text-foreground tabular-nums mt-0.5">{seasonPpg.toFixed(1)}</p>
-              <p className="text-[10px] text-muted-foreground/70">
-                {player.seasonRank ? `${posLabel}${player.seasonRank} Overall` : `${stats.gamesPlayed} GP`}
-              </p>
-            </div>
-            {player.seasonRank ? (
-              <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60 text-center">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Rank</p>
-                <p className="text-xl font-bold text-foreground tabular-nums mt-0.5">{posLabel}{player.seasonRank}</p>
-                <p className="text-[10px] text-muted-foreground/70">{stats.gamesPlayed} GP</p>
+          <div data-testid="overview-stat-boxes" className="space-y-2">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Performance</p>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="p-3 rounded-md bg-muted/60 dark:bg-slate-800/70 text-center ring-1 ring-border/50">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">PPG</p>
+                <p className="text-2xl font-extrabold text-foreground tabular-nums mt-0.5">{seasonPpg.toFixed(1)}</p>
+                <p className="text-[10px] text-muted-foreground/70">
+                  {player.seasonRank ? `${stats.gamesPlayed} GP \u00B7 ${posLabel}${player.seasonRank}` : `${stats.gamesPlayed} GP`}
+                </p>
               </div>
-            ) : null}
-            <div className="p-3 rounded-md bg-amber-500/8 dark:bg-amber-900/15 text-center">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Elite %</p>
-              <p className="text-lg font-bold text-amber-600 dark:text-amber-400 tabular-nums mt-0.5">{stats.elitePct.toFixed(0)}%</p>
-              <p className="text-[10px] text-muted-foreground/70">Top {thresholds.elite} Weekly Finishes</p>
+              <div className="p-3 rounded-md bg-amber-500/8 dark:bg-amber-900/15 text-center">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Elite %</p>
+                <p className="text-lg font-bold text-amber-600 dark:text-amber-400 tabular-nums mt-0.5">{stats.elitePct.toFixed(0)}%</p>
+                <p className="text-[10px] text-muted-foreground/70">Top {thresholds.elite} Weekly Finishes</p>
+              </div>
+              <div className="p-3 rounded-md bg-sky-500/8 dark:bg-sky-900/15 text-center">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Starter %</p>
+                <p className="text-lg font-bold text-sky-600 dark:text-sky-400 tabular-nums mt-0.5">{stats.starterPct.toFixed(0)}%</p>
+                <p className="text-[10px] text-muted-foreground/70">Top 12 Weekly Finishes</p>
+              </div>
             </div>
-            <div className="p-3 rounded-md bg-sky-500/8 dark:bg-sky-900/15 text-center">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Starter %</p>
-              <p className="text-lg font-bold text-sky-600 dark:text-sky-400 tabular-nums mt-0.5">{stats.starterPct.toFixed(0)}%</p>
-              <p className="text-[10px] text-muted-foreground/70">Top 12 Weekly Finishes</p>
-            </div>
-            <div className="p-3 rounded-md bg-red-500/8 dark:bg-red-900/15 text-center">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Bust %</p>
-              <p className="text-lg font-bold text-red-500 dark:text-red-400 tabular-nums mt-0.5">{stats.bustPct.toFixed(0)}%</p>
-              <p className="text-[10px] text-muted-foreground/70">Outside Top {thresholds.bust}</p>
-            </div>
-            <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60 text-center">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Volatility</p>
-              <p className="text-lg font-bold text-foreground tabular-nums mt-0.5">{stats.volatility.toFixed(1)}</p>
-              <p className="text-[10px] text-muted-foreground/70">Std Dev FPTS</p>
+
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium pt-1">Risk</p>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="p-3 rounded-md bg-red-500/8 dark:bg-red-900/15 text-center">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Bust %</p>
+                <p className="text-lg font-bold text-red-500 dark:text-red-400 tabular-nums mt-0.5">{stats.bustPct.toFixed(0)}%</p>
+                <p className="text-[10px] text-muted-foreground/70">Outside Top {thresholds.bust}</p>
+              </div>
+              <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60 text-center">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Volatility</p>
+                <p className={`text-lg font-bold tabular-nums mt-0.5 ${volColor}`}>{stats.volatility.toFixed(1)}</p>
+                <p className="text-[10px] text-muted-foreground/70">{volLabel}</p>
+              </div>
             </div>
           </div>
 
@@ -806,7 +814,8 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
             </Card>
           )}
         </>
-      ) : (
+        );
+      })() : (
         <Card>
           <CardContent className="p-6 text-center">
             <p className="text-muted-foreground text-sm">No season data available yet.</p>
