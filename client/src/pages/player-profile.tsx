@@ -645,12 +645,6 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
 
   return (
     <div className="space-y-6">
-      {player.seasonLabel && (
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider" data-testid="text-season-label">
-          {player.seasonLabel}
-        </p>
-      )}
-
       {hasData ? (() => {
         const volLabel = stats.volatility < 6 ? 'Stable' : stats.volatility < 9 ? 'Moderate' : 'Volatile';
         const volColor = stats.volatility < 6
@@ -659,14 +653,28 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
           ? 'text-amber-600 dark:text-amber-400'
           : 'text-red-500 dark:text-red-400';
 
+        const cv = seasonPpg > 0 ? (stats.volatility / seasonPpg) * 100 : 100;
+        const consistencyScore = Math.max(0, Math.min(100, Math.round(100 - cv * 1.5)));
+        const conLabel = consistencyScore >= 70 ? 'Very Consistent' : consistencyScore >= 45 ? 'Average' : 'Boom or Bust';
+        const conColor = consistencyScore >= 70
+          ? 'text-green-600 dark:text-green-400'
+          : consistencyScore >= 45
+          ? 'text-foreground'
+          : 'text-red-500 dark:text-red-400';
+
         return (
         <>
           <div data-testid="overview-stat-boxes" className="space-y-2">
+            {player.seasonLabel && (
+              <p className="text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider" data-testid="text-season-label">
+                {player.seasonLabel}
+              </p>
+            )}
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Performance</p>
             <div className="grid grid-cols-3 gap-2">
-              <div className="p-3 rounded-md bg-muted/60 dark:bg-slate-800/70 text-center ring-1 ring-border/50">
+              <div className="p-3 rounded-md bg-muted/60 dark:bg-slate-800/70 text-center ring-1 ring-border/40">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">PPG</p>
-                <p className="text-2xl font-extrabold text-foreground tabular-nums mt-0.5">{seasonPpg.toFixed(1)}</p>
+                <p className="text-xl font-bold text-foreground tabular-nums mt-0.5">{seasonPpg.toFixed(1)}</p>
                 <p className="text-[10px] text-muted-foreground/70">
                   {player.seasonRank ? `${stats.gamesPlayed} GP \u00B7 ${posLabel}${player.seasonRank}` : `${stats.gamesPlayed} GP`}
                 </p>
@@ -684,7 +692,7 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
             </div>
 
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium pt-1">Risk</p>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               <div className="p-3 rounded-md bg-red-500/8 dark:bg-red-900/15 text-center">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Bust %</p>
                 <p className="text-lg font-bold text-red-500 dark:text-red-400 tabular-nums mt-0.5">{stats.bustPct.toFixed(0)}%</p>
@@ -694,6 +702,11 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Volatility</p>
                 <p className={`text-lg font-bold tabular-nums mt-0.5 ${volColor}`}>{stats.volatility.toFixed(1)}</p>
                 <p className="text-[10px] text-muted-foreground/70">{volLabel}</p>
+              </div>
+              <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60 text-center">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Consistency</p>
+                <p className={`text-lg font-bold tabular-nums mt-0.5 ${conColor}`}>{consistencyScore}</p>
+                <p className="text-[10px] text-muted-foreground/70">{conLabel}</p>
               </div>
             </div>
           </div>
