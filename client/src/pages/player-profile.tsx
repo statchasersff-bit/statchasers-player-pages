@@ -600,12 +600,46 @@ function TrendIndicator({ current, previous }: { current: number; previous: numb
   return <span className="text-xs text-red-500 dark:text-red-400 flex items-center gap-0.5"><ArrowDownRight className="w-3 h-3" /> {pct.toFixed(0)}%</span>;
 }
 
-function getPositionOutlook(player: Player, stats: ReturnType<typeof computeGameLogStats>): string {
-  if (!stats || stats.gamesPlayed === 0) return `${player.name} has not recorded any fantasy points this season. Check back as the season progresses for updated analysis.`;
-  const pos = player.position || 'player';
-  const trend = stats.last4Ppg > stats.ppg ? 'trending upward' : stats.last4Ppg < stats.ppg * 0.85 ? 'cooling off' : 'performing consistently';
-  const tier = stats.ppg >= 20 ? 'elite' : stats.ppg >= 15 ? 'strong' : stats.ppg >= 10 ? 'solid' : 'depth';
-  return `${player.name} is averaging ${stats.ppg.toFixed(1)} PPG as a ${tier} ${pos} option, ${trend} over the last 4 weeks (${stats.last4Ppg.toFixed(1)} PPG). Best outing was Week ${stats.bestWeek.week} vs ${stats.bestWeek.opp} with ${stats.bestWeek.stats.pts_ppr.toFixed(1)} points.`;
+interface OutlookData {
+  formLabel: string;
+  formDetail: string;
+  formColor: string;
+  roleLabel: string;
+  volatilityLabel: string;
+  volatilityColor: string;
+  tierProfile: string;
+  sentence: string;
+  hasData: boolean;
+  noDataMsg?: string;
+}
+
+function getStructuredOutlook(player: Player, stats: ReturnType<typeof computeGameLogStats>): OutlookData {
+  if (!stats || stats.gamesPlayed === 0) {
+    return {
+      formLabel: 'No Data', formDetail: '', formColor: 'text-muted-foreground',
+      roleLabel: 'Unknown', volatilityLabel: 'N/A', volatilityColor: 'text-muted-foreground',
+      tierProfile: 'N/A', sentence: `Check back as the season progresses for updated analysis.`,
+      hasData: false, noDataMsg: `${player.name} has not recorded any fantasy points this season.`,
+    };
+  }
+  const pos = player.position || 'FLEX';
+  const ppgDelta = stats.ppg > 0 ? ((stats.last4Ppg - stats.ppg) / stats.ppg) * 100 : 0;
+  const formLabel = ppgDelta > 5 ? 'Heating Up' : ppgDelta < -10 ? 'Cooling' : 'Stable';
+  const formDetail = `${ppgDelta > 0 ? '+' : ''}${ppgDelta.toFixed(0)}% vs season avg`;
+  const formColor = ppgDelta > 5 ? 'text-green-600 dark:text-green-400' : ppgDelta < -10 ? 'text-red-500 dark:text-red-400' : 'text-foreground';
+
+  const topRate = stats.pos1Pct + stats.pos2Pct;
+  const roleLabel = topRate >= 60 ? 'Starter' : topRate >= 35 ? 'Flex' : 'Depth';
+
+  const cvRatio = stats.ppg > 0 ? stats.volatility / stats.ppg : 2;
+  const volatilityLabel = cvRatio < 0.4 ? 'Low' : cvRatio < 0.7 ? 'Moderate' : 'High';
+  const volatilityColor = cvRatio < 0.4 ? 'text-green-600 dark:text-green-400' : cvRatio < 0.7 ? 'text-foreground' : 'text-red-500 dark:text-red-400';
+
+  const tierProfile = `${stats.pos1Pct.toFixed(0)}% ${getTierLabel(pos, 1)} rate`;
+  const bestWeekStr = stats.bestWeek ? `Best outing: Wk ${stats.bestWeek.week} vs ${stats.bestWeek.opp} (${stats.bestWeek.stats.pts_ppr.toFixed(1)} pts).` : '';
+  const sentence = bestWeekStr;
+
+  return { formLabel, formDetail, formColor, roleLabel, volatilityLabel, volatilityColor, tierProfile, sentence, hasData: true };
 }
 
 function getKeyStatSummary(entries: GameLogEntry[], position: string | null) {
@@ -676,7 +710,7 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
   const keyStats = getKeyStatSummary(entries, player.position);
   const activeEntries = entries.filter(e => hasParticipation(e.stats, player.position));
   const weeklyPts = activeEntries.map(e => e.stats.pts_ppr);
-  const outlook = getPositionOutlook(player, stats);
+  const outlook = getStructuredOutlook(player, stats);
   const hasData = stats && stats.gamesPlayed > 0;
 
   const seasonPpg = stats?.ppg ?? 0;
@@ -1187,12 +1221,39 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
       )}
 
       <Card>
-        <CardContent className="p-4">
-          <div className="flex items-center gap-2 mb-2 flex-wrap">
+        <CardContent className="p-3.5" data-testid="section-quick-outlook">
+          <div className="flex items-center gap-2 mb-2.5 flex-wrap">
             <FileText className="w-4 h-4 text-muted-foreground" />
-            <p className="text-xs text-muted-foreground font-medium">Quick Outlook</p>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Quick Outlook</p>
           </div>
-          <p className="text-sm text-foreground leading-relaxed" data-testid="text-outlook">{outlook}</p>
+          {outlook.hasData ? (
+            <>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 mb-2.5" data-testid="outlook-stat-lines">
+                <div className="flex items-baseline gap-1.5 flex-wrap">
+                  <span className="text-[10px] text-muted-foreground/60 font-medium">Current Form:</span>
+                  <span className={`text-xs font-semibold ${outlook.formColor}`} data-testid="text-outlook-form">{outlook.formLabel}</span>
+                  <span className="text-[9px] text-muted-foreground/40 tabular-nums">({outlook.formDetail})</span>
+                </div>
+                <div className="flex items-baseline gap-1.5 flex-wrap">
+                  <span className="text-[10px] text-muted-foreground/60 font-medium">Role:</span>
+                  <span className="text-xs font-semibold text-foreground" data-testid="text-outlook-role">{outlook.roleLabel}</span>
+                </div>
+                <div className="flex items-baseline gap-1.5 flex-wrap">
+                  <span className="text-[10px] text-muted-foreground/60 font-medium">Volatility:</span>
+                  <span className={`text-xs font-semibold ${outlook.volatilityColor}`} data-testid="text-outlook-volatility">{outlook.volatilityLabel}</span>
+                </div>
+                <div className="flex items-baseline gap-1.5 flex-wrap">
+                  <span className="text-[10px] text-muted-foreground/60 font-medium">Tier Profile:</span>
+                  <span className="text-xs font-semibold text-foreground" data-testid="text-outlook-tier">{outlook.tierProfile}</span>
+                </div>
+              </div>
+              {outlook.sentence && (
+                <p className="text-[11px] text-muted-foreground leading-relaxed" data-testid="text-outlook-sentence">{outlook.sentence}</p>
+              )}
+            </>
+          ) : (
+            <p className="text-sm text-muted-foreground" data-testid="text-outlook">{outlook.noDataMsg}</p>
+          )}
         </CardContent>
       </Card>
     </div>
