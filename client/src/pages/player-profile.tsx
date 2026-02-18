@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Player, GameLogEntry, NewsEntry, GameLogStats } from "@shared/playerTypes";
+import { TEAM_FULL_NAMES, TEAM_PRIMARY_COLORS, POSITION_FULL_NAMES } from "@shared/teamMappings";
 import {
   Select,
   SelectContent,
@@ -50,26 +51,43 @@ const POSITION_COLORS: Record<string, string> = {
   DEF: "bg-gray-500/15 text-gray-700 dark:text-gray-400",
 };
 
-function PlayerHeadshot({ url, name }: { url: string | null; name: string }) {
-  const [imgError, setImgError] = useState(false);
+function getHeadshotUrl(playerId: string): string {
+  return `https://sleepercdn.com/content/nfl/players/thumb/${playerId}.jpg`;
+}
 
-  if (url && !imgError) {
-    return (
-      <img
-        src={url}
-        alt={`${name} headshot`}
-        className="w-20 h-20 rounded-md object-cover bg-muted"
-        onError={() => setImgError(true)}
-        data-testid="img-headshot"
-      />
-    );
-  }
+function PlayerHeadshot({ playerId, name, teamColor }: { playerId: string; name: string; teamColor?: string }) {
+  const [imgError, setImgError] = useState(false);
+  const headshotUrl = getHeadshotUrl(playerId);
+  const ringColor = teamColor || '#6B7280';
+
   return (
     <div
-      className="w-20 h-20 rounded-md bg-muted flex items-center justify-center"
-      data-testid="img-headshot-fallback"
+      className="relative flex-shrink-0"
+      data-testid="img-headshot"
     >
-      <User className="w-10 h-10 text-muted-foreground/40" />
+      <div
+        className="w-24 h-24 md:w-28 md:h-28 rounded-full"
+        style={{
+          boxShadow: `0 0 20px ${ringColor}30, 0 4px 12px rgba(0,0,0,0.15)`,
+          border: `3px solid ${ringColor}`,
+        }}
+      >
+        {!imgError ? (
+          <img
+            src={headshotUrl}
+            alt={`${name} headshot`}
+            className="w-full h-full rounded-full object-cover bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div
+            className="w-full h-full rounded-full flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800"
+            data-testid="img-headshot-fallback"
+          >
+            <User className="w-10 h-10 md:w-12 md:h-12 text-slate-400 dark:text-slate-500" />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -356,25 +374,33 @@ function GameLogCard({ player }: { player: PlayerWithSeasons }) {
 
 function PlayerProfileSkeleton() {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="flex items-center gap-4 mb-6 flex-wrap">
-        <Skeleton className="w-20 h-20 rounded-md" />
-        <div>
-          <Skeleton className="h-8 w-48 mb-2" />
-          <Skeleton className="h-5 w-32" />
+    <>
+      <div className="bg-slate-50 dark:bg-[#0B1634] border-b-2 border-slate-200 dark:border-slate-700">
+        <div className="max-w-4xl mx-auto px-4 py-10">
+          <div className="flex items-center gap-6 flex-wrap">
+            <Skeleton className="w-24 h-24 md:w-28 md:h-28 rounded-full" />
+            <div>
+              <Skeleton className="h-4 w-16 mb-2" />
+              <Skeleton className="h-9 w-56 mb-3" />
+              <Skeleton className="h-[2px] w-20 mb-4" />
+              <Skeleton className="h-5 w-40" />
+            </div>
+          </div>
         </div>
       </div>
-      <Card>
-        <CardContent className="p-6">
-          <Skeleton className="h-6 w-40 mb-4" />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-16 rounded-md" />
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <Card>
+          <CardContent className="p-6">
+            <Skeleton className="h-6 w-40 mb-4" />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton key={i} className="h-16 rounded-md" />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </>
   );
 }
 
@@ -494,7 +520,7 @@ export default function PlayerProfile() {
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4 flex-wrap">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <Link href="/nfl/players">
               <Button variant="ghost" size="icon" data-testid="button-back">
                 <ArrowLeft className="w-4 h-4" />
@@ -526,37 +552,99 @@ export default function PlayerProfile() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 py-8">
-        <div className="mb-6">
-          <div className="flex items-start gap-4 mb-3 flex-wrap">
-            <PlayerHeadshot url={player.headshotUrl} name={player.name} />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 mb-1 flex-wrap">
-                <h1 className="text-2xl md:text-3xl font-bold text-foreground" data-testid="text-player-name">
-                  {player.name}
-                </h1>
-                {player.position && (
-                  <Badge
-                    variant="secondary"
-                    className={POSITION_COLORS[player.position] || ""}
-                    data-testid="badge-position"
+      {(() => {
+        const teamColor = player.team ? TEAM_PRIMARY_COLORS[player.team] || '#6B7280' : '#6B7280';
+        const teamName = player.team ? TEAM_FULL_NAMES[player.team] || player.team : 'Free Agent';
+        const positionFull = player.position ? POSITION_FULL_NAMES[player.position] || player.position : '';
+        return (
+          <section
+            className="relative overflow-hidden border-b-2"
+            style={{ borderBottomColor: `${teamColor}60` }}
+            data-testid="section-player-header"
+          >
+            <div
+              className="absolute inset-0"
+              style={{
+                background: `linear-gradient(135deg, #F8FAFC 0%, #EEF2F7 50%, #E2E8F0 100%)`,
+              }}
+            />
+            <div
+              className="absolute inset-0 hidden dark:block"
+              style={{
+                background: `linear-gradient(135deg, #0B1634 0%, #111D42 40%, #0F172A 100%)`,
+              }}
+            />
+            <div
+              className="absolute inset-0 opacity-[0.07] dark:opacity-[0.12]"
+              style={{
+                background: `radial-gradient(ellipse at 30% 50%, ${teamColor} 0%, transparent 70%)`,
+              }}
+            />
+            <div
+              className="absolute bottom-0 left-0 right-0 h-[2px]"
+              style={{
+                background: `linear-gradient(90deg, transparent 0%, #D4A843 30%, #F5D36E 50%, #D4A843 70%, transparent 100%)`,
+              }}
+            />
+
+            <div className="relative max-w-4xl mx-auto px-4 pt-8 pb-8 md:pt-10 md:pb-10">
+              <div className="flex items-center gap-6 md:gap-8 flex-wrap">
+                <PlayerHeadshot playerId={player.id} name={player.name} teamColor={teamColor} />
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-3 mb-1 flex-wrap">
+                    {player.position && (
+                      <Badge
+                        variant="secondary"
+                        className={POSITION_COLORS[player.position] || ""}
+                        data-testid="badge-position"
+                      >
+                        {player.position}
+                      </Badge>
+                    )}
+                    {player.injury_status && (
+                      <Badge variant="destructive" data-testid="badge-injury">
+                        {player.injury_status}
+                      </Badge>
+                    )}
+                  </div>
+
+                  <h1
+                    className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight"
+                    style={{ letterSpacing: '-0.02em', fontWeight: 800 }}
+                    data-testid="text-player-name"
                   >
-                    {player.position}
-                  </Badge>
-                )}
-                {player.injury_status && (
-                  <Badge variant="destructive" data-testid="badge-injury">
-                    {player.injury_status}
-                  </Badge>
-                )}
+                    {player.name}
+                  </h1>
+                  <div
+                    className="mt-2 mb-4 h-[2px] w-20 rounded-full"
+                    style={{
+                      background: 'linear-gradient(90deg, #D4A843, #F5D36E, #D4A843)',
+                    }}
+                  />
+
+                  <div className="flex items-center gap-3 flex-wrap" data-testid="text-team">
+                    <div
+                      className="w-1 h-8 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: teamColor }}
+                    />
+                    <div>
+                      <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                        {teamName}
+                      </p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                        {positionFull}{player.season ? ` \u00B7 ${player.season} Season` : ''}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <p className="text-muted-foreground" data-testid="text-team">
-                {player.team ? player.team : "Free Agent"} {player.position ? `| ${player.position}` : ""}
-                {player.season ? ` | ${player.season} Season` : ""}
-              </p>
             </div>
-          </div>
-        </div>
+          </section>
+        );
+      })()}
+
+      <main className="max-w-4xl mx-auto px-4 py-8">
 
         {player.injury_status && (
           <Card className="mb-6 border-destructive/30 bg-destructive/5">
