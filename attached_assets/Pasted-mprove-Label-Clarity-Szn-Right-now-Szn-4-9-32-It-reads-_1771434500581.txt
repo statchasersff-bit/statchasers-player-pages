@@ -1,0 +1,140 @@
+mprove Label Clarity (“Szn”)
+
+Right now:
+
+Szn: 4.9 -32%
+
+It reads slightly cramped.
+
+Upgrade to:
+
+Season Avg: 4.9
+↓ -32%
+
+Or:
+
+4.9 (Season) ↓ 32%
+
+Even better:
+
+Season: 4.9 | -32%
+
+Cleaner language increases perceived quality.
+
+🔥 2️⃣ Improve Visual Hierarchy
+
+Right now all cards have equal weight.
+
+But they are not equal importance.
+
+For WR:
+
+Primary Usage:
+
+Targets/G
+
+Yards/G
+
+Secondary Efficiency:
+
+Catch %
+
+Yards/Target
+
+TD Rate
+
+Context:
+
+WR1 %
+
+Make Targets/G slightly more emphasized (subtle thicker border or slightly bolder number).
+
+That guides the eye properly.
+
+🔥 3️⃣ Tighten TD Rate Presentation
+
+Right now:
+
+TD Rate
+0.3
+Szn: 0.3
+
+That looks flat.
+
+Instead show:
+
+TDs/Game: 0.30
+Season: 0.30 (0%)
+
+Or:
+
+TD Rate: 0.30
+No change vs season
+
+Make neutral deltas explicit instead of blank.
+
+🔥 4️⃣ Add Small Visual Role Divider
+
+Right now it’s just a grid.
+
+Consider adding:
+
+Top row label: Usage
+Bottom row label: Efficiency
+
+Very subtle small uppercase text above each row.
+
+That gives structure.
+
+🔥 5️⃣ Improve the Signal Line
+
+Current:
+
+“Signal: Usage-driven dip — target volume declining.”
+
+That’s good.
+
+Make it slightly more decisive and structured:
+
+Signal: Usage-Driven Decline
+Target volume down 32% vs season.
+
+Two-line structured format feels more premium.
+
+🔥 6️⃣ Optional Micro Upgrade: Add Trend Arrows Per Card
+
+Right now only color shows direction.
+
+Add tiny arrows:
+
+↑ 8%
+↓ 27%
+
+Visual reinforcement improves scannability.
+
+🔥 7️⃣ One Potential Upgrade (High Impact)
+
+Right now this section is very similar to Section 2 (trend charts).
+
+To avoid redundancy:
+
+You could shift Section 3 to focus on:
+
+Season vs Last 3 Snapshot (which you’re doing)
+Instead of repeating “trend direction.”
+
+That’s already what you’re doing — just tighten the labels to make that explicit.
+
+Maybe title it:
+
+Role Snapshot (Season vs Recent)
+
+That clarifies its purpose.
+
+🔥 8️⃣ Minor Spacing Tweak
+
+Cards are slightly airy.
+
+Reducing vertical padding by ~10% will make it feel tighter and more professional.
+
+Premium dashboards feel compact.
