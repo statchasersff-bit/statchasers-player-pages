@@ -436,34 +436,35 @@ function computeRollingAvg(data: number[], window: number = 3): number[] {
   });
 }
 
+function getTrendColor(pct: number): string {
+  const abs = Math.abs(pct);
+  if (pct > 0) return 'text-green-600 dark:text-green-400';
+  if (abs <= 10) return 'text-amber-600 dark:text-amber-400';
+  if (abs <= 25) return 'text-red-400 dark:text-red-400';
+  return 'text-red-600 dark:text-red-500';
+}
+
 function TrendArrow({ data, unit = 'PPG' }: { data: number[]; unit?: string }) {
-  if (data.length < 4) return null;
+  if (data.length < 3) return null;
   const recent = data.slice(-3);
-  const earlier = data.slice(-6, -3);
-  if (earlier.length === 0) return null;
   const recentAvg = recent.reduce((a, b) => a + b, 0) / recent.length;
-  const earlierAvg = earlier.reduce((a, b) => a + b, 0) / earlier.length;
-  const diff = recentAvg - earlierAvg;
-  const pct = earlierAvg > 0 ? ((diff) / earlierAvg) * 100 : 0;
+  const seasonAvg = data.reduce((a, b) => a + b, 0) / data.length;
+  const diff = recentAvg - seasonAvg;
+  const pct = seasonAvg > 0 ? (diff / seasonAvg) * 100 : 0;
   const delta = `${diff > 0 ? '+' : ''}${diff.toFixed(1)} ${unit}`;
 
   if (Math.abs(pct) < 5) {
     return (
-      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground font-medium" data-testid="text-trend-arrow">
+      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground font-medium" data-testid="text-trend-arrow" title="vs season average">
         <Minus className="w-3.5 h-3.5" /> Stable <span className="text-muted-foreground/60">{delta}</span>
       </span>
     );
   }
-  if (pct > 0) {
-    return (
-      <span className="inline-flex items-center gap-1 text-xs text-green-600 dark:text-green-400 font-medium" data-testid="text-trend-arrow">
-        <ArrowUpRight className="w-3.5 h-3.5" /> {delta} <span className="opacity-70">({pct > 0 ? '+' : ''}{pct.toFixed(0)}%)</span>
-      </span>
-    );
-  }
+  const color = getTrendColor(pct);
+  const Icon = pct > 0 ? ArrowUpRight : ArrowDownRight;
   return (
-    <span className="inline-flex items-center gap-1 text-xs text-red-500 dark:text-red-400 font-medium" data-testid="text-trend-arrow">
-      <ArrowDownRight className="w-3.5 h-3.5" /> {delta} <span className="opacity-70">({pct.toFixed(0)}%)</span>
+    <span className={`inline-flex items-center gap-1 text-xs font-medium ${color}`} data-testid="text-trend-arrow" title="vs season average">
+      <Icon className="w-3.5 h-3.5" /> {delta} <span className="opacity-70">({pct > 0 ? '+' : ''}{pct.toFixed(0)}%)</span>
     </span>
   );
 }
@@ -534,8 +535,8 @@ function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentCo
 
         {showAvgLine && (
           <>
-            <line x1={0} y1={avgY} x2={viewW} y2={avgY} stroke="currentColor" strokeWidth="1" strokeDasharray="4 3" opacity="0.15" />
-            <text x={viewW - 2} y={avgY - 4} textAnchor="end" className="fill-muted-foreground" fontSize="9" opacity="0.5">avg {avg.toFixed(1)}</text>
+            <line x1={0} y1={avgY} x2={viewW} y2={avgY} stroke="currentColor" strokeWidth="1" strokeDasharray="4 3" opacity="0.12" />
+            <text x={viewW - 8} y={avgY - 4} textAnchor="end" className="fill-muted-foreground" fontSize="9" opacity="0.35">avg {avg.toFixed(1)}</text>
           </>
         )}
 
@@ -804,7 +805,7 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
                     <p className="text-[10px] text-muted-foreground/70 mt-1.5" data-testid="text-points-insight">
                       Averaging <span className="font-medium text-foreground/80">{last3Avg.toFixed(1)} PPG</span> over last 3 weeks
                       {Math.abs(last3Pct) >= 1 && (
-                        <span className={last3Pct > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}>
+                        <span className={getTrendColor(last3Pct)}>
                           {' '}({last3Pct > 0 ? '+' : ''}{last3Pct.toFixed(0)}% vs season avg)
                         </span>
                       )}
@@ -833,10 +834,19 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
                         <p className="text-[10px] text-muted-foreground/70 mt-1.5" data-testid="text-usage-insight">
                           Averaging <span className="font-medium text-foreground/80">{sec3Avg.toFixed(1)} {secondaryMetric.unit}/gm</span> over last 3 weeks
                           {sec3Pct != null && Math.abs(sec3Pct) >= 1 && (
-                            <span className={sec3Pct > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}>
+                            <span className={getTrendColor(sec3Pct)}>
                               {' '}({sec3Pct > 0 ? '+' : ''}{sec3Pct.toFixed(0)}% vs season avg)
                             </span>
                           )}
+                        </p>
+                      )}
+                      {sec3Pct != null && Math.abs(last3Pct) >= 5 && Math.abs(sec3Pct) >= 5 && (
+                        <p className="text-[10px] text-muted-foreground/50 italic mt-0.5" data-testid="text-diagnostic-insight">
+                          {Math.abs(sec3Pct) > Math.abs(last3Pct) * 1.5
+                            ? `Decline appears usage-driven \u2014 opportunity share ${sec3Pct > 0 ? 'up' : 'down'} more than production.`
+                            : Math.abs(last3Pct) > Math.abs(sec3Pct) * 1.5
+                            ? `${last3Pct < 0 ? 'Decline' : 'Gain'} appears efficiency-driven \u2014 usage relatively stable.`
+                            : `Both production and usage trending ${last3Pct > 0 ? 'up' : 'down'} together.`}
                         </p>
                       )}
                     </div>
