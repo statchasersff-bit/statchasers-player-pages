@@ -697,7 +697,7 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
   const posLabel = player.position || '';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {hasData ? (() => {
         const volLabel = stats.volatility < 6 ? 'Stable' : stats.volatility < 9 ? 'Moderate' : 'Volatile';
         const volColor = stats.volatility < 6
@@ -708,70 +708,117 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
 
         const cvRatio = seasonPpg > 0 ? stats.volatility / seasonPpg : 2;
         const consistencyScore = Math.round(100 / (1 + Math.pow(cvRatio / 0.6, 2)));
-        const conLabel = consistencyScore >= 70 ? 'Very Consistent' : consistencyScore >= 45 ? 'Average' : 'Boom or Bust';
+        const conLabel = consistencyScore >= 70 ? 'Very Reliable' : consistencyScore >= 45 ? 'Average' : 'Boom or Bust';
         const conColor = consistencyScore >= 70
           ? 'text-green-600 dark:text-green-400'
           : consistencyScore >= 45
           ? 'text-foreground'
           : 'text-red-500 dark:text-red-400';
 
+        const roleGrade = (() => {
+          const topRate = stats.pos1Pct + stats.pos2Pct;
+          if (topRate >= 60) return { label: 'Starter', color: 'bg-green-500/15 text-green-700 dark:text-green-400' };
+          if (topRate >= 35) return { label: 'Flex', color: 'bg-teal-500/15 text-teal-700 dark:text-teal-400' };
+          return { label: 'Depth', color: 'bg-slate-500/15 text-slate-600 dark:text-slate-400' };
+        })();
+
         return (
         <>
-          <div data-testid="overview-stat-boxes" className="space-y-2">
+          <div data-testid="overview-stat-boxes" className="space-y-1.5">
             {player.seasonLabel && (
-              <p className="text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider" data-testid="text-season-label">
-                {player.seasonLabel}
-              </p>
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className="text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider" data-testid="text-season-label">
+                  {player.seasonLabel}
+                </p>
+                <Badge variant="secondary" className={`text-[9px] px-1.5 py-0 ${roleGrade.color}`} data-testid="badge-role-grade">
+                  Role: {roleGrade.label} {posLabel}
+                </Badge>
+              </div>
+            )}
+            {!player.seasonLabel && (
+              <div className="flex items-center gap-2 flex-wrap">
+                <Badge variant="secondary" className={`text-[9px] px-1.5 py-0 ${roleGrade.color}`} data-testid="badge-role-grade">
+                  Role: {roleGrade.label} {posLabel}
+                </Badge>
+              </div>
             )}
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Performance</p>
-            <div className={`grid gap-2 ${thresholds.hasTier3 ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-3'}`}>
-              <div className="p-3 rounded-md bg-muted/60 dark:bg-slate-800/70 text-center ring-1 ring-border/40">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">PPG</p>
-                <p className="text-xl font-bold text-foreground tabular-nums mt-0.5">{seasonPpg.toFixed(1)}</p>
-                <p className="text-[10px] text-muted-foreground/70">
-                  {player.seasonRank ? `${stats.gamesPlayed} GP \u00B7 ${posLabel}${player.seasonRank}` : `${stats.gamesPlayed} GP`}
-                </p>
-              </div>
-              <div className="p-3 rounded-md bg-green-500/8 dark:bg-green-900/15 text-center">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 1)} %</p>
-                <p className="text-lg font-bold text-green-600 dark:text-green-400 tabular-nums mt-0.5" data-testid="text-pos1-pct">{stats.pos1Pct.toFixed(0)}%</p>
-                <p className="text-[10px] text-muted-foreground/70">{posLabel}1\u2013{posLabel}12 Weeks</p>
-              </div>
-              <div className="p-3 rounded-md bg-sky-500/8 dark:bg-sky-900/15 text-center">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 2)} %</p>
-                <p className="text-lg font-bold text-sky-600 dark:text-sky-400 tabular-nums mt-0.5" data-testid="text-pos2-pct">{stats.pos2Pct.toFixed(0)}%</p>
-                <p className="text-[10px] text-muted-foreground/70">{posLabel}13\u2013{posLabel}{thresholds.hasTier3 ? 24 : thresholds.bust} Weeks</p>
-              </div>
-              {thresholds.hasTier3 && (
-                <div className="p-3 rounded-md bg-amber-500/8 dark:bg-amber-900/15 text-center">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 3)} %</p>
-                  <p className="text-lg font-bold text-amber-600 dark:text-amber-400 tabular-nums mt-0.5" data-testid="text-pos3-pct">{stats.pos3Pct.toFixed(0)}%</p>
-                  <p className="text-[10px] text-muted-foreground/70">{posLabel}25\u2013{posLabel}{thresholds.bust} Weeks</p>
+            <div className="rounded-md bg-muted/30 dark:bg-slate-800/30 p-2">
+              <div className={`grid gap-1.5 ${thresholds.hasTier3 ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-3'}`}>
+                <div className="p-2.5 rounded-md bg-card dark:bg-slate-800/80 text-center ring-1 ring-border/50">
+                  <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">PPG</p>
+                  <p className="text-xl font-extrabold text-foreground tabular-nums mt-0.5">{seasonPpg.toFixed(1)}</p>
+                  <p className="text-[9px] text-muted-foreground/70">
+                    {player.seasonRank ? `${stats.gamesPlayed} GP \u00B7 ${posLabel}${player.seasonRank}` : `${stats.gamesPlayed} GP`}
+                  </p>
                 </div>
-              )}
+                <div className="p-2.5 rounded-md bg-green-500/8 dark:bg-green-900/15 text-center ring-1 ring-green-500/15 dark:ring-green-400/10">
+                  <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 1)} %</p>
+                  <p className="text-xl font-extrabold text-green-600 dark:text-green-400 tabular-nums mt-0.5" data-testid="text-pos1-pct">{stats.pos1Pct.toFixed(0)}%</p>
+                  <p className="text-[9px] text-muted-foreground/70">{getTierLabel(player.position, 1)} Weeks ({posLabel}1{'\u2013'}{posLabel}12)</p>
+                </div>
+                <div className="p-2.5 rounded-md bg-teal-500/6 dark:bg-teal-900/10 text-center">
+                  <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 2)} %</p>
+                  <p className="text-base font-bold text-teal-600 dark:text-teal-400 tabular-nums mt-0.5" data-testid="text-pos2-pct">{stats.pos2Pct.toFixed(0)}%</p>
+                  <p className="text-[9px] text-muted-foreground/70">{getTierLabel(player.position, 2)} Weeks ({posLabel}13{'\u2013'}{posLabel}{thresholds.hasTier3 ? 24 : thresholds.bust})</p>
+                </div>
+                {thresholds.hasTier3 && (
+                  <div className="p-2.5 rounded-md bg-slate-500/5 dark:bg-slate-700/15 text-center">
+                    <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 3)} %</p>
+                    <p className="text-base font-bold text-slate-500 dark:text-slate-400 tabular-nums mt-0.5" data-testid="text-pos3-pct">{stats.pos3Pct.toFixed(0)}%</p>
+                    <p className="text-[9px] text-muted-foreground/70">{getTierLabel(player.position, 3)} Weeks ({posLabel}25{'\u2013'}{posLabel}{thresholds.bust})</p>
+                  </div>
+                )}
+              </div>
+              <div className="mt-2 px-0.5" data-testid="tier-distribution-bar">
+                {(() => {
+                  const total = stats.pos1Pct + stats.pos2Pct + (thresholds.hasTier3 ? stats.pos3Pct : 0) + stats.bustPct;
+                  const norm = total > 0 ? 100 / total : 1;
+                  const p1w = stats.pos1Pct * norm;
+                  const p2w = stats.pos2Pct * norm;
+                  const p3w = thresholds.hasTier3 ? stats.pos3Pct * norm : 0;
+                  const bw = stats.bustPct * norm;
+                  return (
+                    <div className="flex h-2.5 rounded-full overflow-hidden">
+                      {p1w > 0 && <div className="bg-green-500 dark:bg-green-400" style={{ width: `${p1w}%` }} title={`${getTierLabel(player.position, 1)}: ${stats.pos1Pct.toFixed(0)}%`} />}
+                      {p2w > 0 && <div className="bg-teal-400 dark:bg-teal-500" style={{ width: `${p2w}%` }} title={`${getTierLabel(player.position, 2)}: ${stats.pos2Pct.toFixed(0)}%`} />}
+                      {p3w > 0 && <div className="bg-slate-300 dark:bg-slate-500" style={{ width: `${p3w}%` }} title={`${getTierLabel(player.position, 3)}: ${stats.pos3Pct.toFixed(0)}%`} />}
+                      {bw > 0 && <div className="bg-red-400 dark:bg-red-500" style={{ width: `${bw}%` }} title={`Bust: ${stats.bustPct.toFixed(0)}%`} />}
+                    </div>
+                  );
+                })()}
+                <div className="flex items-center justify-between mt-1 gap-1 flex-wrap">
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500 dark:bg-green-400 inline-block" /><span className="text-[9px] text-muted-foreground">{getTierLabel(player.position, 1)}</span></span>
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-teal-400 dark:bg-teal-500 inline-block" /><span className="text-[9px] text-muted-foreground">{getTierLabel(player.position, 2)}</span></span>
+                    {thresholds.hasTier3 && <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-500 inline-block" /><span className="text-[9px] text-muted-foreground">{getTierLabel(player.position, 3)}</span></span>}
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-400 dark:bg-red-500 inline-block" /><span className="text-[9px] text-muted-foreground">Bust</span></span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium pt-1">Risk</p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              <div className="p-3 rounded-md bg-red-500/8 dark:bg-red-900/15 text-center">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Bust %</p>
-                <p className="text-lg font-bold text-red-500 dark:text-red-400 tabular-nums mt-0.5" data-testid="text-bust-pct-risk">{stats.bustPct.toFixed(0)}%</p>
-                <p className="text-[10px] text-muted-foreground/70">{posLabel}{thresholds.bust + 1}+ Weeks</p>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40 font-medium pt-0.5">Risk</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5">
+              <div className="p-2 rounded-md bg-red-500/5 dark:bg-red-900/10 text-center">
+                <p className="text-[9px] uppercase tracking-wider text-muted-foreground/70 font-medium">Bust %</p>
+                <p className="text-base font-bold text-red-500 dark:text-red-400 tabular-nums mt-0.5" data-testid="text-bust-pct-risk">{stats.bustPct.toFixed(0)}%</p>
+                <p className="text-[9px] text-muted-foreground/60">Bust Weeks ({posLabel}{thresholds.bust + 1}+)</p>
               </div>
-              <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60 text-center">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Volatility</p>
-                <p className={`text-lg font-bold tabular-nums mt-0.5 ${volColor}`}>{stats.volatility.toFixed(1)}</p>
-                <p className="text-[10px] text-muted-foreground/70">{volLabel}</p>
+              <div className="p-2 rounded-md bg-muted/30 dark:bg-slate-800/40 text-center">
+                <p className="text-[9px] uppercase tracking-wider text-muted-foreground/70 font-medium">Volatility</p>
+                <p className={`text-base font-bold tabular-nums mt-0.5 ${volColor}`}>{stats.volatility.toFixed(1)}</p>
+                <p className="text-[9px] text-muted-foreground/60">{volLabel}</p>
               </div>
-              <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60 text-center">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Consistency</p>
-                <p className={`text-lg font-bold tabular-nums mt-0.5 ${conColor}`}>{consistencyScore}</p>
-                <p className="text-[10px] text-muted-foreground/70">{conLabel}</p>
+              <div className="p-2 rounded-md bg-muted/30 dark:bg-slate-800/40 text-center">
+                <p className="text-[9px] uppercase tracking-wider text-muted-foreground/70 font-medium">Reliability</p>
+                <p className={`text-base font-bold tabular-nums mt-0.5 ${conColor}`}>{consistencyScore}</p>
+                <p className="text-[9px] text-muted-foreground/60">{conLabel}</p>
               </div>
-              <div className="p-3 rounded-md bg-red-500/8 dark:bg-red-900/15 text-center">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Goose Egg</p>
-                <p className={`text-lg font-bold tabular-nums mt-0.5 ${stats.gooseEggPct > 0 ? 'text-red-500 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`} data-testid="text-goose-egg">{stats.gooseEggPct.toFixed(0)}%</p>
-                <p className="text-[10px] text-muted-foreground/70">0-Point Games</p>
+              <div className="p-2 rounded-md bg-red-500/5 dark:bg-red-900/10 text-center">
+                <p className="text-[9px] uppercase tracking-wider text-muted-foreground/70 font-medium">Goose Egg</p>
+                <p className={`text-base font-bold tabular-nums mt-0.5 ${stats.gooseEggPct > 0 ? 'text-red-500 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`} data-testid="text-goose-egg">{stats.gooseEggPct.toFixed(0)}%</p>
+                <p className="text-[9px] text-muted-foreground/60">0-Point Games</p>
               </div>
             </div>
           </div>
@@ -1065,13 +1112,13 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
                     <p className="text-lg font-bold text-green-600 dark:text-green-400 tabular-nums">{multiYearAvg.pos1Pct.toFixed(0)}%</p>
                     <p className="text-[10px] text-muted-foreground">{getTierLabel(player.position, 1)} %</p>
                   </div>
-                  <div className="text-center p-2 rounded-md bg-blue-500/10 dark:bg-blue-900/20">
-                    <p className="text-lg font-bold text-blue-600 dark:text-blue-400 tabular-nums">{multiYearAvg.pos2Pct.toFixed(0)}%</p>
+                  <div className="text-center p-2 rounded-md bg-teal-500/10 dark:bg-teal-900/20">
+                    <p className="text-lg font-bold text-teal-600 dark:text-teal-400 tabular-nums">{multiYearAvg.pos2Pct.toFixed(0)}%</p>
                     <p className="text-[10px] text-muted-foreground">{getTierLabel(player.position, 2)} %</p>
                   </div>
                   {thresholds.hasTier3 && (
-                    <div className="text-center p-2 rounded-md bg-amber-500/10 dark:bg-amber-900/20">
-                      <p className="text-lg font-bold text-amber-600 dark:text-amber-400 tabular-nums">{multiYearAvg.pos3Pct.toFixed(0)}%</p>
+                    <div className="text-center p-2 rounded-md bg-slate-500/10 dark:bg-slate-700/20">
+                      <p className="text-lg font-bold text-slate-500 dark:text-slate-400 tabular-nums">{multiYearAvg.pos3Pct.toFixed(0)}%</p>
                       <p className="text-[10px] text-muted-foreground">{getTierLabel(player.position, 3)} %</p>
                     </div>
                   )}
@@ -1159,18 +1206,18 @@ function GameLogTab({ player }: { player: PlayerWithSeasons }) {
           <div className="p-3 rounded-md bg-green-500/10 dark:bg-green-900/20 text-center">
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 1)} %</p>
             <p className="text-lg font-bold text-green-600 dark:text-green-400 tabular-nums mt-0.5" data-testid="text-pos1-pct">{stats.pos1Pct.toFixed(0)}%</p>
-            <p className="text-[10px] text-muted-foreground/70">{posLabel}1\u2013{posLabel}12</p>
+            <p className="text-[10px] text-muted-foreground/70">{posLabel}1{'\u2013'}{posLabel}12</p>
           </div>
-          <div className="p-3 rounded-md bg-blue-500/10 dark:bg-blue-900/20 text-center">
+          <div className="p-3 rounded-md bg-teal-500/10 dark:bg-teal-900/20 text-center">
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 2)} %</p>
-            <p className="text-lg font-bold text-blue-600 dark:text-blue-400 tabular-nums mt-0.5" data-testid="text-pos2-pct">{stats.pos2Pct.toFixed(0)}%</p>
-            <p className="text-[10px] text-muted-foreground/70">{posLabel}13\u2013{posLabel}{thresholds.hasTier3 ? 24 : thresholds.bust}</p>
+            <p className="text-lg font-bold text-teal-600 dark:text-teal-400 tabular-nums mt-0.5" data-testid="text-pos2-pct">{stats.pos2Pct.toFixed(0)}%</p>
+            <p className="text-[10px] text-muted-foreground/70">{posLabel}13{'\u2013'}{posLabel}{thresholds.hasTier3 ? 24 : thresholds.bust}</p>
           </div>
           {thresholds.hasTier3 && (
-            <div className="p-3 rounded-md bg-amber-500/10 dark:bg-amber-900/20 text-center">
+            <div className="p-3 rounded-md bg-slate-500/10 dark:bg-slate-700/20 text-center">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 3)} %</p>
-              <p className="text-lg font-bold text-amber-600 dark:text-amber-400 tabular-nums mt-0.5" data-testid="text-pos3-pct">{stats.pos3Pct.toFixed(0)}%</p>
-              <p className="text-[10px] text-muted-foreground/70">{posLabel}25\u2013{posLabel}{thresholds.bust}</p>
+              <p className="text-lg font-bold text-slate-500 dark:text-slate-400 tabular-nums mt-0.5" data-testid="text-pos3-pct">{stats.pos3Pct.toFixed(0)}%</p>
+              <p className="text-[10px] text-muted-foreground/70">{posLabel}25{'\u2013'}{posLabel}{thresholds.bust}</p>
             </div>
           )}
           <div className="p-3 rounded-md bg-red-500/10 dark:bg-red-900/20 text-center">
