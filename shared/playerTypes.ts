@@ -50,6 +50,7 @@ export interface Player {
   age: number | null;
   height: string | null;
   weight: string | null;
+  number: number | null;
   depth_chart_order: number | null;
   years_exp: number | null;
   headshotUrl: string | null;

@@ -48,6 +48,15 @@ type LightPlayer = {
   position: string;
 };
 
+function formatHeight(inches: string | null): string {
+  if (!inches) return '';
+  const total = parseInt(inches, 10);
+  if (isNaN(total) || total <= 0) return inches;
+  const feet = Math.floor(total / 12);
+  const rem = total % 12;
+  return `${feet}'${rem}"`;
+}
+
 const POSITION_COLORS: Record<string, string> = {
   QB: "bg-red-500/15 text-red-700 dark:text-red-400",
   RB: "bg-blue-500/15 text-blue-700 dark:text-blue-400",
@@ -1226,16 +1235,6 @@ export default function PlayerProfile() {
           <div className="flex items-center gap-6 md:gap-8 flex-wrap">
             <PlayerHeadshot playerId={player.id} name={player.name} teamColor={teamColor} />
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 mb-1 flex-wrap">
-                {player.position && (
-                  <Badge variant="secondary" className={POSITION_COLORS[player.position] || ""} data-testid="badge-position">
-                    {player.position}
-                  </Badge>
-                )}
-                {player.injury_status && (
-                  <Badge variant="destructive" data-testid="badge-injury">{player.injury_status}</Badge>
-                )}
-              </div>
               <h1
                 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight"
                 style={{ letterSpacing: '-0.02em', fontWeight: 800 }}
@@ -1243,18 +1242,50 @@ export default function PlayerProfile() {
               >
                 {player.name}
               </h1>
+              <div className="flex items-center gap-2 mt-1.5 flex-wrap" data-testid="text-team">
+                <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{positionFull}</span>
+                <span className="text-slate-400 dark:text-slate-500">{'\u00B7'}</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1 h-4 rounded-full flex-shrink-0" style={{ backgroundColor: teamColor }} />
+                  <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{teamName}</span>
+                </div>
+                <span className="text-slate-400 dark:text-slate-500">{'\u00B7'}</span>
+                <span className="text-sm text-slate-500 dark:text-slate-400" data-testid="text-player-status">
+                  {player.injury_status ? player.injury_status : (player.status || 'Active')}
+                </span>
+                {player.number && (
+                  <>
+                    <span className="text-slate-400 dark:text-slate-500">{'\u00B7'}</span>
+                    <span className="text-sm text-slate-500 dark:text-slate-400">#{player.number}</span>
+                  </>
+                )}
+              </div>
               <div
-                className="mt-2 mb-4 h-[2px] w-20 rounded-full"
+                className="mt-2.5 mb-3 h-[2px] w-20 rounded-full"
                 style={{ background: 'linear-gradient(90deg, #D4A843, #F5D36E, #D4A843)' }}
               />
-              <div className="flex items-center gap-3 flex-wrap" data-testid="text-team">
-                <div className="w-1 h-8 rounded-full flex-shrink-0" style={{ backgroundColor: teamColor }} />
-                <div>
-                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{teamName}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    {positionFull}{player.season ? ` \u00B7 ${player.season} Season` : ''}
-                  </p>
-                </div>
+              <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400 flex-wrap" data-testid="text-player-meta">
+                {player.age && (
+                  <span>Age <span className="font-semibold text-slate-700 dark:text-slate-300">{player.age}</span></span>
+                )}
+                {player.height && (
+                  <>
+                    <span className="text-slate-300 dark:text-slate-600">|</span>
+                    <span><span className="font-semibold text-slate-700 dark:text-slate-300">{formatHeight(player.height)}</span></span>
+                  </>
+                )}
+                {player.weight && (
+                  <>
+                    <span className="text-slate-300 dark:text-slate-600">|</span>
+                    <span><span className="font-semibold text-slate-700 dark:text-slate-300">{player.weight}</span> lbs</span>
+                  </>
+                )}
+                {player.years_exp != null && (
+                  <>
+                    <span className="text-slate-300 dark:text-slate-600">|</span>
+                    <span>Exp <span className="font-semibold text-slate-700 dark:text-slate-300">{player.years_exp} yr{player.years_exp !== 1 ? 's' : ''}</span></span>
+                  </>
+                )}
               </div>
             </div>
           </div>
