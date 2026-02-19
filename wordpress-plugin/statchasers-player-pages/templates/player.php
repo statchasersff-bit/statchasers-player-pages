@@ -7,22 +7,9 @@ if ( ! $player ) {
     echo '<p>Player not found.</p>';
     return;
 }
-
-$app_base_url = get_option( 'scpp_app_base_url', '' );
 ?>
 <!-- StatChasers Player Pages Template -->
 <div class="scpp-root" data-scpp-template="player" data-scpp-version="<?php echo esc_attr( SC_VERSION ); ?>">
-<?php if ( $app_base_url ) : ?>
-  <iframe
-    id="scpp-embed"
-    class="scpp-iframe"
-    src="<?php echo esc_url( $app_base_url . '/nfl/players/' . $player['slug'] . '/' ); ?>"
-    frameborder="0"
-    scrolling="no"
-    allowtransparency="true"
-    title="<?php echo esc_attr( $player['name'] ); ?> Fantasy Football Profile"
-  ></iframe>
-<?php else : ?>
 <div class="sc-players">
 
   <nav class="sc-breadcrumb">
@@ -144,14 +131,9 @@ $app_base_url = get_option( 'scpp_app_base_url', '' );
   </div>
 
 </div>
-<?php endif; ?>
 </div>
 
 <style>
-    .scpp-root .scpp-iframe {
-        width: 100%; border: none; min-height: 800px;
-        display: block; overflow: hidden;
-    }
     .scpp-root .sc-players { max-width: 1100px; margin: 0 auto; padding: 24px 16px; box-sizing: border-box; }
     @media (min-width: 1200px) { .scpp-root .sc-players { max-width: 1200px; } }
     .scpp-root .sc-players .sc-breadcrumb { margin-bottom: 24px; }
@@ -199,19 +181,3 @@ $app_base_url = get_option( 'scpp_app_base_url', '' );
     .scpp-root .sc-players .sc-nav-link span { font-size: 0.85em; color: #6b7280; }
 </style>
 
-<?php if ( $app_base_url ) : ?>
-<script>
-(function() {
-    var iframe = document.getElementById('scpp-embed');
-    if (!iframe) return;
-    var allowedOrigin = <?php echo wp_json_encode( rtrim( preg_replace( '#^(https?://[^/]+).*$#', '$1', $app_base_url ), '/' ) ); ?>;
-
-    window.addEventListener('message', function(e) {
-        if (e.origin !== allowedOrigin) return;
-        if (e.data && e.data.type === 'scpp-resize' && typeof e.data.height === 'number') {
-            iframe.style.height = e.data.height + 'px';
-        }
-    });
-})();
-</script>
-<?php endif; ?>

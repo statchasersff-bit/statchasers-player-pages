@@ -1,21 +1,8 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
-
-$app_base_url = get_option( 'scpp_app_base_url', '' );
 ?>
 <!-- StatChasers Player Pages Template -->
 <div class="scpp-root" data-scpp-template="index" data-scpp-version="<?php echo esc_attr( SC_VERSION ); ?>">
-<?php if ( $app_base_url ) : ?>
-  <iframe
-    id="scpp-embed"
-    class="scpp-iframe"
-    src="<?php echo esc_url( $app_base_url . '/nfl/players' ); ?>"
-    frameborder="0"
-    scrolling="no"
-    allowtransparency="true"
-    title="NFL Player Directory"
-  ></iframe>
-<?php else : ?>
 <div class="sc-players">
 
   <header class="sc-header">
@@ -40,14 +27,9 @@ $app_base_url = get_option( 'scpp_app_base_url', '' );
   <div id="sc-results"></div>
 
 </div>
-<?php endif; ?>
 </div>
 
 <style>
-    .scpp-root .scpp-iframe {
-        width: 100%; border: none; min-height: 800px;
-        display: block; overflow: hidden;
-    }
     .scpp-root .sc-players { max-width: 1100px; margin: 0 auto; padding: 24px 16px; box-sizing: border-box; }
     @media (min-width: 1200px) { .scpp-root .sc-players { max-width: 1200px; } }
     .scpp-root .sc-players .sc-header { margin-bottom: 32px; }
@@ -90,20 +72,4 @@ $app_base_url = get_option( 'scpp_app_base_url', '' );
     .scpp-root .sc-players .sc-pos-DEF { background: rgba(107,114,128,0.12); color: #4b5563; }
 </style>
 
-<?php if ( $app_base_url ) : ?>
-<script>
-(function() {
-    var iframe = document.getElementById('scpp-embed');
-    if (!iframe) return;
-    var allowedOrigin = <?php echo wp_json_encode( rtrim( preg_replace( '#^(https?://[^/]+).*$#', '$1', $app_base_url ), '/' ) ); ?>;
-
-    window.addEventListener('message', function(e) {
-        if (e.origin !== allowedOrigin) return;
-        if (e.data && e.data.type === 'scpp-resize' && typeof e.data.height === 'number') {
-            iframe.style.height = e.data.height + 'px';
-        }
-    });
-})();
-</script>
-<?php endif; ?>
 <?php /* Config passed via wp_localize_script; players.js enqueued with filemtime cache-busting */ ?>
