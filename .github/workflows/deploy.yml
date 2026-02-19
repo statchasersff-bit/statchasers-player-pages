@@ -1,4 +1,4 @@
-name: Deploy WP Plugin (SSH autodetect)
+name: Deploy WP Plugin (SSH autodetect + marker check)
 
 on:
   push:
@@ -65,3 +65,8 @@ jobs:
 
             echo "Deployed:"
             ls -lah "$WP/wp-content/plugins/statchasers-player-pages" | head
+
+            echo ""
+            echo "Marker check (server):"
+            grep -n "SCPP DEPLOY MARKER" "$WP/wp-content/plugins/statchasers-player-pages/includes/rewrite.php" || echo "NOT FOUND ON SERVER"
+            grep -n "SCPP v0.3.0" "$WP/wp-content/plugins/statchasers-player-pages/includes/rewrite.php" || true
