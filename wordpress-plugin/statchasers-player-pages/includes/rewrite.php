@@ -130,7 +130,7 @@ function sc_hijack_query( $query ) {
     $r = sc_detect_route();
     if ( ! $r ) return;
 
-    $container_id = (int) get_option( 'scpp_container_page_id', 0 );
+    $container_id   = (int) get_option( 'scpp_container_page_id', 0 );
     $container_post = $container_id ? get_post( $container_id ) : null;
 
     if ( ! $container_post || $container_post->post_type !== 'page' || $container_post->post_status !== 'publish' ) {
@@ -172,17 +172,17 @@ function sc_force_container_posts( $posts, $query ) {
     $r = sc_detect_route();
     if ( ! $r ) return $posts;
 
-    $container_id = (int) get_option( 'scpp_container_page_id', 0 );
+    $container_id   = (int) get_option( 'scpp_container_page_id', 0 );
     $container_post = $container_id ? get_post( $container_id ) : null;
 
     if ( ! $container_post || $container_post->post_type !== 'page' || $container_post->post_status !== 'publish' ) {
         return $posts;
     }
 
-    $query->posts       = array( $container_post );
-    $query->post        = $container_post;
-    $query->found_posts = 1;
-    $query->post_count  = 1;
+    $query->posts         = array( $container_post );
+    $query->post          = $container_post;
+    $query->found_posts   = 1;
+    $query->post_count    = 1;
     $query->max_num_pages = 1;
 
     $query->is_page     = true;
@@ -224,6 +224,8 @@ function sc_inject_content( $content ) {
         $debug .= ' slug=' . esc_html( $slug );
     }
     $debug .= ' -->';
+
+    // ✅ Deployment marker to verify CI/CD is updating the live plugin files
     $deploy_marker = "\n<!-- SCPP DEPLOY MARKER: 2026-02-19-02 -->\n";
 
     if ( $route === 'index' ) {
