@@ -7,8 +7,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 add_action( 'init', 'sc_register_rewrite_rules', 9 );
 
 /**
- * Register custom query vars.
+ * Register custom query vars (priority 1 to ensure early registration).
  */
+add_filter( 'query_vars', 'scpp_register_query_vars', 1 );
 add_filter( 'query_vars', 'sc_register_query_vars' );
 
 /**
@@ -56,9 +57,23 @@ function sc_register_rewrite_rules() {
     add_rewrite_rule( '^nfl/players/([^/]+)/?$', 'index.php?sc_player_slug=$matches[1]', 'top' );
 }
 
+function scpp_register_query_vars( $vars ) {
+    if ( ! in_array( 'sc_players_index', $vars, true ) ) {
+        $vars[] = 'sc_players_index';
+    }
+    if ( ! in_array( 'sc_player_slug', $vars, true ) ) {
+        $vars[] = 'sc_player_slug';
+    }
+    if ( ! in_array( 'sc_player_sitemap', $vars, true ) ) {
+        $vars[] = 'sc_player_sitemap';
+    }
+    return $vars;
+}
+
 function sc_register_query_vars( $vars ) {
     $vars[] = 'sc_players_index';
     $vars[] = 'sc_player_slug';
+    $vars[] = 'sc_player_sitemap';
     return $vars;
 }
 
@@ -230,7 +245,7 @@ function sc_inject_content( $content ) {
     $route = $r['route'];
     $slug  = $r['slug'];
 
-    $debug = '<!-- SCPP v0.3.0: container=' . $container_id . ' route=' . esc_html( $route );
+    $debug = '<!-- SCPP v0.3.1: container=' . $container_id . ' route=' . esc_html( $route );
     if ( $slug ) {
         $debug .= ' slug=' . esc_html( $slug );
     }
