@@ -44,6 +44,14 @@ function sc_handle_admin_actions() {
         }
     }
 
+    if ( isset( $_POST['sc_save_app_url'] ) ) {
+        if ( ! check_admin_referer( 'sc_admin_nonce', 'sc_nonce' ) ) return;
+        $app_url = isset( $_POST['scpp_app_base_url'] ) ? esc_url_raw( trim( $_POST['scpp_app_base_url'] ) ) : '';
+        $app_url = rtrim( $app_url, '/' );
+        update_option( 'scpp_app_base_url', $app_url );
+        add_settings_error( 'statchasers', 'app_url_saved', 'App Base URL saved.', 'success' );
+    }
+
     if ( isset( $_POST['sc_flush_rewrite'] ) ) {
         if ( ! check_admin_referer( 'sc_admin_nonce', 'sc_nonce' ) ) return;
         if ( function_exists( 'sc_register_rewrite_rules' ) ) {
@@ -167,6 +175,33 @@ function sc_render_admin_page() {
                 <p style="color: #666;">Or auto-create the required pages (NFL &rarr; Players) and set as container:</p>
                 <p>
                     <input type="submit" name="sc_auto_create_pages" class="button" value="Auto-Create NFL/Players Pages and Set Container" />
+                </p>
+            </form>
+        </div>
+
+        <!-- App Base URL -->
+        <?php $app_base_url = get_option( 'scpp_app_base_url', '' ); ?>
+        <div class="card" style="max-width: 700px; padding: 20px; margin-top: 20px;">
+            <h2>App Base URL (Embed)</h2>
+            <p style="color: #666;">Enter the URL of your published React app. Player pages will embed it via iframe for the full interactive experience (game logs, scoring toggle, charts, etc.).</p>
+            <?php if ( ! $app_base_url ) : ?>
+                <div class="notice notice-warning" style="padding: 8px; margin: 8px 0;">
+                    <strong>No App URL set.</strong> Player pages will show basic static content until you set this.
+                </div>
+            <?php endif; ?>
+            <form method="post">
+                <?php wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' ); ?>
+                <table class="form-table">
+                    <tr>
+                        <th><label for="scpp_app_base_url">App URL</label></th>
+                        <td>
+                            <input type="url" name="scpp_app_base_url" id="scpp_app_base_url" value="<?php echo esc_attr( $app_base_url ); ?>" style="min-width: 400px;" placeholder="https://your-app.replit.app" />
+                            <p class="description">Example: <code>https://statchasers.replit.app</code></p>
+                        </td>
+                    </tr>
+                </table>
+                <p>
+                    <input type="submit" name="sc_save_app_url" class="button button-primary" value="Save App URL" />
                 </p>
             </form>
         </div>

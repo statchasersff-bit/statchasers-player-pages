@@ -80,6 +80,8 @@ Located in `wordpress-plugin/statchasers-player-pages/`
 - **Point formulas**: Standard = raw stat pts (no reception bonus), Half = +0.5/rec, PPR = +1.0/rec
 
 ## Recent Changes
+- 2026-02-19: WordPress plugin iframe embed: App Base URL admin setting, templates conditionally embed React app via iframe when URL is set (fallback to static PHP), postMessage-based auto-resize with origin validation, scoped CSS isolation (.scpp-root)
+- 2026-02-19: React app iframe-aware: useIframeResize hook in App.tsx sends postMessage height updates to parent when embedded, with cleanup and targeted origin
 - 2026-02-19: Opportunity Momentum section (Usage & Trends tab Section 1): Role Momentum Score (0-100) with EXPANDING/STABLE/DECLINING badge, Season vs Last 4 delta comparison table (position-specific metrics), TD Dependency Index (% of fantasy pts from TDs), Usage Stability Score (0-100, CV-based), Production Type badge (Volume-Backed / TD-Driven / Balanced)
 - 2026-02-19: Global scoring format toggle (Standard/Half-PPR/PPR): pill UI in player header, dynamically recalculates all metrics including weekly ranks, tier finish rates, PPG, distribution bar, best/worst week, season rank, career profile, and trends across all tabs
 - 2026-02-19: Game Score column: compact W/L + score (e.g., "W, 34–10") from ESPN scoreboard data (2023-2025), color-coded W/L
