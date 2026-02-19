@@ -54,6 +54,16 @@ type LightPlayer = {
   slug: string;
   team: string;
   position: string;
+  posRank: number;
+  ppg: number;
+};
+
+type RelatedResponse = {
+  neighbors: LightPlayer[];
+  currentRank: number;
+  season: number;
+  format: string;
+  position: string;
 };
 
 function formatHeight(inches: string | null): string {
@@ -2244,8 +2254,9 @@ export default function PlayerProfile() {
     queryFn: () => fetch(`/api/players/${slug}?format=${scoringFormat}`).then(r => r.json()),
   });
 
-  const { data: relatedPlayers } = useQuery<LightPlayer[]>({
-    queryKey: ["/api/players", slug, "related"],
+  const { data: relatedData } = useQuery<RelatedResponse>({
+    queryKey: ["/api/players", slug, "related", { format: scoringFormat }],
+    queryFn: () => fetch(`/api/players/${slug}/related?format=${scoringFormat}`).then(r => r.json()),
     enabled: !!player,
   });
 
@@ -2512,32 +2523,31 @@ export default function PlayerProfile() {
           )}
         </div>
 
-        {relatedPlayers && relatedPlayers.length > 0 && (
+        {relatedData && relatedData.neighbors && relatedData.neighbors.length > 0 && (
           <div className="mt-8">
-            <div className="flex items-center gap-2 mb-4 flex-wrap">
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
               <Users className="w-5 h-5 text-primary" />
               <h2 className="text-lg font-semibold text-foreground" data-testid="text-related-heading">
-                Related {player.position}s
+                Rank Neighbors ({player.position})
               </h2>
             </div>
+            <p className="text-xs text-muted-foreground mb-4" data-testid="text-related-subtitle">
+              Based on {relatedData.season} {relatedData.format.toUpperCase()} season rank &middot; Showing {player.position}{Math.min(...relatedData.neighbors.map(n => n.posRank))}–{player.position}{Math.max(...relatedData.neighbors.map(n => n.posRank))}
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {relatedPlayers.map((rp) => (
+              {relatedData.neighbors.map((rp) => (
                 <Link key={rp.id} href={`/nfl/players/${rp.slug}/`}>
                   <Card className="hover-elevate cursor-pointer h-full" data-testid={`card-related-${rp.slug}`}>
                     <CardContent className="p-3 flex items-center gap-3 flex-wrap">
-                      <div className="flex-shrink-0 w-9 h-9 rounded-full bg-muted flex items-center justify-center">
-                        <span className="text-[10px] font-bold text-muted-foreground">{rp.position}</span>
+                      <div className="flex-shrink-0 w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                        <span className="text-[10px] font-bold text-primary">{rp.position}{rp.posRank}</span>
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-sm text-foreground truncate">{rp.name}</p>
                         <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                          <Badge
-                            variant="secondary"
-                            className={`text-[10px] px-1.5 py-0 ${POSITION_COLORS[rp.position || ""] || ""}`}
-                          >
-                            {rp.position}
-                          </Badge>
                           <span className="text-xs text-muted-foreground">{rp.team}</span>
+                          <span className="text-xs text-muted-foreground">&middot;</span>
+                          <span className="text-xs font-medium text-muted-foreground">{rp.ppg} PPG</span>
                         </div>
                       </div>
                     </CardContent>
