@@ -1,4 +1,4 @@
-name: Deploy WP Plugin (SFTP)
+name: Deploy WP Plugin (SFTP over SSH)
 
 on:
   push:
@@ -11,13 +11,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Upload plugin via SCP (over SFTP/SSH)
+      - name: Upload plugin via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           source: "wordpress-plugin/statchasers-player-pages/*"
-          target: "/home/${{ secrets.CPANEL_USER }}/public_html/wp-content/plugins/statchasers-player-pages/"
+          target: ${{ secrets.SSH_TARGET }}
           strip_components: 2
