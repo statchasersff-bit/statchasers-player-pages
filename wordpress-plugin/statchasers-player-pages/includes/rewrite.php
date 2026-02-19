@@ -224,11 +224,12 @@ function sc_inject_content( $content ) {
         $debug .= ' slug=' . esc_html( $slug );
     }
     $debug .= ' -->';
+    $deploy_marker = "\n<!-- SCPP DEPLOY MARKER: 2026-02-19-02 -->\n";
 
     if ( $route === 'index' ) {
         ob_start();
         include SC_PLUGIN_DIR . 'templates/index.php';
-        return $debug . "\n" . ob_get_clean();
+        return $debug . $deploy_marker . ob_get_clean();
     }
 
     if ( $route === 'player' && $slug ) {
@@ -238,7 +239,7 @@ function sc_inject_content( $content ) {
         }
         ob_start();
         include SC_PLUGIN_DIR . 'templates/player.php';
-        return $debug . "\n" . ob_get_clean();
+        return $debug . $deploy_marker . ob_get_clean();
     }
 
     return $content;
