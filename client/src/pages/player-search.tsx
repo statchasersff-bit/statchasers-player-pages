@@ -16,6 +16,7 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import {
+  ArrowLeft,
   Search,
   Users,
   TrendingUp,
@@ -486,6 +487,12 @@ export default function PlayerSearch() {
         <div className="max-w-7xl mx-auto px-4 py-8 md:py-10">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
+              <Link href="/">
+                <Button variant="ghost" size="sm" className="mb-3 -ml-1 text-gray-300 hover:text-white" data-testid="button-back-home">
+                  <ArrowLeft className="w-4 h-4 mr-1" />
+                  Back
+                </Button>
+              </Link>
               <div className="flex items-center gap-2 mb-1">
                 <Zap className="w-5 h-5 text-amber-400" />
                 <span className="text-xs font-semibold text-amber-400 uppercase tracking-widest">Command Index</span>

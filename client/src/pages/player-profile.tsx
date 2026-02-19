@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  ArrowLeft,
   Trophy,
   BarChart3,
   FileText,
@@ -2362,6 +2363,12 @@ export default function PlayerProfile() {
         />
 
         <div className="relative max-w-4xl mx-auto px-4 pt-8 pb-8 md:pt-10 md:pb-10">
+          <Link href="/nfl/players">
+            <Button variant="ghost" size="sm" className="mb-4 -ml-1 text-slate-600 dark:text-slate-300" data-testid="button-back">
+              <ArrowLeft className="w-4 h-4 mr-1" />
+              All Players
+            </Button>
+          </Link>
           <div className="flex items-center gap-6 md:gap-8 flex-wrap">
             <PlayerHeadshot playerId={player.id} name={player.name} teamColor={teamColor} />
             <div className="flex-1 min-w-0">
