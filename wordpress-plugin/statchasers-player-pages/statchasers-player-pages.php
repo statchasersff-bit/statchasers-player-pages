@@ -64,6 +64,12 @@ add_action( 'wp_enqueue_scripts', function() {
         $js_ver,
         true
     );
+
+    wp_localize_script( 'sc-players-js', 'scPlayersConfig', array(
+        'restUrl'    => rest_url( 'statchasers/v1/players' ),
+        'baseUrl'    => home_url( '/nfl/players/' ),
+        'indexedUrl' => rest_url( 'statchasers/v1/indexed-players' ),
+    ) );
 } );
 
 add_action( 'admin_notices', function() {

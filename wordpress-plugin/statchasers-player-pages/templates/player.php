@@ -9,7 +9,7 @@ if ( ! $player ) {
 }
 ?>
 <!-- StatChasers Player Pages Template -->
-<div class="scpp-root">
+<div class="scpp-root" data-scpp-template="player" data-scpp-version="0.3.2">
 <div class="sc-players">
 
   <nav class="sc-breadcrumb">
