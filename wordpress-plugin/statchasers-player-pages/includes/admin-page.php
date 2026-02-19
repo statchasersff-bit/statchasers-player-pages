@@ -62,6 +62,26 @@ function sc_handle_admin_actions() {
             add_settings_error( 'statchasers', 'indexed_error', 'Failed to generate indexed player list. Check the error log.', 'error' );
         }
     }
+
+    if ( isset( $_POST['sc_fetch_gamelogs'] ) ) {
+        if ( ! check_admin_referer( 'sc_admin_nonce', 'sc_nonce' ) ) return;
+        $result = sc_fetch_game_logs();
+        if ( $result ) {
+            add_settings_error( 'statchasers', 'gamelogs_success', 'Game logs fetched successfully!', 'success' );
+        } else {
+            add_settings_error( 'statchasers', 'gamelogs_error', 'Failed to fetch game logs. Check the error log.', 'error' );
+        }
+    }
+
+    if ( isset( $_POST['sc_fetch_gamescores'] ) ) {
+        if ( ! check_admin_referer( 'sc_admin_nonce', 'sc_nonce' ) ) return;
+        $result = sc_fetch_game_scores();
+        if ( $result ) {
+            add_settings_error( 'statchasers', 'gamescores_success', 'Game scores fetched successfully!', 'success' );
+        } else {
+            add_settings_error( 'statchasers', 'gamescores_error', 'Failed to fetch game scores. Check the error log.', 'error' );
+        }
+    }
 }
 
 function sc_auto_create_container_pages() {
