@@ -1,4 +1,4 @@
-name: Deploy WP Plugin (SSH)
+name: Deploy WP Plugin (SSH autodetect)
 
 on:
   push:
@@ -11,44 +11,57 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1) Upload plugin folder to a guaranteed-writable temp dir in your home
-      - name: Upload plugin to home tmp
+      # Upload plugin folder to /tmp (always writable)
+      - name: Upload plugin to /tmp
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.SSH_IP }}
+          host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: 22
           source: "wordpress-plugin/statchasers-player-pages"
-          target: "/home/${{ secrets.SSH_USER }}/sc_deploy_tmp/"
+          target: "/tmp/sc_deploy_tmp/"
           overwrite: true
 
-      # 2) Move it into wp-content/plugins with an SSH command
-      - name: Move plugin into WordPress plugins directory
+      # Auto-detect WP root and install plugin
+      - name: Install plugin into WordPress
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.SSH_IP }}
+          host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
             set -e
-            WP="${{ secrets.WP_ABSPATH }}"
-            echo "WP_ABSPATH=$WP"
-            ls -lah "$WP/wp-content/plugins" || true
 
-            # Backup existing plugin (optional but smart)
+            # autodetect WP root (public_html root)
+            if [ -d "/home1/${{ secrets.SSH_USER }}/public_html/wp-content/plugins" ]; then
+              WP="/home1/${{ secrets.SSH_USER }}/public_html"
+            elif [ -d "/home/${{ secrets.SSH_USER }}/public_html/wp-content/plugins" ]; then
+              WP="/home/${{ secrets.SSH_USER }}/public_html"
+            else
+              echo "ERROR: Could not find wp-content/plugins under /home1 or /home."
+              echo "Debug listing:"
+              ls -lah /home1/${{ secrets.SSH_USER }} || true
+              ls -lah /home/${{ secrets.SSH_USER }} || true
+              exit 1
+            fi
+
+            echo "Using WP root: $WP"
+            ls -lah "$WP/wp-content/plugins" | head
+
+            # backup existing plugin
             if [ -d "$WP/wp-content/plugins/statchasers-player-pages" ]; then
               rm -rf "$WP/wp-content/plugins/statchasers-player-pages.bak" || true
               mv "$WP/wp-content/plugins/statchasers-player-pages" "$WP/wp-content/plugins/statchasers-player-pages.bak"
             fi
 
-            # Move new version into place
+            # install new plugin
             rm -rf "$WP/wp-content/plugins/statchasers-player-pages" || true
-            mv "/home/${{ secrets.SSH_USER }}/sc_deploy_tmp/wordpress-plugin/statchasers-player-pages" "$WP/wp-content/plugins/statchasers-player-pages"
+            mv "/tmp/sc_deploy_tmp/wordpress-plugin/statchasers-player-pages" "$WP/wp-content/plugins/statchasers-player-pages"
 
-            # Cleanup
-            rm -rf "/home/${{ secrets.SSH_USER }}/sc_deploy_tmp" || true
+            # cleanup
+            rm -rf "/tmp/sc_deploy_tmp" || true
 
             echo "Deployed:"
             ls -lah "$WP/wp-content/plugins/statchasers-player-pages" | head
