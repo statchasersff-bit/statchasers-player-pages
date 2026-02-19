@@ -38,6 +38,17 @@ add_filter( 'the_content', 'sc_inject_content', 99 );
  */
 add_filter( 'body_class', 'sc_add_body_class' );
 
+/* ─── Prevent WP from redirecting our virtual routes ─── */
+add_filter( 'redirect_canonical', function( $redirect_url, $requested_url ) {
+    $path = isset($_SERVER['REQUEST_URI']) ? parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) : '';
+    $path = ltrim( (string) $path, '/' );
+
+    if ( preg_match( '#^nfl/players(/|$)#', $path ) ) {
+        return false;
+    }
+    return $redirect_url;
+}, 10, 2 );
+
 /* ─── Disable cache for player routes (debug only) ─── */
 add_action('send_headers', function () {
     if ( function_exists('sc_detect_route') ) {
