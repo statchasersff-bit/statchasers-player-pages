@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  ArrowLeft,
   Trophy,
   BarChart3,
   FileText,
@@ -2307,16 +2306,6 @@ export default function PlayerProfile() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <header className="border-b bg-card sticky top-0 z-50">
-          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3 flex-wrap">
-            <Link href="/nfl/players">
-              <Button variant="ghost" size="icon" data-testid="button-back-skeleton">
-                <ArrowLeft className="w-4 h-4" />
-              </Button>
-            </Link>
-            <Skeleton className="h-5 w-24" />
-          </div>
-        </header>
         <PlayerProfileSkeleton />
       </div>
     );
@@ -2325,16 +2314,6 @@ export default function PlayerProfile() {
   if (error || !player) {
     return (
       <div className="min-h-screen bg-background">
-        <header className="border-b bg-card sticky top-0 z-50">
-          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3 flex-wrap">
-            <Link href="/nfl/players">
-              <Button variant="ghost" size="icon" data-testid="button-back-error">
-                <ArrowLeft className="w-4 h-4" />
-              </Button>
-            </Link>
-            <span className="font-bold text-foreground">StatChasers</span>
-          </div>
-        </header>
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
           <AlertTriangle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-foreground mb-2" data-testid="text-not-found">Player Not Found</h1>
@@ -2360,40 +2339,6 @@ export default function PlayerProfile() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b bg-card sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4 flex-wrap">
-          <div className="flex items-center gap-3 flex-wrap">
-            <Link href="/nfl/players">
-              <Button variant="ghost" size="icon" data-testid="button-back">
-                <ArrowLeft className="w-4 h-4" />
-              </Button>
-            </Link>
-            <Link href="/">
-              <span className="text-lg font-bold tracking-tight text-foreground" data-testid="link-logo">
-                StatChasers
-              </span>
-            </Link>
-          </div>
-          <nav className="flex items-center gap-2 flex-wrap">
-            <Link href="/nfl/players">
-              <Button variant="ghost" size="sm" data-testid="link-players">
-                <Search className="w-4 h-4 mr-1" />
-                Players
-              </Button>
-            </Link>
-            <Link href="/rankings/">
-              <Button variant="ghost" size="sm" data-testid="link-rankings">Rankings</Button>
-            </Link>
-            <Link href="/tools/">
-              <Button variant="ghost" size="sm" data-testid="link-tools">Tools</Button>
-            </Link>
-            <Link href="/articles/">
-              <Button variant="ghost" size="sm" data-testid="link-articles">Articles</Button>
-            </Link>
-          </nav>
-        </div>
-      </header>
-
       <section
         className="relative overflow-hidden border-b-2"
         style={{ borderBottomColor: `${teamColor}60` }}
@@ -2597,11 +2542,6 @@ export default function PlayerProfile() {
         )}
       </main>
 
-      <footer className="border-t bg-card mt-16">
-        <div className="max-w-6xl mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
-          StatChasers - Fantasy Football Intelligence
-        </div>
-      </footer>
     </div>
   );
 }
