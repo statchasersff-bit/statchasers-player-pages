@@ -17,6 +17,7 @@ import {
   Shield,
   AlertTriangle,
   TrendingUp,
+  TrendingDown,
   Search,
   Newspaper,
   Table,
@@ -33,6 +34,7 @@ import {
   ArrowDown,
   EyeOff,
   Eye,
+  Gauge,
 } from "lucide-react";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import type { Player, GameLogEntry, NewsEntry, GameLogStats, GameScore } from "@shared/playerTypes";
@@ -1657,8 +1659,113 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
   );
 }
 
+function getPositionMomentumMetrics(position: string | null) {
+  if (position === 'QB') return [
+    { key: 'pass_att', label: 'Pass Att/G', pct: false },
+    { key: 'pass_cmp', label: 'Completions/G', pct: false },
+    { key: 'pass_yd', label: 'Pass Yds/G', pct: false },
+    { key: 'rush_att', label: 'Rush Att/G', pct: false },
+  ];
+  if (position === 'RB') return [
+    { key: 'rush_att', label: 'Carries/G', pct: false },
+    { key: 'rush_yd', label: 'Rush Yds/G', pct: false },
+    { key: 'rec_tgt', label: 'Targets/G', pct: false },
+    { key: 'rec', label: 'Receptions/G', pct: false },
+  ];
+  if (position === 'WR' || position === 'TE') return [
+    { key: 'rec_tgt', label: 'Targets/G', pct: false },
+    { key: 'rec', label: 'Receptions/G', pct: false },
+    { key: 'rec_yd', label: 'Rec Yds/G', pct: false },
+    { key: 'rush_att', label: 'Carries/G', pct: false },
+  ];
+  if (position === 'K') return [
+    { key: 'fga', label: 'FG Att/G', pct: false },
+    { key: 'fgm', label: 'FG Made/G', pct: false },
+    { key: 'xpa', label: 'XP Att/G', pct: false },
+    { key: 'xpm', label: 'XP Made/G', pct: false },
+  ];
+  return [];
+}
+
+function computeMetricAvg(activeEntries: GameLogEntry[], key: string, count?: number): number {
+  const src = count ? activeEntries.slice(-count) : activeEntries;
+  if (src.length === 0) return 0;
+  const sum = src.reduce((s, e) => s + ((e.stats as unknown as Record<string, number>)[key] ?? 0), 0);
+  return sum / src.length;
+}
+
+function computeTdDependency(activeEntries: GameLogEntry[], position: string | null, format: ScoringFormat): { pct: number; label: string; tag: string } {
+  if (activeEntries.length === 0) return { pct: 0, label: 'N/A', tag: '' };
+  const s = (key: string) => activeEntries.reduce((sum, e) => sum + ((e.stats as unknown as Record<string, number>)[key] ?? 0), 0);
+  let tdPts = 0;
+  if (position === 'QB') {
+    tdPts = s('pass_td') * 4 + s('rush_td') * 6;
+  } else if (position === 'K') {
+    tdPts = 0;
+  } else {
+    tdPts = (s('rec_td') + s('rush_td')) * 6;
+  }
+  const totalPts = activeEntries.reduce((sum, e) => sum + fpts(e, format), 0);
+  if (totalPts === 0) return { pct: 0, label: 'N/A', tag: '' };
+  const pct = (tdPts / totalPts) * 100;
+  if (pct >= 35) return { pct, label: 'TD-Driven', tag: 'High TD reliance' };
+  if (pct >= 20) return { pct, label: 'Balanced', tag: 'Balanced production' };
+  return { pct, label: 'Volume-Backed', tag: 'Volume-backed production' };
+}
+
+function computeUsageStability(activeEntries: GameLogEntry[], primaryKey: string): number {
+  if (activeEntries.length < 3) return 50;
+  const vals = activeEntries.map(e => (e.stats as unknown as Record<string, number>)[primaryKey] ?? 0);
+  const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+  if (mean === 0) return 50;
+  const variance = vals.reduce((s, v) => s + (v - mean) ** 2, 0) / vals.length;
+  const cv = Math.sqrt(variance) / mean;
+  return Math.round(Math.max(0, Math.min(100, 100 / (1 + (cv / 0.4) ** 2))));
+}
+
+function DeltaCell({ delta, pct = false }: { delta: number; pct?: boolean }) {
+  const isPos = delta > 0.05;
+  const isNeg = delta < -0.05;
+  const color = isPos ? 'text-emerald-500' : isNeg ? 'text-red-400' : 'text-muted-foreground';
+  const sign = isPos ? '+' : '';
+  return (
+    <span className={`font-semibold tabular-nums ${color}`}>
+      {sign}{delta.toFixed(1)}{pct ? '%' : ''}
+    </span>
+  );
+}
+
 function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWithSeasons; entries: GameLogEntry[]; format?: ScoringFormat }) {
   const position = player.position;
+  const activeEntries = entries.filter(e => hasParticipation(e.stats, position));
+  const metrics = getPositionMomentumMetrics(position);
+  const RECENT_WINDOW = 4;
+
+  const deltaRows = metrics.map(m => {
+    const seasonAvg = computeMetricAvg(activeEntries, m.key);
+    const recentAvg = computeMetricAvg(activeEntries, m.key, RECENT_WINDOW);
+    const delta = recentAvg - seasonAvg;
+    return { ...m, seasonAvg, recentAvg, delta };
+  });
+
+  const primaryKey = metrics[0]?.key ?? 'rec_tgt';
+  const weightedPctChange = deltaRows.reduce((s, d, i) => {
+    const weight = [4, 3, 2, 1][i] ?? 1;
+    const pctChange = d.seasonAvg > 0 ? (d.delta / d.seasonAvg) : 0;
+    return s + pctChange * weight;
+  }, 0);
+  const totalWeight = deltaRows.reduce((s, _, i) => s + ([4, 3, 2, 1][i] ?? 1), 0) || 1;
+  const avgPctChange = weightedPctChange / totalWeight;
+  const momentumScore = Math.round(Math.max(0, Math.min(100, 50 + avgPctChange * 200)));
+
+  const momentumLabel = momentumScore >= 65 ? 'EXPANDING' : momentumScore <= 35 ? 'DECLINING' : 'STABLE';
+  const momentumColor = momentumScore >= 65 ? 'text-emerald-500' : momentumScore <= 35 ? 'text-red-400' : 'text-amber-400';
+  const momentumBg = momentumScore >= 65 ? 'bg-emerald-500/10 border-emerald-500/20' : momentumScore <= 35 ? 'bg-red-500/10 border-red-500/20' : 'bg-amber-500/10 border-amber-500/20';
+
+  const tdDep = computeTdDependency(activeEntries, position, format);
+  const stability = computeUsageStability(activeEntries, primaryKey);
+  const stabilityLabel = stability >= 70 ? 'Stable Role' : stability >= 45 ? 'Moderate' : 'Volatile Usage';
+  const stabilityColor = stability >= 70 ? 'text-emerald-500' : stability >= 45 ? 'text-amber-400' : 'text-red-400';
 
   const weeklyPts = entries.map(e => fpts(e, format));
   const rollingPts = weeklyPts.map((_, i) => {
@@ -1671,37 +1778,24 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   let primaryUsageLabel = '';
   let secondaryUsageKey = '';
   let secondaryUsageLabel = '';
-
   if (position === 'QB') {
-    primaryUsageKey = 'pass_att';
-    primaryUsageLabel = 'Pass Attempts';
-    secondaryUsageKey = 'rush_att';
-    secondaryUsageLabel = 'Rush Attempts';
+    primaryUsageKey = 'pass_att'; primaryUsageLabel = 'Pass Attempts';
+    secondaryUsageKey = 'rush_att'; secondaryUsageLabel = 'Rush Attempts';
   } else if (position === 'RB') {
-    primaryUsageKey = 'rush_att';
-    primaryUsageLabel = 'Carries';
-    secondaryUsageKey = 'rec_tgt';
-    secondaryUsageLabel = 'Targets';
+    primaryUsageKey = 'rush_att'; primaryUsageLabel = 'Carries';
+    secondaryUsageKey = 'rec_tgt'; secondaryUsageLabel = 'Targets';
   } else if (position === 'WR' || position === 'TE') {
-    primaryUsageKey = 'rec_tgt';
-    primaryUsageLabel = 'Targets';
-    secondaryUsageKey = 'rec';
-    secondaryUsageLabel = 'Receptions';
+    primaryUsageKey = 'rec_tgt'; primaryUsageLabel = 'Targets';
+    secondaryUsageKey = 'rec'; secondaryUsageLabel = 'Receptions';
   } else if (position === 'K') {
-    primaryUsageKey = 'fga';
-    primaryUsageLabel = 'FG Attempts';
-    secondaryUsageKey = 'xpa';
-    secondaryUsageLabel = 'XP Attempts';
+    primaryUsageKey = 'fga'; primaryUsageLabel = 'FG Attempts';
+    secondaryUsageKey = 'xpa'; secondaryUsageLabel = 'XP Attempts';
   }
 
   const primaryData = entries.map(e => (e.stats as unknown as Record<string, number>)[primaryUsageKey] ?? 0);
   const secondaryData = entries.map(e => (e.stats as unknown as Record<string, number>)[secondaryUsageKey] ?? 0);
   const rollingPrimary = getRollingAverage(entries, primaryUsageKey, 3);
   const rollingSecondary = getRollingAverage(entries, secondaryUsageKey, 3);
-
-  const gp = entries.filter(e => hasParticipation(e.stats, position)).length || 1;
-  const avgPrimary = primaryData.reduce((a, b) => a + b, 0) / gp;
-  const avgSecondary = secondaryData.reduce((a, b) => a + b, 0) / gp;
 
   let yardageKey = '';
   let yardageLabel = '';
@@ -1712,7 +1806,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   const yardageData = yardageKey ? entries.map(e => (e.stats as unknown as Record<string, number>)[yardageKey] ?? 0) : [];
   const rollingYardage = yardageKey ? getRollingAverage(entries, yardageKey, 3) : [];
 
-  if (entries.length === 0) {
+  if (entries.length === 0 || metrics.length === 0) {
     return (
       <div className="rounded-md border border-dashed border-muted-foreground/25 p-12 text-center">
         <TrendingUp className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
@@ -1723,17 +1817,80 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   }
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-        <StatBox label={`${primaryUsageLabel}/Game`} value={avgPrimary.toFixed(1)} />
-        <StatBox label={`${secondaryUsageLabel}/Game`} value={avgSecondary.toFixed(1)} />
-        {yardageKey && (
-          <StatBox
-            label={`${yardageLabel}/Game`}
-            value={(yardageData.reduce((a, b) => a + b, 0) / gp).toFixed(1)}
-          />
-        )}
-      </div>
+    <div className="space-y-6" data-testid="usage-trends-tab">
+      <Card data-testid="opportunity-momentum-card">
+        <CardContent className="p-4 space-y-4">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div className="flex items-center gap-2">
+              <Gauge className="w-4 h-4 text-muted-foreground" />
+              <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Opportunity Momentum</p>
+            </div>
+            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs font-bold ${momentumBg} ${momentumColor}`} data-testid="role-momentum-badge">
+              {momentumScore >= 65 ? <TrendingUp className="w-3.5 h-3.5" /> : momentumScore <= 35 ? <TrendingDown className="w-3.5 h-3.5" /> : <Minus className="w-3.5 h-3.5" />}
+              ROLE {momentumLabel}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Role Momentum</p>
+              <p className="text-3xl font-bold tabular-nums" style={{ color: momentumScore >= 65 ? '#10b981' : momentumScore <= 35 ? '#f87171' : '#fbbf24' }} data-testid="text-momentum-score">
+                {momentumScore}
+                <span className="text-sm font-medium text-muted-foreground ml-1">/ 100</span>
+              </p>
+            </div>
+            <div className="flex gap-4 flex-wrap">
+              <div className="text-right">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Usage Stability</p>
+                <p className={`text-lg font-bold tabular-nums ${stabilityColor}`} data-testid="text-stability-score">{stability}<span className="text-xs font-medium text-muted-foreground ml-0.5">/ 100</span></p>
+                <p className="text-[10px] text-muted-foreground/70">{stabilityLabel}</p>
+              </div>
+              {position !== 'K' && (
+                <div className="text-right">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">TD Dependency</p>
+                  <p className="text-lg font-bold tabular-nums text-foreground" data-testid="text-td-dependency">{tdDep.pct.toFixed(0)}%</p>
+                  <p className="text-[10px] text-muted-foreground/70">{tdDep.label}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="border-t border-border pt-3">
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs" data-testid="table-momentum-deltas">
+                <thead>
+                  <tr className="text-muted-foreground">
+                    <th className="text-left font-medium pb-2 pr-3">Metric</th>
+                    <th className="text-right font-medium pb-2 px-2">Season</th>
+                    <th className="text-right font-medium pb-2 px-2">Last {RECENT_WINDOW}</th>
+                    <th className="text-right font-medium pb-2 pl-2">{'\u0394'}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {deltaRows.map((row, i) => (
+                    <tr key={i} className="border-t border-border/50">
+                      <td className="py-1.5 pr-3 text-foreground font-medium">{row.label}</td>
+                      <td className="py-1.5 px-2 text-right tabular-nums text-muted-foreground">{row.seasonAvg.toFixed(1)}</td>
+                      <td className="py-1.5 px-2 text-right tabular-nums text-foreground font-medium">{row.recentAvg.toFixed(1)}</td>
+                      <td className="py-1.5 pl-2 text-right"><DeltaCell delta={row.delta} /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {position !== 'K' && (
+            <div className="flex items-center gap-2 pt-1 flex-wrap">
+              <span className="text-[10px] text-muted-foreground">Production Type:</span>
+              <Badge variant="outline" className={`text-[10px] ${tdDep.pct >= 35 ? 'border-amber-500/30 text-amber-500' : 'border-emerald-500/30 text-emerald-500'}`} data-testid="badge-production-type">
+                {tdDep.pct >= 35 ? <AlertTriangle className="w-3 h-3 mr-1" /> : <TrendingUp className="w-3 h-3 mr-1" />}
+                {tdDep.tag}
+              </Badge>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <Card>
         <CardContent className="p-4">
@@ -1832,7 +1989,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
 
       <Card>
         <CardContent className="p-4">
-          <p className="text-xs text-muted-foreground font-medium mb-1">Fantasy Points - 3 Week Rolling Avg</p>
+          <p className="text-xs text-muted-foreground font-medium mb-1">Fantasy Points ({SCORING_LABELS[format]}) - 3 Week Rolling Avg</p>
           <div className="relative">
             <MiniBarChart data={weeklyPts} height={80} color="bg-primary/30" />
             <div className="absolute inset-0 flex items-end gap-[2px]" style={{ height: 80 }}>
