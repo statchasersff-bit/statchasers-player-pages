@@ -1,4 +1,4 @@
-name: Deploy WP Plugin (SFTP over SSH)
+name: Deploy WP Plugin (SSH)
 
 on:
   push:
@@ -11,13 +11,44 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Upload plugin folder via SCP
+      # 1) Upload plugin folder to a guaranteed-writable temp dir in your home
+      - name: Upload plugin to home tmp
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.SSH_HOST }}
+          host: ${{ secrets.SSH_IP }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
+          port: 22
           source: "wordpress-plugin/statchasers-player-pages"
-          target: ${{ secrets.SSH_PLUGINS_DIR }}
+          target: "/home/${{ secrets.SSH_USER }}/sc_deploy_tmp/"
           overwrite: true
+
+      # 2) Move it into wp-content/plugins with an SSH command
+      - name: Move plugin into WordPress plugins directory
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            set -e
+            WP="${{ secrets.WP_ABSPATH }}"
+            echo "WP_ABSPATH=$WP"
+            ls -lah "$WP/wp-content/plugins" || true
+
+            # Backup existing plugin (optional but smart)
+            if [ -d "$WP/wp-content/plugins/statchasers-player-pages" ]; then
+              rm -rf "$WP/wp-content/plugins/statchasers-player-pages.bak" || true
+              mv "$WP/wp-content/plugins/statchasers-player-pages" "$WP/wp-content/plugins/statchasers-player-pages.bak"
+            fi
+
+            # Move new version into place
+            rm -rf "$WP/wp-content/plugins/statchasers-player-pages" || true
+            mv "/home/${{ secrets.SSH_USER }}/sc_deploy_tmp/wordpress-plugin/statchasers-player-pages" "$WP/wp-content/plugins/statchasers-player-pages"
+
+            # Cleanup
+            rm -rf "/home/${{ secrets.SSH_USER }}/sc_deploy_tmp" || true
+
+            echo "Deployed:"
+            ls -lah "$WP/wp-content/plugins/statchasers-player-pages" | head
