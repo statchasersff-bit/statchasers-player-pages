@@ -22,6 +22,42 @@ function sc_register_rest_routes() {
         'callback'            => 'sc_rest_indexed_players',
         'permission_callback' => '__return_true',
     ) );
+
+    register_rest_route( 'statchasers/v1', '/player/(?P<slug>[a-z0-9-]+)', array(
+        'methods'             => 'GET',
+        'callback'            => 'sc_rest_player_profile',
+        'permission_callback' => '__return_true',
+        'args'                => array(
+            'season' => array(
+                'required'          => false,
+                'sanitize_callback' => 'absint',
+                'default'           => 0,
+            ),
+            'format' => array(
+                'required'          => false,
+                'sanitize_callback' => 'sanitize_text_field',
+                'default'           => 'ppr',
+            ),
+        ),
+    ) );
+
+    register_rest_route( 'statchasers/v1', '/player/(?P<slug>[a-z0-9-]+)/game-log', array(
+        'methods'             => 'GET',
+        'callback'            => 'sc_rest_player_game_log',
+        'permission_callback' => '__return_true',
+        'args'                => array(
+            'season' => array(
+                'required'          => false,
+                'sanitize_callback' => 'absint',
+                'default'           => 0,
+            ),
+            'format' => array(
+                'required'          => false,
+                'sanitize_callback' => 'sanitize_text_field',
+                'default'           => 'ppr',
+            ),
+        ),
+    ) );
 }
 
 function sc_rest_search_players( $request ) {
