@@ -209,20 +209,19 @@ function sc_render_admin_page() {
                         <?php endif; ?>
                     </td>
                 </tr>
-                <tr>
-                    <th>Query Vars Registered</th>
-                    <td>
-                        <?php
-                        $public = $GLOBALS['wp']->public_query_vars ?? [];
-                        $has_slug    = in_array( 'sc_player_slug', $public, true );
-                        $has_index   = in_array( 'sc_players_index', $public, true );
-                        $has_sitemap = in_array( 'sc_player_sitemap', $public, true );
-                        ?>
-                        sc_player_slug: <code style="color:<?php echo $has_slug ? 'green' : 'red'; ?>;"><?php echo $has_slug ? 'YES' : 'NO'; ?></code><br/>
-                        sc_players_index: <code style="color:<?php echo $has_index ? 'green' : 'red'; ?>;"><?php echo $has_index ? 'YES' : 'NO'; ?></code><br/>
-                        sc_player_sitemap: <code style="color:<?php echo $has_sitemap ? 'green' : 'red'; ?>;"><?php echo $has_sitemap ? 'YES' : 'NO'; ?></code>
-                    </td>
-                </tr>
+                <?php
+                $simulated_public_vars = apply_filters( 'query_vars', array() );
+
+                $qv_slug   = in_array( 'sc_player_slug', $simulated_public_vars, true ) ? 'YES' : 'NO';
+                $qv_index  = in_array( 'sc_players_index', $simulated_public_vars, true ) ? 'YES' : 'NO';
+                $qv_sitemap= in_array( 'sc_player_sitemap', $simulated_public_vars, true ) ? 'YES' : 'NO';
+
+                echo '<tr><th>Query Vars Registered</th><td>';
+                echo 'sc_player_slug: <strong>' . esc_html( $qv_slug ) . '</strong><br>';
+                echo 'sc_players_index: <strong>' . esc_html( $qv_index ) . '</strong><br>';
+                echo 'sc_player_sitemap: <strong>' . esc_html( $qv_sitemap ) . '</strong>';
+                echo '</td></tr>';
+                ?>
                 <tr>
                     <th>Current Request URI</th>
                     <td><code><?php echo esc_html( isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '(unknown)' ); ?></code></td>
