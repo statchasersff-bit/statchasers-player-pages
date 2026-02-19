@@ -653,24 +653,71 @@ export async function registerRoutes(
   });
 
   app.get("/api/players/:slug/related", (req, res) => {
-    const players = loadPlayers();
+    const allPlayers = loadPlayers();
     const player = getPlayerBySlug(req.params.slug);
     if (!player) {
       return res.status(404).json({ error: "not_found" });
     }
-    const samePos = players.filter(
-      (p) => p.position === player.position && p.slug !== player.slug && p.team !== "FA"
-    );
-    const shuffled = samePos.sort(() => Math.random() - 0.5).slice(0, 6);
-    const lightweight = shuffled.map((p) => ({
-      id: p.id,
-      name: p.name,
-      slug: p.slug,
-      team: p.team,
-      position: p.position,
-    }));
+
+    const format = (req.query.format as string) || "ppr";
+    const seasonParam = req.query.season ? parseInt(req.query.season as string, 10) : null;
+    const radius = 3;
+
+    const availableSeasons = [2025, 2024, 2023].filter(s => {
+      try { loadGameLogs(s); return true; } catch { return false; }
+    });
+    const activeSeason = seasonParam && availableSeasons.includes(seasonParam) ? seasonParam : availableSeasons[0] || 2025;
+
+    if (!player.position) {
+      return res.json([]);
+    }
+
+    const seasonLogs = loadGameLogs(activeSeason);
+    const ppgByPlayer: { id: string; ppg: number; totalPts: number; gp: number }[] = [];
+    for (const [pid, pLogs] of Object.entries(seasonLogs)) {
+      const p = allPlayers.find(ap => ap.id === pid);
+      if (!p || p.position !== player.position) continue;
+      const played = pLogs.filter(e => hasParticipation(e.stats, p.position));
+      if (played.length < 4) continue;
+      const totalPts = played.reduce((sum, e) => sum + getEntryPoints(e.stats, format as any), 0);
+      ppgByPlayer.push({ id: pid, ppg: totalPts / played.length, totalPts, gp: played.length });
+    }
+    ppgByPlayer.sort((a, b) => b.ppg - a.ppg);
+
+    const currentIdx = ppgByPlayer.findIndex(x => x.id === player.id);
+    if (currentIdx === -1) {
+      return res.json([]);
+    }
+
+    const currentRank = currentIdx + 1;
+    const start = Math.max(0, currentIdx - radius);
+    const end = Math.min(ppgByPlayer.length, currentIdx + radius + 1);
+    const neighbors = ppgByPlayer
+      .slice(start, end)
+      .filter(x => x.id !== player.id);
+
+    const result = neighbors.map(n => {
+      const p = allPlayers.find(ap => ap.id === n.id);
+      const rank = ppgByPlayer.indexOf(n) + 1;
+      return {
+        id: n.id,
+        name: p?.name || "",
+        slug: p?.slug || "",
+        team: p?.team || "",
+        position: p?.position || "",
+        posRank: rank,
+        ppg: Math.round(n.ppg * 10) / 10,
+      };
+    });
+
     res.set("Cache-Control", "public, max-age=3600");
-    res.json(lightweight);
+    res.json({
+      neighbors: result,
+      currentRank,
+      season: activeSeason,
+      format,
+      position: player.position,
+    });
   });
 
   app.get("/sitemap.xml", (_req, res) => {
