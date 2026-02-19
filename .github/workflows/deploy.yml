@@ -11,13 +11,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Upload plugin via SCP
+      - name: Upload plugin folder via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "wordpress-plugin/statchasers-player-pages/*"
-          target: ${{ secrets.SSH_TARGET }}
-          strip_components: 2
+          source: "wordpress-plugin/statchasers-player-pages"
+          target: ${{ secrets.SSH_PLUGINS_DIR }}
+          overwrite: true
