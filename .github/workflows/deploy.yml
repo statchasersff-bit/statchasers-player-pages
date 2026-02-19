@@ -1,4 +1,4 @@
-name: Deploy WP Plugin (SFTP)
+name: Deploy WP Plugin (FTPS)
 
 on:
   push:
@@ -11,14 +11,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy Plugin Folder via SFTP
+      - name: Deploy Plugin Folder via FTPS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.SFTP_SERVER }}
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
-          protocol: sftp
-          port: 22
+          protocol: ftps
+          port: 21
           local-dir: wordpress-plugin/statchasers-player-pages/
           server-dir: public_html/wp-content/plugins/statchasers-player-pages/
           exclude: |
