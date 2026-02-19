@@ -37,6 +37,7 @@ import {
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import type { Player, GameLogEntry, NewsEntry, GameLogStats, GameScore } from "@shared/playerTypes";
 import { TEAM_FULL_NAMES, TEAM_PRIMARY_COLORS, POSITION_FULL_NAMES } from "@shared/teamMappings";
+import { type ScoringFormat, SCORING_LABELS, getEntryPoints } from "@shared/scoring";
 import {
   Select,
   SelectContent,
@@ -236,18 +237,22 @@ function hasParticipation(stats: GameLogEntry['stats'], position: string | null)
   return (s.rec_tgt ?? 0) > 0 || (s.rec ?? 0) > 0 || (s.rush_att ?? 0) > 0 || (s.pass_att ?? 0) > 0;
 }
 
-function computeGameLogStats(entries: GameLogEntry[], position: string | null = null) {
+function fpts(entry: GameLogEntry, format: ScoringFormat): number {
+  return getEntryPoints(entry.stats, format);
+}
+
+function computeGameLogStats(entries: GameLogEntry[], position: string | null = null, format: ScoringFormat = 'ppr') {
   if (entries.length === 0) return null;
   const activeEntries = entries.filter(e => e.game_status === 'active');
   const playedEntries = activeEntries.length > 0 ? activeEntries : entries.filter(e => hasParticipation(e.stats, position));
   const gamesPlayed = playedEntries.length;
-  const totalPts = playedEntries.reduce((s, e) => s + e.stats.pts_ppr, 0);
+  const totalPts = playedEntries.reduce((s, e) => s + fpts(e, format), 0);
   const ppg = gamesPlayed > 0 ? totalPts / gamesPlayed : 0;
   const bestWeek = playedEntries.length > 0
-    ? playedEntries.reduce((best, e) => e.stats.pts_ppr > best.stats.pts_ppr ? e : best, playedEntries[0])
+    ? playedEntries.reduce((best, e) => fpts(e, format) > fpts(best, format) ? e : best, playedEntries[0])
     : entries[0];
   const last4 = playedEntries.slice(-4);
-  const last4Pts = last4.reduce((s, e) => s + e.stats.pts_ppr, 0);
+  const last4Pts = last4.reduce((s, e) => s + fpts(e, format), 0);
   const last4Ppg = last4.length > 0 ? last4Pts / last4.length : 0;
 
   const { bust: bustThreshold, hasTier3 } = getTierThresholds(position);
@@ -262,13 +267,13 @@ function computeGameLogStats(entries: GameLogEntry[], position: string | null = 
   const pos3Pct = gamesPlayed > 0 ? (pos3Games / gamesPlayed) * 100 : 0;
   const bustPct = gamesPlayed > 0 ? (bustGames / gamesPlayed) * 100 : 0;
 
-  const ptsArr = playedEntries.map(e => e.stats.pts_ppr);
+  const ptsArr = playedEntries.map(e => fpts(e, format));
   const mean = ptsArr.length > 0 ? ptsArr.reduce((a, b) => a + b, 0) / ptsArr.length : 0;
   const volatility = ptsArr.length > 1
     ? Math.sqrt(ptsArr.reduce((s, v) => s + (v - mean) ** 2, 0) / (ptsArr.length - 1))
     : 0;
 
-  const gooseEggs = playedEntries.filter(e => e.stats.pts_ppr === 0).length;
+  const gooseEggs = playedEntries.filter(e => fpts(e, format) === 0).length;
   const gooseEggPct = gamesPlayed > 0 ? (gooseEggs / gamesPlayed) * 100 : 0;
 
   return { gamesPlayed, totalPts, ppg, bestWeek, last4Ppg, pos1Pct, pos2Pct, pos3Pct, bustPct, pos1Games, pos2Games, pos3Games, bustGames, volatility, gooseEggPct };
@@ -303,7 +308,7 @@ function getOppRankColor(rank: number | null | undefined): string {
 type SortKey = 'week' | 'fpts' | 'finish' | string;
 type SortDir = 'asc' | 'desc';
 
-function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive }: { entries?: GameLogEntry[]; position: string | null; filter: 'full' | 'last5'; tierFilter: DistTier | null; hideInactive: boolean }) {
+function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive, format = 'ppr' }: { entries?: GameLogEntry[]; position: string | null; filter: 'full' | 'last5'; tierFilter: DistTier | null; hideInactive: boolean; format?: ScoringFormat }) {
   const { primary, detail, conditionalRush } = getPositionColumns(position);
   const posLabel = position || '';
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
@@ -347,7 +352,7 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
   }
 
   const isInTier = (entry: GameLogEntry, tier: DistTier): boolean => {
-    const pts = entry.stats.pts_ppr;
+    const pts = fpts(entry, format);
     if (tier === '15+') return pts >= 15;
     if (tier === '10\u201314.9') return pts >= 10 && pts < 15;
     if (tier === '5\u20139.9') return pts >= 5 && pts < 10;
@@ -364,7 +369,7 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
     sorted.sort((a, b) => {
       let av: number, bv: number;
       if (sortKey === 'week') { av = a.week; bv = b.week; }
-      else if (sortKey === 'fpts') { av = a.game_status === 'active' ? a.stats.pts_ppr : -1; bv = b.game_status === 'active' ? b.stats.pts_ppr : -1; }
+      else if (sortKey === 'fpts') { av = a.game_status === 'active' ? fpts(a, format) : -1; bv = b.game_status === 'active' ? fpts(b, format) : -1; }
       else if (sortKey === 'finish') { av = a.pos_rank ?? 999; bv = b.pos_rank ?? 999; }
       else { av = a.game_status === 'active' ? getStat(a, sortKey) : -1; bv = b.game_status === 'active' ? getStat(b, sortKey) : -1; }
       const diff = av - bv;
@@ -472,7 +477,7 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
                         </td>
                       ))}
                       <td className="py-1 pr-2 text-right font-bold text-foreground tabular-nums">
-                        {entry.stats.pts_ppr.toFixed(1)}
+                        {fpts(entry, format).toFixed(1)}
                       </td>
                       <td className="py-1 text-right" data-testid={`text-finish-week-${entry.week}`}>
                         {tierBadge ? (
@@ -552,8 +557,8 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
               <td className="py-1.5 pr-2 text-right text-foreground tabular-nums font-bold">
                 {gamesPlayed > 0
                   ? footerMode === 'avg'
-                    ? (activeInDisplay.reduce((sum, e) => sum + e.stats.pts_ppr, 0) / gamesPlayed).toFixed(1)
-                    : activeInDisplay.reduce((sum, e) => sum + e.stats.pts_ppr, 0).toFixed(1)
+                    ? (activeInDisplay.reduce((sum, e) => sum + fpts(e, format), 0) / gamesPlayed).toFixed(1)
+                    : activeInDisplay.reduce((sum, e) => sum + fpts(e, format), 0).toFixed(1)
                   : '0.0'}
               </td>
               <td className={`py-1.5 text-right tabular-nums text-[11px] font-semibold ${avgFinish ? getRankColor(Math.round(avgFinish)) : ''}`} data-testid="text-avg-finish">
@@ -752,7 +757,7 @@ interface OutlookData {
   noDataMsg?: string;
 }
 
-function getStructuredOutlook(player: Player, stats: ReturnType<typeof computeGameLogStats>): OutlookData {
+function getStructuredOutlook(player: Player, stats: ReturnType<typeof computeGameLogStats>, format: ScoringFormat = 'ppr'): OutlookData {
   if (!stats || stats.gamesPlayed === 0) {
     return {
       formLabel: 'No Data', formDetail: '', formColor: 'text-muted-foreground',
@@ -775,7 +780,7 @@ function getStructuredOutlook(player: Player, stats: ReturnType<typeof computeGa
   const volatilityColor = cvRatio < 0.4 ? 'text-green-600 dark:text-green-400' : cvRatio < 0.7 ? 'text-foreground' : 'text-red-500 dark:text-red-400';
 
   const tierProfile = `${stats.pos1Pct.toFixed(0)}% ${getTierLabel(pos, 1)} rate`;
-  const bestWeekStr = stats.bestWeek ? `Best outing: Wk ${stats.bestWeek.week} vs ${stats.bestWeek.opp} (${stats.bestWeek.stats.pts_ppr.toFixed(1)} pts).` : '';
+  const bestWeekStr = stats.bestWeek ? `Best outing: Wk ${stats.bestWeek.week} vs ${stats.bestWeek.opp} (${fpts(stats.bestWeek, format).toFixed(1)} pts).` : '';
   const sentence = bestWeekStr;
 
   return { formLabel, formDetail, formColor, roleLabel, volatilityLabel, volatilityColor, tierProfile, sentence, hasData: true };
@@ -861,12 +866,12 @@ type PlayerWithSeasons = Player & {
   careerProfile?: CareerProfile | null;
 };
 
-function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: GameLogEntry[] }) {
-  const stats = computeGameLogStats(entries, player.position);
+function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSeasons; entries: GameLogEntry[]; format?: ScoringFormat }) {
+  const stats = computeGameLogStats(entries, player.position, format);
   const keyStats = getKeyStatSummary(entries, player.position);
   const activeEntries = entries.filter(e => hasParticipation(e.stats, player.position));
-  const weeklyPts = activeEntries.map(e => e.stats.pts_ppr);
-  const outlook = getStructuredOutlook(player, stats);
+  const weeklyPts = activeEntries.map(e => fpts(e, format));
+  const outlook = getStructuredOutlook(player, stats, format);
   const hasData = stats && stats.gamesPlayed > 0;
 
   const seasonPpg = stats?.ppg ?? 0;
@@ -1450,14 +1455,14 @@ function OverviewTab({ player, entries }: { player: PlayerWithSeasons; entries: 
 
 type DistTier = '15+' | '10\u201314.9' | '5\u20139.9' | '<5';
 
-function GameDistributionBar({ entries, position, activeTier, onTierClick }: { entries: GameLogEntry[]; position: string | null; activeTier: DistTier | null; onTierClick: (tier: DistTier | null) => void }) {
+function GameDistributionBar({ entries, position, activeTier, onTierClick, format = 'ppr' }: { entries: GameLogEntry[]; position: string | null; activeTier: DistTier | null; onTierClick: (tier: DistTier | null) => void; format?: ScoringFormat }) {
   const played = entries.filter(e => e.game_status === 'active');
   if (played.length === 0) return null;
   const bins: { label: DistTier; count: number; color: string; textColor: string }[] = [
-    { label: '15+', count: played.filter(e => e.stats.pts_ppr >= 15).length, color: 'bg-green-500 dark:bg-green-400', textColor: 'text-green-700 dark:text-green-400' },
-    { label: '10\u201314.9', count: played.filter(e => e.stats.pts_ppr >= 10 && e.stats.pts_ppr < 15).length, color: 'bg-teal-500 dark:bg-teal-400', textColor: 'text-teal-700 dark:text-teal-400' },
-    { label: '5\u20139.9', count: played.filter(e => e.stats.pts_ppr >= 5 && e.stats.pts_ppr < 10).length, color: 'bg-amber-500 dark:bg-amber-400', textColor: 'text-amber-700 dark:text-amber-400' },
-    { label: '<5', count: played.filter(e => e.stats.pts_ppr < 5).length, color: 'bg-red-500 dark:bg-red-400', textColor: 'text-red-700 dark:text-red-400' },
+    { label: '15+', count: played.filter(e => fpts(e, format) >= 15).length, color: 'bg-green-500 dark:bg-green-400', textColor: 'text-green-700 dark:text-green-400' },
+    { label: '10\u201314.9', count: played.filter(e => fpts(e, format) >= 10 && fpts(e, format) < 15).length, color: 'bg-teal-500 dark:bg-teal-400', textColor: 'text-teal-700 dark:text-teal-400' },
+    { label: '5\u20139.9', count: played.filter(e => fpts(e, format) >= 5 && fpts(e, format) < 10).length, color: 'bg-amber-500 dark:bg-amber-400', textColor: 'text-amber-700 dark:text-amber-400' },
+    { label: '<5', count: played.filter(e => fpts(e, format) < 5).length, color: 'bg-red-500 dark:bg-red-400', textColor: 'text-red-700 dark:text-red-400' },
   ];
   const total = played.length;
   return (
@@ -1512,7 +1517,7 @@ function GameDistributionBar({ entries, position, activeTier, onTierClick }: { e
   );
 }
 
-function GameLogTab({ player }: { player: PlayerWithSeasons }) {
+function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; format?: ScoringFormat }) {
   const availableSeasons = player.availableSeasons || (player.season ? [player.season] : []);
   const [selectedSeason, setSelectedSeason] = useState<number>(availableSeasons[0] || new Date().getFullYear());
   const [gameFilter, setGameFilter] = useState<'full' | 'last5'>('full');
@@ -1521,9 +1526,9 @@ function GameLogTab({ player }: { player: PlayerWithSeasons }) {
   const isDefaultSeason = selectedSeason === availableSeasons[0];
 
   const { data: seasonGameLog, isLoading: isSeasonLoading } = useQuery<GameLogEntry[]>({
-    queryKey: ["/api/players", player.slug, "game-log", selectedSeason],
+    queryKey: ["/api/players", player.slug, "game-log", selectedSeason, format],
     queryFn: async () => {
-      const res = await fetch(`/api/players/${player.slug}/game-log?season=${selectedSeason}`);
+      const res = await fetch(`/api/players/${player.slug}/game-log?season=${selectedSeason}&format=${format}`);
       if (!res.ok) throw new Error("Failed to fetch game log");
       return res.json();
     },
@@ -1531,12 +1536,12 @@ function GameLogTab({ player }: { player: PlayerWithSeasons }) {
   });
 
   const entries = isDefaultSeason ? (player.gameLog || []) : (seasonGameLog || []);
-  const stats = computeGameLogStats(entries, player.position);
+  const stats = computeGameLogStats(entries, player.position, format);
   const posLabel = player.position || '';
   const played = entries.filter(e => hasParticipation(e.stats, player.position));
 
-  const bestWeek = played.length > 0 ? played.reduce((best, e) => e.stats.pts_ppr > best.stats.pts_ppr ? e : best, played[0]) : null;
-  const worstWeek = played.length > 0 ? played.reduce((worst, e) => e.stats.pts_ppr < worst.stats.pts_ppr ? e : worst, played[0]) : null;
+  const bestWeek = played.length > 0 ? played.reduce((best, e) => fpts(e, format) > fpts(best, format) ? e : best, played[0]) : null;
+  const worstWeek = played.length > 0 ? played.reduce((worst, e) => fpts(e, format) < fpts(worst, format) ? e : worst, played[0]) : null;
   const bestTier = bestWeek ? getTierBadge(bestWeek.pos_rank, player.position) : null;
   const worstTier = worstWeek ? getTierBadge(worstWeek.pos_rank, player.position) : null;
 
@@ -1590,7 +1595,7 @@ function GameLogTab({ player }: { player: PlayerWithSeasons }) {
           <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60">
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Best Week</p>
             <p className="text-xl font-bold text-foreground tabular-nums mt-0.5" data-testid="text-best-week-pts">
-              {bestWeek ? bestWeek.stats.pts_ppr.toFixed(1) : '\u2014'}
+              {bestWeek ? fpts(bestWeek, format).toFixed(1) : '\u2014'}
             </p>
             {bestWeek && bestTier && (
               <div className="flex items-center gap-1 mt-0.5 flex-wrap">
@@ -1605,7 +1610,7 @@ function GameLogTab({ player }: { player: PlayerWithSeasons }) {
           <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60">
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Worst Week</p>
             <p className="text-xl font-bold text-foreground tabular-nums mt-0.5" data-testid="text-worst-week-pts">
-              {worstWeek ? worstWeek.stats.pts_ppr.toFixed(1) : '\u2014'}
+              {worstWeek ? fpts(worstWeek, format).toFixed(1) : '\u2014'}
             </p>
             {worstWeek && worstTier && (
               <div className="flex items-center gap-1 mt-0.5 flex-wrap">
@@ -1621,7 +1626,7 @@ function GameLogTab({ player }: { player: PlayerWithSeasons }) {
       )}
 
       {stats && gameFilter === 'full' && (
-        <GameDistributionBar entries={entries} position={player.position} activeTier={tierFilter} onTierClick={setTierFilter} />
+        <GameDistributionBar entries={entries} position={player.position} activeTier={tierFilter} onTierClick={setTierFilter} format={format} />
       )}
 
       <Card>
@@ -1644,7 +1649,7 @@ function GameLogTab({ player }: { player: PlayerWithSeasons }) {
               <Skeleton className="h-4 w-32 mx-auto" />
             </div>
           ) : (
-            <GameLogTable entries={entries} position={player.position} filter={gameFilter} tierFilter={tierFilter} hideInactive={hideInactive} />
+            <GameLogTable entries={entries} position={player.position} filter={gameFilter} tierFilter={tierFilter} hideInactive={hideInactive} format={format} />
           )}
         </CardContent>
       </Card>
@@ -1652,11 +1657,15 @@ function GameLogTab({ player }: { player: PlayerWithSeasons }) {
   );
 }
 
-function UsageTrendsTab({ player, entries }: { player: PlayerWithSeasons; entries: GameLogEntry[] }) {
+function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWithSeasons; entries: GameLogEntry[]; format?: ScoringFormat }) {
   const position = player.position;
 
-  const weeklyPts = entries.map(e => e.stats.pts_ppr);
-  const rollingPts = getRollingAverage(entries, 'pts_ppr', 3);
+  const weeklyPts = entries.map(e => fpts(e, format));
+  const rollingPts = weeklyPts.map((_, i) => {
+    const start = Math.max(0, i - 2);
+    const slice = weeklyPts.slice(start, i + 1);
+    return slice.reduce((a, b) => a + b, 0) / slice.length;
+  });
 
   let primaryUsageKey = '';
   let primaryUsageLabel = '';
@@ -2042,13 +2051,40 @@ function PlayerProfileSkeleton() {
   );
 }
 
+function ScoringFormatToggle({ format, onChange }: { format: ScoringFormat; onChange: (f: ScoringFormat) => void }) {
+  const formats: ScoringFormat[] = ['standard', 'half', 'ppr'];
+  return (
+    <div className="flex items-center gap-1" data-testid="scoring-format-toggle">
+      <span className="text-xs text-muted-foreground mr-1.5 hidden sm:inline">Scoring:</span>
+      <div className="flex rounded-md border border-border overflow-visible">
+        {formats.map((f) => (
+          <button
+            key={f}
+            onClick={() => onChange(f)}
+            className={`px-2.5 py-1 text-xs font-medium transition-colors whitespace-nowrap ${
+              format === f
+                ? 'bg-[#D4A843] text-white dark:text-slate-900'
+                : 'text-muted-foreground'
+            } ${f === 'standard' ? 'rounded-l-md' : ''} ${f === 'ppr' ? 'rounded-r-md' : ''}`}
+            data-testid={`button-format-${f}`}
+          >
+            {SCORING_LABELS[f]}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function PlayerProfile() {
   const params = useParams<{ slug: string }>();
   const slug = params.slug;
   const [activeTab, setActiveTab] = useState<TabKey>("overview");
+  const [scoringFormat, setScoringFormat] = useState<ScoringFormat>('ppr');
 
   const { data: player, isLoading, error } = useQuery<Player>({
-    queryKey: ["/api/players", slug],
+    queryKey: ["/api/players", slug, { format: scoringFormat }],
+    queryFn: () => fetch(`/api/players/${slug}?format=${scoringFormat}`).then(r => r.json()),
   });
 
   const { data: relatedPlayers } = useQuery<LightPlayer[]>({
@@ -2256,7 +2292,10 @@ export default function PlayerProfile() {
                 className="mt-2.5 mb-3 h-[2px] w-20 rounded-full"
                 style={{ background: 'linear-gradient(90deg, #D4A843, #F5D36E, #D4A843)' }}
               />
-              <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400 flex-wrap" data-testid="text-player-meta">
+              <div className="mt-3">
+                <ScoringFormatToggle format={scoringFormat} onChange={setScoringFormat} />
+              </div>
+              <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400 flex-wrap mt-2" data-testid="text-player-meta">
                 {player.age && (
                   <span>Age <span className="font-semibold text-slate-700 dark:text-slate-300">{player.age}</span></span>
                 )}
@@ -2348,13 +2387,13 @@ export default function PlayerProfile() {
           style={{ animation: 'fadeSlideIn 0.3s ease-out' }}
         >
           {activeTab === "overview" && (
-            <OverviewTab player={playerWithSeasons} entries={defaultEntries} />
+            <OverviewTab player={playerWithSeasons} entries={defaultEntries} format={scoringFormat} />
           )}
           {activeTab === "gamelog" && (
-            <GameLogTab player={playerWithSeasons} />
+            <GameLogTab player={playerWithSeasons} format={scoringFormat} />
           )}
           {activeTab === "usage" && (
-            <UsageTrendsTab player={playerWithSeasons} entries={defaultEntries} />
+            <UsageTrendsTab player={playerWithSeasons} entries={defaultEntries} format={scoringFormat} />
           )}
           {activeTab === "rankings" && (
             <RankingsTab player={player} />
