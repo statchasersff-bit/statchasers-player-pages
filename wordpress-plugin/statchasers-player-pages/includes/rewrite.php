@@ -220,10 +220,10 @@ function sc_inject_content( $content ) {
     $r = sc_detect_route();
     if ( ! $r ) return $content;
 
-    if ( ! in_the_loop() ) return $content;
-
     $container_id = (int) get_option( 'scpp_container_page_id', 0 );
-    if ( $container_id && (int) get_queried_object_id() !== $container_id ) {
+
+    // Only inject when we're rendering the container page (Divi-safe)
+    if ( ! $container_id || (int) get_queried_object_id() !== $container_id ) {
         return $content;
     }
 
@@ -236,13 +236,12 @@ function sc_inject_content( $content ) {
     }
     $debug .= ' -->';
 
-    // ✅ Deployment marker to verify CI/CD is updating the live plugin files
     $deploy_marker = "\n<!-- SCPP DEPLOY MARKER: 2026-02-19-02 -->\n";
 
     if ( $route === 'index' ) {
         ob_start();
         include SC_PLUGIN_DIR . 'templates/index.php';
-        return $debug . $deploy_marker . ob_get_clean();
+        return $deploy_marker . $debug . "\n" . ob_get_clean();
     }
 
     if ( $route === 'player' && $slug ) {
@@ -252,11 +251,12 @@ function sc_inject_content( $content ) {
         }
         ob_start();
         include SC_PLUGIN_DIR . 'templates/player.php';
-        return $debug . $deploy_marker . ob_get_clean();
+        return $deploy_marker . $debug . "\n" . ob_get_clean();
     }
 
     return $content;
 }
+
 
 
 /* ─── Rewrite Diagnostics Helper ─── */
