@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import type { Player, GameLogEntry } from "@shared/playerTypes";
 import { normalizeTeamAbbr, TEAM_ALIAS_MAP } from "@shared/teamMappings";
+import { type ScoringFormat, getEntryPoints } from "@shared/scoring";
 
 let playersCache: Player[] | null = null;
 let playersBySlug: Map<string, Player> | null = null;
@@ -18,7 +19,7 @@ const BYE_WEEKS_FILE = path.resolve(process.cwd(), "data", "bye_weeks.json");
 const GAME_SCORES_FILE = path.resolve(process.cwd(), "data", "game_scores.json");
 
 const gameLogsCache: Map<number, Record<string, GameLogEntry[]>> = new Map();
-const weeklyRanksCache: Map<number, Map<string, Map<number, number>>> = new Map();
+const weeklyRanksCache: Map<string, Map<string, Map<number, number>>> = new Map();
 
 let gameScoresData: Record<string, Record<string, { tm: number; opp: number; r: string }>> | null = null;
 function loadGameScores(): typeof gameScoresData {
@@ -119,8 +120,9 @@ function hasParticipation(stats: GameLogEntry['stats'], position: string | null)
   return (s.rec_tgt ?? 0) > 0 || (s.rec ?? 0) > 0 || (s.rush_att ?? 0) > 0 || (s.pass_att ?? 0) > 0;
 }
 
-function buildWeeklyRanks(season: number, logs: Record<string, GameLogEntry[]>, players: Player[]): Map<string, Map<number, number>> {
-  if (weeklyRanksCache.has(season)) return weeklyRanksCache.get(season)!;
+function buildWeeklyRanks(season: number, logs: Record<string, GameLogEntry[]>, players: Player[], format: ScoringFormat = 'ppr'): Map<string, Map<number, number>> {
+  const cacheKey = `${season}_${format}`;
+  if (weeklyRanksCache.has(cacheKey)) return weeklyRanksCache.get(cacheKey)!;
 
   const playerPosMap = new Map<string, string>();
   for (const p of players) {
@@ -136,7 +138,7 @@ function buildWeeklyRanks(season: number, logs: Record<string, GameLogEntry[]>, 
       if (!weekPosBuckets.has(entry.week)) weekPosBuckets.set(entry.week, new Map());
       const posBucket = weekPosBuckets.get(entry.week)!;
       if (!posBucket.has(pos)) posBucket.set(pos, []);
-      posBucket.get(pos)!.push({ playerId, pts: entry.stats.pts_ppr });
+      posBucket.get(pos)!.push({ playerId, pts: getEntryPoints(entry.stats, format) });
     }
   }
 
@@ -152,7 +154,7 @@ function buildWeeklyRanks(season: number, logs: Record<string, GameLogEntry[]>, 
     });
   });
 
-  weeklyRanksCache.set(season, rankMap);
+  weeklyRanksCache.set(cacheKey, rankMap);
   return rankMap;
 }
 
@@ -162,10 +164,11 @@ function attachRanks(entries: GameLogEntry[], playerId: string, ranks: Map<strin
   return entries.map(e => ({ ...e, pos_rank: playerRanks.get(e.week) ?? null }));
 }
 
-const oppRanksCache: Map<number, Map<string, number>> = new Map();
+const oppRanksCache: Map<string, Map<string, number>> = new Map();
 
-function buildOppRanks(season: number, logs: Record<string, GameLogEntry[]>, players: Player[]): Map<string, number> {
-  if (oppRanksCache.has(season)) return oppRanksCache.get(season)!;
+function buildOppRanks(season: number, logs: Record<string, GameLogEntry[]>, players: Player[], format: ScoringFormat = 'ppr'): Map<string, number> {
+  const cacheKey = `${season}_${format}`;
+  if (oppRanksCache.has(cacheKey)) return oppRanksCache.get(cacheKey)!;
 
   const playerPosMap = new Map<string, { position: string; team: string }>();
   for (const p of players) {
@@ -183,7 +186,7 @@ function buildOppRanks(season: number, logs: Record<string, GameLogEntry[]>, pla
       const normalizedOpp = normalizeTeamAbbr(entry.opp);
       const key = `${normalizedOpp}:${pos}`;
       if (!oppPtsAllowed.has(key)) oppPtsAllowed.set(key, []);
-      oppPtsAllowed.get(key)!.push(entry.stats.pts_ppr);
+      oppPtsAllowed.get(key)!.push(getEntryPoints(entry.stats, format));
     }
   }
 
@@ -203,7 +206,7 @@ function buildOppRanks(season: number, logs: Record<string, GameLogEntry[]>, pla
     }
   });
 
-  oppRanksCache.set(season, rankMap);
+  oppRanksCache.set(cacheKey, rankMap);
   return rankMap;
 }
 
@@ -232,6 +235,11 @@ function getAvailableSeasons(): number[] {
     .map(f => parseInt(f.replace(".json", ""), 10))
     .filter(n => !isNaN(n))
     .sort((a, b) => b - a);
+}
+
+function parseScoringFormat(param: unknown): ScoringFormat {
+  if (param === 'standard' || param === 'half' || param === 'ppr') return param;
+  return 'ppr';
 }
 
 let indexedSlugs: string[] = [];
@@ -452,6 +460,7 @@ export async function registerRoutes(
     }
     const allPlayers = loadPlayers();
     const seasons = getAvailableSeasons();
+    const format = parseScoringFormat(req.query.format);
 
     let activeSeason = seasons[0] || new Date().getFullYear();
     let playerLogs: GameLogEntry[] = [];
@@ -461,9 +470,9 @@ export async function registerRoutes(
       const hasStats = pLogs.some(e => hasParticipation(e.stats, player.position));
       if (hasStats) {
         activeSeason = s;
-        const ranks = buildWeeklyRanks(s, sLogs, allPlayers);
+        const ranks = buildWeeklyRanks(s, sLogs, allPlayers, format);
         playerLogs = attachRanks(pLogs, player.id, ranks);
-        const oppRanks = buildOppRanks(s, sLogs, allPlayers);
+        const oppRanks = buildOppRanks(s, sLogs, allPlayers, format);
         playerLogs = attachOppRanks(playerLogs, player.position, oppRanks);
         playerLogs = fillMissingWeeks(playerLogs, s, player.team);
         break;
@@ -485,10 +494,10 @@ export async function registerRoutes(
       const pLogs = sLogs[player.id] || [];
       const played = pLogs.filter(e => hasParticipation(e.stats, player.position));
       if (played.length === 0) continue;
-      const ranks = buildWeeklyRanks(s, sLogs, allPlayers);
+      const ranks = buildWeeklyRanks(s, sLogs, allPlayers, format);
       const rankedLogs = attachRanks(pLogs, player.id, ranks);
       const gp = played.length;
-      const totalPts = played.reduce((sum, e) => sum + e.stats.pts_ppr, 0);
+      const totalPts = played.reduce((sum, e) => sum + getEntryPoints(e.stats, format), 0);
       const pos = player.position || '';
       const bustThresh = (pos === 'QB' || pos === 'TE') ? 18 : pos === 'WR' ? 36 : 30;
       const hasTier3 = bustThresh > 24;
@@ -529,8 +538,8 @@ export async function registerRoutes(
         const sLogs = loadGameLogs(s);
         const pLogs = sLogs[player.id] || [];
         const played = pLogs.filter(e => hasParticipation(e.stats, player.position));
-        played.forEach(e => pts.push(e.stats.pts_ppr));
-        const ranks = buildWeeklyRanks(s, sLogs, allPlayers);
+        played.forEach(e => pts.push(getEntryPoints(e.stats, format)));
+        const ranks = buildWeeklyRanks(s, sLogs, allPlayers, format);
         const rankedLogs = attachRanks(pLogs, player.id, ranks);
         const rankedPlayed = rankedLogs.filter(e => hasParticipation(e.stats, player.position) && e.pos_rank != null);
         const pos = player.position || '';
@@ -583,7 +592,7 @@ export async function registerRoutes(
         if (!p || p.position !== player.position) continue;
         const played = pLogs.filter(e => hasParticipation(e.stats, p.position));
         if (played.length < 4) continue;
-        const totalPts = played.reduce((sum, e) => sum + e.stats.pts_ppr, 0);
+        const totalPts = played.reduce((sum, e) => sum + getEntryPoints(e.stats, format), 0);
         ppgByPlayer.push({ id: pid, ppg: totalPts / played.length });
       }
       ppgByPlayer.sort((a, b) => b.ppg - a.ppg);
@@ -591,7 +600,7 @@ export async function registerRoutes(
       if (idx >= 0) seasonRank = idx + 1;
     }
 
-    const weeklyPts = playedLogs.map(e => e.stats.pts_ppr);
+    const weeklyPts = playedLogs.map(e => getEntryPoints(e.stats, format));
     const trends: import("@shared/playerTypes").PlayerTrends | null =
       weeklyPts.length > 0 ? { weeklyFantasyPoints: weeklyPts } : null;
 
@@ -632,10 +641,11 @@ export async function registerRoutes(
     const seasons = getAvailableSeasons();
     const seasonParam = parseInt(req.query.season as string, 10);
     const season = !isNaN(seasonParam) && seasons.includes(seasonParam) ? seasonParam : (seasons[0] || new Date().getFullYear());
+    const format = parseScoringFormat(req.query.format);
     const logs = loadGameLogs(season);
-    const ranks = buildWeeklyRanks(season, logs, allPlayers);
+    const ranks = buildWeeklyRanks(season, logs, allPlayers, format);
     let playerLogs = attachRanks(logs[player.id] || [], player.id, ranks);
-    const oppRanks = buildOppRanks(season, logs, allPlayers);
+    const oppRanks = buildOppRanks(season, logs, allPlayers, format);
     playerLogs = attachOppRanks(playerLogs, player.position, oppRanks);
     playerLogs = fillMissingWeeks(playerLogs, season, player.team);
     res.set("Cache-Control", "public, max-age=3600");

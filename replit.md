@@ -24,6 +24,7 @@ Programmatic SEO player pages for NFL fantasy football, powered by Sleeper API d
 - `scripts/buildGameScores.js` - Fetches NFL game scores from ESPN scoreboard API (2023-2025)
 - `shared/playerTypes.ts` - Player TypeScript interfaces (Player, GameLogEntry, GameLogStats, NewsEntry, PlayerTrends)
 - `shared/teamMappings.ts` - Team abbreviation aliases, full names, and normalization helpers
+- `shared/scoring.ts` - Scoring format types (ScoringFormat), fantasy point computation (getEntryPoints/getFantasyPoints)
 - `server/routes.ts` - API routes + SEO injection + sitemap + robots.txt + game log serving
 - `client/src/pages/home.tsx` - Landing page
 - `client/src/pages/player-search.tsx` - Player directory (indexed by default, search all)
@@ -69,7 +70,17 @@ Located in `wordpress-plugin/statchasers-player-pages/`
 - **Role Grade**: Starter (pos1+pos2 >= 60%), Flex (>= 35%), Depth (< 35%)
 - **Goose Egg %**: (# played weeks with pts==0) / games_played
 
+## Scoring Format System
+- **Formats**: Standard, Half-PPR, PPR (default)
+- **Toggle**: Pill buttons in player header, affects entire page globally
+- **Architecture**: Raw stats stored once; points computed dynamically via `getEntryPoints()` in `shared/scoring.ts`
+- **Recalculated per format**: Fantasy points, weekly positional ranks, tier finish rates (WR1%/Bust%), PPG, distribution bar, best/worst week, season rank, career profile, trends chart
+- **Server caching**: Weekly ranks and opp ranks cached per `{season}_{format}` key
+- **API**: `?format=standard|half|ppr` param on `/api/players/:slug` and `/api/players/:slug/game-log`
+- **Point formulas**: Standard = raw stat pts (no reception bonus), Half = +0.5/rec, PPR = +1.0/rec
+
 ## Recent Changes
+- 2026-02-19: Global scoring format toggle (Standard/Half-PPR/PPR): pill UI in player header, dynamically recalculates all metrics including weekly ranks, tier finish rates, PPG, distribution bar, best/worst week, season rank, career profile, and trends across all tabs
 - 2026-02-19: Game Score column: compact W/L + score (e.g., "W, 34–10") from ESPN scoreboard data (2023-2025), color-coded W/L
 - 2026-02-19: Dynamic rushing columns for WR/TE: CAR/RUSH columns appear only when player has rushing attempts (premium conditional architecture)
 - 2026-02-19: Totals/Per-Game toggle: footer row switches between AVG/G and TOTALS views with clickable label
