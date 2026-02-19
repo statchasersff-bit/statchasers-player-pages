@@ -2,7 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
 <!-- StatChasers Player Pages Template -->
-<div class="scpp-root">
+<div class="scpp-root" data-scpp-template="index" data-scpp-version="0.3.2">
 <div class="sc-players">
 
   <header class="sc-header">
@@ -72,11 +72,4 @@ if ( ! defined( 'ABSPATH' ) ) exit;
     .scpp-root .sc-players .sc-pos-DEF { background: rgba(107,114,128,0.12); color: #4b5563; }
 </style>
 
-<script>
-    window.scPlayersConfig = {
-        restUrl: <?php echo wp_json_encode( rest_url( 'statchasers/v1/players' ) ); ?>,
-        baseUrl: <?php echo wp_json_encode( home_url( '/nfl/players/' ) ); ?>,
-        indexedUrl: <?php echo wp_json_encode( rest_url( 'statchasers/v1/indexed-players' ) ); ?>
-    };
-</script>
-<?php /* players.js enqueued via wp_enqueue_scripts with filemtime cache-busting */ ?>
+<?php /* Config passed via wp_localize_script; players.js enqueued with filemtime cache-busting */ ?>
