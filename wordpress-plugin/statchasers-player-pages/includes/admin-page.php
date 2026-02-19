@@ -113,7 +113,7 @@ function sc_render_admin_page() {
     $pages           = get_pages( array( 'post_status' => 'publish', 'sort_column' => 'post_title' ) );
     ?>
     <div class="wrap">
-        <h1>StatChasers Player Pages <small style="font-size: 12px; color: #999;">v0.3.0</small></h1>
+        <h1>StatChasers Player Pages <small style="font-size: 12px; color: #999;">v0.3.1</small></h1>
 
         <?php settings_errors( 'statchasers' ); ?>
 
@@ -175,7 +175,7 @@ function sc_render_admin_page() {
             <table class="form-table">
                 <tr>
                     <th>Plugin Version</th>
-                    <td><code>0.3.0</code></td>
+                    <td><code>0.3.1</code></td>
                 </tr>
                 <tr>
                     <th>Container Page</th>
@@ -213,12 +213,14 @@ function sc_render_admin_page() {
                     <th>Query Vars Registered</th>
                     <td>
                         <?php
-                        $public_vars = isset( $GLOBALS['wp'] ) ? $GLOBALS['wp']->public_query_vars : array();
-                        $has_slug  = in_array( 'sc_player_slug', $public_vars );
-                        $has_index = in_array( 'sc_players_index', $public_vars );
+                        $public = $GLOBALS['wp']->public_query_vars ?? [];
+                        $has_slug    = in_array( 'sc_player_slug', $public, true );
+                        $has_index   = in_array( 'sc_players_index', $public, true );
+                        $has_sitemap = in_array( 'sc_player_sitemap', $public, true );
                         ?>
                         sc_player_slug: <code style="color:<?php echo $has_slug ? 'green' : 'red'; ?>;"><?php echo $has_slug ? 'YES' : 'NO'; ?></code><br/>
-                        sc_players_index: <code style="color:<?php echo $has_index ? 'green' : 'red'; ?>;"><?php echo $has_index ? 'YES' : 'NO'; ?></code>
+                        sc_players_index: <code style="color:<?php echo $has_index ? 'green' : 'red'; ?>;"><?php echo $has_index ? 'YES' : 'NO'; ?></code><br/>
+                        sc_player_sitemap: <code style="color:<?php echo $has_sitemap ? 'green' : 'red'; ?>;"><?php echo $has_sitemap ? 'YES' : 'NO'; ?></code>
                     </td>
                 </tr>
                 <tr>
@@ -320,7 +322,7 @@ function sc_render_admin_page() {
                 <li>Click <strong>Auto-Create NFL/Players Pages and Set Container</strong> above (or select an existing page).</li>
                 <li>Click <strong>Flush Rewrite Rules Now</strong> above, OR go to <strong>Settings &gt; Permalinks</strong> and click <strong>Save Changes</strong>.</li>
                 <li>Visit <a href="<?php echo esc_url( home_url( '/nfl/players/' ) ); ?>" target="_blank">/nfl/players/</a> to verify.</li>
-                <li>View page source and search for <code>&lt;!-- SCPP v0.3.0</code> to confirm new code is live.</li>
+                <li>View page source and search for <code>&lt;!-- SCPP v0.3.1</code> to confirm new code is live.</li>
             </ol>
         </div>
     </div>
