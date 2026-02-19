@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/sheet";
 import {
   Search,
-  ArrowLeft,
   Users,
   TrendingUp,
   Keyboard,
@@ -432,36 +431,9 @@ export default function PlayerSearch() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b bg-card sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4 flex-wrap">
-          <div className="flex items-center gap-3">
-            <Link href="/">
-              <Button variant="ghost" size="icon" data-testid="button-back-home">
-                <ArrowLeft className="w-4 h-4" />
-              </Button>
-            </Link>
-            <Link href="/">
-              <span className="text-lg font-bold tracking-tight text-foreground" data-testid="link-logo">
-                StatChasers
-              </span>
-            </Link>
-          </div>
-          <nav className="flex items-center gap-2 flex-wrap">
-            <Link href="/rankings/">
-              <Button variant="ghost" size="sm" data-testid="link-rankings">Rankings</Button>
-            </Link>
-            <Link href="/tools/">
-              <Button variant="ghost" size="sm" data-testid="link-tools">Tools</Button>
-            </Link>
-            <Link href="/articles/">
-              <Button variant="ghost" size="sm" data-testid="link-articles">Articles</Button>
-            </Link>
-          </nav>
-        </div>
-      </header>
 
       {stickyVisible && !isSearching && (
-        <div className="sticky top-[57px] z-40 border-b bg-card/95 backdrop-blur-sm" data-testid="sticky-filter-bar">
+        <div className="sticky top-0 z-40 border-b bg-card/95 backdrop-blur-sm" data-testid="sticky-filter-bar">
           <div className="max-w-7xl mx-auto px-4 py-2 flex items-center gap-3 flex-wrap">
             <div className="relative flex-1 max-w-xs">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -861,11 +833,6 @@ export default function PlayerSearch() {
         onClose={() => setSheetOpen(false)}
       />
 
-      <footer className="border-t bg-card mt-12">
-        <div className="max-w-7xl mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
-          StatChasers - Fantasy Football Intelligence
-        </div>
-      </footer>
     </div>
   );
 }
