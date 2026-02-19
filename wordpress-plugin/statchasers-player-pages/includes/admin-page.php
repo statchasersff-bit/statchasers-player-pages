@@ -46,7 +46,9 @@ function sc_handle_admin_actions() {
 
     if ( isset( $_POST['sc_flush_rewrite'] ) ) {
         if ( ! check_admin_referer( 'sc_admin_nonce', 'sc_nonce' ) ) return;
-        sc_register_rewrite_rules();
+        if ( function_exists( 'sc_register_rewrite_rules' ) ) {
+            sc_register_rewrite_rules();
+        }
         flush_rewrite_rules();
         add_settings_error( 'statchasers', 'flush_success', 'Rewrite rules flushed successfully!', 'success' );
     }
@@ -99,7 +101,9 @@ function sc_auto_create_container_pages() {
     }
 
     update_option( 'scpp_container_page_id', $players_id );
-    sc_register_rewrite_rules();
+    if ( function_exists( 'sc_register_rewrite_rules' ) ) {
+        sc_register_rewrite_rules();
+    }
     flush_rewrite_rules();
     return true;
 }
@@ -111,9 +115,11 @@ function sc_render_admin_page() {
     $container_id    = (int) get_option( 'scpp_container_page_id', 0 );
     $container_post  = $container_id ? get_post( $container_id ) : null;
     $pages           = get_pages( array( 'post_status' => 'publish', 'sort_column' => 'post_title' ) );
+    if ( ! is_array( $pages ) ) $pages = array();
     ?>
+    <!-- SCPP ADMIN OK v0.3.2 -->
     <div class="wrap">
-        <h1>StatChasers Player Pages <small style="font-size: 12px; color: #999;">v0.3.1</small></h1>
+        <h1>StatChasers Player Pages <small style="font-size: 12px; color: #999;">v0.3.2</small></h1>
 
         <?php settings_errors( 'statchasers' ); ?>
 
@@ -169,13 +175,19 @@ function sc_render_admin_page() {
         <div class="card" style="max-width: 700px; padding: 20px; margin-top: 20px;">
             <h2>Routing Debug</h2>
             <?php
-            $sc_rules = sc_get_rewrite_diagnostics();
-            $permalink_structure = get_option( 'permalink_structure', '' );
+            ob_start();
+            try {
+                $sc_rules = array();
+                if ( function_exists( 'sc_get_rewrite_diagnostics' ) ) {
+                    $sc_rules = sc_get_rewrite_diagnostics();
+                    if ( ! is_array( $sc_rules ) ) $sc_rules = array();
+                }
+                $permalink_structure = get_option( 'permalink_structure', '' );
             ?>
             <table class="form-table">
                 <tr>
                     <th>Plugin Version</th>
-                    <td><code>0.3.1</code></td>
+                    <td><code>0.3.2</code></td>
                 </tr>
                 <tr>
                     <th>Container Page</th>
@@ -211,10 +223,11 @@ function sc_render_admin_page() {
                 </tr>
                 <?php
                 $simulated_public_vars = apply_filters( 'query_vars', array() );
+                if ( ! is_array( $simulated_public_vars ) ) $simulated_public_vars = array();
 
-                $qv_slug   = in_array( 'sc_player_slug', $simulated_public_vars, true ) ? 'YES' : 'NO';
-                $qv_index  = in_array( 'sc_players_index', $simulated_public_vars, true ) ? 'YES' : 'NO';
-                $qv_sitemap= in_array( 'sc_player_sitemap', $simulated_public_vars, true ) ? 'YES' : 'NO';
+                $qv_slug    = in_array( 'sc_player_slug', $simulated_public_vars, true ) ? 'YES' : 'NO';
+                $qv_index   = in_array( 'sc_players_index', $simulated_public_vars, true ) ? 'YES' : 'NO';
+                $qv_sitemap = in_array( 'sc_player_sitemap', $simulated_public_vars, true ) ? 'YES' : 'NO';
 
                 echo '<tr><th>Query Vars Registered</th><td>';
                 echo 'sc_player_slug: <strong>' . esc_html( $qv_slug ) . '</strong><br>';
@@ -231,6 +244,21 @@ function sc_render_admin_page() {
                 <?php wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' ); ?>
                 <input type="submit" name="sc_flush_rewrite" class="button button-secondary" value="Flush Rewrite Rules Now" />
             </form>
+            <?php
+                $routing_html = ob_get_clean();
+                echo $routing_html;
+            } catch ( \Throwable $e ) {
+                ob_end_clean();
+                echo '<div class="notice notice-warning" style="padding: 12px;">';
+                echo '<strong>Routing Debug failed to render.</strong> Check <code>wp-content/debug.log</code>';
+                echo '<br><small>Error: ' . esc_html( $e->getMessage() ) . '</small>';
+                echo '</div>';
+                echo '<form method="post" style="margin-top: 12px;">';
+                wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' );
+                echo '<input type="submit" name="sc_flush_rewrite" class="button button-secondary" value="Flush Rewrite Rules Now" />';
+                echo '</form>';
+            }
+            ?>
         </div>
 
         <!-- Player Index Status -->
@@ -262,9 +290,9 @@ function sc_render_admin_page() {
         <div class="card" style="max-width: 700px; padding: 20px; margin-top: 20px;">
             <h2>Indexed Players</h2>
             <?php
-            $indexed_path = sc_get_indexed_json_path();
+            $indexed_path = function_exists( 'sc_get_indexed_json_path' ) ? sc_get_indexed_json_path() : '';
             $indexed_data = null;
-            if ( file_exists( $indexed_path ) ) {
+            if ( $indexed_path && file_exists( $indexed_path ) ) {
                 $indexed_raw = file_get_contents( $indexed_path );
                 $indexed_data = json_decode( $indexed_raw, true );
             }
@@ -321,7 +349,7 @@ function sc_render_admin_page() {
                 <li>Click <strong>Auto-Create NFL/Players Pages and Set Container</strong> above (or select an existing page).</li>
                 <li>Click <strong>Flush Rewrite Rules Now</strong> above, OR go to <strong>Settings &gt; Permalinks</strong> and click <strong>Save Changes</strong>.</li>
                 <li>Visit <a href="<?php echo esc_url( home_url( '/nfl/players/' ) ); ?>" target="_blank">/nfl/players/</a> to verify.</li>
-                <li>View page source and search for <code>&lt;!-- SCPP v0.3.1</code> to confirm new code is live.</li>
+                <li>View page source and search for <code>&lt;!-- SCPP v0.3.2</code> to confirm new code is live.</li>
             </ol>
         </div>
     </div>
