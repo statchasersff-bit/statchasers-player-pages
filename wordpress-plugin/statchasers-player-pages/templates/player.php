@@ -1,3 +1,4 @@
+<!-- SCPP TEMPLATE MARKER: 2026-02-19-AAA -->
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
