@@ -236,22 +236,23 @@ function sc_inject_content( $content ) {
     if ( ! $r ) return $content;
 
     $container_id = (int) get_option( 'scpp_container_page_id', 0 );
+    if ( ! $container_id ) return $content;
 
-    // Only inject when we're rendering the container page (Divi-safe)
-    if ( ! $container_id || (int) get_queried_object_id() !== $container_id ) {
+    // Divi-safe: only inject when WP is rendering the container page
+    if ( (int) get_queried_object_id() !== $container_id ) {
         return $content;
     }
 
     $route = $r['route'];
     $slug  = $r['slug'];
 
-    $debug = '<!-- SCPP v0.3.1: container=' . $container_id . ' route=' . esc_html( $route );
+    $deploy_marker = "\n<!-- SCPP LIVE OUTPUT: 2026-02-19-PLAYERPAGES -->\n";
+
+    $debug = '<!-- SCPP v0.3.0: container=' . $container_id . ' route=' . esc_html( $route );
     if ( $slug ) {
         $debug .= ' slug=' . esc_html( $slug );
     }
     $debug .= ' -->';
-
-    $deploy_marker = "\n<!-- SCPP DEPLOY MARKER: 2026-02-19-02 -->\n";
 
     if ( $route === 'index' ) {
         ob_start();
