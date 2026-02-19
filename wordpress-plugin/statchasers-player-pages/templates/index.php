@@ -77,4 +77,4 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         indexedUrl: <?php echo wp_json_encode( rest_url( 'statchasers/v1/indexed-players' ) ); ?>
     };
 </script>
-<script src="<?php echo esc_url( SC_PLUGIN_URL . 'assets/players.js' ); ?>"></script>
+<?php /* players.js enqueued via wp_enqueue_scripts with filemtime cache-busting */ ?>

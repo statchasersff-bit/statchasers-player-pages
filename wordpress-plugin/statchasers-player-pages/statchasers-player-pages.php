@@ -3,7 +3,7 @@
  * Plugin Name: StatChasers Player Pages
  * Plugin URI:  https://statchasers.com
  * Description: Programmatic SEO-friendly NFL player pages powered by the Sleeper API. Adds /nfl/players/ directory and /nfl/players/{slug}/ profile pages using your theme's header/footer.
- * Version:     0.3.0
+ * Version:     0.3.2
  * Author:      StatChasers
  * Author URI:  https://statchasers.com
  * License:     GPL-2.0+
@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'SC_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'SC_VERSION', '0.3.2' );
 define( 'SC_CRON_HOOK', 'sc_daily_player_refresh' );
 
 require_once SC_PLUGIN_DIR . 'includes/cache.php';
@@ -45,6 +46,25 @@ function sc_deactivate() {
 }
 
 add_action( SC_CRON_HOOK, 'sc_refresh_players_data' );
+
+/**
+ * Enqueue plugin assets with filemtime cache-busting.
+ */
+add_action( 'wp_enqueue_scripts', function() {
+    $r = function_exists( 'sc_detect_route' ) ? sc_detect_route() : null;
+    if ( ! $r ) return;
+
+    $js_file = SC_PLUGIN_DIR . 'assets/players.js';
+    $js_ver  = file_exists( $js_file ) ? filemtime( $js_file ) : SC_VERSION;
+
+    wp_enqueue_script(
+        'sc-players-js',
+        SC_PLUGIN_URL . 'assets/players.js',
+        array(),
+        $js_ver,
+        true
+    );
+} );
 
 add_action( 'admin_notices', function() {
     if ( ! current_user_can( 'manage_options' ) ) return;
