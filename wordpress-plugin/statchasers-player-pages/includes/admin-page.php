@@ -331,6 +331,70 @@ function sc_render_admin_page() {
             </form>
         </div>
 
+        <!-- Game Log Data -->
+        <div class="card" style="max-width: 700px; padding: 20px; margin-top: 20px;">
+            <h2>Game Log Data</h2>
+            <?php
+            $gl_last_fetch    = get_option( 'sc_gamelogs_last_fetch', 'Never' );
+            $gs_last_fetch    = get_option( 'sc_gamescores_last_fetch', 'Never' );
+            $gl_seasons       = function_exists( 'sc_get_available_seasons' ) ? sc_get_available_seasons() : array();
+            $gl_season_count  = count( $gl_seasons );
+            $gs_path          = function_exists( 'sc_get_game_scores_path' ) ? sc_get_game_scores_path() : '';
+            $gs_exists        = $gs_path && file_exists( $gs_path );
+            ?>
+            <table class="form-table">
+                <tr>
+                    <th>Game Logs Last Fetch</th>
+                    <td><strong><?php echo esc_html( $gl_last_fetch ); ?></strong></td>
+                </tr>
+                <tr>
+                    <th>Season Files</th>
+                    <td>
+                        <strong><?php echo esc_html( $gl_season_count ); ?></strong> season(s)
+                        <?php if ( ! empty( $gl_seasons ) ) : ?>
+                            &mdash; <?php echo esc_html( implode( ', ', $gl_seasons ) ); ?>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <?php if ( ! empty( $gl_seasons ) ) : ?>
+                <tr>
+                    <th>Players per Season</th>
+                    <td>
+                        <?php
+                        foreach ( $gl_seasons as $s ) {
+                            $s_logs = function_exists( 'sc_load_game_logs' ) ? sc_load_game_logs( $s ) : array();
+                            $s_count = is_array( $s_logs ) ? count( $s_logs ) : 0;
+                            echo '<strong>' . esc_html( $s ) . ':</strong> ' . esc_html( number_format( $s_count ) ) . ' players&nbsp;&nbsp;';
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <?php endif; ?>
+                <tr>
+                    <th>Game Scores Last Fetch</th>
+                    <td><strong><?php echo esc_html( $gs_last_fetch ); ?></strong></td>
+                </tr>
+                <tr>
+                    <th>Game Scores File</th>
+                    <td><?php echo $gs_exists ? '<span style="color:green;">Exists</span>' : '<span style="color:red;">Not found</span>'; ?></td>
+                </tr>
+            </table>
+            <form method="post" style="display: inline-block; margin-right: 8px;">
+                <?php wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' ); ?>
+                <p>
+                    <input type="submit" name="sc_fetch_gamelogs" class="button button-primary" value="Fetch Game Logs" />
+                    <span class="description" style="margin-left: 8px;">Fetches from Sleeper API (3 seasons &times; 18 weeks). Takes ~1-2 min.</span>
+                </p>
+            </form>
+            <form method="post" style="display: inline-block;">
+                <?php wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' ); ?>
+                <p>
+                    <input type="submit" name="sc_fetch_gamescores" class="button button-secondary" value="Fetch Game Scores" />
+                    <span class="description" style="margin-left: 8px;">Fetches from ESPN API.</span>
+                </p>
+            </form>
+        </div>
+
         <!-- Quick Links -->
         <div class="card" style="max-width: 700px; padding: 20px; margin-top: 20px;">
             <h2>Quick Links</h2>
