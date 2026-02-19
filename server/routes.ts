@@ -15,9 +15,32 @@ const INDEXED_FILE = path.resolve(process.cwd(), "data", "indexed_players.json")
 const INDEXED_BY_TEAM_FILE = path.resolve(process.cwd(), "data", "indexed_players_by_team.json");
 const GAME_LOGS_DIR = path.resolve(process.cwd(), "data", "game_logs");
 const BYE_WEEKS_FILE = path.resolve(process.cwd(), "data", "bye_weeks.json");
+const GAME_SCORES_FILE = path.resolve(process.cwd(), "data", "game_scores.json");
 
 const gameLogsCache: Map<number, Record<string, GameLogEntry[]>> = new Map();
 const weeklyRanksCache: Map<number, Map<string, Map<number, number>>> = new Map();
+
+let gameScoresData: Record<string, Record<string, { tm: number; opp: number; r: string }>> | null = null;
+function loadGameScores(): typeof gameScoresData {
+  if (gameScoresData) return gameScoresData;
+  try {
+    gameScoresData = JSON.parse(fs.readFileSync(GAME_SCORES_FILE, "utf-8"));
+  } catch {
+    gameScoresData = {};
+  }
+  return gameScoresData!;
+}
+
+function getGameScore(season: number, team: string | null, week: number): { tm: number; opp: number; r: 'W' | 'L' | 'T' } | null {
+  if (!team) return null;
+  const scores = loadGameScores();
+  const seasonScores = scores?.[String(season)];
+  if (!seasonScores) return null;
+  const normalizedTeam = normalizeTeamAbbr(team);
+  const entry = seasonScores[`${normalizedTeam}_${week}`];
+  if (!entry) return null;
+  return { tm: entry.tm, opp: entry.opp, r: entry.r as 'W' | 'L' | 'T' };
+}
 
 let byeWeeksData: Record<string, Record<string, number>> | null = null;
 function loadByeWeeks(): Record<string, Record<string, number>> {
@@ -77,6 +100,9 @@ function fillMissingWeeks(entries: GameLogEntry[], season: number, team: string 
   for (const entry of filled) {
     if (!entry.game_status) {
       entry.game_status = 'active';
+    }
+    if (entry.game_status === 'active') {
+      entry.score = getGameScore(season, team, entry.week) ?? null;
     }
   }
   return filled;

@@ -35,7 +35,7 @@ import {
   Eye,
 } from "lucide-react";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
-import type { Player, GameLogEntry, NewsEntry, GameLogStats } from "@shared/playerTypes";
+import type { Player, GameLogEntry, NewsEntry, GameLogStats, GameScore } from "@shared/playerTypes";
 import { TEAM_FULL_NAMES, TEAM_PRIMARY_COLORS, POSITION_FULL_NAMES } from "@shared/teamMappings";
 import {
   Select,
@@ -154,7 +154,7 @@ function SnapshotItem({
 
 type ColumnDef = { key: string; label: string; abbr?: string };
 
-function getPositionColumns(position: string | null): { primary: ColumnDef[]; detail: ColumnDef[] } {
+function getPositionColumns(position: string | null): { primary: ColumnDef[]; detail: ColumnDef[]; conditionalRush?: boolean } {
   switch (position) {
     case "QB":
       return {
@@ -194,10 +194,8 @@ function getPositionColumns(position: string | null): { primary: ColumnDef[]; de
           { key: "rec_yd", label: "REC YDS" },
           { key: "rec_td", label: "REC TD" },
         ],
-        detail: [
-          { key: "rush_att", label: "CAR" },
-          { key: "rush_yd", label: "RUSH YDS" },
-        ],
+        detail: [],
+        conditionalRush: true,
       };
     case "K":
       return {
@@ -306,19 +304,28 @@ type SortKey = 'week' | 'fpts' | 'finish' | string;
 type SortDir = 'asc' | 'desc';
 
 function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive }: { entries?: GameLogEntry[]; position: string | null; filter: 'full' | 'last5'; tierFilter: DistTier | null; hideInactive: boolean }) {
-  const { primary, detail } = getPositionColumns(position);
+  const { primary, detail, conditionalRush } = getPositionColumns(position);
   const posLabel = position || '';
-  const colCount = 5 + primary.length + (detail.length > 0 ? 1 : 0);
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortDir, setSortDir] = useState<SortDir>('desc');
-  const hasDetail = detail.length > 0;
+  const [footerMode, setFooterMode] = useState<'avg' | 'total'>('avg');
 
-  const toggleRow = (index: number) => {
+  const getStat = (entry: GameLogEntry, key: string) =>
+    (entry.stats as unknown as Record<string, number>)[key] ?? 0;
+
+  const allActiveEntries = entries.filter(e => e.game_status === 'active');
+  const hasRushing = conditionalRush && allActiveEntries.some(e => getStat(e, 'rush_att') > 0);
+  const rushCols: ColumnDef[] = hasRushing ? [{ key: 'rush_att', label: 'CAR' }, { key: 'rush_yd', label: 'RUSH' }] : [];
+  const allCols = [...primary, ...rushCols];
+  const hasDetail = detail.length > 0;
+  const colCount = 6 + allCols.length + (hasDetail ? 1 : 0);
+
+  const toggleRow = (week: number) => {
     setExpandedRows(prev => {
       const next = new Set(prev);
-      if (next.has(index)) next.delete(index);
-      else next.add(index);
+      if (next.has(week)) next.delete(week);
+      else next.add(week);
       return next;
     });
   };
@@ -332,11 +339,6 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
       setSortDir(key === 'week' ? 'asc' : 'desc');
     }
   }, [sortKey, sortDir]);
-
-  const getStat = (entry: GameLogEntry, key: string) =>
-    (entry.stats as unknown as Record<string, number>)[key] ?? 0;
-
-  const allActiveEntries = entries.filter(e => e.game_status === 'active');
 
   let baseEntries = filter === 'last5' ? allActiveEntries.slice(-5) : entries;
 
@@ -386,7 +388,10 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
       : <ArrowDown className="w-2.5 h-2.5 ml-0.5 inline text-primary" />;
   };
 
+  const scoreColor = (r: string) => r === 'W' ? 'text-green-600 dark:text-green-400' : r === 'L' ? 'text-red-500 dark:text-red-400' : 'text-muted-foreground';
+
   const thClass = "py-1.5 pr-2 text-muted-foreground font-medium whitespace-nowrap cursor-pointer select-none transition-colors";
+  const thStatic = "py-1.5 pr-2 text-muted-foreground font-medium whitespace-nowrap select-none";
 
   return (
     <div className="overflow-x-auto">
@@ -394,9 +399,9 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
         <thead>
           <tr className="border-b text-left">
             <th className={thClass} onClick={() => handleSort('week')} data-testid="sort-week">WK<SortIcon colKey="week" /></th>
-            <th className={`${thClass}`}>OPP</th>
-            <th className={`${thClass} text-center`}>STATUS</th>
-            {primary.map((col) => (
+            <th className={thStatic}>OPP</th>
+            <th className={`${thStatic} text-center`}>SCORE</th>
+            {allCols.map((col) => (
               <th key={col.key} className={`${thClass} text-right`} onClick={() => handleSort(col.key)} data-testid={`sort-${col.key}`}>
                 {col.label}<SortIcon colKey={col.key} />
               </th>
@@ -418,18 +423,19 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
                 const isBye = entry.game_status === 'bye';
                 const isOut = entry.game_status === 'out';
                 const isInactive = isBye || isOut;
+                const sc = entry.score;
 
                 if (isInactive) {
                   return (
                     <tr key={entry.week} className="border-b last:border-0 opacity-40" data-testid={`row-gamelog-week-${entry.week}`}>
                       <td className="py-1 pr-2 text-foreground font-medium">{entry.week}</td>
                       <td className="py-1 pr-2 text-muted-foreground">{isBye ? 'BYE' : '\u2014'}</td>
-                      <td className="py-1 pr-2 text-center">
+                      <td className="py-1 pr-2 text-center text-muted-foreground">
                         <Badge variant="secondary" className={`text-[8px] px-1.5 py-0 ${isBye ? 'bg-sky-500/10 text-sky-700 dark:text-sky-400' : 'bg-muted text-muted-foreground'}`} data-testid={`badge-status-${entry.week}`}>
                           {isBye ? 'BYE' : 'OUT'}
                         </Badge>
                       </td>
-                      {primary.map((col) => (
+                      {allCols.map((col) => (
                         <td key={col.key} className="py-1 pr-2 text-right text-muted-foreground">{'\u2014'}</td>
                       ))}
                       <td className="py-1 pr-2 text-right text-muted-foreground">{'\u2014'}</td>
@@ -453,12 +459,14 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
                           {oppRankSuffix && <span className={`text-[9px] leading-none ${getOppRankColor(oppRank)}`}>{oppRankSuffix} vs {posLabel}</span>}
                         </div>
                       </td>
-                      <td className="py-1 pr-2 text-center">
-                        <Badge variant="secondary" className="text-[8px] px-1.5 py-0 bg-green-500/10 text-green-700 dark:text-green-400" data-testid={`badge-status-${entry.week}`}>
-                          Active
-                        </Badge>
+                      <td className="py-1 pr-2 text-center whitespace-nowrap" data-testid={`score-week-${entry.week}`}>
+                        {sc ? (
+                          <span className={`text-[10px] tabular-nums font-medium ${scoreColor(sc.r)}`}>
+                            {sc.r}, {sc.tm}\u2013{sc.opp}
+                          </span>
+                        ) : '\u2014'}
                       </td>
-                      {primary.map((col) => (
+                      {allCols.map((col) => (
                         <td key={col.key} className="py-1 pr-2 text-foreground text-right tabular-nums">
                           {getStat(entry, col.key)}
                         </td>
@@ -518,24 +526,34 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
         {activeInDisplay.length > 0 && !tierFilter && (
           <tfoot>
             <tr className="border-t-2 border-foreground/20">
-              <td className="py-1.5 pr-2 text-foreground font-bold text-[10px] uppercase tracking-wider" colSpan={3} data-testid="text-totals-label">
+              <td className="py-1.5 pr-2 text-foreground font-bold text-[10px] uppercase tracking-wider" colSpan={2} data-testid="text-totals-label">
                 <div className="flex flex-col">
-                  <span>AVG/G</span>
+                  <button
+                    className="text-left flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider"
+                    onClick={() => setFooterMode(footerMode === 'avg' ? 'total' : 'avg')}
+                    data-testid="toggle-footer-mode"
+                  >
+                    {footerMode === 'avg' ? 'AVG/G' : 'TOTALS'}
+                    <ArrowUpDown className="w-2.5 h-2.5 opacity-40" />
+                  </button>
                   <span className="text-[9px] text-muted-foreground font-normal normal-case tracking-normal">{gamesPlayed} games</span>
                 </div>
               </td>
-              {primary.map((col) => {
+              <td className="py-1.5 pr-2"></td>
+              {allCols.map((col) => {
                 const total = activeInDisplay.reduce((sum, e) => sum + getStat(e, col.key), 0);
-                const avg = gamesPlayed > 0 ? total / gamesPlayed : 0;
+                const val = footerMode === 'avg' ? (gamesPlayed > 0 ? total / gamesPlayed : 0) : total;
                 return (
                   <td key={col.key} className="py-1.5 pr-2 text-foreground text-right tabular-nums font-semibold">
-                    {avg % 1 === 0 ? avg.toFixed(0) : avg.toFixed(1)}
+                    {footerMode === 'total' ? val : (val % 1 === 0 ? val.toFixed(0) : val.toFixed(1))}
                   </td>
                 );
               })}
               <td className="py-1.5 pr-2 text-right text-foreground tabular-nums font-bold">
                 {gamesPlayed > 0
-                  ? (activeInDisplay.reduce((sum, e) => sum + e.stats.pts_ppr, 0) / gamesPlayed).toFixed(1)
+                  ? footerMode === 'avg'
+                    ? (activeInDisplay.reduce((sum, e) => sum + e.stats.pts_ppr, 0) / gamesPlayed).toFixed(1)
+                    : activeInDisplay.reduce((sum, e) => sum + e.stats.pts_ppr, 0).toFixed(1)
                   : '0.0'}
               </td>
               <td className={`py-1.5 text-right tabular-nums text-[11px] font-semibold ${avgFinish ? getRankColor(Math.round(avgFinish)) : ''}`} data-testid="text-avg-finish">

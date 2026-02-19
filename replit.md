@@ -20,6 +20,8 @@ Programmatic SEO player pages for NFL fantasy football, powered by Sleeper API d
 - `data/indexed_players.json` - Indexed player slugs and metadata
 - `data/indexed_players_by_team.json` - Indexed players grouped by team and position
 - `data/game_logs/YYYY.json` - Per-season game log data keyed by player_id, ~660 players per season
+- `data/game_scores.json` - NFL game final scores by season, keyed by `TEAM_WEEK` (e.g., `BUF_1`), sourced from ESPN API
+- `scripts/buildGameScores.js` - Fetches NFL game scores from ESPN scoreboard API (2023-2025)
 - `shared/playerTypes.ts` - Player TypeScript interfaces (Player, GameLogEntry, GameLogStats, NewsEntry, PlayerTrends)
 - `shared/teamMappings.ts` - Team abbreviation aliases, full names, and normalization helpers
 - `server/routes.ts` - API routes + SEO injection + sitemap + robots.txt + game log serving
@@ -68,6 +70,10 @@ Located in `wordpress-plugin/statchasers-player-pages/`
 - **Goose Egg %**: (# played weeks with pts==0) / games_played
 
 ## Recent Changes
+- 2026-02-19: Game Score column: compact W/L + score (e.g., "W, 34–10") from ESPN scoreboard data (2023-2025), color-coded W/L
+- 2026-02-19: Dynamic rushing columns for WR/TE: CAR/RUSH columns appear only when player has rushing attempts (premium conditional architecture)
+- 2026-02-19: Totals/Per-Game toggle: footer row switches between AVG/G and TOTALS views with clickable label
+- 2026-02-19: Game scores data pipeline: scripts/buildGameScores.js fetches from ESPN API, stores in data/game_scores.json keyed by team_week
 - 2026-02-18: Game Log tab redesign: outcome-focused summary bar (GP/PPG/Best Week/Worst Week with tier badges), Full Season/Last 5 filter toggle, Game Distribution bar (15+/10-14.9/5-9.9/<5), colored tier finish badges (Pos1=green/Pos2=blue/Pos3=orange/Bust=red), Status column (Active/OUT), Opponent Rank vs Position in OPP column (ordinal rank with color coding), server-side opp rank computation from season-wide game log data
 - 2026-02-18: Multi-Year Performance Profile: replaced career averages with 3-year window (S, S-1, S-2), shows PPG + durability %, tier breakdown (pos1/pos2/pos3/bust), volatility, career arc mini bar chart; computed server-side with raw weekly data
 - 2026-02-18: Quick Outlook restructured: paragraph → structured summary report (Current Form, Role, Volatility, Tier Profile stat lines + best-week sentence)
