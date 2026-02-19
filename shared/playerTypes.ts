@@ -20,6 +20,12 @@ export interface GameLogStats {
   xpa?: number;
 }
 
+export interface GameScore {
+  r: 'W' | 'L' | 'T';
+  tm: number;
+  opp: number;
+}
+
 export interface GameLogEntry {
   week: number;
   opp: string;
@@ -27,6 +33,7 @@ export interface GameLogEntry {
   pos_rank?: number | null;
   opp_rank_vs_pos?: number | null;
   game_status?: 'active' | 'bye' | 'out' | null;
+  score?: GameScore | null;
 }
 
 export interface NewsEntry {

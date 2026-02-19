@@ -1,0 +1,139 @@
+SECTION 1 — Opportunity Momentum
+🔹 Purpose
+
+Instantly show:
+
+Is usage expanding or shrinking?
+
+Is the role stable?
+
+Is production sustainable?
+
+🧠 Layout Structure
+Top Row — Role Momentum Snapshot (Delta-Based)
+Metric	Season	Last 4	Δ
+Target Share	18.2%	24.6%	+6.4%
+Targets / Game	6.3	8.1	+1.8
+Snap %	74%	86%	+12%
+TD Rate	5.1%	9.3%	+4.2%
+
+Important: These are comparative deltas, not averages.
+This avoids duplicating Overview.
+
+🎯 Primary Badge (Large, Visual)
+
+Under the table:
+
+🟢 ROLE EXPANDING
+
+or
+🟡 ROLE STABLE
+or
+🔴 ROLE DECLINING
+
+📊 Core Metrics (Sleeper-Native)
+
+You can compute all of these right now:
+
+1️⃣ Target Share %
+Target Share = Player Targets / Team Pass Attempts
+
+
+(Team pass attempts from matchup data)
+
+2️⃣ Targets per Game Delta
+Last 4 T/G - Season T/G
+
+3️⃣ Snap % Delta (if available)
+
+If snap % unavailable for some games:
+Use rolling average of available weeks only.
+
+4️⃣ TD Dependency Index
+TD Points / Total Fantasy Points
+
+
+If:
+
+35% = High TD reliance
+
+20–35% = Balanced
+
+<20% = Volume-backed
+
+Display small tag:
+⚠️ TD-Driven Production
+or
+📈 Volume-Backed Production
+
+🔥 Add Proprietary Score (StatChasers Differentiator)
+Role Momentum Score (0–100)
+
+Formula example:
+
+Momentum =
+  (Target Share Delta × 4)
++ (Targets/Game Delta × 3)
++ (Snap% Delta × 2)
++ (Recent TD Delta × 1)
+
+Normalize to 0–100 scale
+
+
+Display:
+
+Role Momentum: 78 / 100
+
+🟢 Strong Upward Trend
+
+🧊 Add Stability Layer (Small Card on Right)
+Usage Stability Score (0–100)
+
+Based on:
+
+Std deviation of targets
+
+Weekly share variance
+
+Example:
+
+Stable Role (84/100)
+or
+Volatile Usage (52/100)
+
+This complements Momentum.
+
+Momentum = Direction
+Stability = Predictability
+
+🎨 Visual Hierarchy (Premium Feel)
+
+Section 1 should look like:
+
+| ROLE MOMENTUM: 78 / 100 🟢 EXPANDING |
+
+Target Share Δ +6.4%
+Targets/Game Δ +1.8
+Snap % Δ +12%
+TD Rate Δ +4.2%
+
+Production Type: Volume-Backed
+Usage Stability: 84 / 100
+
+Clean. Focused. No fluff.
+
+🚀 Why This Works
+
+It:
+
+Doesn’t replicate Overview
+
+Doesn’t replicate Game Log
+
+Uses only Sleeper-available data
+
+Feels analytical
+
+Feels proprietary
+
+Feels premium
