@@ -37,6 +37,17 @@ add_filter( 'the_content', 'sc_inject_content', 99 );
  */
 add_filter( 'body_class', 'sc_add_body_class' );
 
+/* ─── Disable cache for player routes (debug only) ─── */
+add_action('send_headers', function () {
+    if ( function_exists('sc_detect_route') ) {
+        $r = sc_detect_route();
+        if ( $r ) {
+            header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+            header('Pragma: no-cache');
+        }
+    }
+}, 1);
+
 
 /* ─── Rewrite Rules ─── */
 
