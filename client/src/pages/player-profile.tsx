@@ -905,12 +905,22 @@ interface CareerProfile {
   smallSample: boolean;
 }
 
+type BenchmarkData = {
+  position: string;
+  season: number;
+  qualifiedThreshold: number;
+  posAvg: { yardsPerCatch: number | null; catchPct: number | null; tdPerTarget: number | null };
+  percentile: { yardsPerCatch: number | null; catchPct: number | null; tdPerTarget: number | null } | null;
+  playerQualified: boolean;
+} | null;
+
 type PlayerWithSeasons = Player & {
   availableSeasons?: number[];
   seasonLabel?: string | null;
   seasonRank?: number | null;
   multiSeasonStats?: SeasonStat[];
   careerProfile?: CareerProfile | null;
+  productionRiskBenchmarks?: BenchmarkData;
 };
 
 function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSeasons; entries: GameLogEntry[]; format?: ScoringFormat }) {
@@ -2526,8 +2536,10 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
             ? { label: 'Efficiency-Driven (Regression Risk)', color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20' }
             : { label: 'Balanced', color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' };
 
-        const tdRateLg = isQB ? 4.5 : isRB ? 3.0 : 5.0;
-        const yptLg = isQB ? 7.0 : isRB ? 4.2 : 7.5;
+        const bench = player.productionRiskBenchmarks;
+        const tdRateLg = bench?.posAvg?.tdPerTarget ?? (isQB ? 4.5 : isRB ? 3.0 : 5.0);
+        const yptLg = bench?.posAvg?.yardsPerCatch ?? (isQB ? 7.0 : isRB ? 4.2 : 7.5);
+        const catchLgBench = bench?.posAvg?.catchPct ?? (isQB ? 64 : isRB ? 75 : 65);
         const shareStabAvg = 55;
 
         const tdDepFactor = Math.max(0.3, Math.min(1.5, tdPctBar / 30));
@@ -2606,28 +2618,59 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                     <div>
                       <p className="text-[10px] text-muted-foreground">{isQB ? 'Yards/Att' : isRB ? 'Yards/Touch' : 'Yards/Catch'}</p>
                       <p className="text-sm font-bold text-foreground tabular-nums">{yardsPerOpp.toFixed(1)}</p>
-                      <p className={`text-[9px] ${yardsPerOpp > yptLg * 1.05 ? 'text-emerald-500' : yardsPerOpp < yptLg * 0.95 ? 'text-red-400' : 'text-muted-foreground/60'}`}>
-                        {yardsPerOpp > yptLg * 1.05 ? '\u2191' : yardsPerOpp < yptLg * 0.95 ? '\u2193' : '\u2248'} Pos Avg {yptLg.toFixed(1)}
-                      </p>
+                      {(() => {
+                        const delta = yardsPerOpp - yptLg;
+                        const isUp = delta > 0.3;
+                        const isDown = delta < -0.3;
+                        return (
+                          <>
+                            <p className={`text-[9px] ${isUp ? 'text-emerald-500' : isDown ? 'text-red-400' : 'text-muted-foreground/60'}`}>
+                              {isUp ? '\u2191' : isDown ? '\u2193' : '\u2248'} {isUp ? '+' : ''}{delta.toFixed(1)} vs Pos Avg ({yptLg.toFixed(1)})
+                            </p>
+                            {bench?.percentile?.yardsPerCatch != null && (
+                              <p className="text-[8px] text-muted-foreground/50">{bench.percentile.yardsPerCatch}th percentile</p>
+                            )}
+                          </>
+                        );
+                      })()}
                     </div>
                     <div>
                       <p className="text-[10px] text-muted-foreground">{isQB ? 'Completion %' : 'Catch %'}</p>
                       <p className="text-sm font-bold text-foreground tabular-nums">{catchPct.toFixed(1)}%</p>
                       {(() => {
-                        const catchLg = isQB ? 64 : isRB ? 75 : 65;
+                        const delta = catchPct - catchLgBench;
+                        const isUp = delta > 1;
+                        const isDown = delta < -1;
                         return (
-                          <p className={`text-[9px] ${catchPct > catchLg * 1.03 ? 'text-emerald-500' : catchPct < catchLg * 0.97 ? 'text-red-400' : 'text-muted-foreground/60'}`}>
-                            {catchPct > catchLg * 1.03 ? '\u2191' : catchPct < catchLg * 0.97 ? '\u2193' : '\u2248'} Pos Avg {catchLg}%
-                          </p>
+                          <>
+                            <p className={`text-[9px] ${isUp ? 'text-emerald-500' : isDown ? 'text-red-400' : 'text-muted-foreground/60'}`}>
+                              {isUp ? '\u2191' : isDown ? '\u2193' : '\u2248'} {isUp ? '+' : ''}{delta.toFixed(1)}% vs Pos Avg ({catchLgBench.toFixed(1)}%)
+                            </p>
+                            {bench?.percentile?.catchPct != null && (
+                              <p className="text-[8px] text-muted-foreground/50">{bench.percentile.catchPct}th percentile</p>
+                            )}
+                          </>
                         );
                       })()}
                     </div>
                     <div>
                       <p className="text-[10px] text-muted-foreground">{isQB ? 'TD/Att Rate' : isRB ? 'TD/Touch Rate' : 'TD/Target Rate'}</p>
                       <p className="text-sm font-bold text-foreground tabular-nums">{tdPerOpp.toFixed(1)}%</p>
-                      <p className={`text-[9px] ${tdPerOpp > tdRateLg * 1.1 ? 'text-emerald-500' : tdPerOpp < tdRateLg * 0.9 ? 'text-red-400' : 'text-muted-foreground/60'}`}>
-                        {tdPerOpp > tdRateLg * 1.1 ? '\u2191 Elevated' : tdPerOpp < tdRateLg * 0.9 ? '\u2193 Below Avg' : '\u2248 League Avg'} ({tdRateLg.toFixed(1)}%)
-                      </p>
+                      {(() => {
+                        const delta = tdPerOpp - tdRateLg;
+                        const isUp = delta > 0.3;
+                        const isDown = delta < -0.3;
+                        return (
+                          <>
+                            <p className={`text-[9px] ${isUp ? 'text-emerald-500' : isDown ? 'text-red-400' : 'text-muted-foreground/60'}`}>
+                              {isUp ? '\u2191' : isDown ? '\u2193' : '\u2248'} {isUp ? '+' : ''}{delta.toFixed(1)}% vs Pos Avg ({tdRateLg.toFixed(1)}%)
+                            </p>
+                            {bench?.percentile?.tdPerTarget != null && (
+                              <p className="text-[8px] text-muted-foreground/50">{bench.percentile.tdPerTarget}th percentile</p>
+                            )}
+                          </>
+                        );
+                      })()}
                     </div>
                   </div>
                 </div>
@@ -3633,8 +3676,6 @@ export default function PlayerProfile() {
                           <span className="text-[10px] font-bold text-primary/80">{rp.position}{rp.posRank}</span>
                           <span className="text-xs text-muted-foreground">&middot;</span>
                           <span className="text-xs text-muted-foreground">{rp.team}</span>
-                          <span className="text-xs text-muted-foreground">&middot;</span>
-                          <span className="text-xs font-medium text-muted-foreground">{rp.ppg} PPG</span>
                         </div>
                       </div>
                     </CardContent>

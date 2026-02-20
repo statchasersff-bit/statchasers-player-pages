@@ -346,6 +346,120 @@ function getAvailableSeasons(): number[] {
     .sort((a, b) => b - a);
 }
 
+interface PosBenchmarks {
+  position: string;
+  season: number;
+  qualThreshold: number;
+  posAvg: { yardsPerCatch: number | null; catchPct: number | null; tdPerTarget: number | null };
+  playerValues: number[];
+  catchValues: number[];
+  tdValues: number[];
+}
+
+const benchmarksCache: Map<string, PosBenchmarks> = new Map();
+
+function computePositionBenchmarks(season: number, position: string, allPlayers: Player[]): PosBenchmarks {
+  const key = `${season}_${position}`;
+  const cached = benchmarksCache.get(key);
+  if (cached) return cached;
+
+  const qualThresh = position === 'WR' ? 30 : 20;
+  const sLogs = loadGameLogs(season);
+
+  let sumYards = 0, sumRec = 0, sumTgt = 0, sumTd = 0;
+  const playerYPC: number[] = [];
+  const playerCatch: number[] = [];
+  const playerTDRate: number[] = [];
+
+  for (const [pid, entries] of Object.entries(sLogs)) {
+    const p = allPlayers.find(ap => ap.id === pid);
+    if (!p || p.position !== position) continue;
+
+    let pYards = 0, pRec = 0, pTgt = 0, pTd = 0;
+    for (const e of entries) {
+      if (!hasParticipation(e.stats, position)) continue;
+      const s = e.stats as unknown as Record<string, number | null | undefined>;
+      if (position === 'QB') {
+        pTgt += (s.pass_att as number) || 0;
+        pRec += (s.pass_cmp as number) || 0;
+        pYards += (s.pass_yd as number) || 0;
+        pTd += (s.pass_td as number) || 0;
+      } else if (position === 'RB') {
+        pTgt += (s.rec_tgt as number) || 0;
+        pRec += (s.rec as number) || 0;
+        pYards += (s.rec_yd as number) || 0;
+        pTd += (s.rec_td as number) || 0;
+      } else {
+        pTgt += (s.rec_tgt as number) || 0;
+        pRec += (s.rec as number) || 0;
+        pYards += (s.rec_yd as number) || 0;
+        pTd += (s.rec_td as number) || 0;
+      }
+    }
+
+    if (pTgt < qualThresh) continue;
+
+    sumYards += pYards;
+    sumRec += pRec;
+    sumTgt += pTgt;
+    sumTd += pTd;
+
+    if (pRec > 0) playerYPC.push(pYards / pRec);
+    if (pTgt > 0) playerCatch.push((pRec / pTgt) * 100);
+    if (pTgt > 0) playerTDRate.push((pTd / pTgt) * 100);
+  }
+
+  const result: PosBenchmarks = {
+    position,
+    season,
+    qualThreshold: qualThresh,
+    posAvg: {
+      yardsPerCatch: sumRec > 0 ? sumYards / sumRec : null,
+      catchPct: sumTgt > 0 ? (sumRec / sumTgt) * 100 : null,
+      tdPerTarget: sumTgt > 0 ? (sumTd / sumTgt) * 100 : null,
+    },
+    playerValues: playerYPC.sort((a, b) => a - b),
+    catchValues: playerCatch.sort((a, b) => a - b),
+    tdValues: playerTDRate.sort((a, b) => a - b),
+  };
+
+  benchmarksCache.set(key, result);
+  return result;
+}
+
+function computePercentile(sortedValues: number[], value: number): number | null {
+  const n = sortedValues.length;
+  if (n <= 1) return null;
+  let rank = 0;
+  for (const v of sortedValues) {
+    if (v < value) rank++;
+    else if (v === value) rank += 0.5;
+  }
+  return Math.round((rank / (n - 1)) * 100);
+}
+
+function getPlayerBenchmarks(season: number, position: string, allPlayers: Player[], playerStats: { yardsPerCatch: number; catchPct: number; tdPerTarget: number }, playerTotalTgt: number) {
+  if (!['QB', 'RB', 'WR', 'TE'].includes(position)) return null;
+  const bench = computePositionBenchmarks(season, position, allPlayers);
+  if (!bench.posAvg.yardsPerCatch && !bench.posAvg.catchPct && !bench.posAvg.tdPerTarget) return null;
+
+  const qualThresh = position === 'WR' ? 30 : 20;
+  const qualified = position === 'QB' || playerTotalTgt >= qualThresh;
+
+  return {
+    position,
+    season,
+    qualifiedThreshold: qualThresh,
+    posAvg: bench.posAvg,
+    percentile: qualified ? {
+      yardsPerCatch: computePercentile(bench.playerValues, playerStats.yardsPerCatch),
+      catchPct: computePercentile(bench.catchValues, playerStats.catchPct),
+      tdPerTarget: computePercentile(bench.tdValues, playerStats.tdPerTarget),
+    } : null,
+    playerQualified: qualified,
+  };
+}
+
 function parseScoringFormat(param: unknown): ScoringFormat {
   if (param === 'standard' || param === 'half' || param === 'ppr') return param;
   return 'ppr';
@@ -733,6 +847,32 @@ export async function registerRoutes(
     const dynastyRankings = loadDynastyRankings();
     const dynasty = dynastyRankings[player.slug] || null;
 
+    let productionRiskBenchmarks: ReturnType<typeof getPlayerBenchmarks> = null;
+    if (player.position && gamesPlayed > 0) {
+      const pos = player.position;
+      const isQB = pos === 'QB';
+      const isRB = pos === 'RB';
+      let pYards = 0, pRec = 0, pTgt = 0, pTd = 0;
+      for (const e of playedLogs) {
+        const s = e.stats as unknown as Record<string, number | null | undefined>;
+        if (isQB) {
+          pTgt += (s.pass_att as number) || 0;
+          pRec += (s.pass_cmp as number) || 0;
+          pYards += (s.pass_yd as number) || 0;
+          pTd += (s.pass_td as number) || 0;
+        } else {
+          pTgt += (s.rec_tgt as number) || 0;
+          pRec += (s.rec as number) || 0;
+          pYards += (s.rec_yd as number) || 0;
+          pTd += (s.rec_td as number) || 0;
+        }
+      }
+      const ypc = pRec > 0 ? pYards / pRec : 0;
+      const cp = pTgt > 0 ? (pRec / pTgt) * 100 : 0;
+      const tdR = pTgt > 0 ? (pTd / pTgt) * 100 : 0;
+      productionRiskBenchmarks = getPlayerBenchmarks(activeSeason, pos, allPlayers, { yardsPerCatch: ypc, catchPct: cp, tdPerTarget: tdR }, pTgt);
+    }
+
     const enriched = {
       ...player,
       headshotUrl: player.headshotUrl ?? null,
@@ -746,6 +886,7 @@ export async function registerRoutes(
       multiSeasonStats,
       careerProfile,
       dynasty,
+      productionRiskBenchmarks,
     };
     res.set("Cache-Control", "public, max-age=3600");
     res.json(enriched);
