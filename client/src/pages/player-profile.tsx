@@ -137,6 +137,35 @@ function PlayerHeadshot({ playerId, name, teamColor }: { playerId: string; name:
   );
 }
 
+function NeighborHeadshot({ playerId, name, teamAbbr }: { playerId: string; name: string; teamAbbr: string }) {
+  const [imgError, setImgError] = useState(false);
+  const url = getHeadshotUrl(playerId);
+  const teamColor = TEAM_PRIMARY_COLORS[teamAbbr] || '#6B7280';
+
+  if (imgError) {
+    return (
+      <div
+        className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800"
+        style={{ border: `2px solid ${teamColor}` }}
+        data-testid={`img-neighbor-${playerId}`}
+      >
+        <User className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={url}
+      alt={name}
+      className="flex-shrink-0 w-9 h-9 rounded-full object-cover bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800"
+      style={{ border: `2px solid ${teamColor}` }}
+      onError={() => setImgError(true)}
+      data-testid={`img-neighbor-${playerId}`}
+    />
+  );
+}
+
 function StatBox({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
   return (
     <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60">
@@ -3597,12 +3626,12 @@ export default function PlayerProfile() {
                 <Link key={rp.id} href={`/nfl/players/${rp.slug}/`}>
                   <Card className="hover-elevate cursor-pointer h-full" data-testid={`card-related-${rp.slug}`}>
                     <CardContent className="p-3 flex items-center gap-3 flex-wrap">
-                      <div className="flex-shrink-0 w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span className="text-[10px] font-bold text-primary">{rp.position}{rp.posRank}</span>
-                      </div>
+                      <NeighborHeadshot playerId={rp.id} name={rp.name} teamAbbr={rp.team} />
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-sm text-foreground truncate">{rp.name}</p>
                         <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                          <span className="text-[10px] font-bold text-primary/80">{rp.position}{rp.posRank}</span>
+                          <span className="text-xs text-muted-foreground">&middot;</span>
                           <span className="text-xs text-muted-foreground">{rp.team}</span>
                           <span className="text-xs text-muted-foreground">&middot;</span>
                           <span className="text-xs font-medium text-muted-foreground">{rp.ppg} PPG</span>
