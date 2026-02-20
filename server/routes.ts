@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import fs from "fs";
 import path from "path";
+import * as cheerio from "cheerio";
 import type { Player, GameLogEntry, DynastyData } from "@shared/playerTypes";
 import { normalizeTeamAbbr, TEAM_ALIAS_MAP } from "@shared/teamMappings";
 import { type ScoringFormat, getEntryPoints } from "@shared/scoring";
@@ -848,6 +849,126 @@ export async function registerRoutes(
       format,
       position: player.position,
     });
+  });
+
+  const patriotsRosterCache: { ts: number; map: Map<string, string> } = { ts: 0, map: new Map() };
+  const ROSTER_TTL = 6 * 60 * 60 * 1000;
+  const patriotsNewsCache: Map<string, { ts: number; items: any[] }> = new Map();
+  const NEWS_TTL = 30 * 60 * 1000;
+
+  function normName(name: string): string {
+    return name.toLowerCase().replace(/\./g, "").replace(/['']/g, "").replace(/\s+(jr|sr|ii|iii|iv|v)\b/g, "").replace(/\s+/g, " ").trim();
+  }
+
+  async function fetchHtml(url: string): Promise<string> {
+    const res = await fetch(url, {
+      headers: {
+        "user-agent": "StatChasersBot/1.0 (+https://statchasers.com)",
+        "accept-language": "en-US,en;q=0.9",
+      },
+    });
+    if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
+    return await res.text();
+  }
+
+  async function getPatriotsRosterMap(): Promise<Map<string, string>> {
+    const now = Date.now();
+    if (patriotsRosterCache.map.size && now - patriotsRosterCache.ts < ROSTER_TTL) {
+      return patriotsRosterCache.map;
+    }
+    const html = await fetchHtml("https://www.patriots.com/team/players-roster/");
+    const $ = cheerio.load(html);
+    const map = new Map<string, string>();
+    $('a[href*="/team/players-roster/"]').each((_, a) => {
+      const href = $(a).attr("href");
+      const text = $(a).text().trim();
+      if (!href || !text || text.length < 3) return;
+      if (href === "/team/players-roster/" || href.endsWith("/index")) return;
+      const full = href.startsWith("http") ? href : `https://www.patriots.com${href}`;
+      map.set(normName(text), full);
+    });
+    patriotsRosterCache.ts = now;
+    patriotsRosterCache.map = map;
+    return map;
+  }
+
+  function extractRelatedContent($: cheerio.CheerioAPI): { title: string; url: string; type: string }[] {
+    const results: { title: string; url: string; type: string }[] = [];
+    const seen = new Set<string>();
+
+    for (const sectionLabel of ["Related News", "Related Videos"]) {
+      const heading = $("h2").filter((_, el) => $(el).text().trim() === sectionLabel).first();
+      if (!heading.length) continue;
+      const grid = heading.closest(".d3-l-grid--inner");
+      if (!grid.length) continue;
+      const linkSelector = sectionLabel.includes("Video") ? 'a[href*="/video/"]' : 'a[href*="/news/"]';
+      grid.find(linkSelector).each((_, a) => {
+        const el = $(a);
+        const href = el.attr("href");
+        if (!href) return;
+        const url = href.startsWith("http") ? href : `https://www.patriots.com${href}`;
+        if (seen.has(url)) return;
+        seen.add(url);
+        const h3 = el.find("h3").first();
+        const rawText = (h3.length ? h3.text() : el.text()).replace(/\s+/g, " ").trim();
+        if (rawText.length < 5) return;
+        const parts = rawText.split(" ");
+        const first = parts[0].toLowerCase();
+        const isTypePrefix = ["news", "video", "audio"].includes(first);
+        const type = isTypePrefix ? first : (sectionLabel.includes("Video") ? "video" : "news");
+        let title = isTypePrefix ? rawText.slice(first.length).trim() : rawText;
+        title = title.replace(/Read the full .*$/, "").replace(/Watch the .*$/, "").trim();
+        if (title.length > 3) results.push({ title, url, type });
+      });
+    }
+    return results;
+  }
+
+  app.get("/api/patriots/player-news", async (req, res) => {
+    try {
+      const playerName = (req.query.player_name || "").toString().trim();
+      const limit = Math.min(parseInt(req.query.limit as string || "6", 10), 10);
+
+      if (!playerName) {
+        return res.status(400).json({ error: "player_name is required" });
+      }
+
+      const cacheKey = normName(playerName);
+      const cached = patriotsNewsCache.get(cacheKey);
+      if (cached && Date.now() - cached.ts < NEWS_TTL) {
+        const rosterMap = await getPatriotsRosterMap();
+        return res.json({
+          player_name: playerName,
+          found: true,
+          patriots_profile_url: rosterMap.get(cacheKey) || null,
+          items: cached.items.slice(0, limit),
+          cached: true,
+        });
+      }
+
+      const rosterMap = await getPatriotsRosterMap();
+      const profileUrl = rosterMap.get(cacheKey);
+
+      if (!profileUrl) {
+        return res.json({ player_name: playerName, found: false, items: [] });
+      }
+
+      const html = await fetchHtml(profileUrl);
+      const $ = cheerio.load(html);
+      const items = extractRelatedContent($);
+
+      patriotsNewsCache.set(cacheKey, { ts: Date.now(), items });
+
+      res.json({
+        player_name: playerName,
+        found: true,
+        patriots_profile_url: profileUrl,
+        items: items.slice(0, limit),
+      });
+    } catch (e: any) {
+      console.error("Patriots news error:", e.message);
+      res.status(500).json({ error: "Failed to fetch news" });
+    }
   });
 
   app.get("/sitemap.xml", (_req, res) => {

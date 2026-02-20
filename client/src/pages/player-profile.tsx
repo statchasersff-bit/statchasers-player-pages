@@ -2901,53 +2901,133 @@ function RankingsTab({ player }: { player: Player }) {
 }
 
 function NewsTab({ player }: { player: Player }) {
-  const entries = player.news || [];
+  const isNE = player.team === 'NE';
+  const { data: patriotsNews, isLoading: patriotsLoading } = useQuery({
+    queryKey: ["/api/patriots/player-news", player.name],
+    queryFn: async () => {
+      const res = await fetch(`/api/patriots/player-news?player_name=${encodeURIComponent(player.name)}&limit=8`);
+      if (!res.ok) throw new Error("Failed to load news");
+      return res.json() as Promise<{ found: boolean; items: { title: string; url: string; type: string }[]; patriots_profile_url?: string }>;
+    },
+    enabled: isNE,
+    staleTime: 30 * 60 * 1000,
+  });
 
-  if (entries.length > 0) {
-    return (
-      <div className="space-y-3" data-testid="news-list">
-        {entries.map((entry, i) => (
-          <a
-            key={i}
-            href={entry.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block"
-            data-testid={`link-news-${i}`}
-          >
-            <Card className="hover-elevate cursor-pointer">
-              <CardContent className="p-4 flex items-start gap-3 flex-wrap">
-                <Newspaper className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground">{entry.title}</p>
-                  {entry.summary && (
-                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{entry.summary}</p>
-                  )}
-                  <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                    <span className="text-[10px] text-muted-foreground/60">{entry.source}</span>
-                    <span className="text-[10px] text-muted-foreground/40">
-                      {new Date(entry.publishedAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-                <ExternalLink className="w-3.5 h-3.5 text-muted-foreground/40 flex-shrink-0 mt-0.5" />
-              </CardContent>
-            </Card>
-          </a>
-        ))}
-      </div>
-    );
-  }
+  const staticEntries = player.news || [];
+  const patriotsItems = patriotsNews?.items || [];
+  const hasContent = staticEntries.length > 0 || patriotsItems.length > 0;
 
   return (
-    <div className="space-y-6">
-      <div className="rounded-md border border-dashed border-muted-foreground/25 p-12 text-center">
-        <Newspaper className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
-        <p className="text-muted-foreground text-sm font-medium">No articles yet</p>
-        <p className="text-muted-foreground/70 text-xs mt-1">
-          News and analysis related to {player.name} will appear here as they are published.
-        </p>
-      </div>
+    <div className="space-y-6" data-testid="news-tab">
+      {isNE && patriotsLoading && (
+        <div className="space-y-3">
+          {[1, 2, 3].map(i => (
+            <Card key={i}><CardContent className="p-4"><Skeleton className="h-16 w-full" /></CardContent></Card>
+          ))}
+        </div>
+      )}
+
+      {patriotsItems.length > 0 && (
+        <div className="space-y-3" data-testid="patriots-news-list">
+          <div className="flex items-center gap-2 mb-1">
+            <Newspaper className="w-4 h-4 text-muted-foreground" />
+            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Latest from Patriots.com</p>
+          </div>
+          {patriotsItems.map((item, i) => (
+            <a
+              key={i}
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+              data-testid={`link-patriots-news-${i}`}
+            >
+              <Card className="hover-elevate cursor-pointer transition-all">
+                <CardContent className="p-4 flex items-start gap-3">
+                  {item.type === 'video' ? (
+                    <div className="p-1.5 rounded-md bg-red-500/10 flex-shrink-0 mt-0.5">
+                      <svg className="w-3.5 h-3.5 text-red-500" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                    </div>
+                  ) : (
+                    <Newspaper className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <Badge variant="outline" className={`text-[9px] py-0 px-1.5 uppercase font-bold ${item.type === 'video' ? 'border-red-500/30 text-red-500' : 'border-amber-500/30 text-amber-600 dark:text-amber-400'}`} data-testid={`badge-news-type-${i}`}>
+                        {item.type}
+                      </Badge>
+                      <span className="text-[10px] text-muted-foreground/50 font-medium">Patriots.com</span>
+                    </div>
+                    <p className="text-sm font-semibold text-foreground leading-snug line-clamp-2">{item.title}</p>
+                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 text-muted-foreground/40 flex-shrink-0 mt-0.5" />
+                </CardContent>
+              </Card>
+            </a>
+          ))}
+          {patriotsNews?.patriots_profile_url && (
+            <a
+              href={patriotsNews.patriots_profile_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground/50 hover:text-muted-foreground/70 transition-colors mt-1"
+              data-testid="link-patriots-profile"
+            >
+              View full profile on Patriots.com <ExternalLink className="w-3 h-3" />
+            </a>
+          )}
+        </div>
+      )}
+
+      {staticEntries.length > 0 && (
+        <div className="space-y-3" data-testid="news-list">
+          {patriotsItems.length > 0 && (
+            <div className="flex items-center gap-2 mb-1">
+              <FileText className="w-4 h-4 text-muted-foreground" />
+              <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Articles</p>
+            </div>
+          )}
+          {staticEntries.map((entry, i) => (
+            <a
+              key={i}
+              href={entry.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+              data-testid={`link-news-${i}`}
+            >
+              <Card className="hover-elevate cursor-pointer">
+                <CardContent className="p-4 flex items-start gap-3 flex-wrap">
+                  <Newspaper className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground">{entry.title}</p>
+                    {entry.summary && (
+                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{entry.summary}</p>
+                    )}
+                    <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                      <span className="text-[10px] text-muted-foreground/60">{entry.source}</span>
+                      <span className="text-[10px] text-muted-foreground/40">
+                        {new Date(entry.publishedAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 text-muted-foreground/40 flex-shrink-0 mt-0.5" />
+                </CardContent>
+              </Card>
+            </a>
+          ))}
+        </div>
+      )}
+
+      {!hasContent && !patriotsLoading && (
+        <div className="rounded-md border border-dashed border-muted-foreground/25 p-12 text-center">
+          <Newspaper className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
+          <p className="text-muted-foreground text-sm font-medium">No articles yet</p>
+          <p className="text-muted-foreground/70 text-xs mt-1">
+            News and analysis related to {player.name} will appear here as they are published.
+          </p>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Link href="/articles/">
