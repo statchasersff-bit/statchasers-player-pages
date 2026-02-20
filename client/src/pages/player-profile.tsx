@@ -2508,17 +2508,17 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
 
         let insightSentence = '';
         if (tdPctBar >= 35 && shareAvg < 18 && !isQB) {
-          insightSentence = `Despite ${shareAvg > 0 ? `a ${shareAvg.toFixed(1)}% target share` : 'moderate usage'}, scoring remains elevated due to an above-average touchdown rate (${tdPerOpp.toFixed(1)}%). Production may be vulnerable if scoring regresses.`;
+          insightSentence = `Despite ${shareAvg > 0 ? `a modest ${shareAvg.toFixed(1)}% target share` : 'limited usage volume'}, scoring remains elevated through a ${tdPerOpp.toFixed(1)}% TD rate that exceeds the positional average (${tdRateLg.toFixed(1)}%). This efficiency-driven profile carries meaningful regression risk if touchdown rate normalizes.`;
         } else if (tdPctBar >= 35 && isQB) {
-          insightSentence = `A ${tdPerOpp.toFixed(1)}% TD rate drives ${tdPctBar.toFixed(0)}% of fantasy output. ${tdPerOpp > tdRateLg + 1 ? 'This rate exceeds league average and may regress toward the mean.' : 'The rate is near league average, suggesting stability.'}`;
+          insightSentence = `A ${tdPerOpp.toFixed(1)}% TD rate accounts for ${tdPctBar.toFixed(0)}% of fantasy output. ${tdPerOpp > tdRateLg + 1 ? `This exceeds the positional baseline (${tdRateLg.toFixed(1)}%) and historically trends toward mean reversion, introducing downside risk.` : `This rate tracks near the positional baseline (${tdRateLg.toFixed(1)}%), providing relative stability in the scoring profile.`}`;
         } else if (volumeScore > efficiencyScore + 15) {
-          insightSentence = `Production is supported by ${isQB ? 'high pass volume' : isRB ? 'a large touch share' : `stable target share (${shareAvg.toFixed(1)}%)`} and moderate efficiency, indicating low regression risk.`;
+          insightSentence = `Production is anchored by ${isQB ? 'sustained pass volume' : isRB ? 'a commanding touch share' : `a ${shareAvg.toFixed(1)}% target share`} rather than elevated efficiency, reducing regression exposure. Volume-backed profiles historically maintain more stable week-to-week output.`;
         } else if (efficiencyScore > volumeScore + 15 && tdPerOpp > tdRateLg + 1) {
-          insightSentence = `Efficiency metrics are elevated${!isQB ? ` (${yardsPerOpp.toFixed(1)} yds/${isRB ? 'touch' : 'target'})` : ''} alongside a ${tdPerOpp.toFixed(1)}% TD rate that exceeds the positional average. ${isQB ? 'Pass volume' : 'Usage volume'} is modest, making scoring vulnerable to efficiency regression.`;
+          insightSentence = `Efficiency metrics${!isQB ? ` (${yardsPerOpp.toFixed(1)} yds/${isRB ? 'touch' : 'target'})` : ''} and a ${tdPerOpp.toFixed(1)}% TD rate both exceed positional baselines. With ${isQB ? 'pass volume' : 'usage volume'} below elite thresholds, scoring is disproportionately dependent on efficiency sustaining above-average levels.`;
         } else if (usageStab >= 70) {
-          insightSentence = `Consistent week-to-week usage (stability score: ${usageStab}) paired with ${tdPctBar < 30 ? 'low TD reliance' : 'moderate TD reliance'} suggests a reliable floor with ${sustainabilityScore >= 60 ? 'sustainable upside' : 'limited upside ceiling'}.`;
+          insightSentence = `Highly consistent week-to-week usage (stability: ${usageStab}/100) paired with ${tdPctBar < 30 ? 'low TD reliance' : 'moderate TD reliance'} establishes a reliable floor. ${sustainabilityScore >= 60 ? 'The balanced profile supports sustained production.' : 'Upside remains capped by volume limitations.'}`;
         } else {
-          insightSentence = `${isQB ? 'Passing volume' : isRB ? 'Touch volume' : 'Target share'} ${usageStab >= 50 ? 'has been reasonably consistent' : 'has fluctuated'} while ${tdPctBar >= 30 ? `TD dependency (${tdPctBar.toFixed(0)}%) adds scoring fragility` : 'a diverse scoring profile provides stability'}.`;
+          insightSentence = `${isQB ? 'Passing volume' : isRB ? 'Touch volume' : 'Target share'} ${usageStab >= 50 ? 'has been reasonably stable' : 'has shown inconsistency'}, while ${tdPctBar >= 30 ? `${tdPctBar.toFixed(0)}% TD dependency introduces scoring fragility in weeks without touchdowns` : 'a diversified scoring profile across yardage and volume reduces single-variable risk'}.`;
         }
 
         return (
@@ -2531,10 +2531,22 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
             </div>
 
             <Card data-testid="volume-vs-efficiency">
-              <CardContent className="p-4 space-y-4">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Volume vs Efficiency Driver</p>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-3">
+              <CardContent className="p-4 space-y-3">
+                <div className="flex items-center gap-1.5">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Volume vs Efficiency Driver</p>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="w-3 h-3 text-muted-foreground/40 cursor-help" data-testid="icon-volume-efficiency-info" />
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="max-w-[220px] text-[10px]">
+                        <p>Compares opportunity volume (touches, targets) against efficiency metrics to identify what drives production and where regression risk lies.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
                     <p className="text-[10px] font-semibold text-foreground uppercase tracking-wider">Volume Engine</p>
                     <div>
                       <p className="text-[10px] text-muted-foreground">{isQB ? 'Att/Game' : isRB ? 'Touches/Game' : 'Targets/Game'}</p>
@@ -2551,40 +2563,69 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                       <p className="text-sm font-bold text-foreground tabular-nums">{usageStab}</p>
                     </div>
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <p className="text-[10px] font-semibold text-foreground uppercase tracking-wider">Efficiency Engine</p>
                     <div>
                       <p className="text-[10px] text-muted-foreground">{isQB ? 'Yards/Att' : isRB ? 'Yards/Touch' : 'Yards/Target'}</p>
                       <p className="text-sm font-bold text-foreground tabular-nums">{yardsPerOpp.toFixed(1)}</p>
+                      <p className={`text-[9px] ${yardsPerOpp > yptLg * 1.05 ? 'text-emerald-500' : yardsPerOpp < yptLg * 0.95 ? 'text-red-400' : 'text-muted-foreground/60'}`}>
+                        {yardsPerOpp > yptLg * 1.05 ? '\u2191' : yardsPerOpp < yptLg * 0.95 ? '\u2193' : '\u2248'} Pos Avg {yptLg.toFixed(1)}
+                      </p>
                     </div>
                     <div>
                       <p className="text-[10px] text-muted-foreground">{isQB ? 'Completion %' : 'Catch %'}</p>
                       <p className="text-sm font-bold text-foreground tabular-nums">{catchPct.toFixed(1)}%</p>
+                      {(() => {
+                        const catchLg = isQB ? 64 : isRB ? 75 : 65;
+                        return (
+                          <p className={`text-[9px] ${catchPct > catchLg * 1.03 ? 'text-emerald-500' : catchPct < catchLg * 0.97 ? 'text-red-400' : 'text-muted-foreground/60'}`}>
+                            {catchPct > catchLg * 1.03 ? '\u2191' : catchPct < catchLg * 0.97 ? '\u2193' : '\u2248'} Pos Avg {catchLg}%
+                          </p>
+                        );
+                      })()}
                     </div>
                     <div>
                       <p className="text-[10px] text-muted-foreground">{isQB ? 'TD/Att Rate' : isRB ? 'TD/Touch Rate' : 'TD/Target Rate'}</p>
                       <p className="text-sm font-bold text-foreground tabular-nums">{tdPerOpp.toFixed(1)}%</p>
+                      <p className={`text-[9px] ${tdPerOpp > tdRateLg * 1.1 ? 'text-emerald-500' : tdPerOpp < tdRateLg * 0.9 ? 'text-red-400' : 'text-muted-foreground/60'}`}>
+                        {tdPerOpp > tdRateLg * 1.1 ? '\u2191 Elevated' : tdPerOpp < tdRateLg * 0.9 ? '\u2193 Below Avg' : '\u2248 League Avg'} ({tdRateLg.toFixed(1)}%)
+                      </p>
                     </div>
                   </div>
                 </div>
                 <div className="pt-2 border-t border-border">
-                  <Badge variant="outline" className={`text-[10px] ${productionDriver.bg} ${productionDriver.color}`} data-testid="badge-production-driver">
-                    {productionDriver.label === 'Volume-Backed Production' ? <TrendingUp className="w-3 h-3 mr-1" /> : productionDriver.label === 'Balanced' ? <Activity className="w-3 h-3 mr-1" /> : <AlertTriangle className="w-3 h-3 mr-1" />}
-                    {productionDriver.label}
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-muted-foreground/60">Production Driver:</span>
+                    <Badge variant="outline" className={`text-[10px] px-2.5 py-0.5 ${productionDriver.bg} ${productionDriver.color}`} data-testid="badge-production-driver">
+                      {productionDriver.label === 'Volume-Backed Production' ? <TrendingUp className="w-3 h-3 mr-1" /> : productionDriver.label === 'Balanced' ? <Activity className="w-3 h-3 mr-1" /> : <AlertTriangle className="w-3 h-3 mr-1" />}
+                      {productionDriver.label}
+                    </Badge>
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card data-testid="td-dependency-breakdown">
               <CardContent className="p-4 space-y-3">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">TD Dependency Breakdown</p>
+                <div className="flex items-center gap-1.5">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">TD Dependency Breakdown</p>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="w-3 h-3 text-muted-foreground/40 cursor-help" data-testid="icon-td-dependency-info" />
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="max-w-[200px] text-[10px]">
+                        <p>TD dependency above 35% may increase weekly volatility and regression risk.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
                 <div className="space-y-2">
-                  <div className="flex h-5 rounded-full overflow-hidden border border-border" data-testid="bar-td-breakdown">
+                  <div className="flex h-6 rounded-full overflow-hidden border border-border" data-testid="bar-td-breakdown">
                     {tdPctBar > 0 && (
                       <div
                         className="flex items-center justify-center text-[9px] font-bold text-white"
-                        style={{ width: `${tdPctBar}%`, background: '#f59e0b' }}
+                        style={{ width: `${tdPctBar}%`, background: '#d97706' }}
                       >
                         {tdPctBar >= 15 ? `${tdPctBar.toFixed(0)}%` : ''}
                       </div>
@@ -2592,7 +2633,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                     {yardPctBar > 0 && (
                       <div
                         className="flex items-center justify-center text-[9px] font-bold text-white"
-                        style={{ width: `${yardPctBar}%`, background: 'hsl(var(--primary))' }}
+                        style={{ width: `${yardPctBar}%`, background: '#6366f1' }}
                       >
                         {yardPctBar >= 15 ? `${yardPctBar.toFixed(0)}%` : ''}
                       </div>
@@ -2600,17 +2641,17 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                     {recPctBar > 0 && (
                       <div
                         className="flex items-center justify-center text-[9px] font-bold text-white"
-                        style={{ width: `${recPctBar}%`, background: '#10b981' }}
+                        style={{ width: `${recPctBar}%`, background: '#059669' }}
                       >
                         {recPctBar >= 15 ? `${recPctBar.toFixed(0)}%` : ''}
                       </div>
                     )}
                   </div>
                   <div className="flex items-center gap-4 text-[10px] text-muted-foreground flex-wrap">
-                    <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ background: '#f59e0b' }} /> TDs {tdPctBar.toFixed(0)}%</span>
-                    <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ background: 'hsl(var(--primary))' }} /> Yardage {yardPctBar.toFixed(0)}%</span>
+                    <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ background: '#d97706' }} /> TDs {tdPctBar.toFixed(0)}%</span>
+                    <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ background: '#6366f1' }} /> Yardage {yardPctBar.toFixed(0)}%</span>
                     {!isQB && recPctBar > 0 && (
-                      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ background: '#10b981' }} /> Receptions {recPctBar.toFixed(0)}%</span>
+                      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ background: '#059669' }} /> Receptions {recPctBar.toFixed(0)}%</span>
                     )}
                   </div>
                 </div>
@@ -2623,29 +2664,39 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
               </CardContent>
             </Card>
 
-            <Card data-testid="sustainability-score">
+            <Card data-testid="sustainability-score" className="border-border/60">
               <CardContent className="p-4 space-y-3">
                 <div className="flex items-center justify-between gap-3 flex-wrap">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Regression Signal</p>
-                  <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md ${sustainBg}`}>
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Sustainability Outlook</p>
+                  <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md ${sustainBg}`}>
                     {sustainIcon}
-                    <span className={`text-[10px] font-semibold ${sustainColor}`}>{sustainLabel}</span>
+                    <span className={`text-[11px] font-bold ${sustainColor}`}>{sustainLabel}</span>
                   </div>
                 </div>
                 <div className="flex items-end gap-3">
-                  <p className={`text-4xl font-bold tabular-nums ${sustainColor}`} data-testid="text-sustainability-score">
+                  <p className={`text-5xl font-extrabold tabular-nums ${sustainColor}`} data-testid="text-sustainability-score">
                     {sustainabilityScore}
                   </p>
-                  <p className="text-sm text-muted-foreground mb-1">/ 100</p>
+                  <div className="mb-1.5">
+                    <p className="text-sm text-muted-foreground">/ 100</p>
+                  </div>
                 </div>
-                <div className="h-2 rounded-full bg-muted overflow-hidden" data-testid="bar-sustainability">
+                <div className="h-3 rounded-full bg-muted overflow-hidden" data-testid="bar-sustainability">
                   <div
-                    className="h-full rounded-full transition-all duration-500"
+                    className="h-full rounded-full"
                     style={{
-                      width: `${sustainabilityScore}%`,
-                      background: sustainabilityScore >= 70 ? '#10b981' : sustainabilityScore >= 45 ? '#f59e0b' : '#ef4444',
-                    }}
+                      '--sustain-width': `${sustainabilityScore}%`,
+                      width: '0%',
+                      background: sustainabilityScore >= 70 ? '#10b981' : sustainabilityScore >= 40 ? '#f59e0b' : '#ef4444',
+                      animation: 'sustainFill 1s ease-out 0.3s forwards',
+                    } as any}
                   />
+                </div>
+                <div className="flex items-center justify-between text-[9px] text-muted-foreground/50 px-0.5">
+                  <span>0 &mdash; Elevated Risk</span>
+                  <span>40 &mdash; Moderate</span>
+                  <span>70 &mdash; Sustainable</span>
+                  <span>100</span>
                 </div>
                 <p className="text-[11px] text-foreground/80 leading-relaxed italic" data-testid="text-sustainability-insight">
                   {insightSentence}

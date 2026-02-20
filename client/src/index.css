@@ -13,6 +13,15 @@
   }
 }
 
+@keyframes sustainFill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--sustain-width);
+  }
+}
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
