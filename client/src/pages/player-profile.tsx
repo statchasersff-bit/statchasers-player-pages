@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   ArrowLeft,
   Trophy,
@@ -35,6 +36,8 @@ import {
   EyeOff,
   Eye,
   Gauge,
+  Info,
+  Sparkles,
 } from "lucide-react";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import type { Player, GameLogEntry, NewsEntry, GameLogStats, GameScore } from "@shared/playerTypes";
@@ -1730,16 +1733,32 @@ function computeUsageStability(activeEntries: GameLogEntry[], primaryKey: string
   return Math.round(Math.max(0, Math.min(100, 100 / (1 + (cv / 0.4) ** 2))));
 }
 
+function getDeltaMicroLabel(delta: number, pct: boolean): string {
+  const abs = Math.abs(delta);
+  if (pct) {
+    if (abs < 2) return 'Stable';
+    if (abs < 5) return delta > 0 ? 'Modest Rise' : 'Modest Dip';
+    return delta > 0 ? 'Notable Rise' : 'Notable Drop';
+  }
+  if (abs < 0.3) return 'Stable';
+  if (abs < 1) return delta > 0 ? 'Modest Rise' : 'Modest Dip';
+  return delta > 0 ? 'Notable Rise' : 'Notable Drop';
+}
+
 function DeltaCell({ delta, pct = false }: { delta: number; pct?: boolean }) {
   const threshold = pct ? 0.3 : 0.05;
   const isPos = delta > threshold;
   const isNeg = delta < -threshold;
   const color = isPos ? 'text-emerald-500' : isNeg ? 'text-red-400' : 'text-muted-foreground';
   const sign = isPos ? '+' : '';
+  const microLabel = getDeltaMicroLabel(delta, pct);
   return (
-    <span className={`font-semibold tabular-nums ${color}`}>
-      {sign}{delta.toFixed(1)}{pct ? '%' : ''}
-    </span>
+    <div className="flex flex-col items-end gap-0">
+      <span className={`font-semibold tabular-nums ${color}`}>
+        {sign}{delta.toFixed(1)}{pct ? '%' : ''}
+      </span>
+      <span className={`text-[9px] font-medium ${color} opacity-70`}>{microLabel}</span>
+    </div>
   );
 }
 
@@ -1784,9 +1803,10 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   const normalizedDelta = weightedDeltaSum / totalWeight;
   const momentumScore = Math.round(Math.max(0, Math.min(100, 50 + normalizedDelta * 2.5)));
 
-  const momentumLabel = momentumScore >= 60 ? 'EXPANDING' : momentumScore <= 39 ? 'DECLINING' : 'STABLE';
+  const momentumLabel = momentumScore >= 80 ? 'STRONG EXPANSION' : momentumScore >= 60 ? 'EXPANDING' : momentumScore <= 39 ? 'DECLINING' : 'STABLE';
   const momentumColor = momentumScore >= 60 ? 'text-emerald-500' : momentumScore <= 39 ? 'text-red-400' : 'text-amber-400';
   const momentumBg = momentumScore >= 60 ? 'bg-emerald-500/10 border-emerald-500/20' : momentumScore <= 39 ? 'bg-red-500/10 border-red-500/20' : 'bg-amber-500/10 border-amber-500/20';
+  const momentumBarColor = momentumScore >= 80 ? '#10b981' : momentumScore >= 60 ? '#34d399' : momentumScore <= 39 ? '#f87171' : '#fbbf24';
 
   const tdDep = computeTdDependency(activeEntries, position, format);
   const stability = computeUsageStability(activeEntries, primaryKey);
@@ -1794,13 +1814,38 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   const stabilityColor = stability >= 70 ? 'text-emerald-500' : stability >= 45 ? 'text-amber-400' : 'text-red-400';
 
   const topDeltaRow = deltaRows.reduce((best, d) => Math.abs(d.delta) > Math.abs(best.delta) ? d : best, deltaRows[0]);
-  const insightDirection = topDeltaRow?.delta > 0 ? 'increased' : 'declined';
-  const insightDeltaStr = Math.abs(topDeltaRow?.delta ?? 0).toFixed(1);
   const secondDelta = deltaRows.filter(d => d.key !== topDeltaRow?.key).reduce((best, d) => Math.abs(d.delta) > Math.abs(best.delta) ? d : best, deltaRows[1] || deltaRows[0]);
-  const insightVerb2 = (secondDelta?.delta ?? 0) < 0 ? 'dropped' : 'rose';
-  const microInsight = topDeltaRow && secondDelta && deltaRows.length >= 2
-    ? `${topDeltaRow.label} has ${insightDirection} ${insightDeltaStr}${topDeltaRow.pct ? '%' : ''} over the last ${RECENT_WINDOW} weeks while ${secondDelta.label.toLowerCase()} ${insightVerb2} ${Math.abs(secondDelta.delta).toFixed(1)}${secondDelta.pct ? '%' : ''}, ${momentumScore >= 50 ? 'indicating sustained offensive involvement' : 'indicating reduced offensive involvement'}.`
-    : null;
+
+  const microInsight = useMemo(() => {
+    if (!topDeltaRow || !secondDelta || deltaRows.length < 2) return null;
+    const topAbs = Math.abs(topDeltaRow.delta);
+    const topLabel = topDeltaRow.label.toLowerCase();
+    const secLabel = secondDelta.label.toLowerCase();
+    const secAbs = Math.abs(secondDelta.delta);
+    const topPct = topDeltaRow.pct;
+
+    const topMagnitude = topPct ? (topAbs < 2 ? 'stable' : topAbs < 5 ? 'modest' : 'notable') : (topAbs < 0.3 ? 'stable' : topAbs < 1 ? 'modest' : 'notable');
+    const secDirection = secondDelta.delta >= 0 ? 'holding steady' : 'dipping slightly';
+
+    if (topMagnitude === 'stable') {
+      return `Usage metrics have remained largely stable over the last ${RECENT_WINDOW} weeks, with ${topLabel} and ${secLabel} both holding near season averages — suggesting a consistent offensive role.`;
+    }
+    const topVerb = topDeltaRow.delta > 0
+      ? (topMagnitude === 'modest' ? 'ticked upward' : 'risen meaningfully')
+      : (topMagnitude === 'modest' ? 'dipped modestly' : 'pulled back noticeably');
+
+    const contextPhrase = secAbs < (secondDelta.pct ? 2 : 0.3)
+      ? `while ${secLabel} remains steady`
+      : `${secondDelta.delta > 0 ? 'alongside rising' : 'even as'} ${secLabel} ${secondDelta.delta > 0 ? secDirection : 'has also softened'}`;
+
+    const outlook = momentumScore >= 60
+      ? 'pointing to a strengthening role'
+      : momentumScore <= 39
+      ? 'suggesting a narrowing of opportunity'
+      : 'worth monitoring over the coming weeks';
+
+    return `${topLabel.charAt(0).toUpperCase() + topLabel.slice(1)} has ${topVerb} over the last four weeks ${contextPhrase} — ${outlook}.`;
+  }, [topDeltaRow, secondDelta, deltaRows, momentumScore]);
 
   const [trendView, setTrendView] = useState<'share' | 'raw' | 'pct'>('share');
 
@@ -1876,85 +1921,150 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
     );
   }
 
+  const playerRoleRows = deltaRows.filter(d => d.key !== 'team_pass_rate');
+  const contextRows = deltaRows.filter(d => d.key === 'team_pass_rate');
+
   return (
     <div className="space-y-6" data-testid="usage-trends-tab">
-      <Card data-testid="opportunity-momentum-card">
-        <CardContent className="p-4 space-y-4">
-          <div className="flex items-center justify-between gap-3 flex-wrap">
-            <div className="flex items-center gap-2">
-              <Gauge className="w-4 h-4 text-muted-foreground" />
-              <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Opportunity Momentum</p>
-            </div>
-            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs font-bold ${momentumBg} ${momentumColor}`} data-testid="role-momentum-badge">
-              {momentumScore >= 60 ? <TrendingUp className="w-3.5 h-3.5" /> : momentumScore <= 39 ? <TrendingDown className="w-3.5 h-3.5" /> : <Minus className="w-3.5 h-3.5" />}
-              ROLE {momentumLabel}
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            <div>
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Role Momentum</p>
-              <p className="text-3xl font-bold tabular-nums" style={{ color: momentumScore >= 60 ? '#10b981' : momentumScore <= 39 ? '#f87171' : '#fbbf24' }} data-testid="text-momentum-score">
-                {momentumScore}
-                <span className="text-sm font-medium text-muted-foreground ml-1">/ 100</span>
-              </p>
-            </div>
-            <div className="flex gap-4 flex-wrap">
-              <div className="text-right">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Usage Stability</p>
-                <p className={`text-lg font-bold tabular-nums ${stabilityColor}`} data-testid="text-stability-score">{stability}<span className="text-xs font-medium text-muted-foreground ml-0.5">/ 100</span></p>
-                <p className={`text-[10px] font-medium ${stabilityColor}`}>{stability >= 70 ? '\u2705' : stability >= 45 ? '\u26A0\uFE0F' : '\u26A0\uFE0F'} {stabilityLabel}</p>
+      <Card className="overflow-hidden" data-testid="opportunity-momentum-card">
+        <CardContent className="p-0">
+          <div className="p-4 pb-0 space-y-4" style={{ background: 'linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--card) / 0.85) 100%)' }}>
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <p className="text-xs uppercase tracking-wider text-foreground font-bold">Role Trend Score</p>
+                <TooltipProvider delayDuration={200}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="inline-flex items-center cursor-help">
+                        <Info className="w-3 h-3 text-muted-foreground/50" />
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="max-w-[200px] text-xs">
+                      Weighted measure of recent usage change relative to season averages
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
-              {position !== 'K' && (
-                <div className="text-right">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">TD Dependency</p>
-                  <p className="text-lg font-bold tabular-nums text-foreground" data-testid="text-td-dependency">{tdDep.pct.toFixed(0)}%</p>
-                  <p className={`text-[10px] font-medium ${tdDep.pct < 20 ? 'text-emerald-500' : tdDep.pct >= 35 ? 'text-amber-400' : 'text-muted-foreground'}`}>{tdDep.pct < 20 ? '\uD83D\uDFE2' : tdDep.pct >= 35 ? '\uD83D\uDFE1' : '\u2796'} {tdDep.label}</p>
+              <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-[10px] font-bold uppercase tracking-wide ${momentumBg} ${momentumColor}`} data-testid="role-momentum-badge">
+                {momentumScore >= 60 ? <TrendingUp className="w-3.5 h-3.5" /> : momentumScore <= 39 ? <TrendingDown className="w-3.5 h-3.5" /> : <Minus className="w-3.5 h-3.5" />}
+                {momentumLabel}
+              </div>
+            </div>
+
+            <div className="flex items-end justify-between gap-4 flex-wrap">
+              <div>
+                <p className="text-4xl font-extrabold tabular-nums leading-none" style={{ color: momentumBarColor }} data-testid="text-momentum-score">
+                  {momentumScore}
+                  <span className="text-base font-semibold text-muted-foreground ml-1">/ 100</span>
+                </p>
+                <div className="mt-2 w-48">
+                  <div className="h-1.5 rounded-full bg-muted/30 overflow-hidden">
+                    <div className="h-full rounded-full transition-all duration-700 ease-out" style={{ width: `${momentumScore}%`, background: `linear-gradient(90deg, ${momentumBarColor}88, ${momentumBarColor})` }} />
+                  </div>
+                  <div className="flex justify-between mt-0.5">
+                    <span className="text-[8px] text-muted-foreground/50">0</span>
+                    <span className="text-[8px] text-muted-foreground/50">100</span>
+                  </div>
                 </div>
-              )}
+              </div>
+              <div className="flex gap-5 flex-wrap pb-1">
+                <div className="text-right">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center justify-end gap-1">Usage Stability
+                    <TooltipProvider delayDuration={200}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="inline-flex cursor-help"><Info className="w-2.5 h-2.5 text-muted-foreground/40" /></span>
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom" className="max-w-[180px] text-xs">
+                          Consistency of weekly target share volume
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </p>
+                  <p className={`text-base font-bold tabular-nums ${stabilityColor}`} data-testid="text-stability-score">{stability}<span className="text-[10px] font-medium text-muted-foreground ml-0.5">/ 100</span></p>
+                  <p className={`text-[9px] font-medium ${stabilityColor}`}>{stabilityLabel}</p>
+                </div>
+                {position !== 'K' && (
+                  <div className="text-right">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">TD Dependency</p>
+                    <p className="text-base font-bold tabular-nums text-foreground" data-testid="text-td-dependency">{tdDep.pct.toFixed(0)}%</p>
+                    <p className={`text-[9px] font-medium ${tdDep.pct < 20 ? 'text-emerald-500' : tdDep.pct >= 35 ? 'text-amber-400' : 'text-muted-foreground'}`}>{tdDep.label}</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="border-t border-border pt-3">
+          <div className="h-px bg-gradient-to-r from-amber-500/30 via-amber-500/10 to-transparent" />
+
+          <div className="p-4 pt-3 space-y-3">
             <div className="overflow-x-auto">
               <table className="w-full text-xs" data-testid="table-momentum-deltas">
                 <thead>
-                  <tr className="text-muted-foreground">
-                    <th className="text-left font-medium pb-2 pr-3">Metric</th>
-                    <th className="text-right font-medium pb-2 px-2">Season</th>
-                    <th className="text-right font-medium pb-2 px-2">Last {RECENT_WINDOW}</th>
-                    <th className="text-right font-medium pb-2 pl-2">{'\u0394'}</th>
+                  <tr className="text-muted-foreground/70">
+                    <th className="text-left font-medium pb-2 pr-3 text-[10px]">Metric</th>
+                    <th className="text-right font-medium pb-2 px-2 text-[10px]">Season</th>
+                    <th className="text-right font-medium pb-2 px-2 text-[10px]">Last {RECENT_WINDOW}</th>
+                    <th className="text-right font-medium pb-2 pl-2 text-[10px]">{'\u0394'}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {deltaRows.map((row, i) => (
-                    <tr key={i} className="border-t border-border/50">
-                      <td className="py-1.5 pr-3 text-foreground font-medium">{row.label}</td>
-                      <td className="py-1.5 px-2 text-right tabular-nums text-muted-foreground">{row.pct ? `${row.seasonAvg.toFixed(1)}%` : row.seasonAvg.toFixed(1)}</td>
-                      <td className="py-1.5 px-2 text-right tabular-nums text-foreground font-medium">{row.pct ? `${row.recentAvg.toFixed(1)}%` : row.recentAvg.toFixed(1)}</td>
+                  {playerRoleRows.map((row, i) => (
+                    <tr key={i} className="border-t border-border/40">
+                      <td className="py-1.5 pr-3 text-foreground/80 font-normal text-[11px]">
+                        {row.label}
+                        {row.key === 'target_share' && (
+                          <TooltipProvider delayDuration={200}>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span className="inline-flex ml-1 align-middle cursor-help"><Info className="w-2.5 h-2.5 text-muted-foreground/30" /></span>
+                              </TooltipTrigger>
+                              <TooltipContent side="right" className="max-w-[180px] text-xs">
+                                Season total targets ÷ team total targets
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
+                      </td>
+                      <td className="py-1.5 px-2 text-right tabular-nums text-muted-foreground/70 text-[11px]">{row.pct ? `${row.seasonAvg.toFixed(1)}%` : row.seasonAvg.toFixed(1)}</td>
+                      <td className="py-1.5 px-2 text-right tabular-nums text-foreground/80 font-medium text-[11px]">{row.pct ? `${row.recentAvg.toFixed(1)}%` : row.recentAvg.toFixed(1)}</td>
                       <td className="py-1.5 pl-2 text-right"><DeltaCell delta={row.delta} pct={row.pct} /></td>
                     </tr>
                   ))}
+                  {contextRows.length > 0 && (
+                    <>
+                      <tr><td colSpan={4} className="py-1"><div className="border-t border-dashed border-border/30" /><p className="text-[9px] uppercase tracking-wider text-muted-foreground/40 font-medium pt-1">Context</p></td></tr>
+                      {contextRows.map((row, i) => (
+                        <tr key={`ctx-${i}`} className="border-t border-border/20">
+                          <td className="py-1.5 pr-3 text-muted-foreground/60 font-normal text-[11px] italic">{row.label}</td>
+                          <td className="py-1.5 px-2 text-right tabular-nums text-muted-foreground/50 text-[11px]">{row.pct ? `${row.seasonAvg.toFixed(1)}%` : row.seasonAvg.toFixed(1)}</td>
+                          <td className="py-1.5 px-2 text-right tabular-nums text-muted-foreground/60 font-medium text-[11px]">{row.pct ? `${row.recentAvg.toFixed(1)}%` : row.recentAvg.toFixed(1)}</td>
+                          <td className="py-1.5 pl-2 text-right"><DeltaCell delta={row.delta} pct={row.pct} /></td>
+                        </tr>
+                      ))}
+                    </>
+                  )}
                 </tbody>
               </table>
             </div>
+
+            {microInsight && (
+              <p className="text-[11px] text-muted-foreground/80 leading-relaxed pt-1 italic" data-testid="text-momentum-insight">
+                {microInsight}
+              </p>
+            )}
+
+            {position !== 'K' && (
+              <div className="flex items-center gap-2 pt-1 flex-wrap">
+                <span className="text-[10px] text-muted-foreground/60">Production Type:</span>
+                <Badge variant="outline" className={`text-[10px] ${tdDep.pct >= 35 ? 'border-amber-500/30 text-amber-500' : 'border-emerald-500/30 text-emerald-500'}`} data-testid="badge-production-type">
+                  {tdDep.pct >= 35 ? <AlertTriangle className="w-3 h-3 mr-1" /> : <TrendingUp className="w-3 h-3 mr-1" />}
+                  {tdDep.tag}
+                </Badge>
+              </div>
+            )}
           </div>
-
-          {microInsight && (
-            <p className="text-[11px] text-muted-foreground leading-relaxed pt-1 italic" data-testid="text-momentum-insight">
-              {microInsight}
-            </p>
-          )}
-
-          {position !== 'K' && (
-            <div className="flex items-center gap-2 pt-1 flex-wrap">
-              <span className="text-[10px] text-muted-foreground">Production Type:</span>
-              <Badge variant="outline" className={`text-[10px] ${tdDep.pct >= 35 ? 'border-amber-500/30 text-amber-500' : 'border-emerald-500/30 text-emerald-500'}`} data-testid="badge-production-type">
-                {tdDep.pct >= 35 ? <AlertTriangle className="w-3 h-3 mr-1" /> : <TrendingUp className="w-3 h-3 mr-1" />}
-                {tdDep.tag}
-              </Badge>
-            </div>
-          )}
         </CardContent>
       </Card>
 
