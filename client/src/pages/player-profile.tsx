@@ -3204,16 +3204,6 @@ export default function PlayerProfile() {
                   </>
                 )}
               </div>
-              {player.dynasty && (
-                <div className="flex items-center gap-3 mt-2 flex-wrap" data-testid="dynasty-header-badge">
-                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/20">
-                    <Trophy className="w-3 h-3 text-amber-500" />
-                    <span className="text-[11px] font-semibold text-amber-600 dark:text-amber-400">
-                      {player.dynasty.ageCurveTier} {player.position}{player.dynasty.positionalRank}
-                    </span>
-                  </div>
-                </div>
-              )}
               <div
                 className="mt-2.5 mb-3 h-[2px] w-20 rounded-full"
                 style={{ background: 'linear-gradient(90deg, #D4A843, #F5D36E, #D4A843)' }}
