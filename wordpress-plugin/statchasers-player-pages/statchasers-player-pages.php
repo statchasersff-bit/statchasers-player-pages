@@ -48,29 +48,66 @@ function sc_deactivate() {
 add_action( SC_CRON_HOOK, 'sc_refresh_players_data' );
 
 /**
- * Enqueue plugin assets with filemtime cache-busting.
+ * Enqueue plugin assets – remote (GitHub Pages) with local fallback.
  */
-add_action( 'wp_enqueue_scripts', function() {
-    $r = function_exists( 'sc_detect_route' ) ? sc_detect_route() : null;
-    if ( ! $r ) return;
+add_action('wp_enqueue_scripts', function () {
+    if (!function_exists('sc_detect_route') || !sc_detect_route()) return;
 
-    $js_file = SC_PLUGIN_DIR . 'assets/players.js';
-    $js_ver  = file_exists( $js_file ) ? filemtime( $js_file ) : SC_VERSION;
+    $remote_base = 'https://YOURUSER.github.io/statchasers-playerpages/';
+    $manifest_url = $remote_base . 'manifest.json';
 
-    wp_enqueue_script(
-        'sc-players-js',
-        SC_PLUGIN_URL . 'assets/players.js',
-        array(),
-        $js_ver,
-        true
-    );
+    $cache_key = 'sc_players_remote_manifest_v1';
+    $manifest = get_transient($cache_key);
 
-    wp_localize_script( 'sc-players-js', 'scPlayersConfig', array(
-        'restUrl'    => rest_url( 'statchasers/v1/players' ),
-        'baseUrl'    => home_url( '/nfl/players/' ),
-        'indexedUrl' => rest_url( 'statchasers/v1/indexed-players' ),
-    ) );
-} );
+    if (!$manifest) {
+        $res = wp_remote_get($manifest_url, ['timeout' => 3]);
+        if (!is_wp_error($res) && wp_remote_retrieve_response_code($res) === 200) {
+            $json = json_decode(wp_remote_retrieve_body($res), true);
+            if (is_array($json)) {
+                $manifest = $json;
+                set_transient($cache_key, $manifest, 10 * MINUTE_IN_SECONDS);
+            }
+        }
+    }
+
+    $use_remote = is_array($manifest);
+
+    if ($use_remote) {
+        $entry = $manifest['index.html'] ?? null;
+        if (!$entry || empty($entry['file'])) {
+            $use_remote = false;
+        } else {
+            $js_file = $entry['file'];
+            $css_files = $entry['css'] ?? [];
+            $ver = md5($js_file);
+
+            foreach ($css_files as $i => $css) {
+                wp_enqueue_style("sc-players-css-remote-$i", $remote_base . $css, [], $ver);
+            }
+
+            wp_enqueue_script('sc-players-js', $remote_base . $js_file, [], $ver, true);
+
+            wp_localize_script('sc-players-js', 'scPlayersConfig', [
+                'restUrl'    => rest_url('statchasers/v1/players'),
+                'baseUrl'    => home_url('/nfl/players/'),
+                'indexedUrl' => rest_url('statchasers/v1/indexed-players'),
+            ]);
+
+            return;
+        }
+    }
+
+    $js_path = plugin_dir_path(__FILE__) . 'assets/players.js';
+    $ver = file_exists($js_path) ? filemtime($js_path) : (defined('SC_VERSION') ? SC_VERSION : '1.0.0');
+
+    wp_enqueue_script('sc-players-js', plugin_dir_url(__FILE__) . 'assets/players.js', [], $ver, true);
+
+    wp_localize_script('sc-players-js', 'scPlayersConfig', [
+        'restUrl'    => rest_url('statchasers/v1/players'),
+        'baseUrl'    => home_url('/nfl/players/'),
+        'indexedUrl' => rest_url('statchasers/v1/indexed-players'),
+    ]);
+});
 
 add_action( 'admin_notices', function() {
     if ( ! current_user_can( 'manage_options' ) ) return;
