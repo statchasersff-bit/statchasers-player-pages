@@ -1749,7 +1749,22 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   const metrics = getPositionMomentumMetrics(position);
   const RECENT_WINDOW = 4;
 
+  const getStat = (e: GameLogEntry, key: string) => (e.stats as unknown as Record<string, number>)[key] ?? 0;
+
+  const totalPlayerTgt = activeEntries.reduce((s, e) => s + getStat(e, 'rec_tgt'), 0);
+  const totalTeamTgt = activeEntries.reduce((s, e) => s + getStat(e, 'team_tgt'), 0);
+  const weightedSeasonShare = totalTeamTgt > 0 ? (totalPlayerTgt / totalTeamTgt) * 100 : 0;
+
   const deltaRows = metrics.map(m => {
+    if (m.key === 'target_share') {
+      const seasonAvg = weightedSeasonShare;
+      const last4 = activeEntries.slice(-RECENT_WINDOW);
+      const l4PlayerTgt = last4.reduce((s, e) => s + getStat(e, 'rec_tgt'), 0);
+      const l4TeamTgt = last4.reduce((s, e) => s + getStat(e, 'team_tgt'), 0);
+      const recentAvg = l4TeamTgt > 0 ? (l4PlayerTgt / l4TeamTgt) * 100 : 0;
+      const delta = recentAvg - seasonAvg;
+      return { ...m, seasonAvg, recentAvg, delta };
+    }
     const seasonAvg = computeMetricAvg(activeEntries, m.key);
     const recentAvg = computeMetricAvg(activeEntries, m.key, RECENT_WINDOW);
     const delta = recentAvg - seasonAvg;
@@ -1789,15 +1804,9 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
 
   const [trendView, setTrendView] = useState<'share' | 'raw' | 'pct'>('share');
 
-  const getStat = (e: GameLogEntry, key: string) => (e.stats as unknown as Record<string, number>)[key] ?? 0;
-
   const targetShareData = activeEntries.map(e => getStat(e, 'target_share'));
   const targetShareRolling = computeRollingAvg(targetShareData, 3);
   const targetShareSeasonAvg = targetShareData.length > 0 ? targetShareData.reduce((a, b) => a + b, 0) / targetShareData.length : 0;
-
-  const totalPlayerTgt = activeEntries.reduce((s, e) => s + getStat(e, 'rec_tgt'), 0);
-  const totalTeamTgt = activeEntries.reduce((s, e) => s + getStat(e, 'team_tgt'), 0);
-  const weightedSeasonShare = totalTeamTgt > 0 ? (totalPlayerTgt / totalTeamTgt) * 100 : 0;
 
   const rawTargetsData = activeEntries.map(e => getStat(e, 'rec_tgt'));
   const rawTargetsRolling = computeRollingAvg(rawTargetsData, 3);
@@ -2118,10 +2127,13 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
       )}
 
       {(() => {
-        const last4Share = activeEntries.length >= 4
-          ? activeEntries.slice(-4).reduce((s, e) => s + getStat(e, 'target_share'), 0) / 4
+        const last4Entries = activeEntries.slice(-4);
+        const l4pTgt = last4Entries.reduce((s, e) => s + getStat(e, 'rec_tgt'), 0);
+        const l4tTgt = last4Entries.reduce((s, e) => s + getStat(e, 'team_tgt'), 0);
+        const last4Share = activeEntries.length >= 4 && l4tTgt > 0
+          ? (l4pTgt / l4tTgt) * 100
           : null;
-        const seasonShare = targetShareSeasonAvg;
+        const seasonShare = weightedSeasonShare;
         const last4Team = activeEntries.length >= 4
           ? activeEntries.slice(-4).reduce((s, e) => s + getStat(e, 'team_tgt'), 0) / 4
           : null;
@@ -2163,16 +2175,25 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
             } else {
               shiftSummary = `Carry volume has been stable at ${last4Carries.toFixed(1)}/gm while targets have ${tgtDelta > 0 ? 'risen' : 'declined'} ${Math.abs(tgtDelta).toFixed(0)}% over the last 4 games (${last4Tgt.toFixed(1)}/gm vs ${seasonTgt.toFixed(1)}/gm).`;
             }
-          } else if (Math.abs(shareDelta) < 1.5 && Math.abs(teamDelta) < 5) {
-            shiftSummary = `Target share has remained stable at ${last4Share.toFixed(1)}% over the last 4 games, consistent with the ${seasonShare.toFixed(1)}% season average. Team volume is also steady.`;
-          } else if (shareDelta < -1.5 && teamDelta < -5) {
+          } else if (Math.abs(shareDelta) < 2 && Math.abs(teamDelta) < 5) {
+            shiftSummary = `Target share has remained stable at ${last4Share.toFixed(1)}% over the last 4 games (season avg ${seasonShare.toFixed(1)}%). Team volume is also steady.`;
+          } else if (shareDelta <= -2 && shareDelta > -5 && Math.abs(teamDelta) < 5) {
+            shiftSummary = `Target share has dipped modestly from ${seasonShare.toFixed(1)}% to ${last4Share.toFixed(1)}% over the last 4 games despite stable team pass volume, suggesting a minor role shift.`;
+          } else if (shareDelta <= -5) {
+            if (teamDelta < -5) {
+              const teamContrib = teamDelta !== 0 ? Math.min(100, Math.round(Math.abs(teamDelta) / (Math.abs(teamDelta) + Math.abs(shareDelta) * 5) * 100)) : 0;
+              shiftSummary = `Over the last 4 games, target share has dropped from ${seasonShare.toFixed(1)}% to ${last4Share.toFixed(1)}%, while team pass volume also declined ${Math.abs(teamDelta).toFixed(0)}%. Reduced team volume accounts for roughly ${teamContrib}% of the usage dip.`;
+            } else {
+              shiftSummary = `Target share has declined significantly from ${seasonShare.toFixed(1)}% to ${last4Share.toFixed(1)}% despite stable team pass volume, indicating a potential loss of role rather than offensive slowdown.`;
+            }
+          } else if (shareDelta <= -2 && teamDelta < -5) {
             const teamContrib = teamDelta !== 0 ? Math.min(100, Math.round(Math.abs(teamDelta) / (Math.abs(teamDelta) + Math.abs(shareDelta) * 5) * 100)) : 0;
-            shiftSummary = `Over the last 4 games, target share has dropped from ${seasonShare.toFixed(1)}% to ${last4Share.toFixed(1)}%, while team pass volume also declined ${Math.abs(teamDelta).toFixed(0)}%. Reduced team volume accounts for roughly ${teamContrib}% of the usage dip.`;
-          } else if (shareDelta < -1.5 && Math.abs(teamDelta) < 5) {
-            shiftSummary = `Target share has declined from ${seasonShare.toFixed(1)}% to ${last4Share.toFixed(1)}% despite stable team pass volume, indicating a potential loss of role rather than offensive slowdown.`;
-          } else if (shareDelta > 1.5) {
+            shiftSummary = `Target share has dipped from ${seasonShare.toFixed(1)}% to ${last4Share.toFixed(1)}%, coinciding with a ${Math.abs(teamDelta).toFixed(0)}% decline in team pass volume. Reduced team volume accounts for roughly ${teamContrib}% of the usage dip.`;
+          } else if (shareDelta >= 5) {
+            shiftSummary = `Target share has risen significantly from ${seasonShare.toFixed(1)}% to ${last4Share.toFixed(1)}% over the last 4 games${teamDelta < -3 ? ' even as team volume declined' : ''}, suggesting a rapidly expanding role in the offense.`;
+          } else if (shareDelta >= 2) {
             shiftSummary = `Target share has risen from ${seasonShare.toFixed(1)}% to ${last4Share.toFixed(1)}% over the last 4 games${teamDelta < -3 ? ' even as team volume declined' : ''}, suggesting an expanding role in the offense.`;
-          } else if (shareDelta >= -1.5 && shareDelta <= 1.5 && teamDelta < -5) {
+          } else if (Math.abs(shareDelta) < 2 && teamDelta < -5) {
             shiftSummary = `Target share has held steady at ${last4Share.toFixed(1)}% despite a ${Math.abs(teamDelta).toFixed(0)}% decline in team pass volume, indicating the player is absorbing a larger proportion of a shrinking passing offense.`;
           } else {
             shiftSummary = `Target share sits at ${last4Share.toFixed(1)}% over the last 4 games vs ${seasonShare.toFixed(1)}% season average. Team volume has shifted ${teamDelta > 0 ? 'up' : 'down'} ${Math.abs(teamDelta).toFixed(0)}%.`;
@@ -2290,21 +2311,22 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
             : { label: 'Balanced', color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' };
 
         const tdRateLg = isQB ? 4.5 : isRB ? 3.0 : 5.0;
-        const yptLg = isQB ? 7.0 : isRB ? 4.5 : 8.5;
-        const shareStabAvg = 60;
+        const yptLg = isQB ? 7.0 : isRB ? 4.2 : 7.5;
+        const shareStabAvg = 55;
 
-        const tdRateSignal = Math.max(-25, Math.min(25, (tdPerOpp - tdRateLg) * (isQB ? 4 : 5)));
-        const yptSignal = Math.max(-25, Math.min(25, (yardsPerOpp - yptLg) * (isQB ? 3 : 2.5)));
-        const stabSignal = Math.max(-15, Math.min(15, (usageStab - shareStabAvg) * 0.25));
-        const volSignal = Math.max(-15, Math.min(15, (volumeScore - 50) * 0.3));
+        const tdDepFactor = Math.max(0.3, Math.min(1.5, tdPctBar / 30));
+        const tdRateSignal = Math.max(-20, Math.min(20, (tdPerOpp - tdRateLg) * (isQB ? 3 : 3.5) * tdDepFactor));
+        const yptSignal = Math.max(-15, Math.min(15, (yardsPerOpp - yptLg) * (isQB ? 2 : 1.5)));
+        const stabSignal = Math.max(-10, Math.min(10, (usageStab - shareStabAvg) * 0.2));
+        const volSignal = Math.max(-10, Math.min(10, (volumeScore - 50) * 0.2));
 
         const rawSustainability = 50 - tdRateSignal + yptSignal + stabSignal + volSignal;
         const sustainabilityScore = Math.max(0, Math.min(100, Math.round(rawSustainability)));
 
-        const sustainLabel = sustainabilityScore >= 70 ? 'Mostly Sustainable' : sustainabilityScore >= 45 ? 'Moderate Risk' : 'Likely Regression Candidate';
-        const sustainColor = sustainabilityScore >= 70 ? 'text-emerald-500' : sustainabilityScore >= 45 ? 'text-amber-400' : 'text-red-400';
-        const sustainBg = sustainabilityScore >= 70 ? 'bg-emerald-500/10' : sustainabilityScore >= 45 ? 'bg-amber-500/10' : 'bg-red-500/10';
-        const sustainIcon = sustainabilityScore >= 70 ? <Shield className="w-3.5 h-3.5 text-emerald-500" /> : sustainabilityScore >= 45 ? <AlertTriangle className="w-3.5 h-3.5 text-amber-400" /> : <AlertTriangle className="w-3.5 h-3.5 text-red-400" />;
+        const sustainLabel = sustainabilityScore >= 65 ? 'Mostly Sustainable' : sustainabilityScore >= 40 ? 'Moderate Risk' : 'Likely Regression Candidate';
+        const sustainColor = sustainabilityScore >= 65 ? 'text-emerald-500' : sustainabilityScore >= 40 ? 'text-amber-400' : 'text-red-400';
+        const sustainBg = sustainabilityScore >= 65 ? 'bg-emerald-500/10' : sustainabilityScore >= 40 ? 'bg-amber-500/10' : 'bg-red-500/10';
+        const sustainIcon = sustainabilityScore >= 65 ? <Shield className="w-3.5 h-3.5 text-emerald-500" /> : sustainabilityScore >= 40 ? <AlertTriangle className="w-3.5 h-3.5 text-amber-400" /> : <AlertTriangle className="w-3.5 h-3.5 text-red-400" />;
 
         let insightSentence = '';
         if (tdPctBar >= 35 && shareAvg < 18 && !isQB) {

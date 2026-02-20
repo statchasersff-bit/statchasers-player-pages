@@ -1,0 +1,166 @@
+First Major Issue: Target Share Inconsistency
+
+In Section 1:
+
+Target Share (Team)
+Season: 16.3%
+Last 4: 15.0%
+Δ: -1.3%
+
+In Production Sustainability:
+
+Target Share (Team)
+16.9%
+
+🚨 That is a contradiction.
+
+You cannot have:
+
+Season share = 16.3%
+
+Volume Engine share = 16.9%
+
+Unless one of these is:
+
+Weighted season share
+
+Simple weekly average
+
+If they are different calculation methods, you must label them differently:
+
+Example:
+
+Season Avg (Weekly Mean): 16.3%
+
+True Season Share (Weighted): 16.9%
+
+Otherwise it looks like a bug.
+
+🔎 2️⃣ Opportunity Trend vs Usage Shift Summary Conflict
+
+Section 1 insight says:
+
+“Target Share (Team) has declined 1.3% over the last 4 weeks…”
+
+Section 2 summary says:
+
+“Target share has remained stable at 15.0% over the last 4 games…”
+
+Those two statements conflict.
+
+You cannot say:
+
+It declined 1.3%
+AND
+
+It remained stable
+
+If 16.3 → 15.0:
+That is a decline.
+
+Even if small.
+
+Better wording:
+
+“Target share has dipped modestly from 16.3% to 15.0%…”
+
+Or classify based on threshold:
+
+<2% change = Stable
+
+2–5% = Moderate shift
+
+5% = Significant shift
+
+Right now the language disagrees with the numbers.
+
+🔎 3️⃣ Regression Signal vs Supporting Logic Conflict
+
+Regression Signal says:
+
+Likely Regression Candidate
+38 / 100
+
+But the explanation says:
+
+“Target share has been reasonably consistent while a diverse scoring profile provides stability.”
+
+Those two statements contradict each other.
+
+You are saying:
+
+Role stable
+
+Balanced scoring
+
+Sustainable volume base
+
+But also:
+
+Likely regression candidate
+
+That does not logically follow.
+
+If:
+
+TD Dependency = 23% (Balanced)
+
+Volume Engine balanced
+
+Share mostly stable
+
+Then regression risk should be moderate at worst, not “Likely”.
+
+Either:
+
+Your regression formula is overweighting something unseen
+OR
+
+Your label thresholds are miscalibrated.
+
+🔎 4️⃣ Team Pass Rate vs Team Pass Attempts
+
+In Section 1:
+You use Team Pass Rate %
+
+In Volume Context:
+You use Team Pass Attempts
+
+That’s not wrong — but it can confuse users.
+
+Pass rate ≠ attempts.
+
+If you use both:
+Make sure you're not implying one explains the other.
+
+🔎 5️⃣ Momentum Score vs Classification
+
+Role Momentum: 43 / 100
+Label: ROLE STABLE
+
+That’s fine IF:
+
+0–39 = Declining
+
+40–59 = Stable
+
+60+ = Expanding
+
+But if earlier 21 was “Declining,” then 43 being stable is consistent.
+
+Just ensure thresholds are documented internally.
+
+🔎 6️⃣ Minor Redundancy
+
+You display:
+
+TD Dependency 23%
+Balanced
+
+Then again in Sustainability:
+
+TDs 23%
+
+Not wrong — just slightly repetitive.
+
+But it’s acceptable since the second is a breakdown chart.
