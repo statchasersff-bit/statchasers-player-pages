@@ -53,7 +53,7 @@ add_action( SC_CRON_HOOK, 'sc_refresh_players_data' );
 add_action('wp_enqueue_scripts', function () {
     if (!function_exists('sc_detect_route') || !sc_detect_route()) return;
 
-    $remote_base = 'https://statchasersff-bit.github.io/statchasers-playerpages/';
+    $remote_base = 'https://github.com/statchasersff-bit/statchasers-player-pages/';
     $manifest_url = $remote_base . 'manifest.json';
 
     $cache_key = 'sc_players_remote_manifest_v1';
