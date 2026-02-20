@@ -1677,7 +1677,7 @@ function getPositionMomentumMetrics(position: string | null) {
   if (position === 'QB') return [
     { key: 'pass_att', label: 'Pass Att/G', pct: false, weight: 5 },
     { key: 'rush_att', label: 'Rush Att/G', pct: false, weight: 3 },
-    { key: 'team_pass_rate', label: 'Team Pass Rate', pct: true, weight: 2 },
+    { key: 'team_pass_att', label: 'Team Pass Att/G', pct: false, weight: 2, context: true },
   ];
   if (position === 'RB') return [
     { key: 'rush_att', label: 'Carries/G', pct: false, weight: 5 },
@@ -1687,7 +1687,7 @@ function getPositionMomentumMetrics(position: string | null) {
   if (position === 'WR' || position === 'TE') return [
     { key: 'target_share', label: 'Target Share (Team)', pct: true, weight: 5 },
     { key: 'rec_tgt', label: 'Targets/G', pct: false, weight: 3 },
-    { key: 'team_pass_rate', label: 'Team Pass Rate', pct: true, weight: 2 },
+    { key: 'team_pass_att', label: 'Team Pass Att/G', pct: false, weight: 2, context: true },
   ];
   if (position === 'K') return [
     { key: 'fga', label: 'FG Att/G', pct: false, weight: 5 },
@@ -1888,10 +1888,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
 
   const teamPassAtt = activeEntries.map(e => {
     if (position === 'QB') return getStat(e, 'pass_att');
-    const teamTgt = getStat(e, 'team_tgt');
-    const teamPassRate = getStat(e, 'team_pass_rate');
-    if (teamTgt > 0 && teamPassRate > 0) return Math.round(teamTgt / (teamPassRate / 100));
-    return teamTgt > 0 ? teamTgt : 0;
+    return getStat(e, 'team_pass_att') || getStat(e, 'team_tgt') || 0;
   });
   const playerVolume = position === 'QB'
     ? activeEntries.map(e => getStat(e, 'pass_att'))
@@ -1921,8 +1918,8 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
     );
   }
 
-  const playerRoleRows = deltaRows.filter(d => d.key !== 'team_pass_rate');
-  const contextRows = deltaRows.filter(d => d.key === 'team_pass_rate');
+  const playerRoleRows = deltaRows.filter(d => !(d as any).context);
+  const contextRows = deltaRows.filter(d => (d as any).context);
 
   return (
     <div className="space-y-6" data-testid="usage-trends-tab">

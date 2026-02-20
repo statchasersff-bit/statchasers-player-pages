@@ -267,7 +267,7 @@ function enrichWithTeamMetrics(entries, playerTeam, season, logs, allPlayers) {
     const targetShare = tw.tgt > 0 ? Math.round((tgt / tw.tgt) * 1000) / 10 : null;
     const totalAtt = tw.pass_att + tw.rush_att;
     const teamPassRate = totalAtt > 0 ? Math.round((tw.pass_att / totalAtt) * 1000) / 10 : null;
-    return { ...e, stats: { ...e.stats, target_share: targetShare, team_pass_rate: teamPassRate, team_tgt: tw.tgt } };
+    return { ...e, stats: { ...e.stats, target_share: targetShare, team_pass_rate: teamPassRate, team_tgt: tw.tgt, team_pass_att: tw.pass_att } };
   });
 }
 

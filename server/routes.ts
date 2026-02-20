@@ -178,6 +178,7 @@ function enrichWithTeamMetrics(entries: GameLogEntry[], playerTeam: string | nul
         target_share: targetShare,
         team_pass_rate: teamPassRate,
         team_tgt: tw.tgt,
+        team_pass_att: tw.pass_att,
       } as GameLogEntry['stats'],
     };
   });
