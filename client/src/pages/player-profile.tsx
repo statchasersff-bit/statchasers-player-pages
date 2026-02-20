@@ -38,6 +38,7 @@ import {
   Gauge,
   Info,
   Sparkles,
+  RefreshCcw,
 } from "lucide-react";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import type { Player, GameLogEntry, NewsEntry, GameLogStats, GameScore } from "@shared/playerTypes";
@@ -2900,14 +2901,24 @@ function RankingsTab({ player }: { player: Player }) {
   );
 }
 
+type PatriotsNewsItem = {
+  title: string;
+  url: string;
+  type: string;
+  tag?: string;
+  impact?: string;
+  ai_blurb?: string;
+  published_at?: string;
+};
+
 function NewsTab({ player }: { player: Player }) {
   const isNE = player.team === 'NE';
-  const { data: patriotsNews, isLoading: patriotsLoading } = useQuery({
+  const { data: patriotsNews, isLoading: patriotsLoading, refetch, isFetching } = useQuery({
     queryKey: ["/api/patriots/player-news", player.name],
     queryFn: async () => {
       const res = await fetch(`/api/patriots/player-news?player_name=${encodeURIComponent(player.name)}&limit=8`);
       if (!res.ok) throw new Error("Failed to load news");
-      return res.json() as Promise<{ found: boolean; items: { title: string; url: string; type: string }[]; patriots_profile_url?: string }>;
+      return res.json() as Promise<{ found: boolean; items: PatriotsNewsItem[]; patriots_profile_url?: string }>;
     },
     enabled: isNE,
     staleTime: 30 * 60 * 1000,
@@ -2920,112 +2931,184 @@ function NewsTab({ player }: { player: Player }) {
   return (
     <div className="space-y-6" data-testid="news-tab">
       {isNE && patriotsLoading && (
-        <div className="space-y-3">
-          {[1, 2, 3].map(i => (
-            <Card key={i}><CardContent className="p-4"><Skeleton className="h-16 w-full" /></CardContent></Card>
-          ))}
+        <div className="sc-teamnews">
+          <div className="sc-teamnews__head">
+            <div className="sc-teamnews__head-left">
+              <div className="sc-teamnews__icon">📰</div>
+              <div>
+                <div className="sc-teamnews__kicker">Latest from Patriots.com</div>
+                <Skeleton className="h-4 w-24 mt-1" />
+              </div>
+            </div>
+          </div>
+          <div className="sc-teamnews__list">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="sc-teamnews__card" style={{ pointerEvents: 'none' }}>
+                <div className="sc-teamnews__card-left"><Skeleton className="w-[34px] h-[34px] rounded-xl" /></div>
+                <div className="sc-teamnews__card-mid"><Skeleton className="h-4 w-16 mb-2" /><Skeleton className="h-5 w-full" /><Skeleton className="h-5 w-3/4 mt-1" /></div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
       {patriotsItems.length > 0 && (
-        <div className="space-y-3" data-testid="patriots-news-list">
-          <div className="flex items-center gap-2 mb-1">
-            <Newspaper className="w-4 h-4 text-muted-foreground" />
-            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Latest from Patriots.com</p>
+        <div className="sc-teamnews" data-testid="patriots-news-list">
+          <div className="sc-teamnews__head">
+            <div className="sc-teamnews__head-left">
+              <div className="sc-teamnews__icon" aria-hidden="true">📰</div>
+              <div>
+                <div className="sc-teamnews__kicker">Latest from Patriots.com</div>
+                <div className="sc-teamnews__sub">{patriotsItems.length} updates</div>
+              </div>
+            </div>
+            <div>
+              <button
+                className="sc-teamnews__btn"
+                type="button"
+                onClick={() => refetch()}
+                disabled={isFetching}
+                data-testid="button-refresh-news"
+              >
+                <RefreshCcw className={`w-3.5 h-3.5 ${isFetching ? 'animate-spin' : ''}`} />
+                Refresh
+              </button>
+            </div>
           </div>
-          {patriotsItems.map((item, i) => (
-            <a
-              key={i}
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block"
-              data-testid={`link-patriots-news-${i}`}
-            >
-              <Card className="hover-elevate cursor-pointer transition-all">
-                <CardContent className="p-4 flex items-start gap-3">
-                  {item.type === 'video' ? (
-                    <div className="p-1.5 rounded-md bg-red-500/10 flex-shrink-0 mt-0.5">
-                      <svg className="w-3.5 h-3.5 text-red-500" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                    </div>
-                  ) : (
-                    <Newspaper className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <Badge variant="outline" className={`text-[9px] py-0 px-1.5 uppercase font-bold ${item.type === 'video' ? 'border-red-500/30 text-red-500' : 'border-amber-500/30 text-amber-600 dark:text-amber-400'}`} data-testid={`badge-news-type-${i}`}>
-                        {item.type}
-                      </Badge>
-                      <span className="text-[10px] text-muted-foreground/50 font-medium">Patriots.com</span>
-                    </div>
-                    <p className="text-sm font-semibold text-foreground leading-snug line-clamp-2">{item.title}</p>
+
+          <div className="sc-teamnews__list">
+            {patriotsItems.map((item, i) => (
+              <a
+                key={i}
+                className="sc-teamnews__card"
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid={`link-patriots-news-${i}`}
+              >
+                <div className="sc-teamnews__card-left" aria-hidden="true">
+                  <div className="sc-teamnews__doc">
+                    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                      <path fill="currentColor" d="M7 2h7l5 5v15a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V8h4.5L14 3.5zM8 11h8v1.75H8V11zm0 4h8v1.75H8V15zm0 4h6v1.75H8V19z" />
+                    </svg>
                   </div>
-                  <ExternalLink className="w-3.5 h-3.5 text-muted-foreground/40 flex-shrink-0 mt-0.5" />
-                </CardContent>
-              </Card>
-            </a>
-          ))}
+                </div>
+
+                <div className="sc-teamnews__card-mid">
+                  <div className="sc-teamnews__meta">
+                    <span className="sc-pill sc-pill--type" data-testid={`badge-news-type-${i}`}>{(item.type || 'news').toUpperCase()}</span>
+                    <span className="sc-teamnews__source">Patriots.com</span>
+                    {item.impact && (
+                      <span className={`sc-pill sc-pill--impact sc-pill--impact-${item.impact.toLowerCase()}`}>{item.impact}</span>
+                    )}
+                    {item.tag && (
+                      <span className="sc-pill sc-pill--tag">{item.tag}</span>
+                    )}
+                  </div>
+                  <div className="sc-teamnews__title">{item.title}</div>
+                  {item.ai_blurb && (
+                    <div className="sc-teamnews__blurb">{item.ai_blurb}</div>
+                  )}
+                </div>
+
+                <div className="sc-teamnews__card-right" aria-hidden="true" title="Open source">
+                  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                    <path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z" />
+                  </svg>
+                </div>
+              </a>
+            ))}
+          </div>
+
           {patriotsNews?.patriots_profile_url && (
-            <a
-              href={patriotsNews.patriots_profile_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground/50 hover:text-muted-foreground/70 transition-colors mt-1"
-              data-testid="link-patriots-profile"
-            >
-              View full profile on Patriots.com <ExternalLink className="w-3 h-3" />
-            </a>
+            <div style={{ padding: '0 14px 12px' }}>
+              <a
+                href={patriotsNews.patriots_profile_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="sc-teamnews__profile-link"
+                data-testid="link-patriots-profile"
+              >
+                View full profile on Patriots.com
+                <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
+                  <path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z" />
+                </svg>
+              </a>
+            </div>
           )}
         </div>
       )}
 
       {staticEntries.length > 0 && (
-        <div className="space-y-3" data-testid="news-list">
-          {patriotsItems.length > 0 && (
-            <div className="flex items-center gap-2 mb-1">
-              <FileText className="w-4 h-4 text-muted-foreground" />
-              <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Articles</p>
+        <div className="sc-teamnews" data-testid="news-list">
+          <div className="sc-teamnews__head">
+            <div className="sc-teamnews__head-left">
+              <div className="sc-teamnews__icon" aria-hidden="true">📄</div>
+              <div>
+                <div className="sc-teamnews__kicker">Articles</div>
+                <div className="sc-teamnews__sub">{staticEntries.length} {staticEntries.length === 1 ? 'article' : 'articles'}</div>
+              </div>
             </div>
-          )}
-          {staticEntries.map((entry, i) => (
-            <a
-              key={i}
-              href={entry.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block"
-              data-testid={`link-news-${i}`}
-            >
-              <Card className="hover-elevate cursor-pointer">
-                <CardContent className="p-4 flex items-start gap-3 flex-wrap">
-                  <Newspaper className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground">{entry.title}</p>
-                    {entry.summary && (
-                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{entry.summary}</p>
-                    )}
-                    <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                      <span className="text-[10px] text-muted-foreground/60">{entry.source}</span>
-                      <span className="text-[10px] text-muted-foreground/40">
-                        {new Date(entry.publishedAt).toLocaleDateString()}
-                      </span>
-                    </div>
+          </div>
+          <div className="sc-teamnews__list">
+            {staticEntries.map((entry, i) => (
+              <a
+                key={i}
+                className="sc-teamnews__card"
+                href={entry.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid={`link-news-${i}`}
+              >
+                <div className="sc-teamnews__card-left" aria-hidden="true">
+                  <div className="sc-teamnews__doc">
+                    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                      <path fill="currentColor" d="M7 2h7l5 5v15a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V8h4.5L14 3.5zM8 11h8v1.75H8V11zm0 4h8v1.75H8V15zm0 4h6v1.75H8V19z" />
+                    </svg>
                   </div>
-                  <ExternalLink className="w-3.5 h-3.5 text-muted-foreground/40 flex-shrink-0 mt-0.5" />
-                </CardContent>
-              </Card>
-            </a>
-          ))}
+                </div>
+                <div className="sc-teamnews__card-mid">
+                  <div className="sc-teamnews__meta">
+                    <span className="sc-pill sc-pill--type">NEWS</span>
+                    <span className="sc-teamnews__source">{entry.source}</span>
+                    {entry.publishedAt && (
+                      <span className="sc-teamnews__date">
+                        {new Date(entry.publishedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </span>
+                    )}
+                  </div>
+                  <div className="sc-teamnews__title">{entry.title}</div>
+                  {entry.summary && (
+                    <div className="sc-teamnews__blurb">{entry.summary}</div>
+                  )}
+                </div>
+                <div className="sc-teamnews__card-right" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                    <path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z" />
+                  </svg>
+                </div>
+              </a>
+            ))}
+          </div>
         </div>
       )}
 
       {!hasContent && !patriotsLoading && (
-        <div className="rounded-md border border-dashed border-muted-foreground/25 p-12 text-center">
-          <Newspaper className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
-          <p className="text-muted-foreground text-sm font-medium">No articles yet</p>
-          <p className="text-muted-foreground/70 text-xs mt-1">
-            News and analysis related to {player.name} will appear here as they are published.
-          </p>
+        <div className="sc-teamnews">
+          <div className="sc-teamnews__head">
+            <div className="sc-teamnews__head-left">
+              <div className="sc-teamnews__icon" aria-hidden="true">📰</div>
+              <div>
+                <div className="sc-teamnews__kicker">News & Analysis</div>
+                <div className="sc-teamnews__sub">No updates found</div>
+              </div>
+            </div>
+          </div>
+          <div className="sc-teamnews__list">
+            <div className="sc-teamnews__empty">
+              No recent items available for {player.name}. Check back soon for updates.
+            </div>
+          </div>
         </div>
       )}
 
