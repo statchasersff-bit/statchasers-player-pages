@@ -2191,6 +2191,266 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
           </Card>
         );
       })()}
+
+      {position !== 'K' && activeEntries.length >= 3 && (() => {
+        const gp = activeEntries.length;
+        const stat = (key: string) => activeEntries.reduce((sum, e) => sum + getStat(e, key), 0);
+
+        const isQB = position === 'QB';
+        const isRB = position === 'RB';
+
+        const tgtsPerGame = isQB ? stat('pass_att') / gp : (isRB ? (stat('rush_att') + stat('rec_tgt')) / gp : stat('rec_tgt') / gp);
+        const shareAvg = isQB ? 0 : (targetShareData.length > 0 ? targetShareData.reduce((a, b) => a + b, 0) / targetShareData.length : 0);
+        const usageStab = stability;
+
+        let yardsPerOpp: number;
+        let catchPct: number;
+        let tdPerOpp: number;
+
+        if (isQB) {
+          const passAtt = stat('pass_att') || 1;
+          yardsPerOpp = stat('pass_yd') / passAtt;
+          catchPct = passAtt > 0 ? (stat('pass_cmp') / passAtt) * 100 : 0;
+          tdPerOpp = (stat('pass_td') / passAtt) * 100;
+        } else if (isRB) {
+          const totalTouches = stat('rush_att') + stat('rec') || 1;
+          yardsPerOpp = (stat('rush_yd') + stat('rec_yd')) / totalTouches;
+          catchPct = stat('rec_tgt') > 0 ? (stat('rec') / stat('rec_tgt')) * 100 : 0;
+          tdPerOpp = ((stat('rush_td') + stat('rec_td')) / totalTouches) * 100;
+        } else {
+          const targets = stat('rec_tgt') || 1;
+          yardsPerOpp = stat('rec_yd') / targets;
+          catchPct = (stat('rec') / targets) * 100;
+          tdPerOpp = (stat('rec_td') / targets) * 100;
+        }
+
+        const totalPts = activeEntries.reduce((sum, e) => sum + fpts(e, format), 0);
+        let tdPts = 0;
+        let yardagePts = 0;
+        let recPts = 0;
+        if (isQB) {
+          tdPts = stat('pass_td') * 4 + stat('rush_td') * 6;
+          yardagePts = stat('pass_yd') * 0.04 + stat('rush_yd') * 0.1;
+          recPts = 0;
+        } else {
+          tdPts = (stat('rec_td') + stat('rush_td')) * 6;
+          yardagePts = stat('rec_yd') * 0.1 + stat('rush_yd') * 0.1;
+          recPts = format === 'ppr' ? stat('rec') * 1 : format === 'half' ? stat('rec') * 0.5 : 0;
+        }
+        const componentTotal = tdPts + yardagePts + recPts;
+        const normFactor = componentTotal > 0 ? 100 / componentTotal : 0;
+        const tdPctBar = tdPts * normFactor;
+        const yardPctBar = yardagePts * normFactor;
+        const recPctBar = recPts * normFactor;
+        const otherPctBar = 0;
+
+        const volumeScore = (() => {
+          let score = 50;
+          if (isQB) {
+            const attPerGame = stat('pass_att') / gp;
+            score += Math.min(15, (attPerGame - 28) * 2);
+            score += Math.min(10, (usageStab - 50) * 0.2);
+          } else if (isRB) {
+            score += Math.min(15, (tgtsPerGame - 15) * 1.5);
+            score += Math.min(10, (usageStab - 50) * 0.2);
+          } else {
+            score += Math.min(15, (shareAvg - 15) * 1);
+            score += Math.min(10, (tgtsPerGame - 5) * 2);
+            score += Math.min(10, (usageStab - 50) * 0.2);
+          }
+          return Math.max(0, Math.min(100, Math.round(score)));
+        })();
+
+        const efficiencyScore = (() => {
+          let score = 50;
+          if (isQB) {
+            score += (catchPct - 62) * 0.8;
+            score += (yardsPerOpp - 6.5) * 4;
+            score += (tdPerOpp - 4) * 3;
+          } else if (isRB) {
+            score += (yardsPerOpp - 4.0) * 5;
+            score += (catchPct - 70) * 0.3;
+            score += (tdPerOpp - 3) * 4;
+          } else {
+            score += (yardsPerOpp - 8) * 2;
+            score += (catchPct - 65) * 0.5;
+            score += (tdPerOpp - 5) * 3;
+          }
+          return Math.max(0, Math.min(100, Math.round(score)));
+        })();
+
+        const productionDriver = volumeScore > efficiencyScore + 15
+          ? { label: 'Volume-Backed Production', color: 'text-emerald-500', bg: 'bg-emerald-500/10 border-emerald-500/20' }
+          : efficiencyScore > volumeScore + 15
+            ? { label: 'Efficiency-Driven (Regression Risk)', color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20' }
+            : { label: 'Balanced', color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' };
+
+        const tdRateLg = isQB ? 4.5 : isRB ? 3.0 : 5.0;
+        const yptLg = isQB ? 7.0 : isRB ? 4.5 : 8.5;
+        const shareStabAvg = 60;
+
+        const tdRateSignal = Math.max(-25, Math.min(25, (tdPerOpp - tdRateLg) * (isQB ? 4 : 5)));
+        const yptSignal = Math.max(-25, Math.min(25, (yardsPerOpp - yptLg) * (isQB ? 3 : 2.5)));
+        const stabSignal = Math.max(-15, Math.min(15, (usageStab - shareStabAvg) * 0.25));
+        const volSignal = Math.max(-15, Math.min(15, (volumeScore - 50) * 0.3));
+
+        const rawSustainability = 50 - tdRateSignal + yptSignal + stabSignal + volSignal;
+        const sustainabilityScore = Math.max(0, Math.min(100, Math.round(rawSustainability)));
+
+        const sustainLabel = sustainabilityScore >= 70 ? 'Mostly Sustainable' : sustainabilityScore >= 45 ? 'Moderate Risk' : 'Likely Regression Candidate';
+        const sustainColor = sustainabilityScore >= 70 ? 'text-emerald-500' : sustainabilityScore >= 45 ? 'text-amber-400' : 'text-red-400';
+        const sustainBg = sustainabilityScore >= 70 ? 'bg-emerald-500/10' : sustainabilityScore >= 45 ? 'bg-amber-500/10' : 'bg-red-500/10';
+        const sustainIcon = sustainabilityScore >= 70 ? <Shield className="w-3.5 h-3.5 text-emerald-500" /> : sustainabilityScore >= 45 ? <AlertTriangle className="w-3.5 h-3.5 text-amber-400" /> : <AlertTriangle className="w-3.5 h-3.5 text-red-400" />;
+
+        let insightSentence = '';
+        if (tdPctBar >= 35 && shareAvg < 18 && !isQB) {
+          insightSentence = `Despite ${shareAvg > 0 ? `a ${shareAvg.toFixed(1)}% target share` : 'moderate usage'}, scoring remains elevated due to an above-average touchdown rate (${tdPerOpp.toFixed(1)}%). Production may be vulnerable if scoring regresses.`;
+        } else if (tdPctBar >= 35 && isQB) {
+          insightSentence = `A ${tdPerOpp.toFixed(1)}% TD rate drives ${tdPctBar.toFixed(0)}% of fantasy output. ${tdPerOpp > tdRateLg + 1 ? 'This rate exceeds league average and may regress toward the mean.' : 'The rate is near league average, suggesting stability.'}`;
+        } else if (volumeScore > efficiencyScore + 15) {
+          insightSentence = `Production is supported by ${isQB ? 'high pass volume' : isRB ? 'a large touch share' : `stable target share (${shareAvg.toFixed(1)}%)`} and moderate efficiency, indicating low regression risk.`;
+        } else if (efficiencyScore > volumeScore + 15 && tdPerOpp > tdRateLg + 1) {
+          insightSentence = `Efficiency metrics are elevated${!isQB ? ` (${yardsPerOpp.toFixed(1)} yds/${isRB ? 'touch' : 'target'})` : ''} alongside a ${tdPerOpp.toFixed(1)}% TD rate that exceeds the positional average. ${isQB ? 'Pass volume' : 'Usage volume'} is modest, making scoring vulnerable to efficiency regression.`;
+        } else if (usageStab >= 70) {
+          insightSentence = `Consistent week-to-week usage (stability score: ${usageStab}) paired with ${tdPctBar < 30 ? 'low TD reliance' : 'moderate TD reliance'} suggests a reliable floor with ${sustainabilityScore >= 60 ? 'sustainable upside' : 'limited upside ceiling'}.`;
+        } else {
+          insightSentence = `${isQB ? 'Passing volume' : isRB ? 'Touch volume' : 'Target share'} ${usageStab >= 50 ? 'has been reasonably consistent' : 'has fluctuated'} while ${tdPctBar >= 30 ? `TD dependency (${tdPctBar.toFixed(0)}%) adds scoring fragility` : 'a diverse scoring profile provides stability'}.`;
+        }
+
+        return (
+          <>
+            <div className="space-y-1 pt-2" data-testid="sustainability-section-header">
+              <div className="flex items-center gap-2">
+                <Gauge className="w-4 h-4 text-muted-foreground" />
+                <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Production Sustainability</p>
+              </div>
+            </div>
+
+            <Card data-testid="volume-vs-efficiency">
+              <CardContent className="p-4 space-y-4">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Volume vs Efficiency Driver</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <p className="text-[10px] font-semibold text-foreground uppercase tracking-wider">Volume Engine</p>
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">{isQB ? 'Att/Game' : isRB ? 'Touches/Game' : 'Targets/Game'}</p>
+                      <p className="text-sm font-bold text-foreground tabular-nums">{tgtsPerGame.toFixed(1)}</p>
+                    </div>
+                    {!isQB && (
+                      <div>
+                        <p className="text-[10px] text-muted-foreground">{isRB ? 'Touch Share' : 'Target Share'}</p>
+                        <p className="text-sm font-bold text-foreground tabular-nums">{shareAvg.toFixed(1)}%</p>
+                      </div>
+                    )}
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">Usage Stability</p>
+                      <p className="text-sm font-bold text-foreground tabular-nums">{usageStab}</p>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <p className="text-[10px] font-semibold text-foreground uppercase tracking-wider">Efficiency Engine</p>
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">{isQB ? 'Yards/Att' : isRB ? 'Yards/Touch' : 'Yards/Target'}</p>
+                      <p className="text-sm font-bold text-foreground tabular-nums">{yardsPerOpp.toFixed(1)}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">{isQB ? 'Completion %' : 'Catch %'}</p>
+                      <p className="text-sm font-bold text-foreground tabular-nums">{catchPct.toFixed(1)}%</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-muted-foreground">{isQB ? 'TD/Att Rate' : isRB ? 'TD/Touch Rate' : 'TD/Target Rate'}</p>
+                      <p className="text-sm font-bold text-foreground tabular-nums">{tdPerOpp.toFixed(1)}%</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="pt-2 border-t border-border">
+                  <Badge variant="outline" className={`text-[10px] ${productionDriver.bg} ${productionDriver.color}`} data-testid="badge-production-driver">
+                    {productionDriver.label === 'Volume-Backed Production' ? <TrendingUp className="w-3 h-3 mr-1" /> : productionDriver.label === 'Balanced' ? <Activity className="w-3 h-3 mr-1" /> : <AlertTriangle className="w-3 h-3 mr-1" />}
+                    {productionDriver.label}
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card data-testid="td-dependency-breakdown">
+              <CardContent className="p-4 space-y-3">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">TD Dependency Breakdown</p>
+                <div className="space-y-2">
+                  <div className="flex h-5 rounded-full overflow-hidden border border-border" data-testid="bar-td-breakdown">
+                    {tdPctBar > 0 && (
+                      <div
+                        className="flex items-center justify-center text-[9px] font-bold text-white"
+                        style={{ width: `${tdPctBar}%`, background: '#f59e0b' }}
+                      >
+                        {tdPctBar >= 15 ? `${tdPctBar.toFixed(0)}%` : ''}
+                      </div>
+                    )}
+                    {yardPctBar > 0 && (
+                      <div
+                        className="flex items-center justify-center text-[9px] font-bold text-white"
+                        style={{ width: `${yardPctBar}%`, background: 'hsl(var(--primary))' }}
+                      >
+                        {yardPctBar >= 15 ? `${yardPctBar.toFixed(0)}%` : ''}
+                      </div>
+                    )}
+                    {recPctBar > 0 && (
+                      <div
+                        className="flex items-center justify-center text-[9px] font-bold text-white"
+                        style={{ width: `${recPctBar}%`, background: '#10b981' }}
+                      >
+                        {recPctBar >= 15 ? `${recPctBar.toFixed(0)}%` : ''}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-4 text-[10px] text-muted-foreground flex-wrap">
+                    <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ background: '#f59e0b' }} /> TDs {tdPctBar.toFixed(0)}%</span>
+                    <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ background: 'hsl(var(--primary))' }} /> Yardage {yardPctBar.toFixed(0)}%</span>
+                    {!isQB && recPctBar > 0 && (
+                      <span className="flex items-center gap-1"><span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ background: '#10b981' }} /> Receptions {recPctBar.toFixed(0)}%</span>
+                    )}
+                  </div>
+                </div>
+                <div className="pt-1">
+                  <Badge variant="outline" className={`text-[10px] ${tdPctBar >= 35 ? 'border-amber-500/30 text-amber-500' : 'border-emerald-500/30 text-emerald-500'}`} data-testid="badge-td-reliance">
+                    {tdPctBar >= 35 ? <AlertTriangle className="w-3 h-3 mr-1" /> : <Shield className="w-3 h-3 mr-1" />}
+                    {tdPctBar >= 35 ? 'High TD Reliance' : 'Sustainable Volume Base'}
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card data-testid="sustainability-score">
+              <CardContent className="p-4 space-y-3">
+                <div className="flex items-center justify-between gap-3 flex-wrap">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Regression Signal</p>
+                  <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md ${sustainBg}`}>
+                    {sustainIcon}
+                    <span className={`text-[10px] font-semibold ${sustainColor}`}>{sustainLabel}</span>
+                  </div>
+                </div>
+                <div className="flex items-end gap-3">
+                  <p className={`text-4xl font-bold tabular-nums ${sustainColor}`} data-testid="text-sustainability-score">
+                    {sustainabilityScore}
+                  </p>
+                  <p className="text-sm text-muted-foreground mb-1">/ 100</p>
+                </div>
+                <div className="h-2 rounded-full bg-muted overflow-hidden" data-testid="bar-sustainability">
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      width: `${sustainabilityScore}%`,
+                      background: sustainabilityScore >= 70 ? '#10b981' : sustainabilityScore >= 45 ? '#f59e0b' : '#ef4444',
+                    }}
+                  />
+                </div>
+                <p className="text-[11px] text-foreground/80 leading-relaxed italic" data-testid="text-sustainability-insight">
+                  {insightSentence}
+                </p>
+              </CardContent>
+            </Card>
+          </>
+        );
+      })()}
     </div>
   );
 }
