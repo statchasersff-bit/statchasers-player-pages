@@ -158,9 +158,42 @@ function buildTeamAggregates(season: number, logs: Record<string, GameLogEntry[]
   return agg;
 }
 
+function resolvePlayerTeam(playerTeam: string | null, entries: GameLogEntry[], season: number, logs: Record<string, GameLogEntry[]>, players: Player[]): string | null {
+  if (playerTeam && playerTeam !== 'FA') return normalizeTeamAbbr(playerTeam);
+  if (entries.length === 0) return null;
+  const weekOppToTeam = new Map<string, string>();
+  for (const p of players) {
+    if (!p.team || p.team === 'FA') continue;
+    const pTeam = normalizeTeamAbbr(p.team);
+    const pEntries = logs[p.id];
+    if (!pEntries) continue;
+    for (const pe of pEntries) {
+      if (!pe.opp) continue;
+      const lookupKey = `${pe.week}_${normalizeTeamAbbr(pe.opp)}`;
+      if (!weekOppToTeam.has(lookupKey)) weekOppToTeam.set(lookupKey, pTeam);
+    }
+  }
+  const teamCounts = new Map<string, number>();
+  for (const e of entries) {
+    if (!e.opp) continue;
+    const lookupKey = `${e.week}_${normalizeTeamAbbr(e.opp)}`;
+    const resolved = weekOppToTeam.get(lookupKey);
+    if (resolved) teamCounts.set(resolved, (teamCounts.get(resolved) || 0) + 1);
+  }
+  if (teamCounts.size > 0) {
+    let bestTeam = '';
+    let bestCount = 0;
+    for (const [t, c] of teamCounts) {
+      if (c > bestCount) { bestTeam = t; bestCount = c; }
+    }
+    if (bestTeam) return bestTeam;
+  }
+  return null;
+}
+
 function enrichWithTeamMetrics(entries: GameLogEntry[], playerTeam: string | null, season: number, logs: Record<string, GameLogEntry[]>, players: Player[]): GameLogEntry[] {
-  if (!playerTeam) return entries;
-  const team = normalizeTeamAbbr(playerTeam);
+  const team = resolvePlayerTeam(playerTeam, entries, season, logs, players);
+  if (!team) return entries;
   const agg = buildTeamAggregates(season, logs, players);
   return entries.map(e => {
     const key = `${team}_${e.week}`;
