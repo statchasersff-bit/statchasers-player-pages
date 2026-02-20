@@ -1784,9 +1784,9 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   const normalizedDelta = weightedDeltaSum / totalWeight;
   const momentumScore = Math.round(Math.max(0, Math.min(100, 50 + normalizedDelta * 2.5)));
 
-  const momentumLabel = momentumScore >= 65 ? 'EXPANDING' : momentumScore <= 35 ? 'DECLINING' : 'STABLE';
-  const momentumColor = momentumScore >= 65 ? 'text-emerald-500' : momentumScore <= 35 ? 'text-red-400' : 'text-amber-400';
-  const momentumBg = momentumScore >= 65 ? 'bg-emerald-500/10 border-emerald-500/20' : momentumScore <= 35 ? 'bg-red-500/10 border-red-500/20' : 'bg-amber-500/10 border-amber-500/20';
+  const momentumLabel = momentumScore >= 60 ? 'EXPANDING' : momentumScore <= 39 ? 'DECLINING' : 'STABLE';
+  const momentumColor = momentumScore >= 60 ? 'text-emerald-500' : momentumScore <= 39 ? 'text-red-400' : 'text-amber-400';
+  const momentumBg = momentumScore >= 60 ? 'bg-emerald-500/10 border-emerald-500/20' : momentumScore <= 39 ? 'bg-red-500/10 border-red-500/20' : 'bg-amber-500/10 border-amber-500/20';
 
   const tdDep = computeTdDependency(activeEntries, position, format);
   const stability = computeUsageStability(activeEntries, primaryKey);
@@ -1886,7 +1886,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
               <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Opportunity Momentum</p>
             </div>
             <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs font-bold ${momentumBg} ${momentumColor}`} data-testid="role-momentum-badge">
-              {momentumScore >= 65 ? <TrendingUp className="w-3.5 h-3.5" /> : momentumScore <= 35 ? <TrendingDown className="w-3.5 h-3.5" /> : <Minus className="w-3.5 h-3.5" />}
+              {momentumScore >= 60 ? <TrendingUp className="w-3.5 h-3.5" /> : momentumScore <= 39 ? <TrendingDown className="w-3.5 h-3.5" /> : <Minus className="w-3.5 h-3.5" />}
               ROLE {momentumLabel}
             </div>
           </div>
@@ -1894,7 +1894,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div>
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Role Momentum</p>
-              <p className="text-3xl font-bold tabular-nums" style={{ color: momentumScore >= 65 ? '#10b981' : momentumScore <= 35 ? '#f87171' : '#fbbf24' }} data-testid="text-momentum-score">
+              <p className="text-3xl font-bold tabular-nums" style={{ color: momentumScore >= 60 ? '#10b981' : momentumScore <= 39 ? '#f87171' : '#fbbf24' }} data-testid="text-momentum-score">
                 {momentumScore}
                 <span className="text-sm font-medium text-muted-foreground ml-1">/ 100</span>
               </p>
@@ -2323,10 +2323,10 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
         const rawSustainability = 50 - tdRateSignal + yptSignal + stabSignal + volSignal;
         const sustainabilityScore = Math.max(0, Math.min(100, Math.round(rawSustainability)));
 
-        const sustainLabel = sustainabilityScore >= 65 ? 'Mostly Sustainable' : sustainabilityScore >= 40 ? 'Moderate Risk' : 'Likely Regression Candidate';
-        const sustainColor = sustainabilityScore >= 65 ? 'text-emerald-500' : sustainabilityScore >= 40 ? 'text-amber-400' : 'text-red-400';
-        const sustainBg = sustainabilityScore >= 65 ? 'bg-emerald-500/10' : sustainabilityScore >= 40 ? 'bg-amber-500/10' : 'bg-red-500/10';
-        const sustainIcon = sustainabilityScore >= 65 ? <Shield className="w-3.5 h-3.5 text-emerald-500" /> : sustainabilityScore >= 40 ? <AlertTriangle className="w-3.5 h-3.5 text-amber-400" /> : <AlertTriangle className="w-3.5 h-3.5 text-red-400" />;
+        const sustainLabel = sustainabilityScore >= 70 ? 'Sustainable' : sustainabilityScore >= 40 ? 'Moderate Risk' : 'Elevated Risk';
+        const sustainColor = sustainabilityScore >= 70 ? 'text-emerald-500' : sustainabilityScore >= 40 ? 'text-amber-400' : 'text-red-400';
+        const sustainBg = sustainabilityScore >= 70 ? 'bg-emerald-500/10' : sustainabilityScore >= 40 ? 'bg-amber-500/10' : 'bg-red-500/10';
+        const sustainIcon = sustainabilityScore >= 70 ? <Shield className="w-3.5 h-3.5 text-emerald-500" /> : sustainabilityScore >= 40 ? <AlertTriangle className="w-3.5 h-3.5 text-amber-400" /> : <AlertTriangle className="w-3.5 h-3.5 text-red-400" />;
 
         let insightSentence = '';
         if (tdPctBar >= 35 && shareAvg < 18 && !isQB) {
