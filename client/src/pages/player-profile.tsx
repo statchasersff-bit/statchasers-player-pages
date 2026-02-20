@@ -1679,10 +1679,10 @@ function getPositionMomentumMetrics(position: string | null) {
   if (position === 'RB') return [
     { key: 'rush_att', label: 'Carries/G', pct: false, weight: 5 },
     { key: 'rec_tgt', label: 'Targets/G', pct: false, weight: 3 },
-    { key: 'target_share', label: 'Target Share', pct: true, weight: 2 },
+    { key: 'target_share', label: 'Target Share (Team)', pct: true, weight: 2 },
   ];
   if (position === 'WR' || position === 'TE') return [
-    { key: 'target_share', label: 'Target Share', pct: true, weight: 5 },
+    { key: 'target_share', label: 'Target Share (Team)', pct: true, weight: 5 },
     { key: 'rec_tgt', label: 'Targets/G', pct: false, weight: 3 },
     { key: 'team_pass_rate', label: 'Team Pass Rate', pct: true, weight: 2 },
   ];
@@ -1795,6 +1795,10 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   const targetShareRolling = computeRollingAvg(targetShareData, 3);
   const targetShareSeasonAvg = targetShareData.length > 0 ? targetShareData.reduce((a, b) => a + b, 0) / targetShareData.length : 0;
 
+  const totalPlayerTgt = activeEntries.reduce((s, e) => s + getStat(e, 'rec_tgt'), 0);
+  const totalTeamTgt = activeEntries.reduce((s, e) => s + getStat(e, 'team_tgt'), 0);
+  const weightedSeasonShare = totalTeamTgt > 0 ? (totalPlayerTgt / totalTeamTgt) * 100 : 0;
+
   const rawTargetsData = activeEntries.map(e => getStat(e, 'rec_tgt'));
   const rawTargetsRolling = computeRollingAvg(rawTargetsData, 3);
 
@@ -1805,7 +1809,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   const teamPctRolling = computeRollingAvg(teamPctData, 3);
 
   const chart1DataMap = {
-    share: { data: targetShareData, rolling: targetShareRolling, label: 'Target Share %', unit: '%', avg: targetShareSeasonAvg },
+    share: { data: targetShareData, rolling: targetShareRolling, label: 'Target Share % (Team Targets)', unit: '%', avg: weightedSeasonShare },
     raw: { data: rawTargetsData, rolling: rawTargetsRolling, label: 'Targets', unit: '', avg: rawTargetsData.length > 0 ? rawTargetsData.reduce((a, b) => a + b, 0) / rawTargetsData.length : 0 },
     pct: { data: teamPctData, rolling: teamPctRolling, label: '% of Team Targets', unit: '%', avg: teamPctData.length > 0 ? teamPctData.reduce((a, b) => a + b, 0) / teamPctData.length : 0 },
   };
@@ -2200,7 +2204,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
         const isRB = position === 'RB';
 
         const tgtsPerGame = isQB ? stat('pass_att') / gp : (isRB ? (stat('rush_att') + stat('rec_tgt')) / gp : stat('rec_tgt') / gp);
-        const shareAvg = isQB ? 0 : (targetShareData.length > 0 ? targetShareData.reduce((a, b) => a + b, 0) / targetShareData.length : 0);
+        const shareAvg = isQB ? 0 : weightedSeasonShare;
         const usageStab = stability;
 
         let yardsPerOpp: number;
@@ -2338,7 +2342,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                     </div>
                     {!isQB && (
                       <div>
-                        <p className="text-[10px] text-muted-foreground">{isRB ? 'Touch Share' : 'Target Share'}</p>
+                        <p className="text-[10px] text-muted-foreground">{isRB ? 'Touch Share' : 'Target Share (Team)'}</p>
                         <p className="text-sm font-bold text-foreground tabular-nums">{shareAvg.toFixed(1)}%</p>
                       </div>
                     )}
