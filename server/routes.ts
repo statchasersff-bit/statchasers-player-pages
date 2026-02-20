@@ -109,6 +109,68 @@ function fillMissingWeeks(entries: GameLogEntry[], season: number, team: string 
   return filled;
 }
 
+type TeamWeekAgg = { tgt: number; pass_att: number; rush_att: number };
+const teamAggCache: Map<string, Map<string, TeamWeekAgg>> = new Map();
+
+function buildTeamAggregates(season: number, logs: Record<string, GameLogEntry[]>, players: Player[]): Map<string, TeamWeekAgg> {
+  const cacheKey = `${season}`;
+  if (teamAggCache.has(cacheKey)) return teamAggCache.get(cacheKey)!;
+
+  const playerTeamMap = new Map<string, string>();
+  for (const p of players) {
+    if (p.team && p.team !== 'FA') playerTeamMap.set(p.id, normalizeTeamAbbr(p.team));
+  }
+
+  const agg = new Map<string, TeamWeekAgg>();
+  for (const [pid, entries] of Object.entries(logs)) {
+    const team = playerTeamMap.get(pid);
+    if (!team) continue;
+    const p = players.find(pl => pl.id === pid);
+    const pos = p?.position;
+    for (const e of entries) {
+      const s = e.stats as unknown as Record<string, number>;
+      const key = `${team}_${e.week}`;
+      if (!agg.has(key)) agg.set(key, { tgt: 0, pass_att: 0, rush_att: 0 });
+      const a = agg.get(key)!;
+      if (pos !== 'QB' && pos !== 'K') {
+        a.tgt += s.rec_tgt || 0;
+      }
+      if (pos === 'QB') {
+        a.pass_att += s.pass_att || 0;
+      }
+      a.rush_att += s.rush_att || 0;
+    }
+  }
+
+  teamAggCache.set(cacheKey, agg);
+  return agg;
+}
+
+function enrichWithTeamMetrics(entries: GameLogEntry[], playerTeam: string | null, season: number, logs: Record<string, GameLogEntry[]>, players: Player[]): GameLogEntry[] {
+  if (!playerTeam) return entries;
+  const team = normalizeTeamAbbr(playerTeam);
+  const agg = buildTeamAggregates(season, logs, players);
+  return entries.map(e => {
+    const key = `${team}_${e.week}`;
+    const tw = agg.get(key);
+    if (!tw) return e;
+    const s = e.stats as unknown as Record<string, number>;
+    const tgt = s.rec_tgt || 0;
+    const targetShare = tw.tgt > 0 ? Math.round((tgt / tw.tgt) * 1000) / 10 : null;
+    const totalAtt = tw.pass_att + tw.rush_att;
+    const teamPassRate = totalAtt > 0 ? Math.round((tw.pass_att / totalAtt) * 1000) / 10 : null;
+    return {
+      ...e,
+      stats: {
+        ...e.stats,
+        target_share: targetShare,
+        team_pass_rate: teamPassRate,
+        team_tgt: tw.tgt,
+      } as GameLogEntry['stats'],
+    };
+  });
+}
+
 function hasParticipation(stats: GameLogEntry['stats'], position: string | null): boolean {
   const s = stats as unknown as Record<string, number | null | undefined>;
   if (position === 'QB') {
@@ -490,6 +552,7 @@ export async function registerRoutes(
         playerLogs = attachRanks(pLogs, player.id, ranks);
         const oppRanks = buildOppRanks(s, sLogs, allPlayers, format);
         playerLogs = attachOppRanks(playerLogs, player.position, oppRanks);
+        playerLogs = enrichWithTeamMetrics(playerLogs, player.team, s, sLogs, allPlayers);
         playerLogs = fillMissingWeeks(playerLogs, s, player.team);
         break;
       }
@@ -663,6 +726,7 @@ export async function registerRoutes(
     let playerLogs = attachRanks(logs[player.id] || [], player.id, ranks);
     const oppRanks = buildOppRanks(season, logs, allPlayers, format);
     playerLogs = attachOppRanks(playerLogs, player.position, oppRanks);
+    playerLogs = enrichWithTeamMetrics(playerLogs, player.team, season, logs, allPlayers);
     playerLogs = fillMissingWeeks(playerLogs, season, player.team);
     res.set("Cache-Control", "public, max-age=3600");
     res.json(playerLogs);

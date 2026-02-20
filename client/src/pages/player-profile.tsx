@@ -1671,28 +1671,24 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
 
 function getPositionMomentumMetrics(position: string | null) {
   if (position === 'QB') return [
-    { key: 'pass_att', label: 'Pass Att/G', pct: false },
-    { key: 'pass_cmp', label: 'Completions/G', pct: false },
-    { key: 'pass_yd', label: 'Pass Yds/G', pct: false },
-    { key: 'rush_att', label: 'Rush Att/G', pct: false },
+    { key: 'pass_att', label: 'Pass Att/G', pct: false, weight: 5 },
+    { key: 'rush_att', label: 'Rush Att/G', pct: false, weight: 3 },
+    { key: 'team_pass_rate', label: 'Team Pass Rate', pct: true, weight: 2 },
   ];
   if (position === 'RB') return [
-    { key: 'rush_att', label: 'Carries/G', pct: false },
-    { key: 'rush_yd', label: 'Rush Yds/G', pct: false },
-    { key: 'rec_tgt', label: 'Targets/G', pct: false },
-    { key: 'rec', label: 'Receptions/G', pct: false },
+    { key: 'rush_att', label: 'Carries/G', pct: false, weight: 5 },
+    { key: 'rec_tgt', label: 'Targets/G', pct: false, weight: 3 },
+    { key: 'target_share', label: 'Target Share', pct: true, weight: 2 },
   ];
   if (position === 'WR' || position === 'TE') return [
-    { key: 'rec_tgt', label: 'Targets/G', pct: false },
-    { key: 'rec', label: 'Receptions/G', pct: false },
-    { key: 'rec_yd', label: 'Rec Yds/G', pct: false },
-    { key: 'rush_att', label: 'Carries/G', pct: false },
+    { key: 'target_share', label: 'Target Share', pct: true, weight: 5 },
+    { key: 'rec_tgt', label: 'Targets/G', pct: false, weight: 3 },
+    { key: 'team_pass_rate', label: 'Team Pass Rate', pct: true, weight: 2 },
   ];
   if (position === 'K') return [
-    { key: 'fga', label: 'FG Att/G', pct: false },
-    { key: 'fgm', label: 'FG Made/G', pct: false },
-    { key: 'xpa', label: 'XP Att/G', pct: false },
-    { key: 'xpm', label: 'XP Made/G', pct: false },
+    { key: 'fga', label: 'FG Att/G', pct: false, weight: 5 },
+    { key: 'fgm', label: 'FG Made/G', pct: false, weight: 3 },
+    { key: 'xpa', label: 'XP Att/G', pct: false, weight: 2 },
   ];
   return [];
 }
@@ -1734,8 +1730,9 @@ function computeUsageStability(activeEntries: GameLogEntry[], primaryKey: string
 }
 
 function DeltaCell({ delta, pct = false }: { delta: number; pct?: boolean }) {
-  const isPos = delta > 0.05;
-  const isNeg = delta < -0.05;
+  const threshold = pct ? 0.3 : 0.05;
+  const isPos = delta > threshold;
+  const isNeg = delta < -threshold;
   const color = isPos ? 'text-emerald-500' : isNeg ? 'text-red-400' : 'text-muted-foreground';
   const sign = isPos ? '+' : '';
   return (
@@ -1759,14 +1756,17 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   });
 
   const primaryKey = metrics[0]?.key ?? 'rec_tgt';
-  const weightedPctChange = deltaRows.reduce((s, d, i) => {
-    const weight = [4, 3, 2, 1][i] ?? 1;
-    const pctChange = d.seasonAvg > 0 ? (d.delta / d.seasonAvg) : 0;
-    return s + pctChange * weight;
+  const weightedDeltaSum = deltaRows.reduce((s, d) => {
+    const w = d.weight ?? 1;
+    if (d.pct) {
+      return s + d.delta * w;
+    }
+    const pctChange = d.seasonAvg > 0 ? (d.delta / d.seasonAvg) * 100 : 0;
+    return s + pctChange * w;
   }, 0);
-  const totalWeight = deltaRows.reduce((s, _, i) => s + ([4, 3, 2, 1][i] ?? 1), 0) || 1;
-  const avgPctChange = weightedPctChange / totalWeight;
-  const momentumScore = Math.round(Math.max(0, Math.min(100, 50 + avgPctChange * 200)));
+  const totalWeight = deltaRows.reduce((s, d) => s + (d.weight ?? 1), 0) || 1;
+  const normalizedDelta = weightedDeltaSum / totalWeight;
+  const momentumScore = Math.round(Math.max(0, Math.min(100, 50 + normalizedDelta * 2.5)));
 
   const momentumLabel = momentumScore >= 65 ? 'EXPANDING' : momentumScore <= 35 ? 'DECLINING' : 'STABLE';
   const momentumColor = momentumScore >= 65 ? 'text-emerald-500' : momentumScore <= 35 ? 'text-red-400' : 'text-amber-400';
@@ -1774,8 +1774,17 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
 
   const tdDep = computeTdDependency(activeEntries, position, format);
   const stability = computeUsageStability(activeEntries, primaryKey);
-  const stabilityLabel = stability >= 70 ? 'Stable Role' : stability >= 45 ? 'Moderate' : 'Volatile Usage';
+  const stabilityLabel = stability >= 70 ? 'Consistent Role' : stability >= 45 ? 'Moderate Variance' : 'High Weekly Volatility';
   const stabilityColor = stability >= 70 ? 'text-emerald-500' : stability >= 45 ? 'text-amber-400' : 'text-red-400';
+
+  const topDeltaRow = deltaRows.reduce((best, d) => Math.abs(d.delta) > Math.abs(best.delta) ? d : best, deltaRows[0]);
+  const insightDirection = topDeltaRow?.delta > 0 ? 'increased' : 'declined';
+  const insightDeltaStr = Math.abs(topDeltaRow?.delta ?? 0).toFixed(1);
+  const secondDelta = deltaRows.filter(d => d.key !== topDeltaRow?.key).reduce((best, d) => Math.abs(d.delta) > Math.abs(best.delta) ? d : best, deltaRows[1] || deltaRows[0]);
+  const insightVerb2 = (secondDelta?.delta ?? 0) < 0 ? 'dropped' : 'rose';
+  const microInsight = topDeltaRow && secondDelta && deltaRows.length >= 2
+    ? `${topDeltaRow.label} has ${insightDirection} ${insightDeltaStr}${topDeltaRow.pct ? '%' : ''} over the last ${RECENT_WINDOW} weeks while ${secondDelta.label.toLowerCase()} ${insightVerb2} ${Math.abs(secondDelta.delta).toFixed(1)}${secondDelta.pct ? '%' : ''}, ${momentumScore >= 50 ? 'indicating sustained offensive involvement' : 'indicating reduced offensive involvement'}.`
+    : null;
 
   const weeklyPts = entries.map(e => fpts(e, format));
   const rollingPts = weeklyPts.map((_, i) => {
@@ -1853,13 +1862,13 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
               <div className="text-right">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Usage Stability</p>
                 <p className={`text-lg font-bold tabular-nums ${stabilityColor}`} data-testid="text-stability-score">{stability}<span className="text-xs font-medium text-muted-foreground ml-0.5">/ 100</span></p>
-                <p className="text-[10px] text-muted-foreground/70">{stabilityLabel}</p>
+                <p className={`text-[10px] font-medium ${stabilityColor}`}>{stability >= 70 ? '\u2705' : stability >= 45 ? '\u26A0\uFE0F' : '\u26A0\uFE0F'} {stabilityLabel}</p>
               </div>
               {position !== 'K' && (
                 <div className="text-right">
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground">TD Dependency</p>
                   <p className="text-lg font-bold tabular-nums text-foreground" data-testid="text-td-dependency">{tdDep.pct.toFixed(0)}%</p>
-                  <p className="text-[10px] text-muted-foreground/70">{tdDep.label}</p>
+                  <p className={`text-[10px] font-medium ${tdDep.pct < 20 ? 'text-emerald-500' : tdDep.pct >= 35 ? 'text-amber-400' : 'text-muted-foreground'}`}>{tdDep.pct < 20 ? '\uD83D\uDFE2' : tdDep.pct >= 35 ? '\uD83D\uDFE1' : '\u2796'} {tdDep.label}</p>
                 </div>
               )}
             </div>
@@ -1880,15 +1889,21 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                   {deltaRows.map((row, i) => (
                     <tr key={i} className="border-t border-border/50">
                       <td className="py-1.5 pr-3 text-foreground font-medium">{row.label}</td>
-                      <td className="py-1.5 px-2 text-right tabular-nums text-muted-foreground">{row.seasonAvg.toFixed(1)}</td>
-                      <td className="py-1.5 px-2 text-right tabular-nums text-foreground font-medium">{row.recentAvg.toFixed(1)}</td>
-                      <td className="py-1.5 pl-2 text-right"><DeltaCell delta={row.delta} /></td>
+                      <td className="py-1.5 px-2 text-right tabular-nums text-muted-foreground">{row.pct ? `${row.seasonAvg.toFixed(1)}%` : row.seasonAvg.toFixed(1)}</td>
+                      <td className="py-1.5 px-2 text-right tabular-nums text-foreground font-medium">{row.pct ? `${row.recentAvg.toFixed(1)}%` : row.recentAvg.toFixed(1)}</td>
+                      <td className="py-1.5 pl-2 text-right"><DeltaCell delta={row.delta} pct={row.pct} /></td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           </div>
+
+          {microInsight && (
+            <p className="text-[11px] text-muted-foreground leading-relaxed pt-1 italic" data-testid="text-momentum-insight">
+              {microInsight}
+            </p>
+          )}
 
           {position !== 'K' && (
             <div className="flex items-center gap-2 pt-1 flex-wrap">

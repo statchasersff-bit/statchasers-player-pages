@@ -218,6 +218,50 @@ function attachOppRanks(entries, position, oppRanks) {
   });
 }
 
+const teamAggCache = new Map();
+function buildTeamAggregates(season, logs, allPlayers) {
+  if (teamAggCache.has(season)) return teamAggCache.get(season);
+  const playerTeamMap = new Map();
+  for (const p of allPlayers) {
+    if (p.team && p.team !== 'FA') playerTeamMap.set(p.id, normalizeTeamAbbr(p.team));
+  }
+  const agg = new Map();
+  for (const [pid, entries] of Object.entries(logs)) {
+    const team = playerTeamMap.get(pid);
+    if (!team) continue;
+    const p = allPlayers.find(pl => pl.id === pid);
+    const pos = p?.position;
+    for (const e of entries) {
+      const s = e.stats || {};
+      const key = `${team}_${e.week}`;
+      if (!agg.has(key)) agg.set(key, { tgt: 0, pass_att: 0, rush_att: 0 });
+      const a = agg.get(key);
+      if (pos !== 'QB' && pos !== 'K') a.tgt += s.rec_tgt || 0;
+      if (pos === 'QB') a.pass_att += s.pass_att || 0;
+      a.rush_att += s.rush_att || 0;
+    }
+  }
+  teamAggCache.set(season, agg);
+  return agg;
+}
+
+function enrichWithTeamMetrics(entries, playerTeam, season, logs, allPlayers) {
+  if (!playerTeam) return entries;
+  const team = normalizeTeamAbbr(playerTeam);
+  const agg = buildTeamAggregates(season, logs, allPlayers);
+  return entries.map(e => {
+    const key = `${team}_${e.week}`;
+    const tw = agg.get(key);
+    if (!tw) return e;
+    const s = e.stats || {};
+    const tgt = s.rec_tgt || 0;
+    const targetShare = tw.tgt > 0 ? Math.round((tgt / tw.tgt) * 1000) / 10 : null;
+    const totalAtt = tw.pass_att + tw.rush_att;
+    const teamPassRate = totalAtt > 0 ? Math.round((tw.pass_att / totalAtt) * 1000) / 10 : null;
+    return { ...e, stats: { ...e.stats, target_share: targetShare, team_pass_rate: teamPassRate, team_tgt: tw.tgt } };
+  });
+}
+
 function buildPlayerProfile(player, allPlayers, seasons, format) {
   let activeSeason = seasons[0] || new Date().getFullYear();
   let playerLogs = [];
@@ -231,6 +275,7 @@ function buildPlayerProfile(player, allPlayers, seasons, format) {
       playerLogs = attachRanks(pLogs, player.id, ranks);
       const oppRanks = buildOppRanks(s, sLogs, allPlayers, format);
       playerLogs = attachOppRanks(playerLogs, player.position, oppRanks);
+      playerLogs = enrichWithTeamMetrics(playerLogs, player.team, s, sLogs, allPlayers);
       playerLogs = fillMissingWeeks(playerLogs, s, player.team);
       break;
     }
@@ -357,6 +402,7 @@ function buildGameLog(player, allPlayers, season, format) {
   let playerLogs = attachRanks(logs[player.id] || [], player.id, ranks);
   const oppRanks = buildOppRanks(season, logs, allPlayers, format);
   playerLogs = attachOppRanks(playerLogs, player.position, oppRanks);
+  playerLogs = enrichWithTeamMetrics(playerLogs, player.team, season, logs, allPlayers);
   playerLogs = fillMissingWeeks(playerLogs, season, player.team);
   return playerLogs;
 }
