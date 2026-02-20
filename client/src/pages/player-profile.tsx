@@ -718,8 +718,9 @@ function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentCo
 
         {showAvgLine && (
           <>
-            <line x1={0} y1={avgY} x2={viewW} y2={avgY} stroke="currentColor" strokeWidth="1" strokeDasharray="4 3" opacity="0.08" />
-            <text x={viewW - 8} y={avgY - 4} textAnchor="end" className="fill-muted-foreground" fontSize="9" opacity="0.2">avg {avg.toFixed(1)}</text>
+            <rect x={0} y={avgY - 6} width={viewW} height={12} fill={accentColor} opacity="0.04" rx="2" />
+            <line x1={0} y1={avgY} x2={viewW} y2={avgY} stroke="currentColor" strokeWidth="1" strokeDasharray="4 3" opacity="0.12" />
+            <text x={viewW - 8} y={avgY - 10} textAnchor="end" className="fill-muted-foreground" fontSize="9" opacity="0.25">avg {avg.toFixed(1)}</text>
           </>
         )}
 
@@ -1786,44 +1787,71 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
     ? `${topDeltaRow.label} has ${insightDirection} ${insightDeltaStr}${topDeltaRow.pct ? '%' : ''} over the last ${RECENT_WINDOW} weeks while ${secondDelta.label.toLowerCase()} ${insightVerb2} ${Math.abs(secondDelta.delta).toFixed(1)}${secondDelta.pct ? '%' : ''}, ${momentumScore >= 50 ? 'indicating sustained offensive involvement' : 'indicating reduced offensive involvement'}.`
     : null;
 
-  const weeklyPts = entries.map(e => fpts(e, format));
-  const rollingPts = weeklyPts.map((_, i) => {
-    const start = Math.max(0, i - 2);
-    const slice = weeklyPts.slice(start, i + 1);
-    return slice.reduce((a, b) => a + b, 0) / slice.length;
-  });
+  const [trendView, setTrendView] = useState<'share' | 'raw' | 'pct'>('share');
 
-  let primaryUsageKey = '';
-  let primaryUsageLabel = '';
-  let secondaryUsageKey = '';
-  let secondaryUsageLabel = '';
+  const getStat = (e: GameLogEntry, key: string) => (e.stats as unknown as Record<string, number>)[key] ?? 0;
+
+  const targetShareData = activeEntries.map(e => getStat(e, 'target_share'));
+  const targetShareRolling = computeRollingAvg(targetShareData, 3);
+  const targetShareSeasonAvg = targetShareData.length > 0 ? targetShareData.reduce((a, b) => a + b, 0) / targetShareData.length : 0;
+
+  const rawTargetsData = activeEntries.map(e => getStat(e, 'rec_tgt'));
+  const rawTargetsRolling = computeRollingAvg(rawTargetsData, 3);
+
+  const teamPctData = activeEntries.map((e, i) => {
+    const teamTgt = getStat(e, 'team_tgt');
+    return teamTgt > 0 ? (rawTargetsData[i] / teamTgt) * 100 : 0;
+  });
+  const teamPctRolling = computeRollingAvg(teamPctData, 3);
+
+  const chart1DataMap = {
+    share: { data: targetShareData, rolling: targetShareRolling, label: 'Target Share %', unit: '%', avg: targetShareSeasonAvg },
+    raw: { data: rawTargetsData, rolling: rawTargetsRolling, label: 'Targets', unit: '', avg: rawTargetsData.length > 0 ? rawTargetsData.reduce((a, b) => a + b, 0) / rawTargetsData.length : 0 },
+    pct: { data: teamPctData, rolling: teamPctRolling, label: '% of Team Targets', unit: '%', avg: teamPctData.length > 0 ? teamPctData.reduce((a, b) => a + b, 0) / teamPctData.length : 0 },
+  };
+
+  let chart1Cfg = chart1DataMap[trendView];
   if (position === 'QB') {
-    primaryUsageKey = 'pass_att'; primaryUsageLabel = 'Pass Attempts';
-    secondaryUsageKey = 'rush_att'; secondaryUsageLabel = 'Rush Attempts';
+    const passAttData = activeEntries.map(e => getStat(e, 'pass_att'));
+    const passAttRolling = computeRollingAvg(passAttData, 3);
+    const passAttAvg = passAttData.length > 0 ? passAttData.reduce((a, b) => a + b, 0) / passAttData.length : 0;
+    chart1Cfg = { data: passAttData, rolling: passAttRolling, label: 'Pass Attempts', unit: '', avg: passAttAvg };
   } else if (position === 'RB') {
-    primaryUsageKey = 'rush_att'; primaryUsageLabel = 'Carries';
-    secondaryUsageKey = 'rec_tgt'; secondaryUsageLabel = 'Targets';
-  } else if (position === 'WR' || position === 'TE') {
-    primaryUsageKey = 'rec_tgt'; primaryUsageLabel = 'Targets';
-    secondaryUsageKey = 'rec'; secondaryUsageLabel = 'Receptions';
+    const carriesData = activeEntries.map(e => getStat(e, 'rush_att'));
+    const carriesRolling = computeRollingAvg(carriesData, 3);
+    const carriesAvg = carriesData.length > 0 ? carriesData.reduce((a, b) => a + b, 0) / carriesData.length : 0;
+    chart1Cfg = { data: carriesData, rolling: carriesRolling, label: 'Carries', unit: '', avg: carriesAvg };
   } else if (position === 'K') {
-    primaryUsageKey = 'fga'; primaryUsageLabel = 'FG Attempts';
-    secondaryUsageKey = 'xpa'; secondaryUsageLabel = 'XP Attempts';
+    const fgaData = activeEntries.map(e => getStat(e, 'fga'));
+    const fgaRolling = computeRollingAvg(fgaData, 3);
+    const fgaAvg = fgaData.length > 0 ? fgaData.reduce((a, b) => a + b, 0) / fgaData.length : 0;
+    chart1Cfg = { data: fgaData, rolling: fgaRolling, label: 'FG Attempts', unit: '', avg: fgaAvg };
   }
 
-  const primaryData = entries.map(e => (e.stats as unknown as Record<string, number>)[primaryUsageKey] ?? 0);
-  const secondaryData = entries.map(e => (e.stats as unknown as Record<string, number>)[secondaryUsageKey] ?? 0);
-  const rollingPrimary = getRollingAverage(entries, primaryUsageKey, 3);
-  const rollingSecondary = getRollingAverage(entries, secondaryUsageKey, 3);
+  const teamPassAtt = activeEntries.map(e => {
+    if (position === 'QB') return getStat(e, 'pass_att');
+    const teamTgt = getStat(e, 'team_tgt');
+    const teamPassRate = getStat(e, 'team_pass_rate');
+    if (teamTgt > 0 && teamPassRate > 0) return Math.round(teamTgt / (teamPassRate / 100));
+    return teamTgt > 0 ? teamTgt : 0;
+  });
+  const playerVolume = position === 'QB'
+    ? activeEntries.map(e => getStat(e, 'pass_att'))
+    : position === 'RB'
+    ? activeEntries.map(e => getStat(e, 'rush_att') + getStat(e, 'rec_tgt'))
+    : activeEntries.map(e => getStat(e, 'rec_tgt'));
+  const teamPassAttRolling = computeRollingAvg(teamPassAtt, 3);
+  const playerVolumeRolling = computeRollingAvg(playerVolume, 3);
 
-  let yardageKey = '';
-  let yardageLabel = '';
-  if (position === 'QB') { yardageKey = 'pass_yd'; yardageLabel = 'Pass Yards'; }
-  else if (position === 'RB') { yardageKey = 'rush_yd'; yardageLabel = 'Rush Yards'; }
-  else if (position === 'WR' || position === 'TE') { yardageKey = 'rec_yd'; yardageLabel = 'Rec Yards'; }
-
-  const yardageData = yardageKey ? entries.map(e => (e.stats as unknown as Record<string, number>)[yardageKey] ?? 0) : [];
-  const rollingYardage = yardageKey ? getRollingAverage(entries, yardageKey, 3) : [];
+  const weeklyPts = activeEntries.map(e => fpts(e, format));
+  const weeklyTdPts = activeEntries.map(e => {
+    const s = e.stats as unknown as Record<string, number>;
+    if (position === 'QB') return ((s.pass_td ?? 0) * 4) + ((s.rush_td ?? 0) * 6);
+    if (position === 'K') return 0;
+    return (((s.rec_td ?? 0) + (s.rush_td ?? 0)) * 6);
+  });
+  const weeklyPtsRolling = computeRollingAvg(weeklyPts, 3);
+  const weeklyTdPtsRolling = computeRollingAvg(weeklyTdPts, 3);
 
   if (entries.length === 0 || metrics.length === 0) {
     return (
@@ -1917,130 +1945,252 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
         </CardContent>
       </Card>
 
-      <Card>
-        <CardContent className="p-4">
-          <p className="text-xs text-muted-foreground font-medium mb-1">{primaryUsageLabel} per Week</p>
-          <p className="text-[10px] text-muted-foreground/60 mb-3">Gold = 3-week rolling avg</p>
-          <div className="relative">
-            <MiniBarChart data={primaryData} height={80} color="bg-primary/40" />
-            <div className="absolute inset-0 flex items-end gap-[2px]" style={{ height: 80 }}>
-              {rollingPrimary.map((val, i) => {
-                const max = Math.max(...primaryData, 1);
-                return (
-                  <div key={i} className="flex-1 flex items-end justify-center h-full">
-                    <div
-                      className="w-1.5 rounded-full"
-                      style={{
-                        height: `${(val / max) * 100}%`,
-                        background: 'linear-gradient(180deg, #F5D36E, #D4A843)',
-                        minHeight: 2,
-                      }}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          <div className="flex items-center justify-between gap-2 mt-2 flex-wrap">
-            <span className="text-[10px] text-muted-foreground">Wk 1</span>
-            <span className="text-[10px] text-muted-foreground">Wk {primaryData.length}</span>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="space-y-1" data-testid="opportunity-trends-section">
+        <div className="flex items-center gap-2">
+          <TrendingUp className="w-4 h-4 text-muted-foreground" />
+          <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Opportunity Trends</p>
+          <span className="text-[10px] text-muted-foreground/50">Rolling Analysis</span>
+        </div>
+      </div>
 
-      <Card>
-        <CardContent className="p-4">
-          <p className="text-xs text-muted-foreground font-medium mb-1">{secondaryUsageLabel} per Week</p>
-          <p className="text-[10px] text-muted-foreground/60 mb-3">Gold = 3-week rolling avg</p>
-          <div className="relative">
-            <MiniBarChart data={secondaryData} height={80} color="bg-chart-2/40" />
-            <div className="absolute inset-0 flex items-end gap-[2px]" style={{ height: 80 }}>
-              {rollingSecondary.map((val, i) => {
-                const max = Math.max(...secondaryData, 1);
-                return (
-                  <div key={i} className="flex-1 flex items-end justify-center h-full">
-                    <div
-                      className="w-1.5 rounded-full"
-                      style={{
-                        height: `${(val / max) * 100}%`,
-                        background: 'linear-gradient(180deg, #F5D36E, #D4A843)',
-                        minHeight: 2,
-                      }}
-                    />
-                  </div>
-                );
-              })}
+      <Card data-testid="chart-target-share-trend">
+        <CardContent className="p-4 space-y-3">
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <div>
+              <p className="text-xs text-foreground font-medium">{chart1Cfg.label} per Week</p>
+              <p className="text-[10px] text-muted-foreground/60">Gold line = 3-week rolling avg &middot; Shaded band = season avg</p>
             </div>
-          </div>
-          <div className="flex items-center justify-between gap-2 mt-2 flex-wrap">
-            <span className="text-[10px] text-muted-foreground">Wk 1</span>
-            <span className="text-[10px] text-muted-foreground">Wk {secondaryData.length}</span>
-          </div>
-        </CardContent>
-      </Card>
-
-      {yardageData.length > 0 && (
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-xs text-muted-foreground font-medium mb-1">{yardageLabel} per Week</p>
-            <p className="text-[10px] text-muted-foreground/60 mb-3">Gold = 3-week rolling avg</p>
-            <div className="relative">
-              <MiniBarChart data={yardageData} height={80} color="bg-chart-3/40" />
-              <div className="absolute inset-0 flex items-end gap-[2px]" style={{ height: 80 }}>
-                {rollingYardage.map((val, i) => {
-                  const max = Math.max(...yardageData, 1);
-                  return (
-                    <div key={i} className="flex-1 flex items-end justify-center h-full">
-                      <div
-                        className="w-1.5 rounded-full"
-                        style={{
-                          height: `${(val / max) * 100}%`,
-                          background: 'linear-gradient(180deg, #F5D36E, #D4A843)',
-                          minHeight: 2,
-                        }}
-                      />
-                    </div>
-                  );
-                })}
+            {(position === 'WR' || position === 'TE') && (
+              <div className="flex rounded-md border border-border overflow-hidden" data-testid="trend-view-toggle">
+                {([
+                  { key: 'share' as const, label: 'Share' },
+                  { key: 'raw' as const, label: 'Raw Tgt' },
+                  { key: 'pct' as const, label: '% Team' },
+                ]).map(opt => (
+                  <button
+                    key={opt.key}
+                    className={`px-2.5 py-1 text-[10px] font-medium transition-colors ${trendView === opt.key ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted/50'}`}
+                    onClick={() => setTrendView(opt.key)}
+                    data-testid={`btn-trend-${opt.key}`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
               </div>
+            )}
+          </div>
+          {chart1Cfg.data.length >= 2 && (
+            <LineChartSVG
+              data={chart1Cfg.data}
+              rollingAvg={chart1Cfg.rolling}
+              height={140}
+              label={`trend-${trendView}`}
+              accentColor="hsl(var(--primary))"
+              showAvgLine={true}
+              highlightLast={Math.min(4, chart1Cfg.data.length)}
+              showRecentFormLabel={true}
+            />
+          )}
+        </CardContent>
+      </Card>
+
+      <Card data-testid="chart-volume-context">
+        <CardContent className="p-4 space-y-3">
+          <div>
+            <p className="text-xs text-foreground font-medium">Volume Context</p>
+            <p className="text-[10px] text-muted-foreground/60">
+              {position === 'QB' ? 'Pass attempts per week' : position === 'RB' ? 'Team targets vs player touches (carries + targets)' : 'Team pass attempts vs player targets'} &middot; Dual overlay
+            </p>
+          </div>
+          {teamPassAtt.length >= 2 && (() => {
+            const allVals = [...teamPassAtt, ...playerVolume];
+            const maxVal = Math.max(...allVals, 1);
+            const h = 140;
+            const pad = { top: 10, bottom: 24, left: 0, right: 0 };
+            const chartH = h - pad.top - pad.bottom;
+            const viewW = 400;
+            const toP = (val: number, i: number, len: number) => ({
+              x: pad.left + (i / (len - 1)) * (viewW - pad.left - pad.right),
+              y: pad.top + chartH - (val / maxVal) * chartH,
+            });
+            const makePath = (d: number[]) => d.map((v, i) => `${i === 0 ? 'M' : 'L'}${toP(v, i, d.length).x},${toP(v, i, d.length).y}`).join(' ');
+            const makeArea = (d: number[]) => {
+              const pts = d.map((v, i) => toP(v, i, d.length));
+              return `${makePath(d)} L${pts[pts.length - 1].x},${pad.top + chartH} L${pts[0].x},${pad.top + chartH} Z`;
+            };
+            return (
+              <svg viewBox={`0 0 ${viewW} ${h}`} className="w-full" style={{ height: h }} preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="vol-team-fill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(var(--muted-foreground))" stopOpacity="0.08" />
+                    <stop offset="100%" stopColor="hsl(var(--muted-foreground))" stopOpacity="0" />
+                  </linearGradient>
+                  <linearGradient id="vol-player-fill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.12" />
+                    <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+                <path d={makeArea(teamPassAtt)} fill="url(#vol-team-fill)" />
+                <path d={makePath(teamPassAtt)} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" strokeDasharray="4 3" opacity="0.4" />
+                <path d={makePath(teamPassAttRolling)} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="2" opacity="0.5" strokeLinejoin="round" />
+                <path d={makeArea(playerVolume)} fill="url(#vol-player-fill)" />
+                <path d={makePath(playerVolume)} fill="none" stroke="hsl(var(--primary))" strokeWidth="1.5" opacity="0.4" />
+                <path d={makePath(playerVolumeRolling)} fill="none" stroke="hsl(var(--primary))" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+                {playerVolume.map((v, i) => {
+                  const p = toP(v, i, playerVolume.length);
+                  return <circle key={i} cx={p.x} cy={p.y} r="2" fill="hsl(var(--primary))" opacity="0.4" />;
+                })}
+                <text x={toP(0, 0, teamPassAtt.length).x} y={h - 4} textAnchor="start" className="fill-muted-foreground" fontSize="10">Wk 1</text>
+                <text x={toP(0, teamPassAtt.length - 1, teamPassAtt.length).x} y={h - 4} textAnchor="end" className="fill-muted-foreground" fontSize="10">Wk {teamPassAtt.length}</text>
+              </svg>
+            );
+          })()}
+          <div className="flex items-center gap-4 text-[10px] text-muted-foreground">
+            <span className="flex items-center gap-1"><span className="inline-block w-3 h-0.5 rounded" style={{ background: 'hsl(var(--muted-foreground))' }} /> {position === 'RB' ? 'Team Targets' : 'Team Pass Att'}</span>
+            <span className="flex items-center gap-1"><span className="inline-block w-3 h-0.5 rounded" style={{ background: 'hsl(var(--primary))' }} /> {position === 'QB' ? 'Pass Att' : position === 'RB' ? 'Carries + Targets' : 'Player Targets'}</span>
+          </div>
+        </CardContent>
+      </Card>
+
+      {position !== 'K' && (
+        <Card data-testid="chart-td-dependency-overlay">
+          <CardContent className="p-4 space-y-3">
+            <div>
+              <p className="text-xs text-foreground font-medium">High-Value Opportunity</p>
+              <p className="text-[10px] text-muted-foreground/60">TD points vs total fantasy points &middot; Shows scoring dependency</p>
             </div>
-            <div className="flex items-center justify-between gap-2 mt-2 flex-wrap">
-              <span className="text-[10px] text-muted-foreground">Wk 1</span>
-              <span className="text-[10px] text-muted-foreground">Wk {yardageData.length}</span>
+            {weeklyPts.length >= 2 && (() => {
+              const maxVal = Math.max(...weeklyPts, 1);
+              const h = 140;
+              const pad = { top: 10, bottom: 24, left: 0, right: 0 };
+              const chartH = h - pad.top - pad.bottom;
+              const viewW = 400;
+              const toP = (val: number, i: number) => ({
+                x: pad.left + (i / (weeklyPts.length - 1)) * (viewW - pad.left - pad.right),
+                y: pad.top + chartH - (val / maxVal) * chartH,
+              });
+              const makePath = (d: number[]) => d.map((v, i) => `${i === 0 ? 'M' : 'L'}${toP(v, i).x},${toP(v, i).y}`).join(' ');
+              const makeArea = (d: number[]) => {
+                const pts = d.map((v, i) => toP(v, i));
+                return `${makePath(d)} L${pts[pts.length - 1].x},${pad.top + chartH} L${pts[0].x},${pad.top + chartH} Z`;
+              };
+              return (
+                <svg viewBox={`0 0 ${viewW} ${h}`} className="w-full" style={{ height: h }} preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="td-total-fill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.1" />
+                      <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+                    </linearGradient>
+                    <linearGradient id="td-pts-fill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.15" />
+                      <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path d={makeArea(weeklyPts)} fill="url(#td-total-fill)" />
+                  <path d={makePath(weeklyPts)} fill="none" stroke="hsl(var(--primary))" strokeWidth="1.5" opacity="0.35" />
+                  <path d={makePath(weeklyPtsRolling)} fill="none" stroke="hsl(var(--primary))" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+                  <path d={makeArea(weeklyTdPts)} fill="url(#td-pts-fill)" />
+                  <path d={makePath(weeklyTdPts)} fill="none" stroke="#f59e0b" strokeWidth="1.5" opacity="0.4" />
+                  <path d={makePath(weeklyTdPtsRolling)} fill="none" stroke="#f59e0b" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+                  {weeklyPts.map((v, i) => {
+                    const p = toP(v, i);
+                    return <circle key={i} cx={p.x} cy={p.y} r="2" fill="hsl(var(--primary))" opacity="0.35" />;
+                  })}
+                  {weeklyTdPts.map((v, i) => {
+                    const p = toP(v, i);
+                    return v > 0 ? <circle key={`td-${i}`} cx={p.x} cy={p.y} r="3" fill="#f59e0b" opacity="0.6" /> : null;
+                  })}
+                  <text x={toP(0, 0).x} y={h - 4} textAnchor="start" className="fill-muted-foreground" fontSize="10">Wk 1</text>
+                  <text x={toP(0, weeklyPts.length - 1).x} y={h - 4} textAnchor="end" className="fill-muted-foreground" fontSize="10">Wk {weeklyPts.length}</text>
+                </svg>
+              );
+            })()}
+            <div className="flex items-center gap-4 text-[10px] text-muted-foreground">
+              <span className="flex items-center gap-1"><span className="inline-block w-3 h-0.5 rounded" style={{ background: 'hsl(var(--primary))' }} /> Total FPTS ({SCORING_LABELS[format]})</span>
+              <span className="flex items-center gap-1"><span className="inline-block w-3 h-0.5 rounded" style={{ background: '#f59e0b' }} /> TD Points Only</span>
             </div>
           </CardContent>
         </Card>
       )}
 
-      <Card>
-        <CardContent className="p-4">
-          <p className="text-xs text-muted-foreground font-medium mb-1">Fantasy Points ({SCORING_LABELS[format]}) - 3 Week Rolling Avg</p>
-          <div className="relative">
-            <MiniBarChart data={weeklyPts} height={80} color="bg-primary/30" />
-            <div className="absolute inset-0 flex items-end gap-[2px]" style={{ height: 80 }}>
-              {rollingPts.map((val, i) => {
-                const max = Math.max(...weeklyPts, 1);
-                return (
-                  <div key={i} className="flex-1 flex items-end justify-center h-full">
-                    <div
-                      className="w-1.5 rounded-full"
-                      style={{
-                        height: `${(val / max) * 100}%`,
-                        background: 'linear-gradient(180deg, #F5D36E, #D4A843)',
-                        minHeight: 2,
-                      }}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          <div className="flex items-center justify-between gap-2 mt-2 flex-wrap">
-            <span className="text-[10px] text-muted-foreground">Wk 1</span>
-            <span className="text-[10px] text-muted-foreground">Wk {weeklyPts.length}</span>
-          </div>
-        </CardContent>
-      </Card>
+      {(() => {
+        const last4Share = activeEntries.length >= 4
+          ? activeEntries.slice(-4).reduce((s, e) => s + getStat(e, 'target_share'), 0) / 4
+          : null;
+        const seasonShare = targetShareSeasonAvg;
+        const last4Team = activeEntries.length >= 4
+          ? activeEntries.slice(-4).reduce((s, e) => s + getStat(e, 'team_tgt'), 0) / 4
+          : null;
+        const seasonTeam = activeEntries.length > 0
+          ? activeEntries.reduce((s, e) => s + getStat(e, 'team_tgt'), 0) / activeEntries.length
+          : 0;
+
+        let shiftSummary = '';
+        if (last4Share !== null && last4Team !== null && activeEntries.length >= 5) {
+          const shareDelta = last4Share - seasonShare;
+          const teamDelta = seasonTeam > 0 ? ((last4Team - seasonTeam) / seasonTeam) * 100 : 0;
+
+          if (position === 'QB') {
+            const last4Att = activeEntries.slice(-4).reduce((s, e) => s + getStat(e, 'pass_att'), 0) / 4;
+            const seasonAtt = activeEntries.reduce((s, e) => s + getStat(e, 'pass_att'), 0) / activeEntries.length;
+            const attDelta = seasonAtt > 0 ? ((last4Att - seasonAtt) / seasonAtt) * 100 : 0;
+            if (Math.abs(attDelta) < 3) {
+              shiftSummary = `Pass attempts have remained stable over the last 4 games (${last4Att.toFixed(0)}/gm vs ${seasonAtt.toFixed(0)}/gm season avg), indicating a consistent offensive scheme.`;
+            } else if (attDelta > 0) {
+              shiftSummary = `Pass attempts have increased ${attDelta.toFixed(0)}% over the last 4 games (${last4Att.toFixed(0)}/gm vs ${seasonAtt.toFixed(0)}/gm), suggesting expanded aerial involvement.`;
+            } else {
+              shiftSummary = `Pass attempts have declined ${Math.abs(attDelta).toFixed(0)}% over the last 4 games (${last4Att.toFixed(0)}/gm vs ${seasonAtt.toFixed(0)}/gm), indicating a potential shift toward the run game.`;
+            }
+          } else if (position === 'RB') {
+            const last4Carries = activeEntries.slice(-4).reduce((s, e) => s + getStat(e, 'rush_att'), 0) / 4;
+            const seasonCarries = activeEntries.reduce((s, e) => s + getStat(e, 'rush_att'), 0) / activeEntries.length;
+            const carriesDelta = seasonCarries > 0 ? ((last4Carries - seasonCarries) / seasonCarries) * 100 : 0;
+            const last4Tgt = activeEntries.slice(-4).reduce((s, e) => s + getStat(e, 'rec_tgt'), 0) / 4;
+            const seasonTgt = activeEntries.reduce((s, e) => s + getStat(e, 'rec_tgt'), 0) / activeEntries.length;
+            const tgtDelta = seasonTgt > 0 ? ((last4Tgt - seasonTgt) / seasonTgt) * 100 : 0;
+            if (Math.abs(carriesDelta) < 5 && Math.abs(tgtDelta) < 10) {
+              shiftSummary = `Carries (${last4Carries.toFixed(1)}/gm) and targets (${last4Tgt.toFixed(1)}/gm) have remained stable over the last 4 games, indicating a consistent backfield role.`;
+            } else if (carriesDelta > 5 && tgtDelta > 10) {
+              shiftSummary = `Both carries (${last4Carries.toFixed(1)}/gm vs ${seasonCarries.toFixed(1)}/gm) and targets (${last4Tgt.toFixed(1)}/gm vs ${seasonTgt.toFixed(1)}/gm) have increased over the last 4 games, suggesting an expanding three-down role.`;
+            } else if (carriesDelta > 5) {
+              shiftSummary = `Carries have increased ${carriesDelta.toFixed(0)}% over the last 4 games (${last4Carries.toFixed(1)}/gm vs ${seasonCarries.toFixed(1)}/gm season avg)${Math.abs(tgtDelta) > 10 ? `, while targets have ${tgtDelta > 0 ? 'also risen' : 'declined'}` : ', with receiving work holding steady'}.`;
+            } else if (carriesDelta < -5) {
+              shiftSummary = `Carries have declined ${Math.abs(carriesDelta).toFixed(0)}% over the last 4 games (${last4Carries.toFixed(1)}/gm vs ${seasonCarries.toFixed(1)}/gm)${tgtDelta > 10 ? ', though targets have increased, suggesting a shift toward a passing-down role' : ', indicating reduced ground-game involvement'}.`;
+            } else {
+              shiftSummary = `Carry volume has been stable at ${last4Carries.toFixed(1)}/gm while targets have ${tgtDelta > 0 ? 'risen' : 'declined'} ${Math.abs(tgtDelta).toFixed(0)}% over the last 4 games (${last4Tgt.toFixed(1)}/gm vs ${seasonTgt.toFixed(1)}/gm).`;
+            }
+          } else if (Math.abs(shareDelta) < 1.5 && Math.abs(teamDelta) < 5) {
+            shiftSummary = `Target share has remained stable at ${last4Share.toFixed(1)}% over the last 4 games, consistent with the ${seasonShare.toFixed(1)}% season average. Team volume is also steady.`;
+          } else if (shareDelta < -1.5 && teamDelta < -5) {
+            const teamContrib = teamDelta !== 0 ? Math.min(100, Math.round(Math.abs(teamDelta) / (Math.abs(teamDelta) + Math.abs(shareDelta) * 5) * 100)) : 0;
+            shiftSummary = `Over the last 4 games, target share has dropped from ${seasonShare.toFixed(1)}% to ${last4Share.toFixed(1)}%, while team pass volume also declined ${Math.abs(teamDelta).toFixed(0)}%. Reduced team volume accounts for roughly ${teamContrib}% of the usage dip.`;
+          } else if (shareDelta < -1.5 && Math.abs(teamDelta) < 5) {
+            shiftSummary = `Target share has declined from ${seasonShare.toFixed(1)}% to ${last4Share.toFixed(1)}% despite stable team pass volume, indicating a potential loss of role rather than offensive slowdown.`;
+          } else if (shareDelta > 1.5) {
+            shiftSummary = `Target share has risen from ${seasonShare.toFixed(1)}% to ${last4Share.toFixed(1)}% over the last 4 games${teamDelta < -3 ? ' even as team volume declined' : ''}, suggesting an expanding role in the offense.`;
+          } else if (shareDelta >= -1.5 && shareDelta <= 1.5 && teamDelta < -5) {
+            shiftSummary = `Target share has held steady at ${last4Share.toFixed(1)}% despite a ${Math.abs(teamDelta).toFixed(0)}% decline in team pass volume, indicating the player is absorbing a larger proportion of a shrinking passing offense.`;
+          } else {
+            shiftSummary = `Target share sits at ${last4Share.toFixed(1)}% over the last 4 games vs ${seasonShare.toFixed(1)}% season average. Team volume has shifted ${teamDelta > 0 ? 'up' : 'down'} ${Math.abs(teamDelta).toFixed(0)}%.`;
+          }
+        }
+
+        if (!shiftSummary) return null;
+
+        return (
+          <Card data-testid="usage-shift-summary">
+            <CardContent className="p-4">
+              <div className="flex items-start gap-2">
+                <FileText className="w-3.5 h-3.5 text-muted-foreground mt-0.5 shrink-0" />
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-1">Usage Shift Summary</p>
+                  <p className="text-[11px] text-foreground/80 leading-relaxed" data-testid="text-shift-summary">{shiftSummary}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })()}
     </div>
   );
 }
