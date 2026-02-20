@@ -80,8 +80,9 @@ Located in `wordpress-plugin/statchasers-player-pages/`
 - **Point formulas**: Standard = raw stat pts (no reception bonus), Half = +0.5/rec, PPR = +1.0/rec
 
 ## Recent Changes
-- 2026-02-20: WordPress plugin v0.4.0: React-powered player pages via wp-entry.tsx, fetches data from published Replit API with CORS support, CSS scoped to .scpp-root to avoid theme conflicts, Google Fonts loaded, ES module loading via script_loader_tag filter
-- 2026-02-20: WordPress build: `npx vite build --config vite.config.wp.ts` outputs to dist/wp/ with manifest.json for cache-busted versioning; deploy dist/wp/ contents to GitHub Pages
+- 2026-02-20: Static data pipeline: `node scripts/buildStaticApi.js` pre-generates all API responses as JSON files (352 players × 3 formats × 12 files each = ~4,200 files, 27MB total); eliminates need for live API server
+- 2026-02-20: WordPress plugin v0.4.0: React-powered player pages via wp-entry.tsx, fetches data from static JSON files on GitHub Pages, CSS scoped to .scpp-root via Tailwind `important` to avoid theme conflicts, Google Fonts loaded, ES module loading via script_loader_tag filter
+- 2026-02-20: WordPress build: `npx vite build --config vite.config.wp.ts` then `node scripts/buildStaticApi.js`; outputs to dist/wp/ with manifest.json for cache-busted versioning; deploy dist/wp/ contents to GitHub Pages
 - 2026-02-20: API CORS: Express server allows cross-origin requests from statchasers.com/www.statchasers.com for /api/ routes
 - 2026-02-19: Reverted iframe embed approach; WordPress plugin is fully self-contained (no external app dependency)
 - 2026-02-19: Opportunity Momentum section (Usage & Trends tab Section 1): Role Momentum Score (0-100) with EXPANDING/STABLE/DECLINING badge, Season vs Last 4 delta comparison table (position-specific metrics), TD Dependency Index (% of fantasy pts from TDs), Usage Stability Score (0-100, CV-based), Production Type badge (Volume-Backed / TD-Driven / Balanced)
