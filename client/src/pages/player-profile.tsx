@@ -649,7 +649,7 @@ function MomentumBadge({ data, unit = 'PPG' }: { data: number[]; unit?: string }
   );
 }
 
-function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentColor = "hsl(var(--primary))", showAvgLine = false, highlightLast = 0, showRecentFormLabel = false }: {
+function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentColor = "hsl(var(--primary))", showAvgLine = false, highlightLast = 0, showRecentFormLabel = false, thickLine = false }: {
   data: number[];
   rollingAvg?: number[];
   bestIdx?: number;
@@ -659,6 +659,7 @@ function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentCo
   showAvgLine?: boolean;
   highlightLast?: number;
   showRecentFormLabel?: boolean;
+  thickLine?: boolean;
 }) {
   if (data.length < 2) return null;
   const max = Math.max(...data, 1);
@@ -728,9 +729,9 @@ function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentCo
         )}
 
         <path d={areaPath} fill={`url(#fill-${uid})`} />
-        <path d={linePath} fill="none" stroke={accentColor} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" opacity="0.5" />
+        <path d={linePath} fill="none" stroke={accentColor} strokeWidth={thickLine ? "2.5" : "2"} strokeLinejoin="round" strokeLinecap="round" opacity="0.5" />
         {rollingPath && (
-          <path d={rollingPath} fill="none" stroke={accentColor} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+          <path d={rollingPath} fill="none" stroke={accentColor} strokeWidth={thickLine ? "3.5" : "2.5"} strokeLinejoin="round" strokeLinecap="round" />
         )}
         {bestPoint && (
           <>
@@ -2073,42 +2074,52 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
         </div>
       </div>
 
-      <Card data-testid="chart-target-share-trend">
+      <Card data-testid="chart-target-share-trend" className="border-primary/10">
         <CardContent className="p-4 space-y-3">
           <div className="flex items-center justify-between gap-2 flex-wrap">
             <div>
-              <p className="text-xs text-foreground font-medium">{chart1Cfg.label} per Week</p>
-              <p className="text-[10px] text-muted-foreground/60">Gold line = 3-week rolling avg &middot; Shaded band = season avg</p>
+              <p className="text-sm text-foreground font-semibold">{chart1Cfg.label} per Week</p>
+              <p className="text-[10px] text-muted-foreground/60">Gold line = 3-week rolling avg &middot; Dashed line = season avg</p>
             </div>
-            {(position === 'WR' || position === 'TE') && (
-              <div className="flex rounded-md border border-border overflow-hidden" data-testid="trend-view-toggle">
-                {([
-                  { key: 'share' as const, label: 'Share' },
-                  { key: 'raw' as const, label: 'Raw Tgt' },
-                  { key: 'pct' as const, label: '% Team' },
-                ]).map(opt => (
-                  <button
-                    key={opt.key}
-                    className={`px-2.5 py-1 text-[10px] font-medium transition-colors ${trendView === opt.key ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted/50'}`}
-                    onClick={() => setTrendView(opt.key)}
-                    data-testid={`btn-trend-${opt.key}`}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
+            <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex items-center gap-2 text-[10px]">
+                <span className="text-muted-foreground/60">Last 4:</span>
+                <span className="font-bold tabular-nums text-foreground">{chart1Cfg.data.length >= 4 ? (chart1Cfg.data.slice(-4).reduce((a, b) => a + b, 0) / 4).toFixed(1) : '—'}{chart1Cfg.unit}</span>
+                <span className="text-muted-foreground/40">|</span>
+                <span className="text-muted-foreground/60">Season:</span>
+                <span className="font-bold tabular-nums text-foreground">{chart1Cfg.avg.toFixed(1)}{chart1Cfg.unit}</span>
               </div>
-            )}
+              {(position === 'WR' || position === 'TE') && (
+                <div className="flex rounded-md border border-border overflow-hidden" data-testid="trend-view-toggle">
+                  {([
+                    { key: 'share' as const, label: 'Share' },
+                    { key: 'raw' as const, label: 'Raw Tgt' },
+                    { key: 'pct' as const, label: '% Team' },
+                  ]).map(opt => (
+                    <button
+                      key={opt.key}
+                      className={`px-2.5 py-1 text-[10px] font-medium transition-colors ${trendView === opt.key ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted/50'}`}
+                      onClick={() => setTrendView(opt.key)}
+                      data-testid={`btn-trend-${opt.key}`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
           {chart1Cfg.data.length >= 2 && (
             <LineChartSVG
               data={chart1Cfg.data}
               rollingAvg={chart1Cfg.rolling}
-              height={140}
+              height={170}
               label={`trend-${trendView}`}
               accentColor="hsl(var(--primary))"
               showAvgLine={true}
               highlightLast={Math.min(4, chart1Cfg.data.length)}
               showRecentFormLabel={true}
+              thickLine={true}
             />
           )}
         </CardContent>
@@ -2116,119 +2127,179 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
 
       <Card data-testid="chart-volume-context">
         <CardContent className="p-4 space-y-3">
-          <div>
-            <p className="text-xs text-foreground font-medium">Volume Context</p>
-            <p className="text-[10px] text-muted-foreground/60">
-              {position === 'QB' ? 'Pass attempts per week' : position === 'RB' ? 'Team targets vs player touches (carries + targets)' : 'Team pass attempts vs player targets'} &middot; Dual overlay
-            </p>
-          </div>
-          {teamPassAtt.length >= 2 && (() => {
-            const allVals = [...teamPassAtt, ...playerVolume];
-            const maxVal = Math.max(...allVals, 1);
-            const h = 140;
-            const pad = { top: 10, bottom: 24, left: 0, right: 0 };
-            const chartH = h - pad.top - pad.bottom;
-            const viewW = 400;
-            const toP = (val: number, i: number, len: number) => ({
-              x: pad.left + (i / (len - 1)) * (viewW - pad.left - pad.right),
-              y: pad.top + chartH - (val / maxVal) * chartH,
-            });
-            const makePath = (d: number[]) => d.map((v, i) => `${i === 0 ? 'M' : 'L'}${toP(v, i, d.length).x},${toP(v, i, d.length).y}`).join(' ');
-            const makeArea = (d: number[]) => {
-              const pts = d.map((v, i) => toP(v, i, d.length));
-              return `${makePath(d)} L${pts[pts.length - 1].x},${pad.top + chartH} L${pts[0].x},${pad.top + chartH} Z`;
-            };
+          {(() => {
+            const teamAvg = teamPassAtt.length > 0 ? teamPassAtt.reduce((a, b) => a + b, 0) / teamPassAtt.length : 0;
+            const teamL4 = teamPassAtt.length >= 4 ? teamPassAtt.slice(-4).reduce((a, b) => a + b, 0) / 4 : teamAvg;
+            const playerAvg = playerVolume.length > 0 ? playerVolume.reduce((a, b) => a + b, 0) / playerVolume.length : 0;
+            const playerL4 = playerVolume.length >= 4 ? playerVolume.slice(-4).reduce((a, b) => a + b, 0) / 4 : playerAvg;
+            const teamDeltaPct = teamAvg > 0 ? ((teamL4 - teamAvg) / teamAvg) * 100 : 0;
+            const playerDeltaPct = playerAvg > 0 ? ((playerL4 - playerAvg) / playerAvg) * 100 : 0;
+            const teamDown = teamDeltaPct < -5;
+            const teamStable = Math.abs(teamDeltaPct) <= 5;
+            const playerDown = playerDeltaPct < -5;
+            const playerStable = Math.abs(playerDeltaPct) <= 5;
+            let volDiagnosis = '';
+            let volDiagColor = 'text-muted-foreground';
+            if (teamDown && playerDown && playerStable === false) {
+              volDiagnosis = 'Team-Driven Decline';
+              volDiagColor = 'text-amber-400';
+            } else if (teamStable && playerDown) {
+              volDiagnosis = 'Role Contraction';
+              volDiagColor = 'text-red-400';
+            } else if (teamDown && playerStable) {
+              volDiagnosis = 'Absorbing Share';
+              volDiagColor = 'text-emerald-500';
+            } else if (teamStable && playerStable) {
+              volDiagnosis = 'Stable Volume';
+              volDiagColor = 'text-muted-foreground';
+            } else if (playerDeltaPct > 5) {
+              volDiagnosis = 'Volume Expansion';
+              volDiagColor = 'text-emerald-500';
+            } else {
+              volDiagnosis = 'Mixed Signals';
+              volDiagColor = 'text-muted-foreground';
+            }
             return (
-              <svg viewBox={`0 0 ${viewW} ${h}`} className="w-full" style={{ height: h }} preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="vol-team-fill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="hsl(var(--muted-foreground))" stopOpacity="0.08" />
-                    <stop offset="100%" stopColor="hsl(var(--muted-foreground))" stopOpacity="0" />
-                  </linearGradient>
-                  <linearGradient id="vol-player-fill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.12" />
-                    <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
-                  </linearGradient>
-                </defs>
-                <path d={makeArea(teamPassAtt)} fill="url(#vol-team-fill)" />
-                <path d={makePath(teamPassAtt)} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" strokeDasharray="4 3" opacity="0.4" />
-                <path d={makePath(teamPassAttRolling)} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="2" opacity="0.5" strokeLinejoin="round" />
-                <path d={makeArea(playerVolume)} fill="url(#vol-player-fill)" />
-                <path d={makePath(playerVolume)} fill="none" stroke="hsl(var(--primary))" strokeWidth="1.5" opacity="0.4" />
-                <path d={makePath(playerVolumeRolling)} fill="none" stroke="hsl(var(--primary))" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
-                {playerVolume.map((v, i) => {
-                  const p = toP(v, i, playerVolume.length);
-                  return <circle key={i} cx={p.x} cy={p.y} r="2" fill="hsl(var(--primary))" opacity="0.4" />;
-                })}
-                <text x={toP(0, 0, teamPassAtt.length).x} y={h - 4} textAnchor="start" className="fill-muted-foreground" fontSize="10">Wk 1</text>
-                <text x={toP(0, teamPassAtt.length - 1, teamPassAtt.length).x} y={h - 4} textAnchor="end" className="fill-muted-foreground" fontSize="10">Wk {teamPassAtt.length}</text>
-              </svg>
+              <>
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <div>
+                    <p className="text-xs text-foreground font-medium">Volume Context</p>
+                    <p className="text-[10px] text-muted-foreground/60">
+                      {position === 'QB' ? 'Pass attempts per week' : position === 'RB' ? 'Team targets vs player touches' : 'Team pass attempts vs player targets'} &middot; Dual overlay
+                    </p>
+                  </div>
+                  <Badge variant="outline" className={`text-[10px] ${volDiagColor} border-current/20`} data-testid="badge-volume-diagnosis">
+                    {volDiagnosis}
+                  </Badge>
+                </div>
+                {teamPassAtt.length >= 2 && (() => {
+                  const allVals = [...teamPassAtt, ...playerVolume];
+                  const maxVal = Math.max(...allVals, 1);
+                  const h = 140;
+                  const pad = { top: 10, bottom: 24, left: 0, right: 0 };
+                  const chartH = h - pad.top - pad.bottom;
+                  const viewW = 400;
+                  const toP = (val: number, i: number, len: number) => ({
+                    x: pad.left + (i / (len - 1)) * (viewW - pad.left - pad.right),
+                    y: pad.top + chartH - (val / maxVal) * chartH,
+                  });
+                  const makePath = (d: number[]) => d.map((v, i) => `${i === 0 ? 'M' : 'L'}${toP(v, i, d.length).x},${toP(v, i, d.length).y}`).join(' ');
+                  const makeArea = (d: number[]) => {
+                    const pts = d.map((v, i) => toP(v, i, d.length));
+                    return `${makePath(d)} L${pts[pts.length - 1].x},${pad.top + chartH} L${pts[0].x},${pad.top + chartH} Z`;
+                  };
+                  return (
+                    <svg viewBox={`0 0 ${viewW} ${h}`} className="w-full" style={{ height: h }} preserveAspectRatio="none">
+                      <defs>
+                        <linearGradient id="vol-team-fill" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="hsl(var(--muted-foreground))" stopOpacity="0.08" />
+                          <stop offset="100%" stopColor="hsl(var(--muted-foreground))" stopOpacity="0" />
+                        </linearGradient>
+                        <linearGradient id="vol-player-fill" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.12" />
+                          <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+                        </linearGradient>
+                      </defs>
+                      <path d={makeArea(teamPassAtt)} fill="url(#vol-team-fill)" />
+                      <path d={makePath(teamPassAtt)} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" strokeDasharray="4 3" opacity="0.4" />
+                      <path d={makePath(teamPassAttRolling)} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="2" opacity="0.5" strokeLinejoin="round" />
+                      <path d={makeArea(playerVolume)} fill="url(#vol-player-fill)" />
+                      <path d={makePath(playerVolume)} fill="none" stroke="hsl(var(--primary))" strokeWidth="1.5" opacity="0.4" />
+                      <path d={makePath(playerVolumeRolling)} fill="none" stroke="hsl(var(--primary))" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+                      {playerVolume.map((v, i) => {
+                        const p = toP(v, i, playerVolume.length);
+                        return <circle key={i} cx={p.x} cy={p.y} r="2" fill="hsl(var(--primary))" opacity="0.4" />;
+                      })}
+                      <text x={toP(0, 0, teamPassAtt.length).x} y={h - 4} textAnchor="start" className="fill-muted-foreground" fontSize="10">Wk 1</text>
+                      <text x={toP(0, teamPassAtt.length - 1, teamPassAtt.length).x} y={h - 4} textAnchor="end" className="fill-muted-foreground" fontSize="10">Wk {teamPassAtt.length}</text>
+                    </svg>
+                  );
+                })()}
+                <div className="flex items-center gap-4 text-[10px] text-muted-foreground">
+                  <span className="flex items-center gap-1"><span className="inline-block w-3 h-0.5 rounded" style={{ background: 'hsl(var(--muted-foreground))' }} /> {position === 'RB' ? 'Team Targets' : 'Team Pass Att'}</span>
+                  <span className="flex items-center gap-1"><span className="inline-block w-3 h-0.5 rounded" style={{ background: 'hsl(var(--primary))' }} /> {position === 'QB' ? 'Pass Att' : position === 'RB' ? 'Carries + Targets' : 'Player Targets'}</span>
+                </div>
+              </>
             );
           })()}
-          <div className="flex items-center gap-4 text-[10px] text-muted-foreground">
-            <span className="flex items-center gap-1"><span className="inline-block w-3 h-0.5 rounded" style={{ background: 'hsl(var(--muted-foreground))' }} /> {position === 'RB' ? 'Team Targets' : 'Team Pass Att'}</span>
-            <span className="flex items-center gap-1"><span className="inline-block w-3 h-0.5 rounded" style={{ background: 'hsl(var(--primary))' }} /> {position === 'QB' ? 'Pass Att' : position === 'RB' ? 'Carries + Targets' : 'Player Targets'}</span>
-          </div>
         </CardContent>
       </Card>
 
       {position !== 'K' && (
         <Card data-testid="chart-td-dependency-overlay">
           <CardContent className="p-4 space-y-3">
-            <div>
-              <p className="text-xs text-foreground font-medium">High-Value Opportunity</p>
-              <p className="text-[10px] text-muted-foreground/60">TD points vs total fantasy points &middot; Shows scoring dependency</p>
-            </div>
-            {weeklyPts.length >= 2 && (() => {
-              const maxVal = Math.max(...weeklyPts, 1);
-              const h = 140;
-              const pad = { top: 10, bottom: 24, left: 0, right: 0 };
-              const chartH = h - pad.top - pad.bottom;
-              const viewW = 400;
-              const toP = (val: number, i: number) => ({
-                x: pad.left + (i / (weeklyPts.length - 1)) * (viewW - pad.left - pad.right),
-                y: pad.top + chartH - (val / maxVal) * chartH,
-              });
-              const makePath = (d: number[]) => d.map((v, i) => `${i === 0 ? 'M' : 'L'}${toP(v, i).x},${toP(v, i).y}`).join(' ');
-              const makeArea = (d: number[]) => {
-                const pts = d.map((v, i) => toP(v, i));
-                return `${makePath(d)} L${pts[pts.length - 1].x},${pad.top + chartH} L${pts[0].x},${pad.top + chartH} Z`;
-              };
+            {(() => {
+              const weeklyTdPct = weeklyPts.map((pts, i) => pts > 0 ? (weeklyTdPts[i] / pts) * 100 : 0);
+              const tdPctRolling = computeRollingAvg(weeklyTdPct, 3);
+              const avgTdPct = weeklyTdPct.length > 0 ? weeklyTdPct.reduce((a, b) => a + b, 0) / weeklyTdPct.length : 0;
+              const highTdWeeks = weeklyTdPct.filter(p => p >= 40).length;
               return (
-                <svg viewBox={`0 0 ${viewW} ${h}`} className="w-full" style={{ height: h }} preserveAspectRatio="none">
-                  <defs>
-                    <linearGradient id="td-total-fill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.1" />
-                      <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
-                    </linearGradient>
-                    <linearGradient id="td-pts-fill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.15" />
-                      <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
-                    </linearGradient>
-                  </defs>
-                  <path d={makeArea(weeklyPts)} fill="url(#td-total-fill)" />
-                  <path d={makePath(weeklyPts)} fill="none" stroke="hsl(var(--primary))" strokeWidth="1.5" opacity="0.35" />
-                  <path d={makePath(weeklyPtsRolling)} fill="none" stroke="hsl(var(--primary))" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
-                  <path d={makeArea(weeklyTdPts)} fill="url(#td-pts-fill)" />
-                  <path d={makePath(weeklyTdPts)} fill="none" stroke="#f59e0b" strokeWidth="1.5" opacity="0.4" />
-                  <path d={makePath(weeklyTdPtsRolling)} fill="none" stroke="#f59e0b" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
-                  {weeklyPts.map((v, i) => {
-                    const p = toP(v, i);
-                    return <circle key={i} cx={p.x} cy={p.y} r="2" fill="hsl(var(--primary))" opacity="0.35" />;
-                  })}
-                  {weeklyTdPts.map((v, i) => {
-                    const p = toP(v, i);
-                    return v > 0 ? <circle key={`td-${i}`} cx={p.x} cy={p.y} r="3" fill="#f59e0b" opacity="0.6" /> : null;
-                  })}
-                  <text x={toP(0, 0).x} y={h - 4} textAnchor="start" className="fill-muted-foreground" fontSize="10">Wk 1</text>
-                  <text x={toP(0, weeklyPts.length - 1).x} y={h - 4} textAnchor="end" className="fill-muted-foreground" fontSize="10">Wk {weeklyPts.length}</text>
-                </svg>
+                <>
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <div>
+                      <p className="text-xs text-foreground font-medium">Scoring Composition</p>
+                      <p className="text-[10px] text-muted-foreground/60">TD points as % of total fantasy output &middot; Weeks &ge;40% highlighted</p>
+                    </div>
+                    <div className="flex items-center gap-2 text-[10px]">
+                      <span className="text-muted-foreground/60">Avg TD%:</span>
+                      <span className={`font-bold tabular-nums ${avgTdPct >= 35 ? 'text-amber-400' : 'text-foreground'}`}>{avgTdPct.toFixed(0)}%</span>
+                      <span className="text-muted-foreground/40">|</span>
+                      <span className="text-muted-foreground/60">&ge;40% weeks:</span>
+                      <span className={`font-bold tabular-nums ${highTdWeeks >= 3 ? 'text-amber-400' : 'text-foreground'}`}>{highTdWeeks}/{weeklyTdPct.length}</span>
+                    </div>
+                  </div>
+                  {weeklyTdPct.length >= 2 && (() => {
+                    const h = 140;
+                    const pad = { top: 10, bottom: 24, left: 0, right: 0 };
+                    const chartH = h - pad.top - pad.bottom;
+                    const viewW = 400;
+                    const maxPct = 100;
+                    const toP = (val: number, i: number) => ({
+                      x: pad.left + (i / (weeklyTdPct.length - 1)) * (viewW - pad.left - pad.right),
+                      y: pad.top + chartH - (Math.min(val, maxPct) / maxPct) * chartH,
+                    });
+                    const makePath = (d: number[]) => d.map((v, i) => `${i === 0 ? 'M' : 'L'}${toP(v, i).x},${toP(v, i).y}`).join(' ');
+                    const threshold40Y = pad.top + chartH - (40 / maxPct) * chartH;
+                    return (
+                      <svg viewBox={`0 0 ${viewW} ${h}`} className="w-full" style={{ height: h }} preserveAspectRatio="none">
+                        <defs>
+                          <linearGradient id="tdpct-fill" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.12" />
+                            <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
+                          </linearGradient>
+                        </defs>
+                        <rect x={0} y={pad.top} width={viewW} height={threshold40Y - pad.top} fill="#f59e0b" opacity="0.03" />
+                        <line x1={0} y1={threshold40Y} x2={viewW} y2={threshold40Y} stroke="#f59e0b" strokeWidth="1" strokeDasharray="4 3" opacity="0.25" />
+                        <text x={viewW - 6} y={threshold40Y - 4} textAnchor="end" fill="#f59e0b" fontSize="8" opacity="0.4">40% threshold</text>
+                        {(() => {
+                          const pts = weeklyTdPct.map((v, i) => toP(v, i));
+                          const areaPath = `${makePath(weeklyTdPct)} L${pts[pts.length - 1].x},${pad.top + chartH} L${pts[0].x},${pad.top + chartH} Z`;
+                          return <path d={areaPath} fill="url(#tdpct-fill)" />;
+                        })()}
+                        <path d={makePath(weeklyTdPct)} fill="none" stroke="#f59e0b" strokeWidth="1.5" opacity="0.4" />
+                        <path d={makePath(tdPctRolling)} fill="none" stroke="#f59e0b" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+                        {weeklyTdPct.map((v, i) => {
+                          const p = toP(v, i);
+                          const isHigh = v >= 40;
+                          return (
+                            <Fragment key={i}>
+                              {isHigh && <circle cx={p.x} cy={p.y} r="6" fill="#f59e0b" opacity="0.12" />}
+                              <circle cx={p.x} cy={p.y} r={isHigh ? 3.5 : 2} fill={isHigh ? '#f59e0b' : '#f59e0b'} opacity={isHigh ? 0.8 : 0.35} />
+                            </Fragment>
+                          );
+                        })}
+                        <text x={toP(0, 0).x} y={h - 4} textAnchor="start" className="fill-muted-foreground" fontSize="10">Wk 1</text>
+                        <text x={toP(0, weeklyTdPct.length - 1).x} y={h - 4} textAnchor="end" className="fill-muted-foreground" fontSize="10">Wk {weeklyTdPct.length}</text>
+                      </svg>
+                    );
+                  })()}
+                  <div className="flex items-center gap-4 text-[10px] text-muted-foreground">
+                    <span className="flex items-center gap-1"><span className="inline-block w-3 h-0.5 rounded" style={{ background: '#f59e0b' }} /> TD% of FPTS (3-wk rolling)</span>
+                    <span className="flex items-center gap-1"><span className="inline-block w-2 h-2 rounded-full" style={{ background: '#f59e0b' }} /> &ge;40% TD-driven week</span>
+                  </div>
+                </>
               );
             })()}
-            <div className="flex items-center gap-4 text-[10px] text-muted-foreground">
-              <span className="flex items-center gap-1"><span className="inline-block w-3 h-0.5 rounded" style={{ background: 'hsl(var(--primary))' }} /> Total FPTS ({SCORING_LABELS[format]})</span>
-              <span className="flex items-center gap-1"><span className="inline-block w-3 h-0.5 rounded" style={{ background: '#f59e0b' }} /> TD Points Only</span>
-            </div>
           </CardContent>
         </Card>
       )}
