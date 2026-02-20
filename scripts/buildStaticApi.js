@@ -8,6 +8,7 @@ const INDEXED_BY_TEAM_FILE = path.resolve(DATA_DIR, 'indexed_players_by_team.jso
 const GAME_LOGS_DIR = path.resolve(DATA_DIR, 'game_logs');
 const BYE_WEEKS_FILE = path.resolve(DATA_DIR, 'bye_weeks.json');
 const GAME_SCORES_FILE = path.resolve(DATA_DIR, 'game_scores.json');
+const DYNASTY_FILE = path.resolve(DATA_DIR, 'dynasty_rankings.json');
 const OUTPUT_DIR = path.resolve(process.cwd(), 'dist', 'wp', 'data');
 
 const TEAM_ALIAS_MAP = {
@@ -64,6 +65,14 @@ function getGameScore(season, team, week) {
   const entry = seasonScores[`${normalizedTeam}_${week}`];
   if (!entry) return null;
   return { tm: entry.tm, opp: entry.opp, r: entry.r };
+}
+
+let dynastyData = null;
+function loadDynastyRankings() {
+  if (dynastyData) return dynastyData;
+  try { dynastyData = JSON.parse(fs.readFileSync(DYNASTY_FILE, 'utf-8')); }
+  catch { dynastyData = {}; }
+  return dynastyData;
 }
 
 let byeWeeksData = null;
@@ -381,6 +390,9 @@ function buildPlayerProfile(player, allPlayers, seasons, format) {
   const weeklyPts = playedLogs.map(e => getEntryPoints(e.stats, format));
   const trends = weeklyPts.length > 0 ? { weeklyFantasyPoints: weeklyPts } : null;
 
+  const dynastyRankings = loadDynastyRankings();
+  const dynasty = dynastyRankings[player.slug] || null;
+
   return {
     ...player,
     headshotUrl: player.headshotUrl ?? null,
@@ -393,6 +405,7 @@ function buildPlayerProfile(player, allPlayers, seasons, format) {
     availableSeasons: seasons,
     multiSeasonStats,
     careerProfile,
+    dynasty,
   };
 }
 

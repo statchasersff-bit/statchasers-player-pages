@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import fs from "fs";
 import path from "path";
-import type { Player, GameLogEntry } from "@shared/playerTypes";
+import type { Player, GameLogEntry, DynastyData } from "@shared/playerTypes";
 import { normalizeTeamAbbr, TEAM_ALIAS_MAP } from "@shared/teamMappings";
 import { type ScoringFormat, getEntryPoints } from "@shared/scoring";
 
@@ -17,9 +17,21 @@ const INDEXED_BY_TEAM_FILE = path.resolve(process.cwd(), "data", "indexed_player
 const GAME_LOGS_DIR = path.resolve(process.cwd(), "data", "game_logs");
 const BYE_WEEKS_FILE = path.resolve(process.cwd(), "data", "bye_weeks.json");
 const GAME_SCORES_FILE = path.resolve(process.cwd(), "data", "game_scores.json");
+const DYNASTY_FILE = path.resolve(process.cwd(), "data", "dynasty_rankings.json");
 
 const gameLogsCache: Map<number, Record<string, GameLogEntry[]>> = new Map();
 const weeklyRanksCache: Map<string, Map<string, Map<number, number>>> = new Map();
+
+let dynastyCache: Record<string, DynastyData> | null = null;
+function loadDynastyRankings(): Record<string, DynastyData> {
+  if (dynastyCache) return dynastyCache;
+  try {
+    dynastyCache = JSON.parse(fs.readFileSync(DYNASTY_FILE, "utf-8"));
+  } catch {
+    dynastyCache = {};
+  }
+  return dynastyCache!;
+}
 
 let gameScoresData: Record<string, Record<string, { tm: number; opp: number; r: string }>> | null = null;
 function loadGameScores(): typeof gameScoresData {
@@ -683,6 +695,9 @@ export async function registerRoutes(
     const trends: import("@shared/playerTypes").PlayerTrends | null =
       weeklyPts.length > 0 ? { weeklyFantasyPoints: weeklyPts } : null;
 
+    const dynastyRankings = loadDynastyRankings();
+    const dynasty = dynastyRankings[player.slug] || null;
+
     const enriched = {
       ...player,
       headshotUrl: player.headshotUrl ?? null,
@@ -695,6 +710,7 @@ export async function registerRoutes(
       availableSeasons: seasons,
       multiSeasonStats,
       careerProfile,
+      dynasty,
     };
     res.set("Cache-Control", "public, max-age=3600");
     res.json(enriched);

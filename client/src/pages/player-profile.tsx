@@ -2196,75 +2196,183 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
 }
 
 function RankingsTab({ player }: { player: Player }) {
-  return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <Card>
-          <CardContent className="p-4 text-center">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">ROS Rank</p>
-            <p className="text-3xl font-bold text-foreground mt-1">{'\u2014'}</p>
-            <p className="text-xs text-muted-foreground mt-1">{player.position || 'Overall'}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 text-center">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Dynasty Rank</p>
-            <p className="text-3xl font-bold text-foreground mt-1">{'\u2014'}</p>
-            <p className="text-xs text-muted-foreground mt-1">{player.position || 'Overall'}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 text-center">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Redraft Rank</p>
-            <p className="text-3xl font-bold text-foreground mt-1">{'\u2014'}</p>
-            <p className="text-xs text-muted-foreground mt-1">{player.position || 'Overall'}</p>
-          </CardContent>
-        </Card>
+  const dynasty = player.dynasty;
+
+  if (!dynasty) {
+    return (
+      <div className="space-y-6">
+        <div className="rounded-md border border-dashed border-muted-foreground/25 p-12 text-center">
+          <Trophy className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
+          <p className="text-muted-foreground text-sm font-medium">Dynasty rankings not available for this player</p>
+          <p className="text-muted-foreground/60 text-xs mt-1">This player is not currently ranked in consensus dynasty rankings.</p>
+        </div>
       </div>
+    );
+  }
 
-      <Card>
-        <CardContent className="p-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Trade Value Score</p>
-              <p className="text-2xl font-bold text-foreground mt-1">{'\u2014'}</p>
+  const tierLabel = `${dynasty.position}${dynasty.positionalTier <= 1 ? '1' : dynasty.positionalTier <= 3 ? '2' : '3+'}`;
+  const tierDesc = dynasty.positionalTier <= 1 ? 'Elite' : dynasty.positionalTier <= 3 ? 'Mid' : dynasty.positionalTier <= 6 ? 'Low-End' : 'Deep';
+  const trendDirection = dynasty.trend30 > 3 ? 'Rising' : dynasty.trend30 < -3 ? 'Falling' : 'Stable';
+  const trendColor = dynasty.trend30 > 3 ? 'text-emerald-500' : dynasty.trend30 < -3 ? 'text-red-400' : 'text-muted-foreground';
+  const trendArrow = dynasty.trend30 > 3 ? '\u25B2' : dynasty.trend30 < -3 ? '\u25BC' : '\u25B6';
+  const ageTierColor = dynasty.ageCurveTier === 'Rising' ? 'text-emerald-500' : dynasty.ageCurveTier === 'Prime' ? 'text-blue-500' : dynasty.ageCurveTier === 'Aging' ? 'text-amber-500' : 'text-red-400';
+
+  return (
+    <div className="space-y-6" data-testid="rankings-tab">
+      <Card data-testid="dynasty-market-snapshot">
+        <CardContent className="p-5 space-y-5">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div className="flex items-center gap-2">
+              <Trophy className="w-4 h-4 text-amber-500" />
+              <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Dynasty Market Snapshot</p>
             </div>
-            <div>
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">ADP vs Current</p>
-              <p className="text-2xl font-bold text-foreground mt-1">{'\u2014'}</p>
+            <a
+              href={`https://keeptradecut.com/dynasty-rankings/players/${dynasty.ktcSlug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[10px] text-muted-foreground/50 hover:text-primary transition-colors flex items-center gap-1"
+              data-testid="link-ktc-profile"
+            >
+              KeepTradeCut <ExternalLink className="w-2.5 h-2.5" />
+            </a>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div data-testid="dynasty-overall-rank">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Overall Rank</p>
+              <p className="text-3xl font-bold text-foreground mt-1 tabular-nums">{dynasty.rank}</p>
+              <p className="text-[10px] text-muted-foreground">of 500+</p>
+            </div>
+            <div data-testid="dynasty-positional-rank">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Positional Rank</p>
+              <p className="text-3xl font-bold text-foreground mt-1 tabular-nums">{dynasty.position}{dynasty.positionalRank}</p>
+              <p className="text-[10px] text-muted-foreground">Tier {dynasty.positionalTier}</p>
+            </div>
+            <div data-testid="dynasty-age-curve">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Age Curve</p>
+              <p className={`text-lg font-bold mt-1 ${ageTierColor}`}>{dynasty.ageCurveTier}</p>
+              <p className="text-[10px] text-muted-foreground tabular-nums">{dynasty.age.toFixed(1)} yrs</p>
+            </div>
+            <div data-testid="dynasty-value-trend">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">30-Day Trend</p>
+              <p className={`text-lg font-bold mt-1 ${trendColor}`}>
+                {trendArrow} {dynasty.trend30 > 0 ? '+' : ''}{dynasty.trend30}
+              </p>
+              <p className={`text-[10px] font-medium ${trendColor}`}>{trendDirection}</p>
             </div>
           </div>
+
+          <div className="border-t border-border pt-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div>
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Dynasty Tier</p>
+                <p className="text-sm font-bold text-foreground mt-1">{tierDesc} {tierLabel}</p>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Market Tier</p>
+                <p className="text-sm font-bold text-foreground mt-1">
+                  {dynasty.value >= 8000 ? 'Elite' : dynasty.value >= 6000 ? 'Premium' : dynasty.value >= 4000 ? 'Solid' : dynasty.value >= 2000 ? 'Roster' : 'Fringe'}
+                </p>
+              </div>
+              {dynasty.startupAdp && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Startup ADP</p>
+                  <p className="text-sm font-bold text-foreground mt-1 tabular-nums">{dynasty.startupAdp.toFixed(1)}</p>
+                </div>
+              )}
+              {dynasty.tradeCount > 0 && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Recent Trades</p>
+                  <p className="text-sm font-bold text-foreground mt-1 tabular-nums">{dynasty.tradeCount}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {dynasty.adp && dynasty.startupAdp && (
+            <div className="border-t border-border pt-4">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-2">ADP Comparison</p>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="rounded-md bg-muted/50 p-3">
+                  <p className="text-[10px] text-muted-foreground">Redraft ADP</p>
+                  <p className="text-lg font-bold text-foreground tabular-nums">{dynasty.adp.toFixed(1)}</p>
+                </div>
+                <div className="rounded-md bg-muted/50 p-3">
+                  <p className="text-[10px] text-muted-foreground">Startup ADP</p>
+                  <p className="text-lg font-bold text-foreground tabular-nums">{dynasty.startupAdp.toFixed(1)}</p>
+                  {dynasty.adp && (
+                    <p className={`text-[10px] font-medium mt-0.5 ${dynasty.startupAdp < dynasty.adp ? 'text-emerald-500' : dynasty.startupAdp > dynasty.adp ? 'text-red-400' : 'text-muted-foreground'}`}>
+                      {dynasty.startupAdp < dynasty.adp ? `${(dynasty.adp - dynasty.startupAdp).toFixed(0)} picks higher` : dynasty.startupAdp > dynasty.adp ? `${(dynasty.startupAdp - dynasty.adp).toFixed(0)} picks lower` : 'Same as redraft'}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {dynasty.trend7 !== undefined && (
+            <div className="border-t border-border pt-4">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-2">Market Movement</p>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="rounded-md bg-muted/50 p-3 text-center">
+                  <p className="text-[10px] text-muted-foreground">7-Day</p>
+                  <p className={`text-sm font-bold tabular-nums ${dynasty.trend7 > 0 ? 'text-emerald-500' : dynasty.trend7 < -2 ? 'text-red-400' : 'text-muted-foreground'}`}>
+                    {dynasty.trend7 > 0 ? '+' : ''}{dynasty.trend7}
+                  </p>
+                </div>
+                <div className="rounded-md bg-muted/50 p-3 text-center">
+                  <p className="text-[10px] text-muted-foreground">30-Day</p>
+                  <p className={`text-sm font-bold tabular-nums ${dynasty.trend30 > 0 ? 'text-emerald-500' : dynasty.trend30 < -3 ? 'text-red-400' : 'text-muted-foreground'}`}>
+                    {dynasty.trend30 > 0 ? '+' : ''}{dynasty.trend30}
+                  </p>
+                </div>
+                <div className="rounded-md bg-muted/50 p-3 text-center">
+                  <p className="text-[10px] text-muted-foreground">Pos 30-Day</p>
+                  <p className={`text-sm font-bold tabular-nums ${dynasty.posTrend30 > 0 ? 'text-emerald-500' : dynasty.posTrend30 < -2 ? 'text-red-400' : 'text-muted-foreground'}`}>
+                    {dynasty.posTrend30 > 0 ? '+' : ''}{dynasty.posTrend30}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex items-center gap-3 mb-3 flex-wrap">
-            <Zap className="w-4 h-4 text-muted-foreground" />
-            <p className="text-xs text-muted-foreground font-medium">Buy / Sell Signal</p>
-          </div>
-          <div className="rounded-md border border-dashed border-muted-foreground/25 p-6 text-center">
-            <p className="text-muted-foreground text-sm">Rankings and trade values will be available once expert consensus data is integrated.</p>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Link href={`/tools/`}>
+      <a
+        href={`https://keeptradecut.com/dynasty-rankings/players/${dynasty.ktcSlug}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <Card className="hover-elevate cursor-pointer">
           <CardContent className="p-4 flex items-center justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-3 flex-wrap">
-              <div className="p-2 rounded-md bg-primary/10">
-                <BarChart3 className="w-4 h-4 text-primary" />
+              <div className="p-2 rounded-md bg-amber-500/10">
+                <BarChart3 className="w-4 h-4 text-amber-500" />
               </div>
               <div>
-                <p className="font-medium text-foreground text-sm">Analyze Trades Involving {player.name}</p>
-                <p className="text-xs text-muted-foreground">Explore trade scenarios and value charts</p>
+                <p className="font-medium text-foreground text-sm">View Full Dynasty Profile</p>
+                <p className="text-xs text-muted-foreground">Trade calculator, keep/trade/cut data, and more on KeepTradeCut</p>
               </div>
             </div>
-            <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+            <ExternalLink className="w-4 h-4 text-muted-foreground flex-shrink-0" />
           </CardContent>
         </Card>
-      </Link>
+      </a>
+
+      <div className="px-1 pt-2" data-testid="dynasty-disclaimer">
+        <p className="text-[9px] text-muted-foreground/40 leading-relaxed">
+          Dynasty market data referenced from publicly available consensus rankings at{' '}
+          <a
+            href="https://keeptradecut.com/dynasty-rankings"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-muted-foreground/60 underline"
+          >
+            KeepTradeCut
+          </a>
+          . StatChasers is not affiliated with KeepTradeCut. Rankings are crowdsourced and updated periodically.
+        </p>
+      </div>
     </div>
   );
 }
@@ -2573,6 +2681,29 @@ export default function PlayerProfile() {
                   </>
                 )}
               </div>
+              {player.dynasty && (
+                <div className="flex items-center gap-3 mt-2 flex-wrap" data-testid="dynasty-header-badge">
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/20">
+                    <Trophy className="w-3 h-3 text-amber-500" />
+                    <span className="text-[11px] font-semibold text-amber-600 dark:text-amber-400">
+                      {player.dynasty.ageCurveTier} {player.position}{player.dynasty.positionalRank}
+                    </span>
+                    <span className="text-[10px] text-muted-foreground">|</span>
+                    <span className={`text-[11px] font-semibold ${player.dynasty.trend30 > 0 ? 'text-emerald-500' : player.dynasty.trend30 < -3 ? 'text-red-400' : 'text-muted-foreground'}`}>
+                      {player.dynasty.trend30 > 0 ? '\u25B2' : player.dynasty.trend30 < -3 ? '\u25BC' : '\u25B6'} {player.dynasty.trend30 > 0 ? 'Rising' : player.dynasty.trend30 < -3 ? 'Falling' : 'Stable'}
+                    </span>
+                  </div>
+                  <a
+                    href={`https://keeptradecut.com/dynasty-rankings/players/${player.dynasty.ktcSlug}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[9px] text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
+                    data-testid="link-ktc-source"
+                  >
+                    via KeepTradeCut
+                  </a>
+                </div>
+              )}
               <div
                 className="mt-2.5 mb-3 h-[2px] w-20 rounded-full"
                 style={{ background: 'linear-gradient(90deg, #D4A843, #F5D36E, #D4A843)' }}

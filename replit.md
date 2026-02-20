@@ -80,6 +80,7 @@ Located in `wordpress-plugin/statchasers-player-pages/`
 - **Point formulas**: Standard = raw stat pts (no reception bonus), Half = +0.5/rec, PPR = +1.0/rec
 
 ## Recent Changes
+- 2026-02-20: Dynasty Market Snapshot (Rankings & Value tab): KeepTradeCut consensus dynasty rankings integrated via `scripts/buildDynastyRankings.js`. Shows overall rank, positional rank, age curve tier, 30-day trend, market value, startup ADP, trade volume, and market movement (7d/30d/positional). Header badge with dynasty tier + trend. Attribution footer with KTC disclaimer. Data for 250 matched players.
 - 2026-02-20: Static data pipeline: `node scripts/buildStaticApi.js` pre-generates all API responses as JSON files (352 players × 3 formats × 12 files each = ~4,200 files, 27MB total); eliminates need for live API server
 - 2026-02-20: WordPress plugin v0.4.0: React-powered player pages via wp-entry.tsx, fetches data from static JSON files on GitHub Pages, CSS scoped to .scpp-root via Tailwind `important` to avoid theme conflicts, Google Fonts loaded, ES module loading via script_loader_tag filter
 - 2026-02-20: WordPress build: `npx vite build --config vite.config.wp.ts` then `node scripts/buildStaticApi.js`; outputs to dist/wp/ with manifest.json for cache-busted versioning; deploy dist/wp/ contents to GitHub Pages

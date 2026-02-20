@@ -48,6 +48,26 @@ export interface PlayerTrends {
   weeklyFantasyPoints: number[];
 }
 
+export interface DynastyData {
+  rank: number;
+  positionalRank: number;
+  value: number;
+  overallTier: number;
+  positionalTier: number;
+  trend30: number;
+  trend7: number;
+  posTrend30: number;
+  posTrend7: number;
+  age: number;
+  position: string;
+  team: string;
+  adp: number | null;
+  startupAdp: number | null;
+  tradeCount: number;
+  ageCurveTier: string;
+  ktcSlug: string;
+}
+
 export interface Player {
   id: string;
   name: string;
@@ -67,4 +87,5 @@ export interface Player {
   trends: PlayerTrends | null;
   gameLog: GameLogEntry[];
   news: NewsEntry[];
+  dynasty?: DynastyData | null;
 }
