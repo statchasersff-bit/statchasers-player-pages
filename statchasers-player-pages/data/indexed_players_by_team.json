@@ -1,0 +1,4322 @@
+{
+  "ARI": {
+    "QB": [
+      {
+        "id": "5849",
+        "name": "Kyler Murray",
+        "slug": "kyler-murray",
+        "team": "ARI",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "3257",
+        "name": "Jacoby Brissett",
+        "slug": "jacoby-brissett",
+        "team": "ARI",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 10,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "4137",
+        "name": "James Conner",
+        "slug": "james-conner",
+        "team": "ARI",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "11589",
+        "name": "Trey Benson",
+        "slug": "trey-benson",
+        "team": "ARI",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "11628",
+        "name": "Marvin Harrison",
+        "slug": "marvin-harrison",
+        "team": "ARI",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "10232",
+        "name": "Michael Wilson",
+        "slug": "michael-wilson",
+        "team": "ARI",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "5970",
+        "name": "Greg Dortch",
+        "slug": "greg-dortch",
+        "team": "ARI",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "8130",
+        "name": "Trey McBride",
+        "slug": "trey-mcbride",
+        "team": "ARI",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "10231",
+        "name": "Elijah Higgins",
+        "slug": "elijah-higgins",
+        "team": "ARI",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "10955",
+        "name": "Chad Ryland",
+        "slug": "chad-ryland",
+        "team": "ARI",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "ARI",
+        "name": "Arizona Cardinals",
+        "slug": "arizona-cardinals",
+        "team": "ARI",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "ATL": {
+    "QB": [
+      {
+        "id": "11559",
+        "name": "Michael Penix",
+        "slug": "michael-penix",
+        "team": "ATL",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "1166",
+        "name": "Kirk Cousins",
+        "slug": "kirk-cousins",
+        "team": "ATL",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 14,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "9509",
+        "name": "Bijan Robinson",
+        "slug": "bijan-robinson",
+        "team": "ATL",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "8132",
+        "name": "Tyler Allgeier",
+        "slug": "tyler-allgeier",
+        "team": "ATL",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "8112",
+        "name": "Drake London",
+        "slug": "drake-london",
+        "team": "ATL",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "7090",
+        "name": "Darnell Mooney",
+        "slug": "darnell-mooney",
+        "team": "ATL",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "5773",
+        "name": "KhaDarel Hodge",
+        "slug": "khadarel-hodge",
+        "team": "ATL",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "7553",
+        "name": "Kyle Pitts",
+        "slug": "kyle-pitts",
+        "team": "ATL",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "8227",
+        "name": "Teagan Quitoriano",
+        "slug": "teagan-quitoriano",
+        "team": "ATL",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "4233",
+        "name": "Zane Gonzalez",
+        "slug": "zane-gonzalez",
+        "team": "ATL",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "ATL",
+        "name": "Atlanta Falcons",
+        "slug": "atlanta-falcons",
+        "team": "ATL",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "BAL": {
+    "QB": [
+      {
+        "id": "4881",
+        "name": "Lamar Jackson",
+        "slug": "lamar-jackson",
+        "team": "BAL",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "4574",
+        "name": "Cooper Rush",
+        "slug": "cooper-rush",
+        "team": "BAL",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "3198",
+        "name": "Derrick Henry",
+        "slug": "derrick-henry",
+        "team": "BAL",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 10,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "5995",
+        "name": "Justice Hill",
+        "slug": "justice-hill",
+        "team": "BAL",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "9997",
+        "name": "Zay Flowers",
+        "slug": "zay-flowers",
+        "team": "BAL",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "7571",
+        "name": "Rashod Bateman",
+        "slug": "rashod-bateman",
+        "team": "BAL",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "1426",
+        "name": "DeAndre Hopkins",
+        "slug": "deandre-hopkins",
+        "team": "BAL",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 13,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "5012",
+        "name": "Mark Andrews",
+        "slug": "mark-andrews",
+        "team": "BAL",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "8131",
+        "name": "Isaiah Likely",
+        "slug": "isaiah-likely",
+        "team": "BAL",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "12711",
+        "name": "Tyler Loop",
+        "slug": "tyler-loop",
+        "team": "BAL",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "BAL",
+        "name": "Baltimore Ravens",
+        "slug": "baltimore-ravens",
+        "team": "BAL",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "BUF": {
+    "QB": [
+      {
+        "id": "4984",
+        "name": "Josh Allen",
+        "slug": "josh-allen",
+        "team": "BUF",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "3976",
+        "name": "Mitchell Trubisky",
+        "slug": "mitchell-trubisky",
+        "team": "BUF",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "8138",
+        "name": "James Cook",
+        "slug": "james-cook",
+        "team": "BUF",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "11575",
+        "name": "Ray Davis",
+        "slug": "ray-davis",
+        "team": "BUF",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "11637",
+        "name": "Keon Coleman",
+        "slug": "keon-coleman",
+        "team": "BUF",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "8134",
+        "name": "Khalil Shakir",
+        "slug": "khalil-shakir",
+        "team": "BUF",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "7670",
+        "name": "Joshua Palmer",
+        "slug": "joshua-palmer",
+        "team": "BUF",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "10236",
+        "name": "Dalton Kincaid",
+        "slug": "dalton-kincaid",
+        "team": "BUF",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "5906",
+        "name": "Dawson Knox",
+        "slug": "dawson-knox",
+        "team": "BUF",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "7042",
+        "name": "Tyler Bass",
+        "slug": "tyler-bass",
+        "team": "BUF",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "BUF",
+        "name": "Buffalo Bills",
+        "slug": "buffalo-bills",
+        "team": "BUF",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "CAR": {
+    "QB": [
+      {
+        "id": "9228",
+        "name": "Bryce Young",
+        "slug": "bryce-young",
+        "team": "CAR",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "829",
+        "name": "Andy Dalton",
+        "slug": "andy-dalton",
+        "team": "CAR",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 15,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "7594",
+        "name": "Chuba Hubbard",
+        "slug": "chuba-hubbard",
+        "team": "CAR",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "7021",
+        "name": "Rico Dowdle",
+        "slug": "rico-dowdle",
+        "team": "CAR",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "12526",
+        "name": "Tetairoa McMillan",
+        "slug": "tetairoa-mcmillan",
+        "team": "CAR",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "11626",
+        "name": "Xavier Legette",
+        "slug": "xavier-legette",
+        "team": "CAR",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "11646",
+        "name": "Jalen Coker",
+        "slug": "jalen-coker",
+        "team": "CAR",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "11600",
+        "name": "Ja'Tavion Sanders",
+        "slug": "jatavion-sanders",
+        "team": "CAR",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "7694",
+        "name": "Tommy Tremble",
+        "slug": "tommy-tremble",
+        "team": "CAR",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "12961",
+        "name": "Ryan Fitzgerald",
+        "slug": "ryan-fitzgerald",
+        "team": "CAR",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "CAR",
+        "name": "Carolina Panthers",
+        "slug": "carolina-panthers",
+        "team": "CAR",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "CHI": {
+    "QB": [
+      {
+        "id": "11560",
+        "name": "Caleb Williams",
+        "slug": "caleb-williams",
+        "team": "CHI",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "11256",
+        "name": "Tyson Bagent",
+        "slug": "tyson-bagent",
+        "team": "CHI",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "6790",
+        "name": "D'Andre Swift",
+        "slug": "dandre-swift",
+        "team": "CHI",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "10235",
+        "name": "Roschon Johnson",
+        "slug": "roschon-johnson",
+        "team": "CHI",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "4983",
+        "name": "DJ Moore",
+        "slug": "dj-moore",
+        "team": "CHI",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "11620",
+        "name": "Rome Odunze",
+        "slug": "rome-odunze",
+        "team": "CHI",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "12519",
+        "name": "Luther Burden",
+        "slug": "luther-burden",
+        "team": "CHI",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "12517",
+        "name": "Colston Loveland",
+        "slug": "colston-loveland",
+        "team": "CHI",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "6826",
+        "name": "Cole Kmet",
+        "slug": "cole-kmet",
+        "team": "CHI",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "2020",
+        "name": "Cairo Santos",
+        "slug": "cairo-santos",
+        "team": "CHI",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 12,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "CHI",
+        "name": "Chicago Bears",
+        "slug": "chicago-bears",
+        "team": "CHI",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "CIN": {
+    "QB": [
+      {
+        "id": "6770",
+        "name": "Joe Burrow",
+        "slug": "joe-burrow",
+        "team": "CIN",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "19",
+        "name": "Joe Flacco",
+        "slug": "joe-flacco",
+        "team": "CIN",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 18,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "9224",
+        "name": "Chase Brown",
+        "slug": "chase-brown",
+        "team": "CIN",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "12543",
+        "name": "Tahj Brooks",
+        "slug": "tahj-brooks",
+        "team": "CIN",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "7564",
+        "name": "Ja'Marr Chase",
+        "slug": "jamarr-chase",
+        "team": "CIN",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "6801",
+        "name": "Tee Higgins",
+        "slug": "tee-higgins",
+        "team": "CIN",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "10226",
+        "name": "Andrei Iosivas",
+        "slug": "andrei-iosivas",
+        "team": "CIN",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "4993",
+        "name": "Mike Gesicki",
+        "slug": "mike-gesicki",
+        "team": "CIN",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "5857",
+        "name": "Noah Fant",
+        "slug": "noah-fant",
+        "team": "CIN",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "7839",
+        "name": "Evan McPherson",
+        "slug": "evan-mcpherson",
+        "team": "CIN",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "CIN",
+        "name": "Cincinnati Bengals",
+        "slug": "cincinnati-bengals",
+        "team": "CIN",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "CLE": {
+    "QB": [
+      {
+        "id": "12524",
+        "name": "Shedeur Sanders",
+        "slug": "shedeur-sanders",
+        "team": "CLE",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "12486",
+        "name": "Dillon Gabriel",
+        "slug": "dillon-gabriel",
+        "team": "CLE",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "12512",
+        "name": "Quinshon Judkins",
+        "slug": "quinshon-judkins",
+        "team": "CLE",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "8143",
+        "name": "Jerome Ford",
+        "slug": "jerome-ford",
+        "team": "CLE",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "6783",
+        "name": "Jerry Jeudy",
+        "slug": "jerry-jeudy",
+        "team": "CLE",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "10444",
+        "name": "Cedric Tillman",
+        "slug": "cedric-tillman",
+        "team": "CLE",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "11633",
+        "name": "Jamari Thrash",
+        "slug": "jamari-thrash",
+        "team": "CLE",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "4033",
+        "name": "David Njoku",
+        "slug": "david-njoku",
+        "team": "CLE",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "12374",
+        "name": "Brenden Bates",
+        "slug": "brenden-bates",
+        "team": "CLE",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "11261",
+        "name": "Andre Szmyt",
+        "slug": "andre-szmyt",
+        "team": "CLE",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "CLE",
+        "name": "Cleveland Browns",
+        "slug": "cleveland-browns",
+        "team": "CLE",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "DAL": {
+    "QB": [
+      {
+        "id": "3294",
+        "name": "Dak Prescott",
+        "slug": "dak-prescott",
+        "team": "DAL",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 10,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "11557",
+        "name": "Joe Milton",
+        "slug": "joe-milton",
+        "team": "DAL",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "7588",
+        "name": "Javonte Williams",
+        "slug": "javonte-williams",
+        "team": "DAL",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "12457",
+        "name": "Jaydon Blue",
+        "slug": "jaydon-blue",
+        "team": "DAL",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "6786",
+        "name": "CeeDee Lamb",
+        "slug": "ceedee-lamb",
+        "team": "DAL",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "8137",
+        "name": "George Pickens",
+        "slug": "george-pickens",
+        "team": "DAL",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "8117",
+        "name": "Jalen Tolbert",
+        "slug": "jalen-tolbert",
+        "team": "DAL",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "8110",
+        "name": "Jake Ferguson",
+        "slug": "jake-ferguson",
+        "team": "DAL",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "10871",
+        "name": "Luke Schoonmaker",
+        "slug": "luke-schoonmaker",
+        "team": "DAL",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "11533",
+        "name": "Brandon Aubrey",
+        "slug": "brandon-aubrey",
+        "team": "DAL",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "DAL",
+        "name": "Dallas Cowboys",
+        "slug": "dallas-cowboys",
+        "team": "DAL",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "DEN": {
+    "QB": [
+      {
+        "id": "11563",
+        "name": "Bo Nix",
+        "slug": "bo-nix",
+        "team": "DEN",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "6136",
+        "name": "Jarrett Stidham",
+        "slug": "jarrett-stidham",
+        "team": "DEN",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "12489",
+        "name": "RJ Harvey",
+        "slug": "rj-harvey",
+        "team": "DEN",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "6806",
+        "name": "J.K. Dobbins",
+        "slug": "jk-dobbins",
+        "team": "DEN",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "5045",
+        "name": "Courtland Sutton",
+        "slug": "courtland-sutton",
+        "team": "DEN",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "9494",
+        "name": "Marvin Mims",
+        "slug": "marvin-mims",
+        "team": "DEN",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "12492",
+        "name": "Pat Bryant",
+        "slug": "pat-bryant",
+        "team": "DEN",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "4066",
+        "name": "Evan Engram",
+        "slug": "evan-engram",
+        "team": "DEN",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "6869",
+        "name": "Adam Trautman",
+        "slug": "adam-trautman",
+        "team": "DEN",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "3678",
+        "name": "Wil Lutz",
+        "slug": "wil-lutz",
+        "team": "DEN",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 10,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "DEN",
+        "name": "Denver Broncos",
+        "slug": "denver-broncos",
+        "team": "DEN",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "DET": {
+    "QB": [
+      {
+        "id": "3163",
+        "name": "Jared Goff",
+        "slug": "jared-goff",
+        "team": "DET",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 10,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "5127",
+        "name": "Kyle Allen",
+        "slug": "kyle-allen",
+        "team": "DET",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "9221",
+        "name": "Jahmyr Gibbs",
+        "slug": "jahmyr-gibbs",
+        "team": "DET",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "5892",
+        "name": "David Montgomery",
+        "slug": "david-montgomery",
+        "team": "DET",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "7547",
+        "name": "Amon-Ra St. Brown",
+        "slug": "amon-ra-st-brown",
+        "team": "DET",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "8148",
+        "name": "Jameson Williams",
+        "slug": "jameson-williams",
+        "team": "DET",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "12535",
+        "name": "Isaac TeSlaa",
+        "slug": "isaac-teslaa",
+        "team": "DET",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "10859",
+        "name": "Sam LaPorta",
+        "slug": "sam-laporta",
+        "team": "DET",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "7891",
+        "name": "Brock Wright",
+        "slug": "brock-wright",
+        "team": "DET",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "11539",
+        "name": "Jake Bates",
+        "slug": "jake-bates",
+        "team": "DET",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "DET",
+        "name": "Detroit Lions",
+        "slug": "detroit-lions",
+        "team": "DET",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "GB": {
+    "QB": [
+      {
+        "id": "6804",
+        "name": "Jordan Love",
+        "slug": "jordan-love",
+        "team": "GB",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "8161",
+        "name": "Malik Willis",
+        "slug": "malik-willis",
+        "team": "GB",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "5850",
+        "name": "Josh Jacobs",
+        "slug": "josh-jacobs",
+        "team": "GB",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "11581",
+        "name": "MarShawn Lloyd",
+        "slug": "marshawn-lloyd",
+        "team": "GB",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "12501",
+        "name": "Matthew Golden",
+        "slug": "matthew-golden",
+        "team": "GB",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "10222",
+        "name": "Jayden Reed",
+        "slug": "jayden-reed",
+        "team": "GB",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "8121",
+        "name": "Romeo Doubs",
+        "slug": "romeo-doubs",
+        "team": "GB",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "9484",
+        "name": "Tucker Kraft",
+        "slug": "tucker-kraft",
+        "team": "GB",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "9481",
+        "name": "Luke Musgrave",
+        "slug": "luke-musgrave",
+        "team": "GB",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "1433",
+        "name": "Brandon McManus",
+        "slug": "brandon-mcmanus",
+        "team": "GB",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 13,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "GB",
+        "name": "Green Bay Packers",
+        "slug": "green-bay-packers",
+        "team": "GB",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "HOU": {
+    "QB": [
+      {
+        "id": "9758",
+        "name": "C.J. Stroud",
+        "slug": "cj-stroud",
+        "team": "HOU",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "7585",
+        "name": "Davis Mills",
+        "slug": "davis-mills",
+        "team": "HOU",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "4988",
+        "name": "Nick Chubb",
+        "slug": "nick-chubb",
+        "team": "HOU",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "4018",
+        "name": "Joe Mixon",
+        "slug": "joe-mixon",
+        "team": "HOU",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "7569",
+        "name": "Nico Collins",
+        "slug": "nico-collins",
+        "team": "HOU",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "4950",
+        "name": "Christian Kirk",
+        "slug": "christian-kirk",
+        "team": "HOU",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "12484",
+        "name": "Jayden Higgins",
+        "slug": "jayden-higgins",
+        "team": "HOU",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "5001",
+        "name": "Dalton Schultz",
+        "slug": "dalton-schultz",
+        "team": "HOU",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "11599",
+        "name": "Cade Stover",
+        "slug": "cade-stover",
+        "team": "HOU",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "3451",
+        "name": "Ka'imi Fairbairn",
+        "slug": "kaimi-fairbairn",
+        "team": "HOU",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 10,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "HOU",
+        "name": "Houston Texans",
+        "slug": "houston-texans",
+        "team": "HOU",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "IND": {
+    "QB": [
+      {
+        "id": "5870",
+        "name": "Daniel Jones",
+        "slug": "daniel-jones",
+        "team": "IND",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "9229",
+        "name": "Anthony Richardson",
+        "slug": "anthony-richardson",
+        "team": "IND",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "6813",
+        "name": "Jonathan Taylor",
+        "slug": "jonathan-taylor",
+        "team": "IND",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "12471",
+        "name": "DJ Giddens",
+        "slug": "dj-giddens",
+        "team": "IND",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "6819",
+        "name": "Michael Pittman",
+        "slug": "michael-pittman",
+        "team": "IND",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "9500",
+        "name": "Josh Downs",
+        "slug": "josh-downs",
+        "team": "IND",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "8142",
+        "name": "Alec Pierce",
+        "slug": "alec-pierce",
+        "team": "IND",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "12518",
+        "name": "Tyler Warren",
+        "slug": "tyler-warren",
+        "team": "IND",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "8489",
+        "name": "Drew Ogletree",
+        "slug": "drew-ogletree",
+        "team": "IND",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "12185",
+        "name": "Spencer Shrader",
+        "slug": "spencer-shrader",
+        "team": "IND",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "IND",
+        "name": "Indianapolis Colts",
+        "slug": "indianapolis-colts",
+        "team": "IND",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "JAX": {
+    "QB": [
+      {
+        "id": "7523",
+        "name": "Trevor Lawrence",
+        "slug": "trevor-lawrence",
+        "team": "JAX",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "4464",
+        "name": "Nick Mullens",
+        "slug": "nick-mullens",
+        "team": "JAX",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "7543",
+        "name": "Travis Etienne",
+        "slug": "travis-etienne",
+        "team": "JAX",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "12490",
+        "name": "Bhayshul Tuten",
+        "slug": "bhayshul-tuten",
+        "team": "JAX",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "11631",
+        "name": "Brian Thomas",
+        "slug": "brian-thomas",
+        "team": "JAX",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "12530",
+        "name": "Travis Hunter",
+        "slug": "travis-hunter",
+        "team": "JAX",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "12908",
+        "name": "Chandler Brayboy",
+        "slug": "chandler-brayboy",
+        "team": "JAX",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "9480",
+        "name": "Brenton Strange",
+        "slug": "brenton-strange",
+        "team": "JAX",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "4314",
+        "name": "Johnny Mundt",
+        "slug": "johnny-mundt",
+        "team": "JAX",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "11786",
+        "name": "Cam Little",
+        "slug": "cam-little",
+        "team": "JAX",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "JAX",
+        "name": "Jacksonville Jaguars",
+        "slug": "jacksonville-jaguars",
+        "team": "JAX",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "KC": {
+    "QB": [
+      {
+        "id": "4046",
+        "name": "Patrick Mahomes",
+        "slug": "patrick-mahomes",
+        "team": "KC",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "6011",
+        "name": "Gardner Minshew",
+        "slug": "gardner-minshew",
+        "team": "KC",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "8205",
+        "name": "Isiah Pacheco",
+        "slug": "isiah-pacheco",
+        "team": "KC",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "4098",
+        "name": "Kareem Hunt",
+        "slug": "kareem-hunt",
+        "team": "KC",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "11624",
+        "name": "Xavier Worthy",
+        "slug": "xavier-worthy",
+        "team": "KC",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "10229",
+        "name": "Rashee Rice",
+        "slug": "rashee-rice",
+        "team": "KC",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "6677",
+        "name": "Joe Forson",
+        "slug": "joe-forson",
+        "team": "KC",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 1,
+        "status": "Practice Squad",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "1466",
+        "name": "Travis Kelce",
+        "slug": "travis-kelce",
+        "team": "KC",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 13,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "7828",
+        "name": "Noah Gray",
+        "slug": "noah-gray",
+        "team": "KC",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "4227",
+        "name": "Harrison Butker",
+        "slug": "harrison-butker",
+        "team": "KC",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "KC",
+        "name": "Kansas City Chiefs",
+        "slug": "kansas-city-chiefs",
+        "team": "KC",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "LAC": {
+    "QB": [
+      {
+        "id": "6797",
+        "name": "Justin Herbert",
+        "slug": "justin-herbert",
+        "team": "LAC",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "7610",
+        "name": "Trey Lance",
+        "slug": "trey-lance",
+        "team": "LAC",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "12507",
+        "name": "Omarion Hampton",
+        "slug": "omarion-hampton",
+        "team": "LAC",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "7528",
+        "name": "Najee Harris",
+        "slug": "najee-harris",
+        "team": "LAC",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "11635",
+        "name": "Ladd McConkey",
+        "slug": "ladd-mcconkey",
+        "team": "LAC",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "1479",
+        "name": "Keenan Allen",
+        "slug": "keenan-allen",
+        "team": "LAC",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 13,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "12509",
+        "name": "Tre' Harris",
+        "slug": "tre-harris",
+        "team": "LAC",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "5010",
+        "name": "Will Dissly",
+        "slug": "will-dissly",
+        "team": "LAC",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "5133",
+        "name": "Tyler Conklin",
+        "slug": "tyler-conklin",
+        "team": "LAC",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "8259",
+        "name": "Cameron Dicker",
+        "slug": "cameron-dicker",
+        "team": "LAC",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "LAC",
+        "name": "Los Angeles Chargers",
+        "slug": "los-angeles-chargers",
+        "team": "LAC",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "LAR": {
+    "QB": [
+      {
+        "id": "421",
+        "name": "Matthew Stafford",
+        "slug": "matthew-stafford",
+        "team": "LAR",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 17,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "1837",
+        "name": "Jimmy Garoppolo",
+        "slug": "jimmy-garoppolo",
+        "team": "LAR",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 12,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "8150",
+        "name": "Kyren Williams",
+        "slug": "kyren-williams",
+        "team": "LAR",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "11586",
+        "name": "Blake Corum",
+        "slug": "blake-corum",
+        "team": "LAR",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "9493",
+        "name": "Puka Nacua",
+        "slug": "puka-nacua",
+        "team": "LAR",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "2133",
+        "name": "Davante Adams",
+        "slug": "davante-adams",
+        "team": "LAR",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 12,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "7562",
+        "name": "Tutu Atwell",
+        "slug": "tutu-atwell",
+        "team": "LAR",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "3271",
+        "name": "Tyler Higbee",
+        "slug": "tyler-higbee",
+        "team": "LAR",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 10,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "12487",
+        "name": "Terrance Ferguson",
+        "slug": "terrance-ferguson",
+        "team": "LAR",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "12015",
+        "name": "Harrison Mevis",
+        "slug": "harrison-mevis",
+        "team": "LAR",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "LAR",
+        "name": "Los Angeles Rams",
+        "slug": "los-angeles-rams",
+        "team": "LAR",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "LV": {
+    "QB": [
+      {
+        "id": "1373",
+        "name": "Geno Smith",
+        "slug": "geno-smith",
+        "team": "LV",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 13,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "8160",
+        "name": "Kenny Pickett",
+        "slug": "kenny-pickett",
+        "team": "LV",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "12527",
+        "name": "Ashton Jeanty",
+        "slug": "ashton-jeanty",
+        "team": "LV",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "2749",
+        "name": "Raheem Mostert",
+        "slug": "raheem-mostert",
+        "team": "LV",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 11,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "2374",
+        "name": "Tyler Lockett",
+        "slug": "tyler-lockett",
+        "team": "LV",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 11,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "12541",
+        "name": "Dont'e Thornton",
+        "slug": "donte-thornton",
+        "team": "LV",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "10213",
+        "name": "Tre Tucker",
+        "slug": "tre-tucker",
+        "team": "LV",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "11604",
+        "name": "Brock Bowers",
+        "slug": "brock-bowers",
+        "team": "LV",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "9482",
+        "name": "Michael Mayer",
+        "slug": "michael-mayer",
+        "team": "LV",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "5095",
+        "name": "Daniel Carlson",
+        "slug": "daniel-carlson",
+        "team": "LV",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "LV",
+        "name": "Las Vegas Raiders",
+        "slug": "las-vegas-raiders",
+        "team": "LV",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "MIA": {
+    "QB": [
+      {
+        "id": "6768",
+        "name": "Tua Tagovailoa",
+        "slug": "tua-tagovailoa",
+        "team": "MIA",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "7538",
+        "name": "Zach Wilson",
+        "slug": "zach-wilson",
+        "team": "MIA",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "9226",
+        "name": "De'Von Achane",
+        "slug": "devon-achane",
+        "team": "MIA",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "12495",
+        "name": "Ollie Gordon",
+        "slug": "ollie-gordon",
+        "team": "MIA",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "7526",
+        "name": "Jaylen Waddle",
+        "slug": "jaylen-waddle",
+        "team": "MIA",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "11610",
+        "name": "Malik Washington",
+        "slug": "malik-washington",
+        "team": "MIA",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "12860",
+        "name": "Theo Wease",
+        "slug": "theo-wease",
+        "team": "MIA",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "2505",
+        "name": "Darren Waller",
+        "slug": "darren-waller",
+        "team": "MIA",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 11,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "11371",
+        "name": "Julian Hill",
+        "slug": "julian-hill",
+        "team": "MIA",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "5119",
+        "name": "Jason Sanders",
+        "slug": "jason-sanders",
+        "team": "MIA",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "MIA",
+        "name": "Miami Dolphins",
+        "slug": "miami-dolphins",
+        "team": "MIA",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "MIN": {
+    "QB": [
+      {
+        "id": "11565",
+        "name": "J.J. McCarthy",
+        "slug": "jj-mccarthy",
+        "team": "MIN",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "3161",
+        "name": "Carson Wentz",
+        "slug": "carson-wentz",
+        "team": "MIN",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 10,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "4199",
+        "name": "Aaron Jones",
+        "slug": "aaron-jones",
+        "team": "MIN",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "8408",
+        "name": "Jordan Mason",
+        "slug": "jordan-mason",
+        "team": "MIN",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "6794",
+        "name": "Justin Jefferson",
+        "slug": "justin-jefferson",
+        "team": "MIN",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "9756",
+        "name": "Jordan Addison",
+        "slug": "jordan-addison",
+        "team": "MIN",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "8180",
+        "name": "Jalen Nailor",
+        "slug": "jalen-nailor",
+        "team": "MIN",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "5844",
+        "name": "T.J. Hockenson",
+        "slug": "tj-hockenson",
+        "team": "MIN",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "5973",
+        "name": "Josh Oliver",
+        "slug": "josh-oliver",
+        "team": "MIN",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "11792",
+        "name": "Will Reichard",
+        "slug": "will-reichard",
+        "team": "MIN",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "MIN",
+        "name": "Minnesota Vikings",
+        "slug": "minnesota-vikings",
+        "team": "MIN",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "NE": {
+    "QB": [
+      {
+        "id": "11564",
+        "name": "Drake Maye",
+        "slug": "drake-maye",
+        "team": "NE",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "4179",
+        "name": "Joshua Dobbs",
+        "slug": "joshua-dobbs",
+        "team": "NE",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "12529",
+        "name": "TreVeyon Henderson",
+        "slug": "treveyon-henderson",
+        "team": "NE",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "7611",
+        "name": "Rhamondre Stevenson",
+        "slug": "rhamondre-stevenson",
+        "team": "NE",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "2449",
+        "name": "Stefon Diggs",
+        "slug": "stefon-diggs",
+        "team": "NE",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 11,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "9501",
+        "name": "DeMario Douglas",
+        "slug": "demario-douglas",
+        "team": "NE",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "12547",
+        "name": "Kyle Williams",
+        "slug": "kyle-williams-12547",
+        "team": "NE",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "3214",
+        "name": "Hunter Henry",
+        "slug": "hunter-henry",
+        "team": "NE",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 10,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "3202",
+        "name": "Austin Hooper",
+        "slug": "austin-hooper",
+        "team": "NE",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 10,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "12713",
+        "name": "Andy Borregales",
+        "slug": "andy-borregales",
+        "team": "NE",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "NE",
+        "name": "New England Patriots",
+        "slug": "new-england-patriots",
+        "team": "NE",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "NO": {
+    "QB": [
+      {
+        "id": "11562",
+        "name": "Spencer Rattler",
+        "slug": "spencer-rattler",
+        "team": "NO",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "12545",
+        "name": "Tyler Shough",
+        "slug": "tyler-shough",
+        "team": "NO",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "4035",
+        "name": "Alvin Kamara",
+        "slug": "alvin-kamara",
+        "team": "NO",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "9757",
+        "name": "Kendre Miller",
+        "slug": "kendre-miller",
+        "team": "NO",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "8144",
+        "name": "Chris Olave",
+        "slug": "chris-olave",
+        "team": "NO",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "11834",
+        "name": "Devaughn Vele",
+        "slug": "devaughn-vele",
+        "team": "NO",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "9492",
+        "name": "Trey Palmer",
+        "slug": "trey-palmer",
+        "team": "NO",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "7002",
+        "name": "Juwan Johnson",
+        "slug": "juwan-johnson",
+        "team": "NO",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "5985",
+        "name": "Foster Moreau",
+        "slug": "foster-moreau",
+        "team": "NO",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "11653",
+        "name": "Charlie Smyth",
+        "slug": "charlie-smyth",
+        "team": "NO",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "NO",
+        "name": "New Orleans Saints",
+        "slug": "new-orleans-saints",
+        "team": "NO",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "NYG": {
+    "QB": [
+      {
+        "id": "1234",
+        "name": "Russell Wilson",
+        "slug": "russell-wilson",
+        "team": "NYG",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 14,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "12508",
+        "name": "Jaxson Dart",
+        "slug": "jaxson-dart",
+        "team": "NYG",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "11655",
+        "name": "Tyrone Tracy",
+        "slug": "tyrone-tracy",
+        "team": "NYG",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "12481",
+        "name": "Cam Skattebo",
+        "slug": "cam-skattebo",
+        "team": "NYG",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "11632",
+        "name": "Malik Nabers",
+        "slug": "malik-nabers",
+        "team": "NYG",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "8126",
+        "name": "Wan'Dale Robinson",
+        "slug": "wandale-robinson",
+        "team": "NYG",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "6149",
+        "name": "Darius Slayton",
+        "slug": "darius-slayton",
+        "team": "NYG",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "11597",
+        "name": "Theo Johnson",
+        "slug": "theo-johnson",
+        "team": "NYG",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "8225",
+        "name": "Daniel Bellinger",
+        "slug": "daniel-bellinger",
+        "team": "NYG",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "13066",
+        "name": "Ben Sauls",
+        "slug": "ben-sauls",
+        "team": "NYG",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "NYG",
+        "name": "New York Giants",
+        "slug": "new-york-giants",
+        "team": "NYG",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "NYJ": {
+    "QB": [
+      {
+        "id": "7591",
+        "name": "Justin Fields",
+        "slug": "justin-fields",
+        "team": "NYJ",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "827",
+        "name": "Tyrod Taylor",
+        "slug": "tyrod-taylor",
+        "team": "NYJ",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 15,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "8155",
+        "name": "Breece Hall",
+        "slug": "breece-hall",
+        "team": "NYJ",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "11576",
+        "name": "Braelon Allen",
+        "slug": "braelon-allen",
+        "team": "NYJ",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "8146",
+        "name": "Garrett Wilson",
+        "slug": "garrett-wilson",
+        "team": "NYJ",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "4171",
+        "name": "Josh Reynolds",
+        "slug": "josh-reynolds",
+        "team": "NYJ",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "11625",
+        "name": "Adonai Mitchell",
+        "slug": "adonai-mitchell",
+        "team": "NYJ",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "12498",
+        "name": "Mason Taylor",
+        "slug": "mason-taylor",
+        "team": "NYJ",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "8145",
+        "name": "Jeremy Ruckert",
+        "slug": "jeremy-ruckert",
+        "team": "NYJ",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "650",
+        "name": "Nick Folk",
+        "slug": "nick-folk",
+        "team": "NYJ",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 19,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "NYJ",
+        "name": "New York Jets",
+        "slug": "new-york-jets",
+        "team": "NYJ",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "PHI": {
+    "QB": [
+      {
+        "id": "6904",
+        "name": "Jalen Hurts",
+        "slug": "jalen-hurts",
+        "team": "PHI",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "9230",
+        "name": "Tanner McKee",
+        "slug": "tanner-mckee",
+        "team": "PHI",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "4866",
+        "name": "Saquon Barkley",
+        "slug": "saquon-barkley",
+        "team": "PHI",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "9225",
+        "name": "Tank Bigsby",
+        "slug": "tank-bigsby",
+        "team": "PHI",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "5859",
+        "name": "A.J. Brown",
+        "slug": "aj-brown",
+        "team": "PHI",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "7525",
+        "name": "DeVonta Smith",
+        "slug": "devonta-smith",
+        "team": "PHI",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "8119",
+        "name": "Jahan Dotson",
+        "slug": "jahan-dotson",
+        "team": "PHI",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "5022",
+        "name": "Dallas Goedert",
+        "slug": "dallas-goedert",
+        "team": "PHI",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "8177",
+        "name": "Grant Calcaterra",
+        "slug": "grant-calcaterra",
+        "team": "PHI",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "4195",
+        "name": "Jake Elliott",
+        "slug": "jake-elliott",
+        "team": "PHI",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "PHI",
+        "name": "Philadelphia Eagles",
+        "slug": "philadelphia-eagles",
+        "team": "PHI",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "PIT": {
+    "QB": [
+      {
+        "id": "96",
+        "name": "Aaron Rodgers",
+        "slug": "aaron-rodgers",
+        "team": "PIT",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 21,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "4972",
+        "name": "Mason Rudolph",
+        "slug": "mason-rudolph",
+        "team": "PIT",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "12504",
+        "name": "Kaleb Johnson",
+        "slug": "kaleb-johnson",
+        "team": "PIT",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "8228",
+        "name": "Jaylen Warren",
+        "slug": "jaylen-warren",
+        "team": "PIT",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "5846",
+        "name": "DK Metcalf",
+        "slug": "dk-metcalf",
+        "team": "PIT",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "8125",
+        "name": "Calvin Austin",
+        "slug": "calvin-austin",
+        "team": "PIT",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "11630",
+        "name": "Roman Wilson",
+        "slug": "roman-wilson",
+        "team": "PIT",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "4144",
+        "name": "Jonnu Smith",
+        "slug": "jonnu-smith",
+        "team": "PIT",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "7600",
+        "name": "Pat Freiermuth",
+        "slug": "pat-freiermuth",
+        "team": "PIT",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "1945",
+        "name": "Chris Boswell",
+        "slug": "chris-boswell",
+        "team": "PIT",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 12,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "PIT",
+        "name": "Pittsburgh Steelers",
+        "slug": "pittsburgh-steelers",
+        "team": "PIT",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "SEA": {
+    "QB": [
+      {
+        "id": "4943",
+        "name": "Sam Darnold",
+        "slug": "sam-darnold",
+        "team": "SEA",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "12510",
+        "name": "Jalen Milroe",
+        "slug": "jalen-milroe",
+        "team": "SEA",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "8151",
+        "name": "Kenneth Walker",
+        "slug": "kenneth-walker-8151",
+        "team": "SEA",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "9753",
+        "name": "Zach Charbonnet",
+        "slug": "zach-charbonnet",
+        "team": "SEA",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "9488",
+        "name": "Jaxon Smith-Njigba",
+        "slug": "jaxon-smith-njigba",
+        "team": "SEA",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "8676",
+        "name": "Rashid Shaheed",
+        "slug": "rashid-shaheed",
+        "team": "SEA",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "4039",
+        "name": "Cooper Kupp",
+        "slug": "cooper-kupp",
+        "team": "SEA",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "12521",
+        "name": "Elijah Arroyo",
+        "slug": "elijah-arroyo",
+        "team": "SEA",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "11603",
+        "name": "AJ Barner",
+        "slug": "aj-barner",
+        "team": "SEA",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "2747",
+        "name": "Jason Myers",
+        "slug": "jason-myers",
+        "team": "SEA",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 11,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "SEA",
+        "name": "Seattle Seahawks",
+        "slug": "seattle-seahawks",
+        "team": "SEA",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "SF": {
+    "QB": [
+      {
+        "id": "8183",
+        "name": "Brock Purdy",
+        "slug": "brock-purdy",
+        "team": "SF",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "7527",
+        "name": "Mac Jones",
+        "slug": "mac-jones",
+        "team": "SF",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "4034",
+        "name": "Christian McCaffrey",
+        "slug": "christian-mccaffrey",
+        "team": "SF",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "8154",
+        "name": "Brian Robinson",
+        "slug": "brian-robinson",
+        "team": "SF",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "11638",
+        "name": "Ricky Pearsall",
+        "slug": "ricky-pearsall",
+        "team": "SF",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "7049",
+        "name": "Jauan Jennings",
+        "slug": "jauan-jennings",
+        "team": "SF",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "6803",
+        "name": "Brandon Aiyuk",
+        "slug": "brandon-aiyuk",
+        "team": "SF",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "4217",
+        "name": "George Kittle",
+        "slug": "george-kittle",
+        "team": "SF",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "7842",
+        "name": "Luke Farrell",
+        "slug": "luke-farrell",
+        "team": "SF",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 5,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "5189",
+        "name": "Eddy Pineiro",
+        "slug": "eddy-pineiro",
+        "team": "SF",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "SF",
+        "name": "San Francisco 49ers",
+        "slug": "san-francisco-49ers",
+        "team": "SF",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "TB": {
+    "QB": [
+      {
+        "id": "4892",
+        "name": "Baker Mayfield",
+        "slug": "baker-mayfield",
+        "team": "TB",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "2152",
+        "name": "Teddy Bridgewater",
+        "slug": "teddy-bridgewater",
+        "team": "TB",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 12,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "11584",
+        "name": "Bucky Irving",
+        "slug": "bucky-irving",
+        "team": "TB",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "8136",
+        "name": "Rachaad White",
+        "slug": "rachaad-white",
+        "team": "TB",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "2216",
+        "name": "Mike Evans",
+        "slug": "mike-evans",
+        "team": "TB",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 12,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "12514",
+        "name": "Emeka Egbuka",
+        "slug": "emeka-egbuka",
+        "team": "TB",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "4037",
+        "name": "Chris Godwin",
+        "slug": "chris-godwin",
+        "team": "TB",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "8111",
+        "name": "Cade Otton",
+        "slug": "cade-otton",
+        "team": "TB",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "10227",
+        "name": "Payne Durham",
+        "slug": "payne-durham",
+        "team": "TB",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "6650",
+        "name": "Chase McLaughlin",
+        "slug": "chase-mclaughlin",
+        "team": "TB",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "TB",
+        "name": "Tampa Bay Buccaneers",
+        "slug": "tampa-bay-buccaneers",
+        "team": "TB",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "TEN": {
+    "QB": [
+      {
+        "id": "12522",
+        "name": "Cam Ward",
+        "slug": "cam-ward",
+        "team": "TEN",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "3357",
+        "name": "Brandon Allen",
+        "slug": "brandon-allen",
+        "team": "TEN",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 10,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "5967",
+        "name": "Tony Pollard",
+        "slug": "tony-pollard",
+        "team": "TEN",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "9508",
+        "name": "Tyjae Spears",
+        "slug": "tyjae-spears",
+        "team": "TEN",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "4981",
+        "name": "Calvin Ridley",
+        "slug": "calvin-ridley",
+        "team": "TEN",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 8,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "12499",
+        "name": "Elic Ayomanor",
+        "slug": "elic-ayomanor",
+        "team": "TEN",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "6853",
+        "name": "Van Jefferson",
+        "slug": "van-jefferson",
+        "team": "TEN",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 6,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "8210",
+        "name": "Chig Okonkwo",
+        "slug": "chig-okonkwo",
+        "team": "TEN",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 4,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "12502",
+        "name": "Gunnar Helm",
+        "slug": "gunnar-helm",
+        "team": "TEN",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "6528",
+        "name": "Joey Slye",
+        "slug": "joey-slye",
+        "team": "TEN",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "TEN",
+        "name": "Tennessee Titans",
+        "slug": "tennessee-titans",
+        "team": "TEN",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  },
+  "WAS": {
+    "QB": [
+      {
+        "id": "11566",
+        "name": "Jayden Daniels",
+        "slug": "jayden-daniels",
+        "team": "WAS",
+        "position": "QB",
+        "depth_chart_order": 1,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "QB1"
+      },
+      {
+        "id": "2307",
+        "name": "Marcus Mariota",
+        "slug": "marcus-mariota",
+        "team": "WAS",
+        "position": "QB",
+        "depth_chart_order": 2,
+        "years_exp": 11,
+        "status": "Active",
+        "rank_label": "QB2"
+      }
+    ],
+    "RB": [
+      {
+        "id": "12533",
+        "name": "Jacory Croskey-Merritt",
+        "slug": "jacory-croskey-merritt",
+        "team": "WAS",
+        "position": "RB",
+        "depth_chart_order": 1,
+        "years_exp": 1,
+        "status": "Active",
+        "rank_label": "RB1"
+      },
+      {
+        "id": "4663",
+        "name": "Austin Ekeler",
+        "slug": "austin-ekeler",
+        "team": "WAS",
+        "position": "RB",
+        "depth_chart_order": 2,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "RB2"
+      }
+    ],
+    "WR": [
+      {
+        "id": "5927",
+        "name": "Terry McLaurin",
+        "slug": "terry-mclaurin",
+        "team": "WAS",
+        "position": "WR",
+        "depth_chart_order": 1,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "WR1"
+      },
+      {
+        "id": "5872",
+        "name": "Deebo Samuel",
+        "slug": "deebo-samuel",
+        "team": "WAS",
+        "position": "WR",
+        "depth_chart_order": 2,
+        "years_exp": 7,
+        "status": "Active",
+        "rank_label": "WR2"
+      },
+      {
+        "id": "4234",
+        "name": "Noah Brown",
+        "slug": "noah-brown",
+        "team": "WAS",
+        "position": "WR",
+        "depth_chart_order": 3,
+        "years_exp": 9,
+        "status": "Active",
+        "rank_label": "WR3"
+      }
+    ],
+    "TE": [
+      {
+        "id": "1339",
+        "name": "Zach Ertz",
+        "slug": "zach-ertz",
+        "team": "WAS",
+        "position": "TE",
+        "depth_chart_order": 1,
+        "years_exp": 13,
+        "status": "Active",
+        "rank_label": "TE1"
+      },
+      {
+        "id": "11596",
+        "name": "Ben Sinnott",
+        "slug": "ben-sinnott",
+        "team": "WAS",
+        "position": "TE",
+        "depth_chart_order": 2,
+        "years_exp": 2,
+        "status": "Active",
+        "rank_label": "TE2"
+      }
+    ],
+    "K": [
+      {
+        "id": "10937",
+        "name": "Jake Moody",
+        "slug": "jake-moody",
+        "team": "WAS",
+        "position": "K",
+        "depth_chart_order": 1,
+        "years_exp": 3,
+        "status": "Active",
+        "rank_label": "K1"
+      }
+    ],
+    "DEF": [
+      {
+        "id": "WAS",
+        "name": "Washington Commanders",
+        "slug": "washington-commanders",
+        "team": "WAS",
+        "position": "DEF",
+        "depth_chart_order": null,
+        "years_exp": null,
+        "status": null,
+        "rank_label": "DEF1"
+      }
+    ]
+  }
+}

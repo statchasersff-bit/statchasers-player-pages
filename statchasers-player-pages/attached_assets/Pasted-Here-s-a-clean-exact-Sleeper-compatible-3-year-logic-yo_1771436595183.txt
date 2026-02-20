@@ -1,0 +1,171 @@
+Here’s a clean, exact, Sleeper-compatible 3-year logic you can implement consistently across positions.
+
+0) Definitions
+
+As-of season (S): the season you’re showing in the player page context (e.g., “2025 Season Final” → S=2025).
+
+3-year window seasons: S, S-1, S-2 (example: 2025, 2024, 2023).
+
+Weekly record: a player’s weekly stats row (from Sleeper ingestion) with pts_ppr and enough stat fields to infer “played.”
+
+1) Determine “Games Played” (GP) per week (critical)
+
+A week counts as a game played if the player had any participation (not points).
+
+Use position-aware participation:
+
+WR / TE (played if any true)
+
+targets (rec_tgt or targets) > 0 OR
+
+receptions (rec) > 0 OR
+
+receiving yards (rec_yd) != 0 OR
+
+rushing attempts (rush_att) > 0
+
+RB (played if any true)
+
+rush_att > 0 OR
+
+rec_tgt/targets > 0 OR
+
+rec > 0 OR
+
+rec_yd != 0
+
+QB (played if any true)
+
+pass_att > 0 OR
+
+rush_att > 0 OR
+
+sacks > 0
+
+Do not filter by pts_ppr > 0.
+0-point games with participation must count.
+
+2) 3-Year PPG (exact)
+
+For the 3-year window seasons:
+
+GP_3y = count(weeks where played==true across S,S-1,S-2)
+
+PTS_3y = sum(pts_ppr for those weeks)
+
+PPG_3y = PTS_3y / GP_3y (if GP_3y > 0 else null)
+
+Display:
+
+PPG_3y to 1 decimal
+
+GP_3y in parentheses
+
+3) Weekly positional finish (rank) used for tier %
+
+This is the foundation for RB1/WR1/etc.
+
+For each season Y in the 3-year window, for each week W:
+
+Build the ranking pool:
+
+all players at that position with played==true that week
+
+Sort by pts_ppr descending
+
+Assign positional ranks: WR1, WR2… / RB1… / QB1… / TE1…
+
+Store this as weekly_pos_rank for each player-week.
+
+Important: rank only among players who played. Don’t include missing rows/inactives.
+
+4) Tier definitions (exact)
+
+Use these default tiers (common fantasy convention):
+
+QB
+
+QB1: rank 1–12
+
+QB2: 13–24
+
+Bust: >24 (or >18 if you want stricter “starter” definition; pick one and be consistent)
+
+RB
+
+RB1: 1–12
+
+RB2: 13–24
+
+RB3: 25–36 (optional but recommended)
+
+Bust: >36
+
+WR
+
+WR1: 1–12
+
+WR2: 13–24
+
+WR3: 25–36 (recommended)
+
+Bust: >36
+
+TE
+
+TE1: 1–12
+
+TE2: 13–24
+
+Bust: >24 (or >18 if you want tighter; again, choose and stay consistent)
+
+For your current UI you’re already using WR bust as WR37+ (outside top 36). Keep that.
+
+5) 3-Year tier percentages (exact)
+
+For a given tier (e.g., WR1):
+
+tier_games_3y = count(weeks where played==true AND weekly_pos_rank in tier range)
+
+tier_pct_3y = (tier_games_3y / GP_3y) * 100
+
+Compute for each tier you display:
+
+WR1%, WR2%, WR3%, Bust%
+(or RB1/RB2/RB3/Bust)
+
+Tip: show WR3/RB3 so the percentages visually “explain” the non-bust remainder.
+
+6) 3-Year volatility (optional, but consistent)
+
+Using only played weeks in the 3-year window:
+
+vol_3y = sample_std_dev(pts_ppr values) (n−1)
+
+Label bands (as you have):
+
+<6 Stable, 6–9 Moderate, >=9 Volatile
+(You may want slightly higher bands for QBs, but optional.)
+
+7) Goose egg % (exact)
+
+Only count played weeks.
+
+goose_3y = count(played==true AND pts_ppr == 0)
+
+goose_pct_3y = goose_3y / GP_3y * 100
+
+8) Edge cases (do this explicitly)
+
+If GP_3y < 8 (tiny sample): show “Small sample” badge and optionally gray the card.
+
+If a player changed positions (rare): use current position for display, but rank them based on the position recorded that week if you store it; otherwise keep current position for simplicity.
+
+Implementation shortcut (performance)
+
+Don’t compute ranks on every page view.
+
+Precompute weekly ranks during ingestion:
+
+For each week+season+position, compute ranks once and store weekly_pos_rank.
+Then Career Context is just DB aggregation.

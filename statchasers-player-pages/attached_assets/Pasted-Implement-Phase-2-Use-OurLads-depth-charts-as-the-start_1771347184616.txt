@@ -1,0 +1,97 @@
+Implement Phase 2: Use OurLads depth charts as the “starter/backups authority” to generate the indexed player list, while still using Sleeper players.json for IDs/slugs and player metadata.
+
+Existing:
+- We already have cached Sleeper players in wp-content/uploads/statchasers/players.json
+- We have container page rendering working for /nfl/players/ and /nfl/players/{slug}/
+- We have sitemap-players.xml and directory page.
+
+Goal:
+Generate an accurate index set of players based on OurLads depth charts for EACH TEAM:
+- QB1/QB2
+- RB1/RB2
+- WR1/WR2/WR3
+- TE1/TE2
+- K1
+- DEF
+
+Create files:
+- wp-content/uploads/statchasers/indexed_players.json
+- wp-content/uploads/statchasers/indexed_players_by_team.json
+
+Implementation details:
+
+1) Add a fetcher module: includes/depthcharts-ourlads.php
+- Fetch the OurLads depth chart source once (daily) and store raw HTML in:
+  wp-content/uploads/statchasers/ourlads_depthcharts.html (or JSON if easier)
+- Do NOT fetch on every page request.
+- Add WP-Cron daily job to refresh.
+- Add admin button: “Refresh OurLads Depth Charts Now”
+
+2) Parser:
+- Parse the OurLads depth chart content to extract per team:
+  QB1,QB2; RB1,RB2; WR1,WR2,WR3; TE1,TE2; K1; DEF
+- Output a normalized structure:
+  {
+    "MIA": {
+      "QB": ["Tua Tagovailoa","Mike White"],
+      "RB": ["Raheem Mostert","De'Von Achane"],
+      "WR": ["Tyreek Hill","Jaylen Waddle","..."],
+      "TE": ["...","..."],
+      "K": ["..."],
+      "DEF": ["MIA"]
+    },
+    ...
+  }
+
+3) Mapping OurLads names -> Sleeper player entries:
+- Load cached Sleeper players.json.
+- Build a lookup keyed by:
+  normalized_name + team + position
+- Normalization function must:
+  - lowercase
+  - remove punctuation
+  - collapse whitespace
+  - handle suffixes: jr, sr, ii, iii
+  - handle apostrophes/hyphens (e.g., De'Von)
+- Matching rules:
+  a) Exact match on normalized full_name + team + position
+  b) If not found, try matching by last_name + first initial + team + position
+  c) If still not found, allow team match + last_name match for that position
+- Collect unmatched names in an “unmatched” array per team and show it in admin UI.
+
+4) Generate indexed player outputs based on the mapped Sleeper players:
+- For each team, add slugs for the mapped players:
+  QB(2), RB(2), WR(3), TE(2), K(1), DEF(1)
+- Save:
+  indexed_players_by_team.json with full detail including:
+    name, slug, id, team, position, source_name, match_confidence
+- Save:
+  indexed_players.json with:
+  {
+    "generated_at": "...",
+    "source": "ourlads",
+    "counts": {...},
+    "slugs": [...]
+  }
+
+5) Integrate outputs:
+- Update sitemap-players.xml to only include slugs from indexed_players.json.
+- Update /nfl/players/ directory page to:
+  - default view = indexed players (grouped by team + position)
+  - search can optionally search ALL cached Sleeper players.
+
+6) Admin UI:
+Under Tools -> StatChasers Players add:
+- Refresh Sleeper Player Cache button (existing)
+- Refresh OurLads Depth Charts button
+- Generate Indexed Player List button (Phase 2)
+- Show:
+  - last refresh time for Sleeper cache
+  - last refresh time for OurLads
+  - count totals
+  - unmatched names table (OurLads name that couldn’t map)
+
+Important:
+- No front-end requests to OurLads.
+- Everything is cached and generated via admin action / cron.
+- Keep CSS scoped to .sc-players only.
