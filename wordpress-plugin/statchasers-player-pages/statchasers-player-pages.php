@@ -3,7 +3,7 @@
  * Plugin Name: StatChasers Player Pages
  * Plugin URI:  https://statchasers.com
  * Description: Programmatic SEO-friendly NFL player pages powered by the Sleeper API. Adds /nfl/players/ directory and /nfl/players/{slug}/ profile pages using your theme's header/footer.
- * Version:     0.3.2
+ * Version:     0.4.0
  * Author:      StatChasers
  * Author URI:  https://statchasers.com
  * License:     GPL-2.0+
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'SC_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'SC_VERSION', '0.3.2' );
+define( 'SC_VERSION', '0.4.0' );
 define( 'SC_CRON_HOOK', 'sc_daily_player_refresh' );
 
 require_once SC_PLUGIN_DIR . 'includes/cache.php';
@@ -53,14 +53,17 @@ add_action( SC_CRON_HOOK, 'sc_refresh_players_data' );
 add_action('wp_enqueue_scripts', function () {
     if (!function_exists('sc_detect_route') || !sc_detect_route()) return;
 
+    wp_enqueue_style('sc-google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap', [], null);
+
     $remote_base = 'https://statchasersff-bit.github.io/statchasers-player-pages/';
     $manifest_url = $remote_base . '.vite/manifest.json';
+    $api_base_url = defined('SC_API_BASE_URL') ? SC_API_BASE_URL : '';
 
-    $cache_key = 'sc_players_remote_manifest_v1';
+    $cache_key = 'sc_players_remote_manifest_v2';
     $manifest = get_transient($cache_key);
 
     if (!$manifest) {
-        $res = wp_remote_get($manifest_url, ['timeout' => 3]);
+        $res = wp_remote_get($manifest_url, ['timeout' => 5]);
         if (!is_wp_error($res) && wp_remote_retrieve_response_code($res) === 200) {
             $json = json_decode(wp_remote_retrieve_body($res), true);
             if (is_array($json)) {
@@ -73,7 +76,7 @@ add_action('wp_enqueue_scripts', function () {
     $use_remote = is_array($manifest);
 
     if ($use_remote) {
-        $entry = $manifest['index.html'] ?? null;
+        $entry = $manifest['src/wp-entry.tsx'] ?? $manifest['index.html'] ?? null;
         if (!$entry || empty($entry['file'])) {
             $use_remote = false;
         } else {
@@ -91,6 +94,7 @@ add_action('wp_enqueue_scripts', function () {
                 'restUrl'    => rest_url('statchasers/v1/players'),
                 'baseUrl'    => home_url('/nfl/players/'),
                 'indexedUrl' => rest_url('statchasers/v1/indexed-players'),
+                'apiBaseUrl' => $api_base_url,
             ]);
 
             return;
@@ -98,7 +102,7 @@ add_action('wp_enqueue_scripts', function () {
     }
 
     $js_path = plugin_dir_path(__FILE__) . 'assets/players.js';
-    $ver = file_exists($js_path) ? filemtime($js_path) : (defined('SC_VERSION') ? SC_VERSION : '1.0.0');
+    $ver = file_exists($js_path) ? filemtime($js_path) : SC_VERSION;
 
     wp_enqueue_script('sc-players-js', plugin_dir_url(__FILE__) . 'assets/players.js', [], $ver, true);
 
@@ -106,8 +110,16 @@ add_action('wp_enqueue_scripts', function () {
         'restUrl'    => rest_url('statchasers/v1/players'),
         'baseUrl'    => home_url('/nfl/players/'),
         'indexedUrl' => rest_url('statchasers/v1/indexed-players'),
+        'apiBaseUrl' => $api_base_url,
     ]);
 });
+
+add_filter('script_loader_tag', function ($tag, $handle) {
+    if ($handle === 'sc-players-js' && strpos($tag, 'type="module"') === false) {
+        $tag = str_replace(' src=', ' type="module" src=', $tag);
+    }
+    return $tag;
+}, 10, 2);
 
 add_action( 'admin_notices', function() {
     if ( ! current_user_can( 'manage_options' ) ) return;

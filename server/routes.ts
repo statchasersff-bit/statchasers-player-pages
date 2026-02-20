@@ -431,6 +431,22 @@ export async function registerRoutes(
   loadPlayers();
   loadIndexedData();
 
+  app.use("/api", (req, res, next) => {
+    const origin = req.headers.origin;
+    const allowed = ["https://statchasers.com", "https://www.statchasers.com"];
+    if (origin && allowed.includes(origin)) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+      res.setHeader("Access-Control-Max-Age", "86400");
+      res.setHeader("Vary", "Origin");
+    }
+    if (req.method === "OPTIONS") {
+      return res.sendStatus(204);
+    }
+    next();
+  });
+
   app.get("/api/indexed-players", (_req, res) => {
     loadIndexedData();
     res.set("Cache-Control", "public, max-age=3600");
