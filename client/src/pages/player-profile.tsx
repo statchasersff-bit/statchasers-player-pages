@@ -1924,13 +1924,20 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
 
   return (
     <div className="space-y-6" data-testid="usage-trends-tab">
+      <div className="space-y-1" data-testid="role-health-section">
+        <div className="flex items-center gap-2">
+          <Activity className="w-4 h-4 text-muted-foreground" />
+          <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Role Health</p>
+        </div>
+      </div>
+
       <Card className="overflow-hidden" data-testid="opportunity-momentum-card">
         <CardContent className="p-0">
           <div className="p-4 pb-0 space-y-4" style={{ background: 'linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--card) / 0.85) 100%)' }}>
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-amber-400" />
-                <p className="text-xs uppercase tracking-wider text-foreground font-bold">Role Trend Score</p>
+                <p className="text-xs uppercase tracking-wider text-foreground font-bold">Role Direction</p>
                 <TooltipProvider delayDuration={200}>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -1968,7 +1975,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
               </div>
               <div className="flex gap-5 flex-wrap pb-1">
                 <div className="text-right">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center justify-end gap-1">Usage Stability
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center justify-end gap-1">Role Consistency
                     <TooltipProvider delayDuration={200}>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -2526,7 +2533,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
             <div className="space-y-1 pt-2" data-testid="sustainability-section-header">
               <div className="flex items-center gap-2">
                 <Gauge className="w-4 h-4 text-muted-foreground" />
-                <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Production Sustainability</p>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Production Risk</p>
               </div>
             </div>
 
@@ -2559,7 +2566,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                       </div>
                     )}
                     <div>
-                      <p className="text-[10px] text-muted-foreground">Usage Stability</p>
+                      <p className="text-[10px] text-muted-foreground">Role Consistency</p>
                       <p className="text-sm font-bold text-foreground tabular-nums">{usageStab}</p>
                     </div>
                   </div>
@@ -2667,7 +2674,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
             <Card data-testid="sustainability-score" className="border-border/60">
               <CardContent className="p-4 space-y-3">
                 <div className="flex items-center justify-between gap-3 flex-wrap">
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Sustainability Outlook</p>
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Sustainability Score</p>
                   <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md ${sustainBg}`}>
                     {sustainIcon}
                     <span className={`text-[11px] font-bold ${sustainColor}`}>{sustainLabel}</span>
