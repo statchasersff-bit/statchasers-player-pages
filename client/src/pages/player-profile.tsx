@@ -2429,7 +2429,8 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
           tdPerOpp = ((stat('rush_td') + stat('rec_td')) / totalTouches) * 100;
         } else {
           const targets = stat('rec_tgt') || 1;
-          yardsPerOpp = stat('rec_yd') / targets;
+          const catches = stat('rec') || 1;
+          yardsPerOpp = stat('rec_yd') / catches;
           catchPct = (stat('rec') / targets) * 100;
           tdPerOpp = (stat('rec_td') / targets) * 100;
         }
@@ -2521,7 +2522,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
         } else if (volumeScore > efficiencyScore + 15) {
           insightSentence = `Production is anchored by ${isQB ? 'sustained pass volume' : isRB ? 'a commanding touch share' : `a ${shareAvg.toFixed(1)}% target share`} rather than elevated efficiency, reducing regression exposure. Volume-backed profiles historically maintain more stable week-to-week output.`;
         } else if (efficiencyScore > volumeScore + 15 && tdPerOpp > tdRateLg + 1) {
-          insightSentence = `Efficiency metrics${!isQB ? ` (${yardsPerOpp.toFixed(1)} yds/${isRB ? 'touch' : 'target'})` : ''} and a ${tdPerOpp.toFixed(1)}% TD rate both exceed positional baselines. With ${isQB ? 'pass volume' : 'usage volume'} below elite thresholds, scoring is disproportionately dependent on efficiency sustaining above-average levels.`;
+          insightSentence = `Efficiency metrics${!isQB ? ` (${yardsPerOpp.toFixed(1)} yds/${isRB ? 'touch' : 'catch'})` : ''} and a ${tdPerOpp.toFixed(1)}% TD rate both exceed positional baselines. With ${isQB ? 'pass volume' : 'usage volume'} below elite thresholds, scoring is disproportionately dependent on efficiency sustaining above-average levels.`;
         } else if (usageStab >= 70) {
           insightSentence = `Highly consistent week-to-week usage (stability: ${usageStab}/100) paired with ${tdPctBar < 30 ? 'low TD reliance' : 'moderate TD reliance'} establishes a reliable floor. ${sustainabilityScore >= 60 ? 'The balanced profile supports sustained production.' : 'Upside remains capped by volume limitations.'}`;
         } else {
@@ -2573,7 +2574,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                   <div className="space-y-2">
                     <p className="text-[10px] font-semibold text-foreground uppercase tracking-wider">Efficiency Engine</p>
                     <div>
-                      <p className="text-[10px] text-muted-foreground">{isQB ? 'Yards/Att' : isRB ? 'Yards/Touch' : 'Yards/Target'}</p>
+                      <p className="text-[10px] text-muted-foreground">{isQB ? 'Yards/Att' : isRB ? 'Yards/Touch' : 'Yards/Catch'}</p>
                       <p className="text-sm font-bold text-foreground tabular-nums">{yardsPerOpp.toFixed(1)}</p>
                       <p className={`text-[9px] ${yardsPerOpp > yptLg * 1.05 ? 'text-emerald-500' : yardsPerOpp < yptLg * 0.95 ? 'text-red-400' : 'text-muted-foreground/60'}`}>
                         {yardsPerOpp > yptLg * 1.05 ? '\u2191' : yardsPerOpp < yptLg * 0.95 ? '\u2193' : '\u2248'} Pos Avg {yptLg.toFixed(1)}
@@ -3210,20 +3211,7 @@ export default function PlayerProfile() {
                     <span className="text-[11px] font-semibold text-amber-600 dark:text-amber-400">
                       {player.dynasty.ageCurveTier} {player.position}{player.dynasty.positionalRank}
                     </span>
-                    <span className="text-[10px] text-muted-foreground">|</span>
-                    <span className={`text-[11px] font-semibold ${player.dynasty.trend30 > 0 ? 'text-emerald-500' : player.dynasty.trend30 < -3 ? 'text-red-400' : 'text-muted-foreground'}`}>
-                      {player.dynasty.trend30 > 0 ? '\u25B2' : player.dynasty.trend30 < -3 ? '\u25BC' : '\u25B6'} {player.dynasty.trend30 > 0 ? 'Rising' : player.dynasty.trend30 < -3 ? 'Falling' : 'Stable'}
-                    </span>
                   </div>
-                  <a
-                    href={`https://keeptradecut.com/dynasty-rankings/players/${player.dynasty.ktcSlug}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[9px] text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
-                    data-testid="link-ktc-source"
-                  >
-                    via KeepTradeCut
-                  </a>
                 </div>
               )}
               <div
