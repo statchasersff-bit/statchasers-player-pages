@@ -1,0 +1,122 @@
+Drop-In Layout
+<div class="sc-player-news">
+
+  <div class="sc-player-news__header">
+    <img src="PLAYER_HEADSHOT_URL" class="sc-player-news__img" />
+    <div>
+      <div class="sc-player-news__name">J.K. Dobbins - RB</div>
+      <div class="sc-player-news__posted">
+        Posted Jan 24, 2026 • 7:21 PM EST
+      </div>
+    </div>
+  </div>
+
+  <div class="sc-player-news__body">
+    Denver Broncos RB RJ Harvey is expected to head up the backfield in the AFC Championship Game Sunday...
+  </div>
+
+  <div class="sc-player-news__footer">
+    <span class="sc-player-news__source">Source: DenverBroncos.com</span>
+    <a href="#" target="_blank" class="sc-player-news__link">
+      View Original →
+    </a>
+  </div>
+
+</div>
+🎨 Premium Light Styling (Matches Your Brand)
+.sc-player-news{
+  padding: 28px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid rgba(15,23,42,.08);
+  box-shadow: 0 14px 28px rgba(15,23,42,.06);
+}
+
+.sc-player-news__header{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin-bottom:18px;
+}
+
+.sc-player-news__img{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  border:3px solid #caa14a;
+}
+
+.sc-player-news__name{
+  font-size:22px;
+  font-weight:900;
+  color:#0f172a;
+}
+
+.sc-player-news__posted{
+  font-size:13px;
+  font-weight:700;
+  color:#64748b;
+  margin-top:4px;
+}
+
+.sc-player-news__body{
+  font-size:15px;
+  font-weight:600;
+  line-height:1.65;
+  color:#1e293b;
+  margin-bottom:20px;
+}
+
+.sc-player-news__footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:13px;
+}
+
+.sc-player-news__source{
+  font-weight:800;
+  color:#475569;
+}
+
+.sc-player-news__link{
+  font-weight:900;
+  text-decoration:none;
+  color:#1d4ed8;
+}
+
+.sc-player-news__link:hover{
+  text-decoration:underline;
+}
+🔥 Even Better: Add Multiple Articles Cleanly
+
+Instead of just one block, we can stack them like:
+
+Large featured article (most recent)
+
+Smaller compact cards below
+
+Example:
+
+[ FEATURED ARTICLE ]
+----------------------------------
+[ smaller card ]
+[ smaller card ]
+[ smaller card ]
+
+This keeps hierarchy strong.
+
+💡 Optional Micro-Upgrade (Makes It Feel Elite)
+
+Add a thin team-colored accent bar at the top:
+
+.sc-player-news::before{
+  content:"";
+  display:block;
+  height:4px;
+  border-radius:6px 6px 0 0;
+  background:linear-gradient(90deg,#caa14a,#f4d27a);
+  margin:-28px -28px 22px -28px;
+}
+
+That tiny detail makes it look designed, not scraped.

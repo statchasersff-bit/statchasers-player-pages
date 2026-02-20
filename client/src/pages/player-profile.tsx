@@ -2911,8 +2911,74 @@ type PatriotsNewsItem = {
   published_at?: string;
 };
 
+function FeaturedNewsCard({ item, player, teamColor }: { item: PatriotsNewsItem; player: Player; teamColor: string }) {
+  const [imgError, setImgError] = useState(false);
+  const headshotUrl = getHeadshotUrl(player.id);
+  const accentColor = teamColor || '#caa14a';
+  const gradientStyle = `linear-gradient(90deg, ${accentColor}, ${accentColor}88)`;
+
+  return (
+    <a
+      href={item.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block"
+      data-testid="link-featured-news"
+    >
+      <div
+        className="sc-player-news"
+        style={{ '--team-accent': accentColor } as React.CSSProperties}
+      >
+        <div style={{ height: 4, borderRadius: '6px 6px 0 0', background: gradientStyle, margin: '-24px -24px 20px -24px' }} />
+
+        <div className="sc-player-news__header">
+          {!imgError ? (
+            <img
+              src={headshotUrl}
+              alt={player.name}
+              className="sc-player-news__img"
+              style={{ borderColor: accentColor }}
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div className="sc-player-news__img-fallback" style={{ borderColor: accentColor }}>
+              <User className="w-6 h-6 text-slate-400 dark:text-slate-500" />
+            </div>
+          )}
+          <div>
+            <div className="sc-player-news__name">{player.name} – {player.position}</div>
+            <div className="sc-player-news__posted">
+              {item.type === 'video' ? '🎥 Video' : '📰 Article'} • Patriots.com
+            </div>
+          </div>
+        </div>
+
+        <div className="sc-player-news__pills">
+          <span className="sc-pill sc-pill--type" data-testid="badge-featured-type">{(item.type || 'news').toUpperCase()}</span>
+          {item.impact && (
+            <span className={`sc-pill sc-pill--impact sc-pill--impact-${item.impact.toLowerCase()}`}>{item.impact}</span>
+          )}
+          {item.tag && (
+            <span className="sc-pill sc-pill--tag">{item.tag}</span>
+          )}
+        </div>
+
+        <div className="sc-player-news__body">
+          {item.ai_blurb || item.title}
+        </div>
+
+        <div className="sc-player-news__footer">
+          <span className="sc-player-news__source">Source: Patriots.com</span>
+          <span className="sc-player-news__link">View Original →</span>
+        </div>
+      </div>
+    </a>
+  );
+}
+
 function NewsTab({ player }: { player: Player }) {
   const isNE = player.team === 'NE';
+  const teamColor = TEAM_PRIMARY_COLORS[player.team || ''] || '#caa14a';
   const { data: patriotsNews, isLoading: patriotsLoading, refetch, isFetching } = useQuery({
     queryKey: ["/api/patriots/player-news", player.name],
     queryFn: async () => {
@@ -2926,33 +2992,49 @@ function NewsTab({ player }: { player: Player }) {
 
   const staticEntries = player.news || [];
   const patriotsItems = patriotsNews?.items || [];
+  const featuredItem = patriotsItems[0] || null;
+  const compactItems = patriotsItems.slice(1);
   const hasContent = staticEntries.length > 0 || patriotsItems.length > 0;
 
   return (
     <div className="space-y-6" data-testid="news-tab">
       {isNE && patriotsLoading && (
-        <div className="sc-teamnews">
-          <div className="sc-teamnews__head">
-            <div className="sc-teamnews__head-left">
-              <div className="sc-teamnews__icon">📰</div>
-              <div>
-                <div className="sc-teamnews__kicker">Latest from Patriots.com</div>
-                <Skeleton className="h-4 w-24 mt-1" />
+        <div className="space-y-5">
+          <div className="sc-player-news" style={{ '--team-accent': teamColor } as React.CSSProperties}>
+            <div style={{ height: 4, borderRadius: '6px 6px 0 0', background: `linear-gradient(90deg, ${teamColor}, ${teamColor}88)`, margin: '-24px -24px 20px -24px' }} />
+            <div className="sc-player-news__header">
+              <Skeleton className="w-14 h-14 rounded-full flex-shrink-0" />
+              <div className="flex-1">
+                <Skeleton className="h-5 w-40 mb-2" />
+                <Skeleton className="h-3.5 w-28" />
               </div>
             </div>
+            <Skeleton className="h-4 w-20 mb-3" />
+            <Skeleton className="h-5 w-full mb-1.5" />
+            <Skeleton className="h-5 w-4/5 mb-4" />
+            <div className="flex justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
+              <Skeleton className="h-3.5 w-32" />
+              <Skeleton className="h-3.5 w-24" />
+            </div>
           </div>
-          <div className="sc-teamnews__list">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="sc-teamnews__card" style={{ pointerEvents: 'none' }}>
-                <div className="sc-teamnews__card-left"><Skeleton className="w-[34px] h-[34px] rounded-xl" /></div>
-                <div className="sc-teamnews__card-mid"><Skeleton className="h-4 w-16 mb-2" /><Skeleton className="h-5 w-full" /><Skeleton className="h-5 w-3/4 mt-1" /></div>
-              </div>
-            ))}
+          <div className="sc-teamnews">
+            <div className="sc-teamnews__list">
+              {[1, 2].map(i => (
+                <div key={i} className="sc-teamnews__card" style={{ pointerEvents: 'none' }}>
+                  <div className="sc-teamnews__card-left"><Skeleton className="w-[34px] h-[34px] rounded-xl" /></div>
+                  <div className="sc-teamnews__card-mid"><Skeleton className="h-4 w-16 mb-2" /><Skeleton className="h-5 w-full" /></div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
 
-      {patriotsItems.length > 0 && (
+      {featuredItem && (
+        <FeaturedNewsCard item={featuredItem} player={player} teamColor={teamColor} />
+      )}
+
+      {compactItems.length > 0 && (
         <div className="sc-teamnews" data-testid="patriots-news-list">
           <div className="sc-teamnews__head">
             <div className="sc-teamnews__head-left">
@@ -2977,7 +3059,7 @@ function NewsTab({ player }: { player: Player }) {
           </div>
 
           <div className="sc-teamnews__list">
-            {patriotsItems.map((item, i) => (
+            {compactItems.map((item, i) => (
               <a
                 key={i}
                 className="sc-teamnews__card"
@@ -3011,7 +3093,7 @@ function NewsTab({ player }: { player: Player }) {
                   )}
                 </div>
 
-                <div className="sc-teamnews__card-right" aria-hidden="true" title="Open source">
+                <div className="sc-teamnews__card-right" aria-hidden="true">
                   <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
                     <path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z" />
                   </svg>
@@ -3036,6 +3118,23 @@ function NewsTab({ player }: { player: Player }) {
               </a>
             </div>
           )}
+        </div>
+      )}
+
+      {patriotsItems.length === 1 && patriotsNews?.patriots_profile_url && (
+        <div style={{ marginTop: -8 }}>
+          <a
+            href={patriotsNews.patriots_profile_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="sc-teamnews__profile-link"
+            data-testid="link-patriots-profile"
+          >
+            View full profile on Patriots.com
+            <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
+              <path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z" />
+            </svg>
+          </a>
         </div>
       )}
 
