@@ -108,9 +108,17 @@ function getPlayerBenchmarks(season, position, allPlayers, playerStats, playerTo
   if (!bench.posAvg.yardsPerCatch && !bench.posAvg.catchPct && !bench.posAvg.tdPerTarget) return null;
   const qualThresh = position === 'WR' ? 30 : 20;
   const qualified = position === 'QB' || playerTotalTgt >= qualThresh;
+  const tdStdDev = (() => {
+    const vals = bench.tdValues;
+    if (vals.length < 2) return 1;
+    const m = vals.reduce((a, b) => a + b, 0) / vals.length;
+    return Math.max(0.5, Math.sqrt(vals.reduce((s, v) => s + (v - m) ** 2, 0) / vals.length));
+  })();
+
   return {
     position, season, qualifiedThreshold: qualThresh,
     posAvg: bench.posAvg,
+    posStdDev: { tdPerTarget: tdStdDev },
     percentile: qualified ? {
       yardsPerCatch: computePercentile(bench.playerValues, playerStats.yardsPerCatch),
       catchPct: computePercentile(bench.catchValues, playerStats.catchPct),

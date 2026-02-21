@@ -1764,9 +1764,14 @@ function computeTdDependency(activeEntries: GameLogEntry[], position: string | n
   return { pct, label: 'Volume-Backed', tag: 'Volume-backed production' };
 }
 
-function computeUsageStability(activeEntries: GameLogEntry[], primaryKey: string): number {
+function computeUsageStability(activeEntries: GameLogEntry[], primaryKey: string, position?: string | null): number {
   if (activeEntries.length < 3) return 50;
-  const vals = activeEntries.map(e => (e.stats as unknown as Record<string, number>)[primaryKey] ?? 0);
+  const getVal = (e: GameLogEntry): number => {
+    const s = e.stats as unknown as Record<string, number>;
+    if (position === 'RB') return (s['rush_att'] ?? 0) + (s['rec_tgt'] ?? 0);
+    return s[primaryKey] ?? 0;
+  };
+  const vals = activeEntries.map(getVal);
   const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
   if (mean === 0) return 50;
   const variance = vals.reduce((s, v) => s + (v - mean) ** 2, 0) / vals.length;
@@ -1834,11 +1839,14 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   const primaryKey = metrics[0]?.key ?? 'rec_tgt';
   const weightedDeltaSum = deltaRows.reduce((s, d) => {
     const w = d.weight ?? 1;
+    let rawContribution: number;
     if (d.pct) {
-      return s + d.delta * w;
+      rawContribution = d.delta;
+    } else {
+      rawContribution = d.seasonAvg > 0 ? (d.delta / d.seasonAvg) * 100 : 0;
     }
-    const pctChange = d.seasonAvg > 0 ? (d.delta / d.seasonAvg) * 100 : 0;
-    return s + pctChange * w;
+    const capped = Math.max(-25, Math.min(25, rawContribution));
+    return s + capped * w;
   }, 0);
   const totalWeight = deltaRows.reduce((s, d) => s + (d.weight ?? 1), 0) || 1;
   const normalizedDelta = weightedDeltaSum / totalWeight;
@@ -1850,7 +1858,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   const momentumBarColor = momentumScore >= 80 ? '#10b981' : momentumScore >= 60 ? '#34d399' : momentumScore <= 39 ? '#f87171' : '#fbbf24';
 
   const tdDep = computeTdDependency(activeEntries, position, format);
-  const stability = computeUsageStability(activeEntries, primaryKey);
+  const stability = computeUsageStability(activeEntries, primaryKey, position);
   const stabilityLabel = stability >= 70 ? 'Consistent Role' : stability >= 45 ? 'Moderate Variance' : 'High Weekly Volatility';
   const stabilityColor = stability >= 70 ? 'text-emerald-500' : stability >= 45 ? 'text-amber-400' : 'text-red-400';
 
@@ -2542,8 +2550,11 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
         const catchLgBench = bench?.posAvg?.catchPct ?? (isQB ? 64 : isRB ? 75 : 65);
         const shareStabAvg = 55;
 
+        const leagueTdStdDev = bench?.posStdDev?.tdPerTarget ?? 1;
+
         const tdDepFactor = Math.max(0.3, Math.min(1.5, tdPctBar / 30));
-        const tdRateSignal = Math.max(-20, Math.min(20, (tdPerOpp - tdRateLg) * (isQB ? 3 : 3.5) * tdDepFactor));
+        const tdZScore = leagueTdStdDev > 0 ? (tdPerOpp - tdRateLg) / leagueTdStdDev : 0;
+        const tdRateSignal = Math.max(-20, Math.min(20, tdZScore * (isQB ? 5 : 6) * tdDepFactor));
         const yptSignal = Math.max(-15, Math.min(15, (yardsPerOpp - yptLg) * (isQB ? 2 : 1.5)));
         const stabSignal = Math.max(-10, Math.min(10, (usageStab - shareStabAvg) * 0.2));
         const volSignal = Math.max(-10, Math.min(10, (volumeScore - 50) * 0.2));
