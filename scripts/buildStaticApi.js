@@ -118,13 +118,13 @@ function getPlayerBenchmarks(season, position, allPlayers, playerStats, playerTo
   if (!bench.posAvg.yardsPerCatch && !bench.posAvg.catchPct && !bench.posAvg.tdPerTarget) return null;
   const qualThresh = position === 'WR' ? 30 : 20;
   const qualified = position === 'QB' || playerTotalTgt >= qualThresh;
-  const computeStdDev = (vals) => {
-    if (vals.length < 2) return 1;
+  const computeStdDev = (vals, minFloor = 0.5) => {
+    if (vals.length < 2) return minFloor;
     const m = vals.reduce((a, b) => a + b, 0) / vals.length;
-    return Math.max(0.5, Math.sqrt(vals.reduce((s, v) => s + (v - m) ** 2, 0) / vals.length));
+    return Math.max(minFloor, Math.sqrt(vals.reduce((s, v) => s + (v - m) ** 2, 0) / vals.length));
   };
   const tdStdDev = computeStdDev(bench.tdValues);
-  const fpuStdDev = bench.fpPerUsageValues ? computeStdDev(bench.fpPerUsageValues) : undefined;
+  const fpuStdDev = bench.fpPerUsageValues ? computeStdDev(bench.fpPerUsageValues, 0.01) : undefined;
 
   return {
     position, season, qualifiedThreshold: qualThresh,

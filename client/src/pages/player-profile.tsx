@@ -2569,14 +2569,24 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
 
         const tdDepFactor = Math.max(0.3, Math.min(1.5, tdPctBar / 30));
         const tdZScore = leagueTdStdDev > 0 ? (tdPerOpp - tdRateLg) / leagueTdStdDev : 0;
-        const tdRateSignal = Math.max(-20, Math.min(20, tdZScore * (isQB ? 5 : 6) * tdDepFactor));
-        const yptSignal = isQB
-          ? Math.max(-15, Math.min(15, (yardsPerOpp - yptLg) * 80))
-          : Math.max(-15, Math.min(15, (yardsPerOpp - yptLg) * 1.5));
-        const stabSignal = Math.max(-10, Math.min(10, (usageStab - shareStabAvg) * 0.2));
-        const volSignal = Math.max(-10, Math.min(10, (volumeScore - 50) * 0.2));
+        const absTdZ = Math.abs(tdZScore);
+        const convexTdZ = absTdZ > 1 ? Math.sign(tdZScore) * (1 + (absTdZ - 1) * 1.8) : tdZScore;
+        const tdRateSignal = Math.max(-25, Math.min(25, convexTdZ * (isQB ? 7 : 9) * tdDepFactor));
 
-        const rawSustainability = 50 - tdRateSignal + yptSignal + stabSignal + volSignal;
+        const fpuStdDev = bench?.posStdDev?.fpPerUsage ?? 1;
+        const yptSignal = isQB
+          ? Math.max(-20, Math.min(20, (fpuStdDev > 0 ? ((yardsPerOpp - yptLg) / fpuStdDev) : 0) * 12))
+          : Math.max(-20, Math.min(20, (yardsPerOpp - yptLg) * 2.5));
+        const stabSignal = Math.max(-12, Math.min(12, (usageStab - shareStabAvg) * 0.3));
+        const volSignal = Math.max(-10, Math.min(10, (volumeScore - 50) * 0.25));
+
+        let rushFloorSignal = 0;
+        if (isQB) {
+          const rushAttPerGame = activeEntries.reduce((s, e) => s + getStat(e, 'rush_att'), 0) / gp;
+          rushFloorSignal = Math.max(0, Math.min(10, (rushAttPerGame - 4) * 2));
+        }
+
+        const rawSustainability = 57 - tdRateSignal + yptSignal + stabSignal + volSignal + rushFloorSignal;
         const sustainabilityScore = Math.max(0, Math.min(100, Math.round(rawSustainability)));
 
         const sustainLabel = sustainabilityScore >= 70 ? 'Sustainable' : sustainabilityScore >= 40 ? 'Moderate Risk' : 'Elevated Risk';
