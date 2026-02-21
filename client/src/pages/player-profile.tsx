@@ -3048,9 +3048,40 @@ function FeaturedNewsCard({ item, player, teamColor }: { item: PatriotsNewsItem;
   );
 }
 
+interface InjuryData {
+  found: boolean;
+  player_name: string;
+  injury?: string;
+  position?: string;
+  practice?: { wed: string; thu: string; fri: string };
+  game_status?: string;
+  blurb?: string;
+  source?: string;
+  source_url?: string;
+  fetched_at?: string;
+}
+
+function getInjuryPillClass(gs: string): string {
+  const upper = (gs || '').toUpperCase().trim();
+  if (upper === 'OUT') return 'sc-injury-pill--out';
+  if (upper === 'DOUBTFUL') return 'sc-injury-pill--doubtful';
+  if (upper === 'QUESTIONABLE') return 'sc-injury-pill--questionable';
+  return 'sc-injury-pill--none';
+}
+
+function getPracticeChipClass(val: string): string {
+  const upper = (val || '').toUpperCase().trim();
+  if (upper === 'FP') return 'sc-injury-chip--fp';
+  if (upper === 'LP') return 'sc-injury-chip--lp';
+  if (upper === 'DNP') return 'sc-injury-chip--dnp';
+  return '';
+}
+
 function NewsTab({ player }: { player: Player }) {
   const isNE = player.team === 'NE';
   const teamColor = TEAM_PRIMARY_COLORS[player.team || ''] || '#caa14a';
+  const [newsFilter, setNewsFilter] = useState<'articles' | 'injuries'>('articles');
+
   const { data: patriotsNews, isLoading: patriotsLoading, refetch, isFetching } = useQuery({
     queryKey: ["/api/patriots/player-news", player.name],
     queryFn: async () => {
@@ -3062,6 +3093,17 @@ function NewsTab({ player }: { player: Player }) {
     staleTime: 30 * 60 * 1000,
   });
 
+  const { data: injuryData, isLoading: injuryLoading } = useQuery({
+    queryKey: ["/api/patriots/injury", player.name],
+    queryFn: async () => {
+      const res = await fetch(`/api/patriots/injury?player_name=${encodeURIComponent(player.name)}`);
+      if (!res.ok) throw new Error("Failed to load injury");
+      return res.json() as Promise<InjuryData>;
+    },
+    enabled: isNE && newsFilter === 'injuries',
+    staleTime: 30 * 60 * 1000,
+  });
+
   const staticEntries = player.news || [];
   const patriotsItems = patriotsNews?.items || [];
   const featuredItem = patriotsItems[0] || null;
@@ -3070,6 +3112,84 @@ function NewsTab({ player }: { player: Player }) {
 
   return (
     <div className="space-y-6" data-testid="news-tab">
+      {isNE && (
+        <div className="sc-news-filter" data-testid="news-filter-toggle">
+          <button
+            type="button"
+            className={`sc-news-filter__btn ${newsFilter === 'articles' ? 'sc-news-filter__btn--active' : ''}`}
+            onClick={() => setNewsFilter('articles')}
+            data-testid="button-filter-articles"
+          >
+            Articles
+          </button>
+          <button
+            type="button"
+            className={`sc-news-filter__btn ${newsFilter === 'injuries' ? 'sc-news-filter__btn--active' : ''}`}
+            onClick={() => setNewsFilter('injuries')}
+            data-testid="button-filter-injuries"
+          >
+            Injuries
+          </button>
+        </div>
+      )}
+
+      {isNE && newsFilter === 'injuries' && (
+        <>
+          {injuryLoading && (
+            <div className="sc-injury-card">
+              <Skeleton className="h-4 w-24 mb-3" />
+              <Skeleton className="h-5 w-full mb-2" />
+              <Skeleton className="h-5 w-4/5 mb-3" />
+              <div className="flex gap-2">
+                <Skeleton className="h-5 w-16 rounded-full" />
+                <Skeleton className="h-5 w-16 rounded-full" />
+                <Skeleton className="h-5 w-16 rounded-full" />
+              </div>
+            </div>
+          )}
+          {injuryData && !injuryLoading && (
+            <div className={`sc-injury-card ${!injuryData.found ? 'sc-injury-card--empty' : ''}`} data-testid="injury-card">
+              {injuryData.found ? (
+                <>
+                  <div className="sc-injury-card__top">
+                    <div>
+                      <div className="sc-injury-card__title">Injury Status</div>
+                      <div className="sc-injury-card__meta" data-testid="text-injury-meta">
+                        {injuryData.position || ''}{injuryData.position && injuryData.injury ? ' \u2022 ' : ''}{injuryData.injury || ''}
+                      </div>
+                    </div>
+                    <div className={`sc-injury-pill ${getInjuryPillClass(injuryData.game_status || '')}`} data-testid="badge-injury-status">
+                      {(() => {
+                        const gs = (injuryData.game_status || '').toUpperCase().trim();
+                        return (gs && gs !== '(-)' && gs !== '-') ? gs : 'No designation';
+                      })()}
+                    </div>
+                  </div>
+                  <div className="sc-injury-card__blurb" data-testid="text-injury-blurb">{injuryData.blurb}</div>
+                  <div className="sc-injury-card__bot">
+                    <span className={`sc-injury-chip ${getPracticeChipClass(injuryData.practice?.wed || '')}`} data-testid="chip-practice-wed">WED: {injuryData.practice?.wed || '-'}</span>
+                    <span className={`sc-injury-chip ${getPracticeChipClass(injuryData.practice?.thu || '')}`} data-testid="chip-practice-thu">THU: {injuryData.practice?.thu || '-'}</span>
+                    <span className={`sc-injury-chip ${getPracticeChipClass(injuryData.practice?.fri || '')}`} data-testid="chip-practice-fri">FRI: {injuryData.practice?.fri || '-'}</span>
+                    {injuryData.source_url && (
+                      <a className="sc-injury-card__link" href={injuryData.source_url} target="_blank" rel="noopener noreferrer" data-testid="link-injury-source">
+                        Source \u2192
+                      </a>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="sc-injury-card__title">Injury Status</div>
+                  <div className="sc-injury-card__blurb" data-testid="text-injury-blurb">{injuryData.blurb || 'No injury update available.'}</div>
+                </>
+              )}
+            </div>
+          )}
+        </>
+      )}
+
+      {isNE && newsFilter !== 'articles' ? null : (
+      <>
       {isNE && patriotsLoading && (
         <div className="space-y-5">
           <div className="sc-player-news" style={{ '--team-accent': teamColor } as React.CSSProperties}>
@@ -3281,6 +3401,9 @@ function NewsTab({ player }: { player: Player }) {
             </div>
           </div>
         </div>
+      )}
+
+      </>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

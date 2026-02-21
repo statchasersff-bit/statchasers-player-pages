@@ -80,6 +80,7 @@ Located in `wordpress-plugin/statchasers-player-pages/`
 - **Point formulas**: Standard = raw stat pts (no reception bonus), Half = +0.5/rec, PPR = +1.0/rec
 
 ## Recent Changes
+- 2026-02-21: Patriots.com injury report integration: `/api/patriots/injury` endpoint scrapes injury report page, returns player-specific injury data (position, injury type, practice participation WED/THU/FRI, game status) with generated blurb; NewsTab has Articles|Injuries filter toggle for NE players; injury card with color-coded status pill and practice chips; 30min table caching
 - 2026-02-20: Position Average Benchmarks: Efficiency Engine in Production Risk (Usage & Trends tab) now shows weighted position averages computed from qualified player cohorts (WR≥30 tgt, TE/RB≥20 tgt) with delta comparisons ("↑ +4.4 vs Pos Avg") and percentile indicators; cached server-side by season+position; mirrored in static build
 - 2026-02-20: Rank Neighbors redesign: player headshots with team-colored ring borders, positional rank in subtitle, PPG display removed
 - 2026-02-20: Patriots.com news integration: `/api/patriots/player-news` endpoint scrapes player profiles for Related News + Related Videos from patriots.com; NewsTab conditionally fetches for NE players with type badges (news/video), loading skeletons, and profile link; in-memory caching (30min news, 6hr roster map)

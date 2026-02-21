@@ -1112,6 +1112,168 @@ export async function registerRoutes(
     }
   });
 
+  const patriotsInjuryCache: { ts: number; data: any } = { ts: 0, data: null };
+  const INJURY_TTL = 30 * 60 * 1000;
+
+  function cleanText(s: string | null | undefined): string {
+    return String(s || "").replace(/\s+/g, " ").trim();
+  }
+
+  function statusWord(s: string): string {
+    const t = cleanText(s).toUpperCase();
+    if (!t || t === "(-)" || t === "-") return "";
+    return t;
+  }
+
+  function isRest(injuryText: string): boolean {
+    const t = cleanText(injuryText).toLowerCase();
+    return t.includes("not injury related") || t.includes("nir") || t.includes("rest");
+  }
+
+  function practiceSummary(wed: string, thu: string, fri: string): string {
+    const seq = [wed, thu, fri].map(x => cleanText(x).toUpperCase()).filter(Boolean);
+    if (!seq.length) return "";
+    const joined = seq.join(" ");
+    if (joined === "FP FP FP") return "practiced fully all week";
+    if (joined === "LP LP LP") return "was limited all week";
+    if (joined === "DNP DNP DNP") return "did not practice all week";
+    const score = (v: string) => (v === "DNP" ? 0 : v === "LP" ? 1 : v === "FP" ? 2 : 1);
+    const nums = [wed, thu, fri].map(x => cleanText(x).toUpperCase()).filter(Boolean).map(score);
+    if (nums.length >= 2) {
+      if (nums[nums.length - 1] > nums[0]) return "showed improving practice participation";
+      if (nums[nums.length - 1] < nums[0]) return "showed decreasing practice participation";
+    }
+    return "had mixed practice participation";
+  }
+
+  function capitalize(s: string): string {
+    if (!s) return s;
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+  function buildInjuryBlurb(opts: { player_name: string; injury: string; wed: string; thu: string; fri: string; game_status: string; week_label: string }): string {
+    const injuryTxt = cleanText(opts.injury);
+    const gs = statusWord(opts.game_status);
+    const ps = practiceSummary(opts.wed, opts.thu, opts.fri);
+
+    if (isRest(injuryTxt)) {
+      return `${opts.player_name} was listed as not injury related/rest. ${ps ? `${capitalize(ps)}.` : ""}`.trim();
+    }
+    if (!injuryTxt) {
+      return `${opts.player_name} has no listed injury detail on the latest report.`.trim();
+    }
+    if (gs) {
+      const expected =
+        gs === "OUT" ? "Not expected to play." :
+        gs === "DOUBTFUL" ? "Unlikely to play." :
+        gs === "QUESTIONABLE" ? "Truly questionable to play." :
+        "Status unclear.";
+      return `${opts.player_name} is dealing with ${injuryTxt}${opts.week_label ? ` heading into ${opts.week_label}` : ""}. ${ps ? `${capitalize(ps)}, and` : ""} is listed as ${gs}. ${expected}`.replace(/\s+/g, " ").trim();
+    }
+    const end = cleanText(opts.fri || opts.thu || opts.wed).toUpperCase();
+    const likelyPlay = end === "FP";
+    return `${opts.player_name} is dealing with ${injuryTxt}${opts.week_label ? ` heading into ${opts.week_label}` : ""}. ${ps ? `${capitalize(ps)} and` : ""} is not listed with a game designation${likelyPlay ? " — expected to play." : "."}`.replace(/\s+/g, " ").trim();
+  }
+
+  app.get("/api/patriots/injury", async (req, res) => {
+    try {
+      const playerName = cleanText(req.query.player_name as string);
+      const weekLabel = cleanText(req.query.week_label as string);
+
+      if (!playerName) return res.status(400).json({ error: "player_name is required" });
+
+      const now = Date.now();
+      let allRows: any[] = [];
+
+      if (patriotsInjuryCache.data && now - patriotsInjuryCache.ts < INJURY_TTL) {
+        allRows = patriotsInjuryCache.data;
+      } else {
+        const url = "https://www.patriots.com/team/injury-report/";
+        const html = await fetchHtml(url);
+        const $ = cheerio.load(html);
+        const table = $("table").first();
+
+        if (table.length) {
+          const headers: string[] = [];
+          table.find("thead th").each((_, th) => { headers.push(cleanText($(th).text()).toLowerCase()); });
+
+          const idx = {
+            player: headers.findIndex(h => h.includes("player")),
+            position: headers.findIndex(h => h.includes("pos")),
+            injury: headers.findIndex(h => h.includes("injury")),
+            wed: headers.findIndex(h => h === "wed"),
+            thu: headers.findIndex(h => h === "thu"),
+            fri: headers.findIndex(h => h === "fri"),
+            status: headers.findIndex(h => h.includes("status") || h.includes("designation")),
+          };
+
+          table.find("tbody tr").each((_, tr) => {
+            const tds = $(tr).find("td");
+            if (!tds.length) return;
+            const playerCell = idx.player >= 0 ? tds.eq(idx.player) : tds.eq(0);
+            const name = cleanText(playerCell.text());
+            if (!name) return;
+            allRows.push({
+              player_name: name,
+              norm: normName(name),
+              position: idx.position >= 0 ? cleanText(tds.eq(idx.position).text()) : "",
+              injury: idx.injury >= 0 ? cleanText(tds.eq(idx.injury).text()) : "",
+              practice: {
+                wed: idx.wed >= 0 ? cleanText(tds.eq(idx.wed).text()) : "",
+                thu: idx.thu >= 0 ? cleanText(tds.eq(idx.thu).text()) : "",
+                fri: idx.fri >= 0 ? cleanText(tds.eq(idx.fri).text()) : "",
+              },
+              game_status: idx.status >= 0 ? cleanText(tds.eq(idx.status).text()) : "",
+            });
+          });
+        }
+
+        patriotsInjuryCache.ts = now;
+        patriotsInjuryCache.data = allRows;
+      }
+
+      const target = normName(playerName);
+      const rowData = allRows.find((r: any) => r.norm === target);
+
+      if (!rowData) {
+        return res.json({
+          found: false,
+          player_name: playerName,
+          blurb: `No injury designation listed for ${playerName} on the latest Patriots injury report.`,
+          source: "Patriots.com",
+          source_url: "https://www.patriots.com/team/injury-report/",
+          fetched_at: new Date().toISOString(),
+        });
+      }
+
+      const blurb = buildInjuryBlurb({
+        player_name: rowData.player_name,
+        injury: rowData.injury,
+        wed: rowData.practice.wed,
+        thu: rowData.practice.thu,
+        fri: rowData.practice.fri,
+        game_status: rowData.game_status,
+        week_label: weekLabel,
+      });
+
+      res.json({
+        found: true,
+        player_name: rowData.player_name,
+        injury: rowData.injury,
+        position: rowData.position,
+        practice: rowData.practice,
+        game_status: rowData.game_status,
+        blurb,
+        source: "Patriots.com",
+        source_url: "https://www.patriots.com/team/injury-report/",
+        fetched_at: new Date().toISOString(),
+      });
+    } catch (e: any) {
+      console.error("Patriots injury error:", e.message);
+      res.status(500).json({ error: "Failed to fetch injury report" });
+    }
+  });
+
   app.get("/sitemap.xml", (_req, res) => {
     loadIndexedData();
     const baseUrl = "https://statchasers.com";

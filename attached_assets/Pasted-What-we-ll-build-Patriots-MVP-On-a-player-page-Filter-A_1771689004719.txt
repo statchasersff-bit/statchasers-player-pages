@@ -1,0 +1,381 @@
+What we’ll build (Patriots MVP)
+
+On a player page:
+
+Filter: Articles | Injuries
+
+When user clicks Injuries, we:
+
+fetch Patriots injury report page
+
+find the row matching that player name
+
+return a small object + a short blurb like:
+
+“Drake Maye (Right Shoulder) practiced fully this week and is not listed with a game designation. Expected to play.”
+
+If the player is not on the report:
+
+“No injury designation listed for Drake Maye on the latest Patriots injury report.”
+
+1) Backend endpoint: player-specific injury only
+Express route (Patriots-only)
+import cheerio from "cheerio";
+
+function normName(name) {
+  return name
+    .toLowerCase()
+    .replace(/\./g, "")
+    .replace(/'/g, "")
+    .replace(/\s+(jr|sr|ii|iii|iv|v)\b/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+async function fetchHtml(url) {
+  const res = await fetch(url, {
+    headers: {
+      "user-agent": "StatChasersBot/1.0 (+https://statchasers.com)",
+      "accept-language": "en-US,en;q=0.9",
+    },
+  });
+  if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
+  return await res.text();
+}
+
+function cleanText(s) {
+  return String(s || "").replace(/\s+/g, " ").trim();
+}
+
+function statusWord(s) {
+  const t = cleanText(s).toUpperCase();
+  if (!t || t === "(-)" || t === "-" ) return ""; // no designation
+  return t;
+}
+
+function isRest(injuryText) {
+  const t = cleanText(injuryText).toLowerCase();
+  return t.includes("not injury related") || t.includes("nir") || t.includes("rest");
+}
+
+function practiceSummary(wed, thu, fri) {
+  const seq = [wed, thu, fri].map(x => cleanText(x).toUpperCase()).filter(Boolean);
+  if (!seq.length) return "";
+  // Examples: "FP FP FP" -> "practiced fully all week"
+  const joined = seq.join(" ");
+  if (joined === "FP FP FP") return "practiced fully all week";
+  if (joined === "LP LP LP") return "was limited all week";
+  if (joined === "DNP DNP DNP") return "did not practice all week";
+
+  // trend detection (simple)
+  const score = (v) => (v === "DNP" ? 0 : v === "LP" ? 1 : v === "FP" ? 2 : 1);
+  const nums = [wed, thu, fri].map(x => cleanText(x).toUpperCase()).filter(Boolean).map(score);
+  if (nums.length >= 2) {
+    const improving = nums[nums.length-1] > nums[0];
+    const worsening = nums[nums.length-1] < nums[0];
+    if (improving) return "showed improving practice participation";
+    if (worsening) return "showed decreasing practice participation";
+  }
+  return "had mixed practice participation";
+}
+
+function buildInjuryBlurb({ player_name, injury, wed, thu, fri, game_status, week_label }) {
+  const injuryTxt = cleanText(injury);
+  const gs = statusWord(game_status);
+  const ps = practiceSummary(wed, thu, fri);
+
+  // Handle rest/NIR
+  if (isRest(injuryTxt)) {
+    return `${player_name} was listed as not injury related/rest. ${ps ? `${capitalize(ps)}.` : ""}`.trim();
+  }
+
+  // No injury text at all (rare)
+  if (!injuryTxt) {
+    return `${player_name} has no listed injury detail on the latest report.`.trim();
+  }
+
+  // If OUT / DOUBTFUL / QUESTIONABLE etc
+  if (gs) {
+    const expected =
+      gs === "OUT" ? "Not expected to play." :
+      gs === "DOUBTFUL" ? "Unlikely to play." :
+      gs === "QUESTIONABLE" ? "Truly questionable to play." :
+      "Status unclear.";
+    return `${player_name} is dealing with ${injuryTxt}${week_label ? ` heading into ${week_label}` : ""}. ${ps ? `${capitalize(ps)}, and` : ""} is listed as ${gs}. ${expected}`.replace(/\s+/g, " ").trim();
+  }
+
+  // No game designation
+  // If FP at end, we can say expected to play
+  const end = cleanText(fri || thu || wed).toUpperCase();
+  const likelyPlay = end === "FP";
+
+  return `${player_name} is dealing with ${injuryTxt}${week_label ? ` heading into ${week_label}` : ""}. ${ps ? `${capitalize(ps)} and` : ""} is not listed with a game designation${likelyPlay ? " — expected to play." : "."}`
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function capitalize(s) {
+  if (!s) return s;
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+/**
+ * GET /patriots/injury?player_name=Drake%20Maye&week_label=the%20Super%20Bowl
+ */
+app.get("/patriots/injury", async (req, res) => {
+  try {
+    const playerName = cleanText(req.query.player_name);
+    const weekLabel = cleanText(req.query.week_label); // optional
+
+    if (!playerName) return res.status(400).json({ error: "player_name is required" });
+
+    const url = "https://www.patriots.com/team/injury-report/";
+    const html = await fetchHtml(url);
+    const $ = cheerio.load(html);
+
+    // Patriots table should be first table on page.
+    const table = $("table").first();
+    if (!table.length) {
+      return res.json({ found: false, player_name: playerName, items: [], blurb: "" });
+    }
+
+    // Map header -> index
+    const headers = [];
+    table.find("thead th").each((_, th) => headers.push(cleanText($(th).text()).toLowerCase()));
+
+    const idx = {
+      player: headers.findIndex(h => h.includes("player")),
+      position: headers.findIndex(h => h.includes("position")),
+      injury: headers.findIndex(h => h.includes("injury")),
+      wed: headers.findIndex(h => h === "wed"),
+      thu: headers.findIndex(h => h === "thu"),
+      fri: headers.findIndex(h => h === "fri"),
+      status: headers.findIndex(h => h.includes("status")),
+    };
+
+    const target = normName(playerName);
+    let rowData = null;
+
+    table.find("tbody tr").each((_, tr) => {
+      const tds = $(tr).find("td");
+      if (!tds.length) return;
+
+      const playerCell = idx.player >= 0 ? tds.eq(idx.player) : tds.eq(0);
+      const name = cleanText(playerCell.text());
+      if (!name) return;
+
+      if (normName(name) === target) {
+        rowData = {
+          player_name: name,
+          position: idx.position >= 0 ? cleanText(tds.eq(idx.position).text()) : "",
+          injury: idx.injury >= 0 ? cleanText(tds.eq(idx.injury).text()) : "",
+          practice: {
+            wed: idx.wed >= 0 ? cleanText(tds.eq(idx.wed).text()) : "",
+            thu: idx.thu >= 0 ? cleanText(tds.eq(idx.thu).text()) : "",
+            fri: idx.fri >= 0 ? cleanText(tds.eq(idx.fri).text()) : "",
+          },
+          game_status: idx.status >= 0 ? cleanText(tds.eq(idx.status).text()) : "",
+          source: "Patriots.com",
+          source_url: url,
+        };
+      }
+    });
+
+    if (!rowData) {
+      return res.json({
+        found: false,
+        player_name: playerName,
+        blurb: `No injury designation listed for ${playerName} on the latest Patriots injury report.`,
+        fetched_at: new Date().toISOString(),
+      });
+    }
+
+    const blurb = buildInjuryBlurb({
+      player_name: rowData.player_name,
+      injury: rowData.injury,
+      wed: rowData.practice.wed,
+      thu: rowData.practice.thu,
+      fri: rowData.practice.fri,
+      game_status: rowData.game_status,
+      week_label: weekLabel,
+    });
+
+    res.json({
+      found: true,
+      player_name: rowData.player_name,
+      injury: rowData.injury,
+      position: rowData.position,
+      practice: rowData.practice,
+      game_status: rowData.game_status,
+      blurb,
+      source: rowData.source,
+      source_url: rowData.source_url,
+      fetched_at: new Date().toISOString(),
+    });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+Why this fits your exact requirement:
+
+It returns one player only
+
+Generates a short, neutral blurb
+
+No big table on your player page
+
+It handles (-) properly as “no designation”
+
+It treats “Not Injury Related / Rest” differently
+
+2) Frontend render: compact “Injury” card
+JS render function
+function renderPlayerInjuryCard(payload) {
+  if (!payload?.found) {
+    return `
+      <div class="sc-injury-card sc-injury-card--empty">
+        <div class="sc-injury-card__title">Injury Status</div>
+        <div class="sc-injury-card__blurb">${escapeHtml(payload?.blurb || "No injury update available.")}</div>
+      </div>
+    `;
+  }
+
+  const p = payload;
+  const gs = (p.game_status || "").toUpperCase();
+  const label = gs && gs !== "(-)" ? gs : "No designation";
+
+  return `
+    <div class="sc-injury-card">
+      <div class="sc-injury-card__top">
+        <div>
+          <div class="sc-injury-card__title">Injury Status</div>
+          <div class="sc-injury-card__meta">${escapeHtml(p.position || "")} • ${escapeHtml(p.injury || "")}</div>
+        </div>
+        <div class="sc-injury-pill">${escapeHtml(label)}</div>
+      </div>
+
+      <div class="sc-injury-card__blurb">${escapeHtml(p.blurb)}</div>
+
+      <div class="sc-injury-card__bot">
+        <span class="sc-chip">WED: ${escapeHtml(p.practice?.wed || "-")}</span>
+        <span class="sc-chip">THU: ${escapeHtml(p.practice?.thu || "-")}</span>
+        <span class="sc-chip">FRI: ${escapeHtml(p.practice?.fri || "-")}</span>
+
+        <a class="sc-injury-card__link" href="${escapeAttr(p.source_url)}" target="_blank" rel="noopener">
+          Source →
+        </a>
+      </div>
+    </div>
+  `;
+}
+CSS (premium, small footprint)
+.sc-injury-card{
+  border: 1px solid rgba(15,23,42,.08);
+  border-radius: 18px;
+  background:#fff;
+  padding: 14px 14px;
+  box-shadow: 0 12px 26px rgba(15,23,42,.06);
+}
+
+.sc-injury-card--empty{
+  background: #fbfdff;
+}
+
+.sc-injury-card__top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.sc-injury-card__title{
+  font-size: 13px;
+  font-weight: 950;
+  letter-spacing:.08em;
+  text-transform: uppercase;
+  color:#0f172a;
+}
+
+.sc-injury-card__meta{
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 800;
+  color:#64748b;
+}
+
+.sc-injury-pill{
+  display:inline-flex;
+  align-items:center;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 950;
+  border: 1px solid rgba(202,161,74,.30);
+  background: rgba(202,161,74,.16);
+  color:#7a5a14;
+  white-space:nowrap;
+}
+
+.sc-injury-card__blurb{
+  font-size: 14px;
+  font-weight: 750;
+  color:#1e293b;
+  line-height:1.45;
+  margin: 10px 0 12px;
+}
+
+.sc-injury-card__bot{
+  display:flex;
+  flex-wrap:wrap;
+  gap: 8px;
+  align-items:center;
+}
+
+.sc-chip{
+  display:inline-flex;
+  align-items:center;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 900;
+  border:1px solid rgba(15,23,42,.10);
+  background: rgba(15,23,42,.04);
+  color:#0f172a;
+}
+
+.sc-injury-card__link{
+  margin-left:auto;
+  font-size: 12.5px;
+  font-weight: 950;
+  color:#1d4ed8;
+  text-decoration:none;
+}
+.sc-injury-card__link:hover{ text-decoration:underline; }
+3) Example: Drake Maye (your exact intended output)
+
+Given:
+
+Injury: Right Shoulder
+
+Wed/Thu/Fri: FP FP FP
+
+Game Status: (-)
+
+Blurb becomes:
+
+“Drake Maye is dealing with Right Shoulder heading into the Super Bowl. Practiced fully all week and is not listed with a game designation — expected to play.”
+
+(If you don’t want “Super Bowl” hard-coded, don’t pass week_label.)
+
+One small but important note
+
+Your injury report example includes both teams because it’s a Super Bowl report (Patriots + Seahawks). This Patriots endpoint only reads the Patriots table (first table), which is what you want for Patriots player pages.
+
+When we later add Seahawks, we’ll create:
+
+/seahawks/injury?player_name=...
+and so on team-by-team.
