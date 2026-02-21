@@ -350,10 +350,11 @@ interface PosBenchmarks {
   position: string;
   season: number;
   qualThreshold: number;
-  posAvg: { yardsPerCatch: number | null; catchPct: number | null; tdPerTarget: number | null };
+  posAvg: { yardsPerCatch: number | null; catchPct: number | null; tdPerTarget: number | null; fpPerUsage?: number | null };
   playerValues: number[];
   catchValues: number[];
   tdValues: number[];
+  fpPerUsageValues?: number[];
 }
 
 const benchmarksCache: Map<string, PosBenchmarks> = new Map();
@@ -367,15 +368,18 @@ function computePositionBenchmarks(season: number, position: string, allPlayers:
   const sLogs = loadGameLogs(season);
 
   let sumYards = 0, sumRec = 0, sumTgt = 0, sumTd = 0;
+  let sumQBFP = 0, sumQBUsage = 0;
   const playerYPC: number[] = [];
   const playerCatch: number[] = [];
   const playerTDRate: number[] = [];
+  const playerFPU: number[] = [];
 
   for (const [pid, entries] of Object.entries(sLogs)) {
     const p = allPlayers.find(ap => ap.id === pid);
     if (!p || p.position !== position) continue;
 
     let pYards = 0, pRec = 0, pTgt = 0, pTd = 0;
+    let pFP = 0, pUsage = 0;
     for (const e of entries) {
       if (!hasParticipation(e.stats, position)) continue;
       const s = e.stats as unknown as Record<string, number | null | undefined>;
@@ -384,6 +388,8 @@ function computePositionBenchmarks(season: number, position: string, allPlayers:
         pRec += (s.pass_cmp as number) || 0;
         pYards += (s.pass_yd as number) || 0;
         pTd += (s.pass_td as number) || 0;
+        pFP += getEntryPoints(e.stats, 'ppr');
+        pUsage += ((s.pass_att as number) || 0) + 2 * ((s.rush_att as number) || 0);
       } else if (position === 'RB') {
         pTgt += (s.rec_tgt as number) || 0;
         pRec += (s.rec as number) || 0;
@@ -404,7 +410,17 @@ function computePositionBenchmarks(season: number, position: string, allPlayers:
     sumTgt += pTgt;
     sumTd += pTd;
 
-    if (pRec > 0) playerYPC.push(pYards / pRec);
+    if (position === 'QB') {
+      if (pTgt > 0) playerYPC.push(pYards / pTgt);
+      if (pUsage > 0) {
+        const fpu = pFP / pUsage;
+        playerFPU.push(fpu);
+        sumQBFP += pFP;
+        sumQBUsage += pUsage;
+      }
+    } else {
+      if (pRec > 0) playerYPC.push(pYards / pRec);
+    }
     if (pTgt > 0) playerCatch.push((pRec / pTgt) * 100);
     if (pTgt > 0) playerTDRate.push((pTd / pTgt) * 100);
   }
@@ -414,13 +430,15 @@ function computePositionBenchmarks(season: number, position: string, allPlayers:
     season,
     qualThreshold: qualThresh,
     posAvg: {
-      yardsPerCatch: sumRec > 0 ? sumYards / sumRec : null,
+      yardsPerCatch: position === 'QB' ? (sumTgt > 0 ? sumYards / sumTgt : null) : (sumRec > 0 ? sumYards / sumRec : null),
       catchPct: sumTgt > 0 ? (sumRec / sumTgt) * 100 : null,
       tdPerTarget: sumTgt > 0 ? (sumTd / sumTgt) * 100 : null,
+      fpPerUsage: position === 'QB' && sumQBUsage > 0 ? sumQBFP / sumQBUsage : null,
     },
     playerValues: playerYPC.sort((a, b) => a - b),
     catchValues: playerCatch.sort((a, b) => a - b),
     tdValues: playerTDRate.sort((a, b) => a - b),
+    fpPerUsageValues: position === 'QB' ? playerFPU.sort((a, b) => a - b) : undefined,
   };
 
   benchmarksCache.set(key, result);
@@ -438,7 +456,7 @@ function computePercentile(sortedValues: number[], value: number): number | null
   return Math.round((rank / (n - 1)) * 100);
 }
 
-function getPlayerBenchmarks(season: number, position: string, allPlayers: Player[], playerStats: { yardsPerCatch: number; catchPct: number; tdPerTarget: number }, playerTotalTgt: number) {
+function getPlayerBenchmarks(season: number, position: string, allPlayers: Player[], playerStats: { yardsPerCatch: number; catchPct: number; tdPerTarget: number; fpPerUsage?: number }, playerTotalTgt: number) {
   if (!['QB', 'RB', 'WR', 'TE'].includes(position)) return null;
   const bench = computePositionBenchmarks(season, position, allPlayers);
   if (!bench.posAvg.yardsPerCatch && !bench.posAvg.catchPct && !bench.posAvg.tdPerTarget) return null;
@@ -446,23 +464,27 @@ function getPlayerBenchmarks(season: number, position: string, allPlayers: Playe
   const qualThresh = position === 'WR' ? 30 : 20;
   const qualified = position === 'QB' || playerTotalTgt >= qualThresh;
 
-  const tdStdDev = (() => {
-    const vals = bench.tdValues;
+  const computeStdDev = (vals: number[]) => {
     if (vals.length < 2) return 1;
     const m = vals.reduce((a, b) => a + b, 0) / vals.length;
     return Math.max(0.5, Math.sqrt(vals.reduce((s, v) => s + (v - m) ** 2, 0) / vals.length));
-  })();
+  };
+
+  const tdStdDev = computeStdDev(bench.tdValues);
+  const fpuStdDev = bench.fpPerUsageValues ? computeStdDev(bench.fpPerUsageValues) : undefined;
 
   return {
     position,
     season,
     qualifiedThreshold: qualThresh,
     posAvg: bench.posAvg,
-    posStdDev: { tdPerTarget: tdStdDev },
+    posStdDev: { tdPerTarget: tdStdDev, fpPerUsage: fpuStdDev },
     percentile: qualified ? {
       yardsPerCatch: computePercentile(bench.playerValues, playerStats.yardsPerCatch),
       catchPct: computePercentile(bench.catchValues, playerStats.catchPct),
       tdPerTarget: computePercentile(bench.tdValues, playerStats.tdPerTarget),
+      fpPerUsage: position === 'QB' && bench.fpPerUsageValues && playerStats.fpPerUsage != null
+        ? computePercentile(bench.fpPerUsageValues, playerStats.fpPerUsage) : null,
     } : null,
     playerQualified: qualified,
   };
@@ -875,10 +897,20 @@ export async function registerRoutes(
           pTd += (s.rec_td as number) || 0;
         }
       }
-      const ypc = pRec > 0 ? pYards / pRec : 0;
+      const ypc = isQB ? (pTgt > 0 ? pYards / pTgt : 0) : (pRec > 0 ? pYards / pRec : 0);
       const cp = pTgt > 0 ? (pRec / pTgt) * 100 : 0;
       const tdR = pTgt > 0 ? (pTd / pTgt) * 100 : 0;
-      productionRiskBenchmarks = getPlayerBenchmarks(activeSeason, pos, allPlayers, { yardsPerCatch: ypc, catchPct: cp, tdPerTarget: tdR }, pTgt);
+      let fpuVal: number | undefined;
+      if (isQB) {
+        const totalFP = playedLogs.reduce((sum, e) => sum + getEntryPoints(e.stats, format), 0);
+        let totalUsage = 0;
+        for (const e of playedLogs) {
+          const s = e.stats as unknown as Record<string, number | null | undefined>;
+          totalUsage += ((s.pass_att as number) || 0) + 2 * ((s.rush_att as number) || 0);
+        }
+        fpuVal = totalUsage > 0 ? totalFP / totalUsage : undefined;
+      }
+      productionRiskBenchmarks = getPlayerBenchmarks(activeSeason, pos, allPlayers, { yardsPerCatch: ypc, catchPct: cp, tdPerTarget: tdR, fpPerUsage: fpuVal }, pTgt);
     }
 
     const enriched = {

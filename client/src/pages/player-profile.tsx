@@ -1718,7 +1718,7 @@ function getPositionMomentumMetrics(position: string | null) {
   if (position === 'QB') return [
     { key: 'pass_att', label: 'Pass Att/G', pct: false, weight: 5 },
     { key: 'rush_att', label: 'Rush Att/G', pct: false, weight: 3 },
-    { key: 'team_pass_att', label: 'Team Pass Att/G', pct: false, weight: 2, context: true },
+    { key: 'pass_cmp_pct', label: 'Cmp%', pct: true, weight: 1 },
   ];
   if (position === 'RB') return [
     { key: 'rush_att', label: 'Carries/G', pct: false, weight: 5 },
@@ -1768,6 +1768,7 @@ function computeUsageStability(activeEntries: GameLogEntry[], primaryKey: string
   if (activeEntries.length < 3) return 50;
   const getVal = (e: GameLogEntry): number => {
     const s = e.stats as unknown as Record<string, number>;
+    if (position === 'QB') return (s['pass_att'] ?? 0) + 2 * (s['rush_att'] ?? 0);
     if (position === 'RB') return (s['rush_att'] ?? 0) + (s['rec_tgt'] ?? 0);
     return s[primaryKey] ?? 0;
   };
@@ -1827,6 +1828,17 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
       const l4PlayerTgt = last4.reduce((s, e) => s + getStat(e, 'rec_tgt'), 0);
       const l4TeamTgt = last4.reduce((s, e) => s + getStat(e, 'team_tgt'), 0);
       const recentAvg = l4TeamTgt > 0 ? (l4PlayerTgt / l4TeamTgt) * 100 : 0;
+      const delta = recentAvg - seasonAvg;
+      return { ...m, seasonAvg, recentAvg, delta };
+    }
+    if (m.key === 'pass_cmp_pct') {
+      const sCmp = activeEntries.reduce((s, e) => s + getStat(e, 'pass_cmp'), 0);
+      const sAtt = activeEntries.reduce((s, e) => s + getStat(e, 'pass_att'), 0);
+      const seasonAvg = sAtt > 0 ? (sCmp / sAtt) * 100 : 0;
+      const last4 = activeEntries.slice(-RECENT_WINDOW);
+      const rCmp = last4.reduce((s, e) => s + getStat(e, 'pass_cmp'), 0);
+      const rAtt = last4.reduce((s, e) => s + getStat(e, 'pass_att'), 0);
+      const recentAvg = rAtt > 0 ? (rCmp / rAtt) * 100 : 0;
       const delta = recentAvg - seasonAvg;
       return { ...m, seasonAvg, recentAvg, delta };
     }
@@ -2467,7 +2479,8 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
 
         if (isQB) {
           const passAtt = stat('pass_att') || 1;
-          yardsPerOpp = stat('pass_yd') / passAtt;
+          const qbUsage = passAtt + 2 * stat('rush_att');
+          yardsPerOpp = activeEntries.reduce((sum, e) => sum + fpts(e, format), 0) / (qbUsage || 1);
           catchPct = passAtt > 0 ? (stat('pass_cmp') / passAtt) * 100 : 0;
           tdPerOpp = (stat('pass_td') / passAtt) * 100;
         } else if (isRB) {
@@ -2524,7 +2537,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
           let score = 50;
           if (isQB) {
             score += (catchPct - 62) * 0.8;
-            score += (yardsPerOpp - 6.5) * 4;
+            score += (yardsPerOpp - (yptLg || 0.55)) * 80;
             score += (tdPerOpp - 4) * 3;
           } else if (isRB) {
             score += (yardsPerOpp - 4.0) * 5;
@@ -2544,9 +2557,11 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
             ? { label: 'Efficiency-Driven (Regression Risk)', color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20' }
             : { label: 'Balanced', color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' };
 
-        const bench = player.productionRiskBenchmarks;
+        const bench = player.productionRiskBenchmarks as Record<string, any> | null;
         const tdRateLg = bench?.posAvg?.tdPerTarget ?? (isQB ? 4.5 : isRB ? 3.0 : 5.0);
-        const yptLg = bench?.posAvg?.yardsPerCatch ?? (isQB ? 7.0 : isRB ? 4.2 : 7.5);
+        const yptLg = isQB
+          ? (bench?.posAvg?.fpPerUsage ?? 0.55)
+          : (bench?.posAvg?.yardsPerCatch ?? (isRB ? 4.2 : 7.5));
         const catchLgBench = bench?.posAvg?.catchPct ?? (isQB ? 64 : isRB ? 75 : 65);
         const shareStabAvg = 55;
 
@@ -2555,7 +2570,9 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
         const tdDepFactor = Math.max(0.3, Math.min(1.5, tdPctBar / 30));
         const tdZScore = leagueTdStdDev > 0 ? (tdPerOpp - tdRateLg) / leagueTdStdDev : 0;
         const tdRateSignal = Math.max(-20, Math.min(20, tdZScore * (isQB ? 5 : 6) * tdDepFactor));
-        const yptSignal = Math.max(-15, Math.min(15, (yardsPerOpp - yptLg) * (isQB ? 2 : 1.5)));
+        const yptSignal = isQB
+          ? Math.max(-15, Math.min(15, (yardsPerOpp - yptLg) * 80))
+          : Math.max(-15, Math.min(15, (yardsPerOpp - yptLg) * 1.5));
         const stabSignal = Math.max(-10, Math.min(10, (usageStab - shareStabAvg) * 0.2));
         const volSignal = Math.max(-10, Math.min(10, (volumeScore - 50) * 0.2));
 

@@ -1,0 +1,211 @@
+This is a really solid framework for QBs — except for one big red flag that will make your Sustainability score look “wrong” to sharp users:
+
+🚨 Your QB league average for Yards/Attempt (10.92) is almost certainly not “passing Y/A”
+
+NFL passing yards per attempt is usually ~6–8. If you’re seeing 10.9, you’re probably accidentally using:
+
+yards per completion, or
+
+(pass yards + rush yards) / pass attempts, or
+
+fantasy points per attempt, or
+
+a filtered cohort / bad denominator
+
+Josh Allen at 7.97 makes perfect sense for passing Y/A, but the “league avg 10.92” does not.
+
+Fix this and your QB Sustainability becomes credible.
+
+1) Momentum Score (55 Stable) — ✅ Good
+
+The logic is clean:
+
+Pass Att weighted highest (×5) — makes sense for QB “role”
+
+Rush Att included (×2) — good for fantasy relevance
+
+Comp% (×3) — fine, but I’d slightly de-emphasize it
+
+One tweak:
+
+Comp% is not a “role” input; it’s performance/efficiency.
+
+If Momentum is meant to be “role direction,” consider swapping Comp% for:
+
+Scrambles / designed rushes (if you have)
+
+or Team plays / pass attempts context
+
+or QB rush share (rushing attempts / team rush attempts)
+
+If you keep Comp%, lower weight to ×1–×2 so it doesn’t blur “role” vs “performance.”
+
+Overall: your 55 explanation is coherent.
+
+2) Usage Stability (73) — ✅ Mostly good, small caveat
+
+Using pass attempts per game is a reasonable proxy for “role consistency” for QBs.
+
+But Allen’s fantasy role is also heavily driven by rushing usage.
+
+If you only use pass attempts, you’ll underrate “stability” for rushing QBs who have stable total usage but swing in pass volume by game script.
+
+Recommendation (better):
+Use a blended QB usage metric:
+
+𝑄
+𝐵
+_
+𝑢
+𝑠
+𝑎
+𝑔
+𝑒
+=
+𝑝
+𝑎
+𝑠
+𝑠
+_
+𝑎
+𝑡
+𝑡
++
+2
+×
+𝑟
+𝑢
+𝑠
+ℎ
+_
+𝑎
+𝑡
+𝑡
+QB_usage=pass_att+2×rush_att
+
+Why 2×?
+Because a QB rushing attempt is typically more valuable/intentional for fantasy than a pass attempt and reflects designed usage.
+
+Then compute CV on that, not just pass attempts.
+
+This will make “Role Consistency” more fantasy-relevant for guys like Allen, Hurts, Lamar.
+
+3) TD Dependency (47.3%) — ✅ Useful, but interpret carefully
+
+This is a good risk flag, BUT for QBs it will always be high vs other positions because TDs are a huge part of QB scoring.
+
+So don’t label 47% as automatically scary.
+
+Recommendation:
+Compare TD dependency against QB baseline distribution (pos avg + percentile), not a universal “high.”
+
+Example:
+
+“47% (QB avg 44%) — slightly TD-leaning”
+
+4) Sustainability Score (46) — ✅ Concept good, but fix the efficiency benchmark
+
+The structure is right:
+
+TD rate penalty scaled by dependency
+
+Efficiency signal
+
+Stability and volume offsets
+
+But:
+
+🚨 Fix “Yards/Attempt” baseline first
+
+If you meant passing yards/attempt:
+
+compute weighted QB average as:
+
+sum(pass_yds) / sum(pass_att) across qualified QBs
+
+qualify QBs by min pass attempts (e.g., ≥ 200 season)
+
+If you meant fantasy efficiency:
+
+rename it (don’t call it Y/A)
+
+use:
+
+fantasy_points / dropbacks (if you have)
+
+or fantasy_points / (pass_att + rush_att)
+
+Right now the label + avg value don’t match, which will cause confusion.
+
+5) One more tweak: don’t penalize “below avg passing efficiency” too hard for rushing QBs
+
+Josh Allen can be below passing-efficiency average and still be sustainable because:
+
+rushing TDs
+
+rushing yards
+
+stable designed rush usage
+
+So in Sustainability, consider using two efficiency signals:
+
+Passing efficiency: pass_yards / pass_att
+
+Rushing efficiency: rush_yards / rush_att (or rush FP share)
+
+Or simpler:
+
+Use fantasy points per “QB usage” unit:
+
+𝐹
+𝑃
+_
+𝑝
+𝑒
+𝑟
+_
+𝑢
+𝑠
+𝑎
+𝑔
+𝑒
+=
+𝑓
+𝑎
+𝑛
+𝑡
+𝑎
+𝑠
+𝑦
+_
+𝑝
+𝑜
+𝑖
+𝑛
+𝑡
+𝑠
+/
+(
+𝑝
+𝑎
+𝑠
+𝑠
+_
+𝑎
+𝑡
+𝑡
++
+2
+×
+𝑟
+𝑢
+𝑠
+ℎ
+_
+𝑎
+𝑡
+𝑡
+)
+FP_per_usage=fantasy_points/(pass_att+2×rush_att)
+
+That’s position-appropriate and directly linked to sustainability.
