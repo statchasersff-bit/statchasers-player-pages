@@ -1152,7 +1152,7 @@ export async function registerRoutes(
     }
   });
 
-  const patriotsInjuryCache: { ts: number; data: any } = { ts: 0, data: null };
+  const patriotsInjuryCache: { ts: number; data: any; reportLabel: string } = { ts: 0, data: null, reportLabel: '' };
   const INJURY_TTL = 30 * 60 * 1000;
 
   function cleanText(s: string | null | undefined): string {
@@ -1191,10 +1191,17 @@ export async function registerRoutes(
     return s.charAt(0).toUpperCase() + s.slice(1);
   }
 
+  function injuryLabel(raw: string): string {
+    const t = cleanText(raw).toLowerCase();
+    if (!t || t.includes('injury') || t.includes('illness') || t.includes('rest') || t.includes('personal') || t.includes('nir')) return cleanText(raw);
+    return `a ${cleanText(raw).toLowerCase()} injury`;
+  }
+
   function buildInjuryBlurb(opts: { player_name: string; injury: string; wed: string; thu: string; fri: string; game_status: string; week_label: string }): string {
     const injuryTxt = cleanText(opts.injury);
     const gs = statusWord(opts.game_status);
     const ps = practiceSummary(opts.wed, opts.thu, opts.fri);
+    const injLabel = injuryLabel(injuryTxt);
 
     if (isRest(injuryTxt)) {
       return `${opts.player_name} was listed as not injury related/rest. ${ps ? `${capitalize(ps)}.` : ""}`.trim();
@@ -1208,11 +1215,11 @@ export async function registerRoutes(
         gs === "DOUBTFUL" ? "Unlikely to play." :
         gs === "QUESTIONABLE" ? "Truly questionable to play." :
         "Status unclear.";
-      return `${opts.player_name} is dealing with ${injuryTxt}${opts.week_label ? ` heading into ${opts.week_label}` : ""}. ${ps ? `${capitalize(ps)}, and` : ""} is listed as ${gs}. ${expected}`.replace(/\s+/g, " ").trim();
+      return `${opts.player_name} is dealing with ${injLabel}${opts.week_label ? ` heading into ${opts.week_label}` : ""}. ${ps ? `${capitalize(ps)}, and` : ""} is listed as ${gs}. ${expected}`.replace(/\s+/g, " ").trim();
     }
     const end = cleanText(opts.fri || opts.thu || opts.wed).toUpperCase();
     const likelyPlay = end === "FP";
-    return `${opts.player_name} is dealing with ${injuryTxt}${opts.week_label ? ` heading into ${opts.week_label}` : ""}. ${ps ? `${capitalize(ps)} and` : ""} is not listed with a game designation${likelyPlay ? " — expected to play." : "."}`.replace(/\s+/g, " ").trim();
+    return `${opts.player_name} is dealing with ${injLabel}${opts.week_label ? ` heading into ${opts.week_label}` : ""}. ${ps ? `${capitalize(ps)} and` : ""} is not listed with a game designation${likelyPlay ? " \u2014 expected to play." : "."}`.replace(/\s+/g, " ").trim();
   }
 
   app.get("/api/patriots/injury", async (req, res) => {
@@ -1232,6 +1239,26 @@ export async function registerRoutes(
         const html = await fetchHtml(url);
         const $ = cheerio.load(html);
         const table = $("table").first();
+
+        let reportLabel = '';
+        const headingEl = $("h1, h2, h3, .nfl-o-matchup-cards__title, .d3-o-section-title").first();
+        if (headingEl.length) {
+          const raw = cleanText(headingEl.text());
+          const match = raw.match(/(?:Week\s+\d+|Wild Card|Divisional|Conference|Super Bowl|Pro Bowl)/i);
+          if (match) reportLabel = match[0];
+        }
+        const captionEl = table.find("caption").first();
+        if (!reportLabel && captionEl.length) {
+          const cap = cleanText(captionEl.text());
+          const capMatch = cap.match(/(?:Week\s+\d+|Wild Card|Divisional|Conference|Super Bowl|Pro Bowl)/i);
+          if (capMatch) reportLabel = capMatch[0];
+        }
+        if (!reportLabel) {
+          const pageText = $("body").text();
+          const weekMatch = pageText.match(/(?:Week\s+\d+|Wild Card|Divisional|Conference Championship|Super Bowl|Pro Bowl)/i);
+          if (weekMatch) reportLabel = weekMatch[0];
+        }
+        patriotsInjuryCache.reportLabel = reportLabel;
 
         if (table.length) {
           const headers: string[] = [];
@@ -1275,6 +1302,8 @@ export async function registerRoutes(
       const target = normName(playerName);
       const rowData = allRows.find((r: any) => r.norm === target);
 
+      const reportLabel = patriotsInjuryCache.reportLabel || '';
+
       if (!rowData) {
         return res.json({
           found: false,
@@ -1282,6 +1311,7 @@ export async function registerRoutes(
           blurb: `No injury designation listed for ${playerName} on the latest Patriots injury report.`,
           source: "Patriots.com",
           source_url: "https://www.patriots.com/team/injury-report/",
+          report_label: reportLabel,
           fetched_at: new Date().toISOString(),
         });
       }
@@ -1293,7 +1323,7 @@ export async function registerRoutes(
         thu: rowData.practice.thu,
         fri: rowData.practice.fri,
         game_status: rowData.game_status,
-        week_label: weekLabel,
+        week_label: weekLabel || reportLabel,
       });
 
       res.json({
@@ -1306,6 +1336,7 @@ export async function registerRoutes(
         blurb,
         source: "Patriots.com",
         source_url: "https://www.patriots.com/team/injury-report/",
+        report_label: reportLabel,
         fetched_at: new Date().toISOString(),
       });
     } catch (e: any) {

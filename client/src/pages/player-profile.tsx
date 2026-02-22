@@ -3096,6 +3096,7 @@ interface InjuryData {
   blurb?: string;
   source?: string;
   source_url?: string;
+  report_label?: string;
   fetched_at?: string;
 }
 
@@ -3185,44 +3186,109 @@ function NewsTab({ player }: { player: Player }) {
               </div>
             </div>
           )}
-          {injuryData && !injuryLoading && (
-            <div className={`sc-injury-card ${!injuryData.found ? 'sc-injury-card--empty' : ''}`} data-testid="injury-card">
-              {injuryData.found ? (
-                <>
-                  <div className="sc-injury-card__top">
-                    <div>
-                      <div className="sc-injury-card__title">Injury Status</div>
-                      <div className="sc-injury-card__meta" data-testid="text-injury-meta">
-                        {injuryData.position || ''}{injuryData.position && injuryData.injury ? ' \u2022 ' : ''}{injuryData.injury || ''}
+          {injuryData && !injuryLoading && (() => {
+            const injuryMeta = (() => {
+              const pos = injuryData.position || '';
+              let inj = injuryData.injury || '';
+              if (inj && !inj.toLowerCase().includes('injury') && !inj.toLowerCase().includes('illness') && !inj.toLowerCase().includes('rest') && !inj.toLowerCase().includes('personal')) {
+                inj = `${inj} Injury`;
+              }
+              return pos && inj ? `${pos} \u2022 ${inj}` : pos || inj;
+            })();
+
+            const contextParts: string[] = [];
+            if (injuryData.report_label) contextParts.push(injuryData.report_label);
+            if (injuryData.fetched_at) {
+              const d = new Date(injuryData.fetched_at);
+              contextParts.push(`Updated ${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`);
+            }
+            const contextLine = contextParts.join(' \u2022 ');
+
+            const blurbParts: { text: string; bold: boolean }[] = (() => {
+              const b = injuryData.blurb || '';
+              const name = injuryData.player_name || '';
+              if (!name || !b.includes(name)) return [{ text: b, bold: false }];
+              const idx = b.indexOf(name);
+              const parts: { text: string; bold: boolean }[] = [];
+              if (idx > 0) parts.push({ text: b.slice(0, idx), bold: false });
+              parts.push({ text: name, bold: true });
+              if (idx + name.length < b.length) parts.push({ text: b.slice(idx + name.length), bold: false });
+              return parts;
+            })();
+
+            const updatedAgo = injuryData.fetched_at ? (() => {
+              const diff = Date.now() - new Date(injuryData.fetched_at).getTime();
+              const mins = Math.floor(diff / 60000);
+              if (mins < 1) return 'Updated just now';
+              if (mins < 60) return `Updated ${mins} minute${mins === 1 ? '' : 's'} ago`;
+              const hrs = Math.floor(mins / 60);
+              if (hrs < 24) return `Updated ${hrs} hour${hrs === 1 ? '' : 's'} ago`;
+              return 'From latest Patriots injury report';
+            })() : 'From latest Patriots injury report';
+
+            return (
+              <div className={`sc-injury-card ${!injuryData.found ? 'sc-injury-card--empty' : ''}`} data-testid="injury-card">
+                {injuryData.found ? (
+                  <>
+                    <div className="sc-injury-card__top">
+                      <div>
+                        <div className="sc-injury-card__title" data-testid="text-injury-title">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline', verticalAlign: '-2px', marginRight: '5px' }}>
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                          </svg>
+                          Injury Status
+                        </div>
+                        {contextLine && (
+                          <div className="sc-injury-card__context" data-testid="text-injury-context">{contextLine}</div>
+                        )}
+                        <div className="sc-injury-card__meta" data-testid="text-injury-meta">{injuryMeta}</div>
+                      </div>
+                      <div className={`sc-injury-pill ${getInjuryPillClass(injuryData.game_status || '')}`} data-testid="badge-injury-status">
+                        {(() => {
+                          const gs = (injuryData.game_status || '').toUpperCase().trim();
+                          return (gs && gs !== '(-)' && gs !== '-') ? gs : 'No designation';
+                        })()}
                       </div>
                     </div>
-                    <div className={`sc-injury-pill ${getInjuryPillClass(injuryData.game_status || '')}`} data-testid="badge-injury-status">
-                      {(() => {
-                        const gs = (injuryData.game_status || '').toUpperCase().trim();
-                        return (gs && gs !== '(-)' && gs !== '-') ? gs : 'No designation';
-                      })()}
+                    <div className="sc-injury-card__blurb" data-testid="text-injury-blurb">
+                      {blurbParts.map((p, i) => p.bold ? <strong key={i}>{p.text}</strong> : <span key={i}>{p.text}</span>)}
                     </div>
-                  </div>
-                  <div className="sc-injury-card__blurb" data-testid="text-injury-blurb">{injuryData.blurb}</div>
-                  <div className="sc-injury-card__bot">
-                    <span className={`sc-injury-chip ${getPracticeChipClass(injuryData.practice?.wed || '')}`} data-testid="chip-practice-wed">WED: {injuryData.practice?.wed || '-'}</span>
-                    <span className={`sc-injury-chip ${getPracticeChipClass(injuryData.practice?.thu || '')}`} data-testid="chip-practice-thu">THU: {injuryData.practice?.thu || '-'}</span>
-                    <span className={`sc-injury-chip ${getPracticeChipClass(injuryData.practice?.fri || '')}`} data-testid="chip-practice-fri">FRI: {injuryData.practice?.fri || '-'}</span>
-                    {injuryData.source_url && (
-                      <a className="sc-injury-card__link" href={injuryData.source_url} target="_blank" rel="noopener noreferrer" data-testid="link-injury-source">
-                        Source \u2192
-                      </a>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="sc-injury-card__title">Injury Status</div>
-                  <div className="sc-injury-card__blurb" data-testid="text-injury-blurb">{injuryData.blurb || 'No injury update available.'}</div>
-                </>
-              )}
-            </div>
-          )}
+                    <div className="sc-injury-card__bot">
+                      <span className={`sc-injury-chip ${getPracticeChipClass(injuryData.practice?.wed || '')}`} data-testid="chip-practice-wed">WED: {injuryData.practice?.wed || '-'}</span>
+                      <span className={`sc-injury-chip ${getPracticeChipClass(injuryData.practice?.thu || '')}`} data-testid="chip-practice-thu">THU: {injuryData.practice?.thu || '-'}</span>
+                      <span className={`sc-injury-chip ${getPracticeChipClass(injuryData.practice?.fri || '')}`} data-testid="chip-practice-fri">FRI: {injuryData.practice?.fri || '-'}</span>
+                    </div>
+                    <div className="sc-injury-card__footer">
+                      <span className="sc-injury-card__updated" data-testid="text-injury-updated">{updatedAgo}</span>
+                      {injuryData.source_url && (
+                        <a className="sc-injury-card__link" href={injuryData.source_url} target="_blank" rel="noopener noreferrer" data-testid="link-injury-source">
+                          View Full Injury Report →
+                        </a>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="sc-injury-card__title">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline', verticalAlign: '-2px', marginRight: '5px' }}>
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                      </svg>
+                      Injury Status
+                    </div>
+                    <div className="sc-injury-card__blurb" data-testid="text-injury-blurb">{injuryData.blurb || 'No injury update available.'}</div>
+                    <div className="sc-injury-card__footer">
+                      <span className="sc-injury-card__updated">{updatedAgo}</span>
+                      {injuryData.source_url && (
+                        <a className="sc-injury-card__link" href={injuryData.source_url} target="_blank" rel="noopener noreferrer" data-testid="link-injury-source">
+                          View Full Injury Report →
+                        </a>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+          })()}
         </>
       )}
 
