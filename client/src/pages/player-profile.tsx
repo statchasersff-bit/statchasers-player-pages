@@ -1745,8 +1745,15 @@ function computeMetricAvg(activeEntries: GameLogEntry[], key: string, count?: nu
   return sum / src.length;
 }
 
-function computeTdDependency(activeEntries: GameLogEntry[], position: string | null, format: ScoringFormat): { pct: number; label: string; tag: string } {
-  if (activeEntries.length === 0) return { pct: 0, label: 'N/A', tag: '' };
+function getTdThresholds(position: string | null): { high: number; mid: number } {
+  if (position === 'QB') return { high: 45, mid: 35 };
+  if (position === 'RB') return { high: 40, mid: 25 };
+  if (position === 'TE') return { high: 40, mid: 25 };
+  return { high: 35, mid: 20 };
+}
+
+function computeTdDependency(activeEntries: GameLogEntry[], position: string | null, format: ScoringFormat): { pct: number; label: string; tag: string; isHigh: boolean } {
+  if (activeEntries.length === 0) return { pct: 0, label: 'N/A', tag: '', isHigh: false };
   const s = (key: string) => activeEntries.reduce((sum, e) => sum + ((e.stats as unknown as Record<string, number>)[key] ?? 0), 0);
   let tdPts = 0;
   if (position === 'QB') {
@@ -1757,11 +1764,12 @@ function computeTdDependency(activeEntries: GameLogEntry[], position: string | n
     tdPts = (s('rec_td') + s('rush_td')) * 6;
   }
   const totalPts = activeEntries.reduce((sum, e) => sum + fpts(e, format), 0);
-  if (totalPts === 0) return { pct: 0, label: 'N/A', tag: '' };
+  if (totalPts === 0) return { pct: 0, label: 'N/A', tag: '', isHigh: false };
   const pct = (tdPts / totalPts) * 100;
-  if (pct >= 35) return { pct, label: 'TD-Driven', tag: 'High TD reliance' };
-  if (pct >= 20) return { pct, label: 'Balanced', tag: 'Balanced production' };
-  return { pct, label: 'Volume-Backed', tag: 'Volume-backed production' };
+  const { high, mid } = getTdThresholds(position);
+  if (pct >= high) return { pct, label: 'TD-Driven', tag: 'High TD reliance', isHigh: true };
+  if (pct >= mid) return { pct, label: 'Balanced', tag: 'Balanced production', isHigh: false };
+  return { pct, label: 'Volume-Backed', tag: 'Volume-backed production', isHigh: false };
 }
 
 function computeUsageStability(activeEntries: GameLogEntry[], primaryKey: string, position?: string | null): number {
@@ -2515,6 +2523,8 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
         const yardPctBar = yardagePts * normFactor;
         const recPctBar = recPts * normFactor;
         const otherPctBar = 0;
+        const { high: tdHighThreshold, mid: tdMidThreshold } = getTdThresholds(position);
+        const tdIsHigh = tdPctBar >= tdHighThreshold;
 
         const volumeScore = (() => {
           let score = 50;
@@ -2595,18 +2605,18 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
         const sustainIcon = sustainabilityScore >= 70 ? <Shield className="w-3.5 h-3.5 text-emerald-500" /> : sustainabilityScore >= 40 ? <AlertTriangle className="w-3.5 h-3.5 text-amber-400" /> : <AlertTriangle className="w-3.5 h-3.5 text-red-400" />;
 
         let insightSentence = '';
-        if (tdPctBar >= 35 && shareAvg < 18 && !isQB) {
+        if (tdIsHigh && shareAvg < 18 && !isQB) {
           insightSentence = `Despite ${shareAvg > 0 ? `a modest ${shareAvg.toFixed(1)}% target share` : 'limited usage volume'}, scoring remains elevated through a ${tdPerOpp.toFixed(1)}% TD rate that exceeds the positional average (${tdRateLg.toFixed(1)}%). This efficiency-driven profile carries meaningful regression risk if touchdown rate normalizes.`;
-        } else if (tdPctBar >= 35 && isQB) {
+        } else if (tdIsHigh && isQB) {
           insightSentence = `A ${tdPerOpp.toFixed(1)}% TD rate accounts for ${tdPctBar.toFixed(0)}% of fantasy output. ${tdPerOpp > tdRateLg + 1 ? `This exceeds the positional baseline (${tdRateLg.toFixed(1)}%) and historically trends toward mean reversion, introducing downside risk.` : `This rate tracks near the positional baseline (${tdRateLg.toFixed(1)}%), providing relative stability in the scoring profile.`}`;
         } else if (volumeScore > efficiencyScore + 15) {
           insightSentence = `Production is anchored by ${isQB ? 'sustained pass volume' : isRB ? 'a commanding touch share' : `a ${shareAvg.toFixed(1)}% target share`} rather than elevated efficiency, reducing regression exposure. Volume-backed profiles historically maintain more stable week-to-week output.`;
         } else if (efficiencyScore > volumeScore + 15 && tdPerOpp > tdRateLg + 1) {
           insightSentence = `Efficiency metrics${!isQB ? ` (${yardsPerOpp.toFixed(1)} yds/${isRB ? 'touch' : 'catch'})` : ''} and a ${tdPerOpp.toFixed(1)}% TD rate both exceed positional baselines. With ${isQB ? 'pass volume' : 'usage volume'} below elite thresholds, scoring is disproportionately dependent on efficiency sustaining above-average levels.`;
         } else if (usageStab >= 70) {
-          insightSentence = `Highly consistent week-to-week usage (stability: ${usageStab}/100) paired with ${tdPctBar < 30 ? 'low TD reliance' : 'moderate TD reliance'} establishes a reliable floor. ${sustainabilityScore >= 60 ? 'The balanced profile supports sustained production.' : 'Upside remains capped by volume limitations.'}`;
+          insightSentence = `Highly consistent week-to-week usage (stability: ${usageStab}/100) paired with ${tdPctBar < tdMidThreshold ? 'low TD reliance' : 'moderate TD reliance'} establishes a reliable floor. ${sustainabilityScore >= 60 ? 'The balanced profile supports sustained production.' : 'Upside remains capped by volume limitations.'}`;
         } else {
-          insightSentence = `${isQB ? 'Passing volume' : isRB ? 'Touch volume' : 'Target share'} ${usageStab >= 50 ? 'has been reasonably stable' : 'has shown inconsistency'}, while ${tdPctBar >= 30 ? `${tdPctBar.toFixed(0)}% TD dependency introduces scoring fragility in weeks without touchdowns` : 'a diversified scoring profile across yardage and volume reduces single-variable risk'}.`;
+          insightSentence = `${isQB ? 'Passing volume' : isRB ? 'Touch volume' : 'Target share'} ${usageStab >= 50 ? 'has been reasonably stable' : 'has shown inconsistency'}, while ${tdPctBar >= tdMidThreshold ? `${tdPctBar.toFixed(0)}% TD dependency introduces scoring fragility in weeks without touchdowns` : 'a diversified scoring profile across yardage and volume reduces single-variable risk'}.`;
         }
 
         return (
@@ -2775,9 +2785,9 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                   </div>
                 </div>
                 <div className="pt-1">
-                  <Badge variant="outline" className={`text-[10px] ${tdPctBar >= 35 ? 'border-amber-500/30 text-amber-500' : 'border-emerald-500/30 text-emerald-500'}`} data-testid="badge-td-reliance">
-                    {tdPctBar >= 35 ? <AlertTriangle className="w-3 h-3 mr-1" /> : <Shield className="w-3 h-3 mr-1" />}
-                    {tdPctBar >= 35 ? 'High TD Reliance' : 'Sustainable Volume Base'}
+                  <Badge variant="outline" className={`text-[10px] ${tdIsHigh ? 'border-amber-500/30 text-amber-500' : 'border-emerald-500/30 text-emerald-500'}`} data-testid="badge-td-reliance">
+                    {tdIsHigh ? <AlertTriangle className="w-3 h-3 mr-1" /> : <Shield className="w-3 h-3 mr-1" />}
+                    {tdIsHigh ? 'High TD Reliance' : 'Sustainable Volume Base'}
                   </Badge>
                 </div>
               </CardContent>
