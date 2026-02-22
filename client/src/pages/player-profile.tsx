@@ -2533,6 +2533,13 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
           return Math.max(0, Math.min(100, Math.round(score)));
         })();
 
+        const bench = player.productionRiskBenchmarks as Record<string, any> | null;
+        const tdRateLg = bench?.posAvg?.tdPerTarget ?? (isQB ? 4.5 : isRB ? 3.0 : 5.0);
+        const yptLg = isQB
+          ? (bench?.posAvg?.fpPerUsage ?? 0.55)
+          : (bench?.posAvg?.yardsPerCatch ?? (isRB ? 4.2 : 7.5));
+        const catchLgBench = bench?.posAvg?.catchPct ?? (isQB ? 64 : isRB ? 75 : 65);
+
         const efficiencyScore = (() => {
           let score = 50;
           if (isQB) {
@@ -2556,13 +2563,6 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
           : efficiencyScore > volumeScore + 15
             ? { label: 'Efficiency-Driven (Regression Risk)', color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20' }
             : { label: 'Balanced', color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' };
-
-        const bench = player.productionRiskBenchmarks as Record<string, any> | null;
-        const tdRateLg = bench?.posAvg?.tdPerTarget ?? (isQB ? 4.5 : isRB ? 3.0 : 5.0);
-        const yptLg = isQB
-          ? (bench?.posAvg?.fpPerUsage ?? 0.55)
-          : (bench?.posAvg?.yardsPerCatch ?? (isRB ? 4.2 : 7.5));
-        const catchLgBench = bench?.posAvg?.catchPct ?? (isQB ? 64 : isRB ? 75 : 65);
         const shareStabAvg = 55;
 
         const leagueTdStdDev = bench?.posStdDev?.tdPerTarget ?? 1;
