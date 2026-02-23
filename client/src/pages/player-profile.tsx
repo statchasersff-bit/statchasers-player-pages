@@ -321,21 +321,20 @@ function computeGameLogStats(entries: GameLogEntry[], position: string | null = 
 
 function getRankColor(rank: number | null | undefined): string {
   if (!rank) return '';
-  if (rank <= 5) return 'text-green-600 dark:text-green-400 font-semibold';
-  if (rank <= 12) return 'text-emerald-600 dark:text-emerald-400';
-  if (rank <= 24) return 'text-foreground';
-  return 'text-muted-foreground';
+  if (rank <= 12) return 'text-yellow-500 dark:text-yellow-400 font-semibold';
+  if (rank <= 24) return 'text-slate-400 dark:text-slate-300 font-semibold';
+  if (rank <= 36) return 'text-amber-700 dark:text-amber-600 font-semibold';
+  return 'text-red-500 dark:text-red-400';
 }
 
 function getTierBadge(rank: number | null | undefined, position: string | null): { label: string; className: string } | null {
   if (!rank) return null;
   const pos = position || 'FLEX';
   const { bust, hasTier3 } = getTierThresholds(position);
-  if (rank <= 12) return { label: `${pos}1`, className: 'bg-green-500/15 text-green-700 dark:text-green-400' };
-  const pos2End = hasTier3 ? 24 : bust;
-  if (rank <= pos2End) return { label: `${pos}2`, className: 'bg-blue-500/15 text-blue-700 dark:text-blue-400' };
-  if (hasTier3 && rank <= bust) return { label: `${pos}3`, className: 'bg-orange-500/15 text-orange-700 dark:text-orange-400' };
-  return { label: 'Bust', className: 'bg-red-500/15 text-red-600 dark:text-red-400' };
+  if (rank <= 12) return { label: `${pos}1`, className: 'bg-yellow-500/15 text-yellow-600 dark:text-yellow-400' };
+  if (rank <= 24) return { label: `${pos}2`, className: 'bg-slate-400/15 text-slate-500 dark:text-slate-300' };
+  if (rank <= 36) return { label: `${pos}3`, className: 'bg-amber-700/15 text-amber-700 dark:text-amber-600' };
+  return { label: 'Bust', className: 'bg-red-500/15 text-red-500 dark:text-red-400' };
 }
 
 function getOppRankColor(rank: number | null | undefined): string {
