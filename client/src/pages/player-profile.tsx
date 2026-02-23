@@ -2965,14 +2965,26 @@ function RankingsTab({ player }: { player: Player }) {
   const tierLabel = `${dynasty.position}${d.positionalTier <= 1 ? '1' : d.positionalTier <= 3 ? '2' : '3+'}`;
   const tierDesc = d.positionalTier <= 1 ? 'Elite' : d.positionalTier <= 3 ? 'Mid' : d.positionalTier <= 6 ? 'Low-End' : 'Deep';
   const ageTierColor = dynasty.ageCurveTier === 'Rising' ? 'text-emerald-500' : dynasty.ageCurveTier === 'Prime' ? 'text-blue-500' : dynasty.ageCurveTier === 'Aging' ? 'text-amber-500' : 'text-red-400';
+  const ageTierBg = dynasty.ageCurveTier === 'Rising' ? 'bg-emerald-500/10' : dynasty.ageCurveTier === 'Prime' ? 'bg-blue-500/10' : dynasty.ageCurveTier === 'Aging' ? 'bg-amber-500/10' : 'bg-red-500/10';
   const valueColor = d.value >= 8000 ? 'text-emerald-500' : d.value >= 6000 ? 'text-blue-500' : d.value >= 4000 ? 'text-foreground' : d.value >= 2000 ? 'text-muted-foreground' : 'text-red-400';
   const valueLabel = d.value >= 8000 ? 'Elite' : d.value >= 6000 ? 'Premium' : d.value >= 4000 ? 'Solid' : d.value >= 2000 ? 'Roster' : 'Fringe';
-  const draftCapitalLabel = dynasty.draftRound && dynasty.draftPick
-    ? `Rd ${dynasty.draftRound}, Pick ${dynasty.draftPick}`
-    : dynasty.draftRound
-    ? `Round ${dynasty.draftRound}`
+
+  const draftRound = dynasty.draftRound;
+  const draftPick = dynasty.draftPick;
+  const draftYear = dynasty.draftYear;
+  const draftedLine = draftRound && draftPick && draftYear
+    ? `Round ${draftRound} \u2013 Pick ${draftPick} (${draftYear})`
+    : draftRound && draftYear
+    ? `Round ${draftRound} (${draftYear})`
+    : draftRound
+    ? `Round ${draftRound}`
     : null;
-  const draftCapitalColor = dynasty.draftRound === 1 ? 'text-yellow-500 dark:text-yellow-400' : dynasty.draftRound === 2 ? 'text-slate-400 dark:text-slate-300' : dynasty.draftRound === 3 ? 'text-amber-700 dark:text-amber-600' : 'text-muted-foreground';
+
+  const draftGrade = !draftRound ? { label: 'Undrafted', color: 'text-muted-foreground', bg: 'bg-muted/50' }
+    : draftRound === 1 && draftPick && draftPick <= 10 ? { label: 'Elite', color: 'text-yellow-500 dark:text-yellow-400', bg: 'bg-yellow-500/10' }
+    : draftRound === 1 ? { label: 'Strong', color: 'text-yellow-500 dark:text-yellow-400', bg: 'bg-yellow-500/10' }
+    : draftRound === 2 ? { label: 'Solid', color: 'text-slate-400 dark:text-slate-300', bg: 'bg-slate-500/10' }
+    : { label: 'Fragile', color: 'text-amber-700 dark:text-amber-600', bg: 'bg-amber-500/10' };
 
   return (
     <div className="space-y-6" data-testid="rankings-tab">
@@ -2981,7 +2993,7 @@ function RankingsTab({ player }: { player: Player }) {
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-2">
               <Trophy className="w-4 h-4 text-amber-500" />
-              <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Dynasty Profile</p>
+              <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Dynasty Market Snapshot</p>
             </div>
             <div className="flex items-center gap-3">
               {dynasty.sf && (
@@ -3023,42 +3035,45 @@ function RankingsTab({ player }: { player: Player }) {
             <div data-testid="dynasty-positional-rank">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Positional Rank</p>
               <p className="text-3xl font-bold text-foreground mt-1 tabular-nums">{dynasty.position}{d.positionalRank}</p>
-              <p className="text-[10px] text-muted-foreground">Tier {d.positionalTier}</p>
+              <span className="inline-block mt-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-muted text-muted-foreground">Tier {d.positionalTier}</span>
             </div>
             <div data-testid="dynasty-age-curve">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Age Curve</p>
-              <p className={`text-lg font-bold mt-1 ${ageTierColor}`}>{dynasty.ageCurveTier}</p>
-              <p className="text-[10px] text-muted-foreground tabular-nums">{dynasty.age.toFixed(1)} yrs</p>
+              <span className={`inline-block mt-2 px-2 py-1 rounded-md text-xs font-bold ${ageTierColor} ${ageTierBg}`}>{dynasty.ageCurveTier}</span>
+              <p className="text-[10px] text-muted-foreground tabular-nums mt-1">{dynasty.age.toFixed(1)} yrs</p>
             </div>
-            <div data-testid="dynasty-value">
+            <div data-testid="dynasty-value" className="relative">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Dynasty Value</p>
-              <p className={`text-3xl font-bold mt-1 tabular-nums ${valueColor}`}>{d.value.toLocaleString()}</p>
-              <p className={`text-[10px] font-medium ${valueColor}`}>{valueLabel}</p>
+              <p className={`text-4xl font-extrabold mt-1 tabular-nums tracking-tight ${valueColor}`}>{d.value.toLocaleString()}</p>
+              <span className={`inline-block mt-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold ${valueColor} ${d.value >= 8000 ? 'bg-emerald-500/10' : d.value >= 6000 ? 'bg-blue-500/10' : 'bg-muted/50'}`}>{valueLabel}</span>
             </div>
           </div>
 
           <div className="border-t border-border pt-4">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {draftCapitalLabel && (
-                <div data-testid="dynasty-draft-capital">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">NFL Draft Capital</p>
-                  <p className={`text-sm font-bold mt-1 ${draftCapitalColor}`}>{draftCapitalLabel}</p>
-                  {dynasty.draftYear && <p className="text-[10px] text-muted-foreground">{dynasty.draftYear} Draft</p>}
-                </div>
-              )}
-              <div data-testid="dynasty-tier">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Dynasty Tier</p>
-                <p className="text-sm font-bold text-foreground mt-1">{tierDesc} {tierLabel}</p>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+              <div data-testid="dynasty-drafted">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Drafted</p>
+                <p className="text-xs font-semibold text-muted-foreground mt-1">{draftedLine || 'Undrafted'}</p>
               </div>
-              {d.startupAdp && (
+              <div data-testid="dynasty-draft-grade">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Capital Grade</p>
+                <span className={`inline-block mt-1 px-2 py-0.5 rounded text-[11px] font-bold ${draftGrade.color} ${draftGrade.bg}`}>{draftGrade.label}</span>
+              </div>
+              <div data-testid="dynasty-tier">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Dynasty Tier</p>
+                <p className="text-xs font-semibold text-muted-foreground mt-1">{tierDesc} {tierLabel}</p>
+              </div>
+              {d.startupAdp ? (
                 <div data-testid="dynasty-startup-adp">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Startup ADP</p>
-                  <p className="text-sm font-bold text-foreground mt-1 tabular-nums">{d.startupAdp.toFixed(1)}</p>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Startup ADP</p>
+                  <p className="text-xs font-semibold text-muted-foreground mt-1 tabular-nums">{d.startupAdp.toFixed(1)}</p>
                 </div>
+              ) : (
+                <div />
               )}
               <div data-testid="dynasty-market-tier">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Market Tier</p>
-                <p className={`text-sm font-bold mt-1 ${valueColor}`}>{valueLabel}</p>
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Market Tier</p>
+                <p className={`text-xs font-semibold mt-1 ${valueColor}`}>{valueLabel}</p>
               </div>
             </div>
           </div>
