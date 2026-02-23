@@ -43,6 +43,7 @@ function getEntryPoints(stats, format) {
 }
 
 function hasParticipation(stats, position) {
+  if ((stats.off_snp ?? 0) > 0) return true;
   if (position === 'QB') return (stats.pass_att ?? 0) > 0 || (stats.rush_att ?? 0) > 0;
   if (position === 'K') return (stats.fga ?? 0) > 0 || (stats.xpa ?? 0) > 0;
   return (stats.rec_tgt ?? 0) > 0 || (stats.rec ?? 0) > 0 || (stats.rush_att ?? 0) > 0 || (stats.pass_att ?? 0) > 0;
@@ -401,16 +402,12 @@ function buildPlayerProfile(player, allPlayers, seasons, format) {
     const rankedLogs = attachRanks(pLogs, player.id, ranks);
     const gp = played.length;
     const totalPts = played.reduce((sum, e) => sum + getEntryPoints(e.stats, format), 0);
-    const pos = player.position || '';
-    const bustThresh = (pos === 'QB' || pos === 'TE') ? 18 : pos === 'WR' ? 36 : 30;
-    const hasTier3 = bustThresh > 24;
     const rankedPlayed = rankedLogs.filter(e => hasParticipation(e.stats, player.position));
     const ranked = rankedPlayed.filter(e => e.pos_rank != null);
     const pos1Games = ranked.filter(e => e.pos_rank >= 1 && e.pos_rank <= 12).length;
-    const pos2End = hasTier3 ? 24 : bustThresh;
-    const pos2Games = ranked.filter(e => e.pos_rank >= 13 && e.pos_rank <= pos2End).length;
-    const pos3Games = hasTier3 ? ranked.filter(e => e.pos_rank >= 25 && e.pos_rank <= bustThresh).length : 0;
-    const bustGames = ranked.filter(e => e.pos_rank > bustThresh).length;
+    const pos2Games = ranked.filter(e => e.pos_rank >= 13 && e.pos_rank <= 24).length;
+    const pos3Games = ranked.filter(e => e.pos_rank >= 25 && e.pos_rank <= 36).length;
+    const bustGames = ranked.filter(e => e.pos_rank > 36).length;
     multiSeasonStats.push({
       season: s, ppg: totalPts / gp, gamesPlayed: gp,
       pos1Pct: (pos1Games / gp) * 100, pos2Pct: (pos2Games / gp) * 100,
@@ -432,14 +429,10 @@ function buildPlayerProfile(player, allPlayers, seasons, format) {
     const ranks = buildWeeklyRanks(s, sLogs, allPlayers, format);
     const rankedLogs = attachRanks(pLogs, player.id, ranks);
     const rankedPlayed = rankedLogs.filter(e => hasParticipation(e.stats, player.position) && e.pos_rank != null);
-    const pos = player.position || '';
-    const bustThresh = (pos === 'QB' || pos === 'TE') ? 18 : pos === 'WR' ? 36 : 30;
-    const hasTier3 = bustThresh > 24;
-    const pos2End = hasTier3 ? 24 : bustThresh;
     p1 += rankedPlayed.filter(e => e.pos_rank >= 1 && e.pos_rank <= 12).length;
-    p2 += rankedPlayed.filter(e => e.pos_rank >= 13 && e.pos_rank <= pos2End).length;
-    p3 += hasTier3 ? rankedPlayed.filter(e => e.pos_rank >= 25 && e.pos_rank <= bustThresh).length : 0;
-    bust += rankedPlayed.filter(e => e.pos_rank > bustThresh).length;
+    p2 += rankedPlayed.filter(e => e.pos_rank >= 13 && e.pos_rank <= 24).length;
+    p3 += rankedPlayed.filter(e => e.pos_rank >= 25 && e.pos_rank <= 36).length;
+    bust += rankedPlayed.filter(e => e.pos_rank > 36).length;
   }
   if (threeYearStats.length > 1) {
     const totalGp = pts.length;

@@ -261,13 +261,7 @@ function getPositionColumns(position: string | null): { primary: ColumnDef[]; de
 }
 
 function getTierThresholds(position: string | null): { bust: number; hasTier3: boolean } {
-  switch (position) {
-    case 'QB': return { bust: 18, hasTier3: false };
-    case 'RB': return { bust: 30, hasTier3: true };
-    case 'WR': return { bust: 36, hasTier3: true };
-    case 'TE': return { bust: 18, hasTier3: false };
-    default: return { bust: 30, hasTier3: true };
-  }
+  return { bust: 36, hasTier3: true };
 }
 
 function getTierLabel(position: string | null, tier: number): string {
