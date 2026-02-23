@@ -1718,7 +1718,6 @@ function getPositionMomentumMetrics(position: string | null) {
   if (position === 'QB') return [
     { key: 'pass_att', label: 'Pass Att/G', pct: false, weight: 5 },
     { key: 'rush_att', label: 'Rush Att/G', pct: false, weight: 3 },
-    { key: 'pass_cmp_pct', label: 'Cmp%', pct: true, weight: 1 },
   ];
   if (position === 'RB') return [
     { key: 'rush_att', label: 'Carries/G', pct: false, weight: 5 },
@@ -1876,6 +1875,15 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   const momentumColor = momentumScore >= 60 ? 'text-emerald-500' : momentumScore <= 39 ? 'text-red-400' : 'text-amber-400';
   const momentumBg = momentumScore >= 60 ? 'bg-emerald-500/10 border-emerald-500/20' : momentumScore <= 39 ? 'bg-red-500/10 border-red-500/20' : 'bg-amber-500/10 border-amber-500/20';
   const momentumBarColor = momentumScore >= 80 ? '#10b981' : momentumScore >= 60 ? '#34d399' : momentumScore <= 39 ? '#f87171' : '#fbbf24';
+  const momentumMicroText = momentumScore >= 80
+    ? 'Opportunity expanding meaningfully over last 4 games.'
+    : momentumScore >= 60
+    ? 'Usage trending up relative to season baseline.'
+    : momentumScore <= 20
+    ? 'Significant opportunity decline over last 4 games.'
+    : momentumScore <= 39
+    ? 'Usage trending down over last 4 games.'
+    : 'Role stable relative to season baseline.';
 
   const tdDep = computeTdDependency(activeEntries, position, format);
   const stability = computeUsageStability(activeEntries, primaryKey, position);
@@ -2013,8 +2021,10 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                         <Info className="w-3 h-3 text-muted-foreground/50" />
                       </span>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom" className="max-w-[200px] text-xs">
-                      Weighted measure of recent usage change relative to season averages
+                    <TooltipContent side="bottom" className="max-w-[260px] text-xs leading-relaxed">
+                      <p className="font-semibold mb-1">What is Role Direction?</p>
+                      <p className="mb-1.5">Measures whether opportunity is expanding or shrinking vs. full-season usage. Does not measure talent or fantasy production — only usage trends.</p>
+                      <p className="text-[10px] text-muted-foreground">80+ Expanding meaningfully | 60–79 Gradual expansion | 40–59 Stable | &lt;40 Shrinking opportunity</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -2040,6 +2050,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                     <span className="text-[8px] text-muted-foreground/50">100</span>
                   </div>
                 </div>
+                <p className={`text-[10px] mt-1 ${momentumColor}`} data-testid="text-momentum-micro">{momentumMicroText}</p>
               </div>
               <div className="flex gap-5 flex-wrap pb-1">
                 <div className="text-right">
