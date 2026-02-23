@@ -1720,9 +1720,9 @@ function getPositionMomentumMetrics(position: string | null) {
     { key: 'rush_att', label: 'Rush Att/G', pct: false, weight: 3 },
   ];
   if (position === 'RB') return [
-    { key: 'rush_att', label: 'Carries/G', pct: false, weight: 5 },
-    { key: 'rec_tgt', label: 'Targets/G', pct: false, weight: 3 },
-    { key: 'target_share', label: 'Target Share (Team)', pct: true, weight: 2 },
+    { key: 'snap_share', label: 'Snap Share', pct: true, weight: 4 },
+    { key: 'rush_att', label: 'Carries/G', pct: false, weight: 4 },
+    { key: 'rec_tgt', label: 'Targets/G', pct: false, weight: 2 },
   ];
   if (position === 'WR' || position === 'TE') return [
     { key: 'target_share', label: 'Target Share (Team)', pct: true, weight: 6 },
@@ -1829,6 +1829,17 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   const weightedSeasonShare = totalTeamTgt > 0 ? (totalPlayerTgt / totalTeamTgt) * 100 : 0;
 
   const deltaRows = metrics.map(m => {
+    if (m.key === 'snap_share') {
+      const seasonSnp = activeEntries.reduce((s, e) => s + getStat(e, 'off_snp'), 0);
+      const seasonTmSnp = activeEntries.reduce((s, e) => s + getStat(e, 'tm_off_snp'), 0);
+      const seasonAvg = seasonTmSnp > 0 ? (seasonSnp / seasonTmSnp) * 100 : 0;
+      const last4 = activeEntries.slice(-RECENT_WINDOW);
+      const l4Snp = last4.reduce((s, e) => s + getStat(e, 'off_snp'), 0);
+      const l4TmSnp = last4.reduce((s, e) => s + getStat(e, 'tm_off_snp'), 0);
+      const recentAvg = l4TmSnp > 0 ? (l4Snp / l4TmSnp) * 100 : 0;
+      const delta = recentAvg - seasonAvg;
+      return { ...m, seasonAvg, recentAvg, delta };
+    }
     if (m.key === 'target_share') {
       const seasonAvg = weightedSeasonShare;
       const last4 = activeEntries.slice(-RECENT_WINDOW);

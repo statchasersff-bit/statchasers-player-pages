@@ -59,6 +59,8 @@ function extractPlayerStats(statsObj, position) {
   const base = {
     pts_ppr: s.pts_ppr ?? computePprPoints(s),
     pts_half_ppr: s.pts_half_ppr ?? null,
+    off_snp: s.off_snp || 0,
+    tm_off_snp: s.tm_off_snp || 0,
   };
 
   if (position === 'QB') {
