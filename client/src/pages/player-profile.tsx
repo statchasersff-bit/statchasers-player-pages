@@ -1880,21 +1880,23 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   }, 0);
   const totalWeight = deltaRows.reduce((s, d) => s + (d.weight ?? 1), 0) || 1;
   const normalizedDelta = weightedDeltaSum / totalWeight;
-  const momentumScore = Math.round(Math.max(0, Math.min(100, 50 + normalizedDelta * 2.5)));
+  const momentumScore = Math.round(Math.max(5, Math.min(95, 50 + normalizedDelta * 2.5)));
 
   const momentumLabel = momentumScore >= 80 ? 'STRONG EXPANSION' : momentumScore >= 60 ? 'EXPANDING' : momentumScore <= 39 ? 'DECLINING' : 'STABLE';
   const momentumColor = momentumScore >= 60 ? 'text-emerald-500' : momentumScore <= 39 ? 'text-red-400' : 'text-amber-400';
   const momentumBg = momentumScore >= 60 ? 'bg-emerald-500/10 border-emerald-500/20' : momentumScore <= 39 ? 'bg-red-500/10 border-red-500/20' : 'bg-amber-500/10 border-amber-500/20';
   const momentumBarColor = momentumScore >= 80 ? '#10b981' : momentumScore >= 60 ? '#34d399' : momentumScore <= 39 ? '#f87171' : '#fbbf24';
-  const momentumMicroText = momentumScore >= 80
-    ? 'Opportunity expanding meaningfully over last 4 games.'
-    : momentumScore >= 60
-    ? 'Usage trending up relative to season baseline.'
-    : momentumScore <= 20
-    ? 'Significant opportunity decline over last 4 games.'
-    : momentumScore <= 39
-    ? 'Usage trending down over last 4 games.'
-    : 'Role stable relative to season baseline.';
+
+  const topDelta = deltaRows.reduce((best, d) => Math.abs(d.delta) > Math.abs(best.delta) ? d : best, deltaRows[0]);
+  const topDeltaPctChange = topDelta.pct
+    ? topDelta.delta
+    : (topDelta.seasonAvg > 0 ? (topDelta.delta / topDelta.seasonAvg) * 100 : 0);
+  const topDeltaDir = topDeltaPctChange > 0 ? 'up' : 'down';
+  const topDeltaAbs = Math.abs(topDeltaPctChange);
+  const topMetricName = topDelta.label.replace(/ \(Team\)/, '').replace(/\/G/, '/game');
+  const momentumMicroText = topDeltaAbs < 2
+    ? 'Role stable relative to season baseline.'
+    : `${topMetricName} ${topDeltaDir} ${topDeltaAbs.toFixed(0)}% vs season baseline.`;
 
   const tdDep = computeTdDependency(activeEntries, position, format);
   const stability = computeUsageStability(activeEntries, primaryKey, position);
