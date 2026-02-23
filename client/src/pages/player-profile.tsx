@@ -78,12 +78,12 @@ function formatHeight(inches: string | null): string {
 }
 
 const POSITION_COLORS: Record<string, string> = {
-  QB: "bg-red-500/15 text-red-700 dark:text-red-400",
-  RB: "bg-blue-500/15 text-blue-700 dark:text-blue-400",
-  WR: "bg-green-500/15 text-green-700 dark:text-green-400",
-  TE: "bg-orange-500/15 text-orange-700 dark:text-orange-400",
-  K: "bg-purple-500/15 text-purple-700 dark:text-purple-400",
-  DEF: "bg-gray-500/15 text-gray-700 dark:text-gray-400",
+  QB: "sc-pos-pill sc-pos-qb",
+  RB: "sc-pos-pill sc-pos-rb",
+  WR: "sc-pos-pill sc-pos-wr",
+  TE: "sc-pos-pill sc-pos-te",
+  K: "sc-pos-pill sc-pos-k",
+  DEF: "sc-pos-pill sc-pos-def",
 };
 
 const TAB_KEYS = ["overview", "gamelog", "usage", "rankings", "news"] as const;

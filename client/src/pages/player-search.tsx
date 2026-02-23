@@ -3,7 +3,6 @@ import { Link, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
@@ -61,12 +60,12 @@ type IndexedData = {
 };
 
 const POSITION_COLORS: Record<string, string> = {
-  QB: "bg-red-500/15 text-red-700 dark:text-red-400",
-  RB: "bg-blue-500/15 text-blue-700 dark:text-blue-400",
-  WR: "bg-green-500/15 text-green-700 dark:text-green-400",
-  TE: "bg-orange-500/15 text-orange-700 dark:text-orange-400",
-  K: "bg-purple-500/15 text-purple-700 dark:text-purple-400",
-  DEF: "bg-gray-500/15 text-gray-700 dark:text-gray-400",
+  QB: "sc-pos-pill sc-pos-qb",
+  RB: "sc-pos-pill sc-pos-rb",
+  WR: "sc-pos-pill sc-pos-wr",
+  TE: "sc-pos-pill sc-pos-te",
+  K: "sc-pos-pill sc-pos-k",
+  DEF: "sc-pos-pill sc-pos-def",
 };
 
 const TEAM_COLORS: Record<string, string> = {
@@ -166,12 +165,7 @@ function TeamRoster({
                     onClick={() => onPlayerClick(p)}
                     data-testid={`link-indexed-player-${p.slug}`}
                   >
-                    <Badge
-                      variant="secondary"
-                      className={`text-[10px] px-1.5 py-0 min-w-[36px] text-center font-mono ${POSITION_COLORS[pos] || ""}`}
-                    >
-                      {p.rank_label}
-                    </Badge>
+                    <span className={POSITION_COLORS[pos] || ""}>{p.rank_label}</span>
                     <span className="text-sm text-foreground truncate flex-1">{p.name}</span>
                     {p.years_exp !== null && p.years_exp > 0 && (
                       <span className="text-[10px] text-muted-foreground/50 font-mono">
@@ -217,12 +211,7 @@ function PlayerSlideOver({
               style={{ backgroundColor: teamColor }}
             />
             {player.team} {teamName}
-            <Badge
-              variant="secondary"
-              className={`text-[10px] ${POSITION_COLORS[player.position] || ""}`}
-            >
-              {player.rank_label}
-            </Badge>
+            <span className={POSITION_COLORS[player.position] || ""}>{player.rank_label}</span>
           </SheetDescription>
         </SheetHeader>
 
@@ -616,12 +605,7 @@ export default function PlayerSearch() {
                             {player.name}
                           </span>
                           <div className="flex items-center gap-1.5 mt-0.5">
-                            <Badge
-                              variant="secondary"
-                              className={`text-[10px] px-1.5 py-0 ${POSITION_COLORS[player.position || ""] || ""}`}
-                            >
-                              {player.position}
-                            </Badge>
+                            <span className={POSITION_COLORS[player.position || ""] || ""}>{player.position}</span>
                             <span className="text-xs text-muted-foreground">{player.team}</span>
                           </div>
                         </div>
@@ -722,12 +706,7 @@ export default function PlayerSearch() {
                                 </span>
                               </div>
                               <div className="flex items-center gap-2 mt-1">
-                                <Badge
-                                  variant="secondary"
-                                  className={`text-xs ${POSITION_COLORS[player.position || ""] || ""}`}
-                                >
-                                  {player.position}
-                                </Badge>
+                                <span className={POSITION_COLORS[player.position || ""] || ""}>{player.position}</span>
                                 <span className="text-xs text-muted-foreground">{player.team}</span>
                               </div>
                             </div>

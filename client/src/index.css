@@ -28,6 +28,12 @@
 
 /* LIGHT MODE */
 :root {
+  --pos-qb: #E53935;
+  --pos-rb: #43A047;
+  --pos-wr: #1E88E5;
+  --pos-te: #FB8C00;
+  --pos-k: #8E24AA;
+  --pos-def: #1E3A8A;
   --button-outline: rgba(0,0,0, .10);
   --badge-outline: rgba(0,0,0, .05);
   --opaque-button-border-intensity: -8;
@@ -812,3 +818,22 @@
   background: #e2e8f0;
   color: #0f172a;
 }
+
+.sc-pos-pill {
+  font-weight: 700;
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: #fff;
+  letter-spacing: 0.3px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  display: inline-block;
+  text-align: center;
+  min-width: 36px;
+}
+.sc-pos-qb { background: var(--pos-qb); }
+.sc-pos-rb { background: var(--pos-rb); }
+.sc-pos-wr { background: var(--pos-wr); }
+.sc-pos-te { background: var(--pos-te); }
+.sc-pos-k  { background: var(--pos-k); }
+.sc-pos-def { background: var(--pos-def); }
