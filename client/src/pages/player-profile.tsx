@@ -520,11 +520,7 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
                         {fpts(entry, format).toFixed(1)}
                       </td>
                       <td className="py-1 text-right" data-testid={`text-finish-week-${entry.week}`}>
-                        {tierBadge ? (
-                          <Badge variant="secondary" className={`text-[8px] px-1.5 py-0 font-semibold ${tierBadge.className}`}>
-                            {tierBadge.label}
-                          </Badge>
-                        ) : rank ? (
+                        {rank ? (
                           <span className={`tabular-nums text-[11px] font-semibold ${getRankColor(rank)}`}>{posLabel}{rank}</span>
                         ) : '\u2014'}
                       </td>
