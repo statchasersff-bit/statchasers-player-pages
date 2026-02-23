@@ -1771,6 +1771,13 @@ function computeTdDependency(activeEntries: GameLogEntry[], position: string | n
   return { pct, label: 'Volume-Backed', tag: 'Volume-backed production', isHigh: false };
 }
 
+function getPositionCvAnchor(position?: string | null): number {
+  if (position === 'QB') return 0.25;
+  if (position === 'RB') return 0.28;
+  if (position === 'TE') return 0.43;
+  return 0.40;
+}
+
 function computeUsageStability(activeEntries: GameLogEntry[], primaryKey: string, position?: string | null): number {
   if (activeEntries.length < 3) return 50;
   const getVal = (e: GameLogEntry): number => {
@@ -1783,8 +1790,11 @@ function computeUsageStability(activeEntries: GameLogEntry[], primaryKey: string
   const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
   if (mean === 0) return 50;
   const variance = vals.reduce((s, v) => s + (v - mean) ** 2, 0) / vals.length;
-  const cv = Math.sqrt(variance) / mean;
-  return Math.round(Math.max(0, Math.min(100, 100 / (1 + (cv / 0.4) ** 2))));
+  let cv = Math.sqrt(variance) / mean;
+  const n = vals.length;
+  if (n < 16) cv = cv * Math.sqrt(n / 16);
+  const anchor = getPositionCvAnchor(position);
+  return Math.round(Math.max(5, Math.min(95, 100 / (1 + (cv / anchor) ** 2))));
 }
 
 function getDeltaMicroLabel(delta: number, pct: boolean): string {
@@ -1902,6 +1912,23 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   const stability = computeUsageStability(activeEntries, primaryKey, position);
   const stabilityLabel = stability >= 70 ? 'Consistent Role' : stability >= 45 ? 'Moderate Variance' : 'High Weekly Volatility';
   const stabilityColor = stability >= 70 ? 'text-emerald-500' : stability >= 45 ? 'text-amber-400' : 'text-red-400';
+
+  const stabilityMicroText = useMemo(() => {
+    if (activeEntries.length < 3) return null;
+    const getVal = (e: GameLogEntry): number => {
+      const s = e.stats as unknown as Record<string, number>;
+      if (position === 'QB') return (s['pass_att'] ?? 0) + 2 * (s['rush_att'] ?? 0);
+      if (position === 'RB') return (s['rush_att'] ?? 0) + (s['rec_tgt'] ?? 0);
+      return s['rec_tgt'] ?? 0;
+    };
+    const vals = activeEntries.map(getVal);
+    const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+    if (mean === 0) return null;
+    const variance = vals.reduce((s, v) => s + (v - mean) ** 2, 0) / vals.length;
+    const stdev = Math.sqrt(variance);
+    const unit = position === 'QB' ? 'weighted attempts' : position === 'RB' ? 'touches' : 'targets';
+    return `Workload varies ~${stdev.toFixed(1)} ${unit}/game`;
+  }, [activeEntries, position]);
 
   const topDeltaRow = deltaRows.reduce((best, d) => Math.abs(d.delta) > Math.abs(best.delta) ? d : best, deltaRows[0]);
   const secondDelta = deltaRows.filter(d => d.key !== topDeltaRow?.key).reduce((best, d) => Math.abs(d.delta) > Math.abs(best.delta) ? d : best, deltaRows[1] || deltaRows[0]);
@@ -2079,14 +2106,22 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                         <TooltipTrigger asChild>
                           <span className="inline-flex cursor-help"><Info className="w-2.5 h-2.5 text-muted-foreground/40" /></span>
                         </TooltipTrigger>
-                        <TooltipContent side="bottom" className="max-w-[180px] text-xs">
-                          Consistency of weekly target share volume
+                        <TooltipContent side="bottom" className="max-w-[260px] text-xs leading-relaxed p-3">
+                          <p className="font-semibold mb-1.5">What does this measure?</p>
+                          <p className="mb-1">Measures how steady a player's weekly workload is throughout the season.</p>
+                          <p className="mb-2 text-muted-foreground">Evaluates how much opportunity fluctuates game-to-game. Does not measure fantasy points — only volume stability.</p>
+                          <div className="space-y-0.5 text-[10px]">
+                            <p><span className="font-semibold text-emerald-500">70+</span> <span className="text-muted-foreground">Extremely stable role</span></p>
+                            <p><span className="font-semibold text-amber-400">45–69</span> <span className="text-muted-foreground">Moderate volatility</span></p>
+                            <p><span className="font-semibold text-red-400">&lt;45</span> <span className="text-muted-foreground">Highly inconsistent workload</span></p>
+                          </div>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   </p>
                   <p className={`text-base font-bold tabular-nums ${stabilityColor}`} data-testid="text-stability-score">{stability}<span className="text-[10px] font-medium text-muted-foreground ml-0.5">/ 100</span></p>
                   <p className={`text-[9px] font-medium ${stabilityColor}`}>{stabilityLabel}</p>
+                  {stabilityMicroText && <p className="text-[9px] text-muted-foreground mt-0.5" data-testid="text-stability-micro">{stabilityMicroText}</p>}
                 </div>
                 {position !== 'K' && (
                   <div className="text-right">

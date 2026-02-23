@@ -1,0 +1,215 @@
+Conceptually — This Is a Great Idea
+
+You're answering:
+
+“How predictable is this QB’s weekly opportunity?”
+
+That’s powerful.
+
+Most fantasy sites measure:
+
+Production volatility
+
+Weekly finishes
+
+Boom/bust %
+
+But you're measuring volume stability.
+
+That’s a sharper signal.
+
+🧠 2️⃣ The Workload Formula
+
+You use:
+
+Weekly Workload = pass_att + 2 × rush_att
+
+I like this.
+
+Why?
+
+Because:
+
+Rush attempts are high fantasy leverage
+
+They’re often more volatile
+
+They materially change ceiling/floor
+
+Doubling rush attempts is reasonable.
+
+You are basically saying:
+1 rush ≈ 2 pass attempts in workload importance.
+
+That’s defensible.
+
+📊 3️⃣ Using Coefficient of Variation (CV)
+
+This is actually advanced.
+
+CV = stdev / mean
+
+That makes sense because:
+
+It adjusts for different baseline volumes
+
+5-pass swing means more for a 25-attempt QB than 40-attempt QB
+
+It normalizes volatility relative to usage
+
+That’s the correct statistical choice.
+
+🔬 4️⃣ The Formula Shape
+
+You’re using:
+
+Score = 100 / (1 + (CV / 0.4)²)
+
+This is very elegant.
+
+Why it works:
+
+It creates smooth decay
+
+It avoids linear cliffs
+
+It compresses extreme volatility
+
+It centers 0.4 CV at 50
+
+That’s mathematically clean.
+
+⚠️ The Only Thing to Question: Is 0.4 the Right Anchor?
+
+You chose:
+
+CV = 0.4 → Score = 50
+
+Is 0.4 typical for QBs?
+
+You should verify:
+
+What is average QB CV across starters?
+
+Is it 0.25?
+
+0.35?
+
+0.45?
+
+If league average CV is 0.32, then:
+
+You're labeling average QBs as “stable.”
+
+If league average CV is 0.45, then:
+
+You're labeling average QBs as unstable.
+
+So the structure is good — but the anchor must match reality.
+
+⚠️ 5️⃣ Potential Hidden Issue
+
+Young QBs with small sample sizes.
+
+If someone has:
+
+6 games played
+
+One weird game massively increases stdev.
+
+That inflates CV.
+
+That tanks score unfairly.
+
+You may want:
+
+Minimum 8 games to fully trust score
+
+Or
+
+Apply sample size smoothing:
+Adjusted CV = CV × sqrt(n / 16)
+
+This dampens small-sample volatility.
+
+🏆 Big Picture Evaluation
+
+This metric is:
+
+✔ Statistically legitimate
+✔ More advanced than most fantasy sites
+✔ Non-arbitrary
+✔ Intellectually defensible
+✔ Different from Role Direction
+
+This is good architecture.
+
+🎯 Now: How To Explain It Clearly
+
+Because right now it sounds mathematical.
+
+Users don’t care about CV.
+
+They care about:
+
+“Is he predictable?”
+
+So your tooltip should say:
+
+📊 What Is Role Consistency?
+
+Role Consistency measures how steady a quarterback’s weekly workload is.
+
+It looks at pass attempts and rushing attempts each game and evaluates how much that workload fluctuates throughout the season.
+
+It does not measure fantasy points — only opportunity stability.
+
+How to Interpret:
+
+80+ → Extremely stable weekly role
+
+60–79 → Generally predictable usage
+
+40–59 → Moderate volatility
+
+0–39 → Highly inconsistent workload
+
+A low score often reflects game script swings, injuries, or a changing offensive role.
+
+That’s all they need.
+
+No CV talk.
+
+No formulas.
+
+🧩 Positioning Within Your Ecosystem
+
+Now you have:
+
+Metric	Question
+Role Direction	Is usage trending up or down?
+Role Consistency	Is usage predictable week-to-week?
+Sustainability	Is production volume-backed or TD-driven?
+Game Log	What happened?
+
+This is a coherent system.
+
+Not random metrics.
+
+🔥 One Small Premium Upgrade
+
+Add micro-text under the score:
+
+Instead of:
+
+73 – Consistent Role
+
+Add:
+
+“Weekly workload CV: 0.28”
+
+or
+
+“Workload varies ±4.1 attempts per game.”
+
+That grounds the metric in football reality.
