@@ -529,7 +529,7 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
                       <td className="py-[5px] px-2 text-center whitespace-nowrap" data-testid={`score-week-${entry.week}`}>
                         {sc ? (
                           <span className={`text-[10px] tabular-nums font-medium ${scoreColor(sc.r)}`}>
-                            {sc.r}, {sc.tm}\u2013{sc.opp}
+                            {sc.r}, {sc.tm}&ndash;{sc.opp}
                           </span>
                         ) : '\u2014'}
                       </td>
