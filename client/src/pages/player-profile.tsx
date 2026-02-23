@@ -1840,16 +1840,12 @@ function CareerStatsTable({ stats, position, format, onSeasonClick }: {
                       );
                     }
                     if (col.key === 'ppg') {
-                      const tierBadge = getTierBadge(row.posRank, position);
                       return (
                         <td key={col.key} className="py-1.5 px-2 text-right">
                           <div className="flex items-center justify-end gap-1.5">
                             <span className="font-bold text-foreground tabular-nums">{row.ppg.toFixed(1)}</span>
-                            {tierBadge && (
-                              <Badge variant="secondary" className={`text-[8px] px-1 py-0 ${tierBadge.className}`}>{tierBadge.label}</Badge>
-                            )}
-                            {!tierBadge && row.posRank && (
-                              <span className={`text-[9px] tabular-nums ${getRankColor(row.posRank)}`}>{pos}{row.posRank}</span>
+                            {row.posRank && (
+                              <span className={`text-[9px] tabular-nums font-semibold ${getRankColor(row.posRank)}`}>{pos}{row.posRank}</span>
                             )}
                           </div>
                         </td>
