@@ -2964,10 +2964,15 @@ function RankingsTab({ player }: { player: Player }) {
 
   const tierLabel = `${dynasty.position}${d.positionalTier <= 1 ? '1' : d.positionalTier <= 3 ? '2' : '3+'}`;
   const tierDesc = d.positionalTier <= 1 ? 'Elite' : d.positionalTier <= 3 ? 'Mid' : d.positionalTier <= 6 ? 'Low-End' : 'Deep';
-  const trendDirection = d.trend30 > 3 ? 'Rising' : d.trend30 < -3 ? 'Falling' : 'Stable';
-  const trendColor = d.trend30 > 3 ? 'text-emerald-500' : d.trend30 < -3 ? 'text-red-400' : 'text-muted-foreground';
-  const trendArrow = d.trend30 > 3 ? '\u25B2' : d.trend30 < -3 ? '\u25BC' : '\u25B6';
   const ageTierColor = dynasty.ageCurveTier === 'Rising' ? 'text-emerald-500' : dynasty.ageCurveTier === 'Prime' ? 'text-blue-500' : dynasty.ageCurveTier === 'Aging' ? 'text-amber-500' : 'text-red-400';
+  const valueColor = d.value >= 8000 ? 'text-emerald-500' : d.value >= 6000 ? 'text-blue-500' : d.value >= 4000 ? 'text-foreground' : d.value >= 2000 ? 'text-muted-foreground' : 'text-red-400';
+  const valueLabel = d.value >= 8000 ? 'Elite' : d.value >= 6000 ? 'Premium' : d.value >= 4000 ? 'Solid' : d.value >= 2000 ? 'Roster' : 'Fringe';
+  const draftCapitalLabel = dynasty.draftRound && dynasty.draftPick
+    ? `Rd ${dynasty.draftRound}, Pick ${dynasty.draftPick}`
+    : dynasty.draftRound
+    ? `Round ${dynasty.draftRound}`
+    : null;
+  const draftCapitalColor = dynasty.draftRound === 1 ? 'text-yellow-500 dark:text-yellow-400' : dynasty.draftRound === 2 ? 'text-slate-400 dark:text-slate-300' : dynasty.draftRound === 3 ? 'text-amber-700 dark:text-amber-600' : 'text-muted-foreground';
 
   return (
     <div className="space-y-6" data-testid="rankings-tab">
@@ -2976,7 +2981,7 @@ function RankingsTab({ player }: { player: Player }) {
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-2">
               <Trophy className="w-4 h-4 text-amber-500" />
-              <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Dynasty Market Snapshot</p>
+              <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Dynasty Profile</p>
             </div>
             <div className="flex items-center gap-3">
               {dynasty.sf && (
@@ -3025,88 +3030,39 @@ function RankingsTab({ player }: { player: Player }) {
               <p className={`text-lg font-bold mt-1 ${ageTierColor}`}>{dynasty.ageCurveTier}</p>
               <p className="text-[10px] text-muted-foreground tabular-nums">{dynasty.age.toFixed(1)} yrs</p>
             </div>
-            <div data-testid="dynasty-value-trend">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">30-Day Trend</p>
-              <p className={`text-lg font-bold mt-1 ${trendColor}`}>
-                {trendArrow} {d.trend30 > 0 ? '+' : ''}{d.trend30}
-              </p>
-              <p className={`text-[10px] font-medium ${trendColor}`}>{trendDirection}</p>
+            <div data-testid="dynasty-value">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Dynasty Value</p>
+              <p className={`text-3xl font-bold mt-1 tabular-nums ${valueColor}`}>{d.value.toLocaleString()}</p>
+              <p className={`text-[10px] font-medium ${valueColor}`}>{valueLabel}</p>
             </div>
           </div>
 
           <div className="border-t border-border pt-4">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div>
+              {draftCapitalLabel && (
+                <div data-testid="dynasty-draft-capital">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">NFL Draft Capital</p>
+                  <p className={`text-sm font-bold mt-1 ${draftCapitalColor}`}>{draftCapitalLabel}</p>
+                  {dynasty.draftYear && <p className="text-[10px] text-muted-foreground">{dynasty.draftYear} Draft</p>}
+                </div>
+              )}
+              <div data-testid="dynasty-tier">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Dynasty Tier</p>
                 <p className="text-sm font-bold text-foreground mt-1">{tierDesc} {tierLabel}</p>
               </div>
-              <div>
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Market Tier</p>
-                <p className="text-sm font-bold text-foreground mt-1">
-                  {d.value >= 8000 ? 'Elite' : d.value >= 6000 ? 'Premium' : d.value >= 4000 ? 'Solid' : d.value >= 2000 ? 'Roster' : 'Fringe'}
-                </p>
-              </div>
               {d.startupAdp && (
-                <div>
+                <div data-testid="dynasty-startup-adp">
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Startup ADP</p>
                   <p className="text-sm font-bold text-foreground mt-1 tabular-nums">{d.startupAdp.toFixed(1)}</p>
                 </div>
               )}
-              {d.tradeCount > 0 && (
-                <div>
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Recent Trades</p>
-                  <p className="text-sm font-bold text-foreground mt-1 tabular-nums">{d.tradeCount}</p>
-                </div>
-              )}
+              <div data-testid="dynasty-market-tier">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Market Tier</p>
+                <p className={`text-sm font-bold mt-1 ${valueColor}`}>{valueLabel}</p>
+              </div>
             </div>
           </div>
 
-          {d.adp && d.startupAdp && (
-            <div className="border-t border-border pt-4">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-2">ADP Comparison</p>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-md bg-muted/50 p-3">
-                  <p className="text-[10px] text-muted-foreground">Redraft ADP</p>
-                  <p className="text-lg font-bold text-foreground tabular-nums">{d.adp.toFixed(1)}</p>
-                </div>
-                <div className="rounded-md bg-muted/50 p-3">
-                  <p className="text-[10px] text-muted-foreground">Startup ADP</p>
-                  <p className="text-lg font-bold text-foreground tabular-nums">{d.startupAdp.toFixed(1)}</p>
-                  {d.adp && (
-                    <p className={`text-[10px] font-medium mt-0.5 ${d.startupAdp < d.adp ? 'text-emerald-500' : d.startupAdp > d.adp ? 'text-red-400' : 'text-muted-foreground'}`}>
-                      {d.startupAdp < d.adp ? `${(d.adp - d.startupAdp).toFixed(0)} picks higher` : d.startupAdp > d.adp ? `${(d.startupAdp - d.adp).toFixed(0)} picks lower` : 'Same as redraft'}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {d.trend7 !== undefined && (
-            <div className="border-t border-border pt-4">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-2">Market Movement</p>
-              <div className="grid grid-cols-3 gap-3">
-                <div className="rounded-md bg-muted/50 p-3 text-center">
-                  <p className="text-[10px] text-muted-foreground">7-Day</p>
-                  <p className={`text-sm font-bold tabular-nums ${d.trend7 > 0 ? 'text-emerald-500' : d.trend7 < -2 ? 'text-red-400' : 'text-muted-foreground'}`}>
-                    {d.trend7 > 0 ? '+' : ''}{d.trend7}
-                  </p>
-                </div>
-                <div className="rounded-md bg-muted/50 p-3 text-center">
-                  <p className="text-[10px] text-muted-foreground">30-Day</p>
-                  <p className={`text-sm font-bold tabular-nums ${d.trend30 > 0 ? 'text-emerald-500' : d.trend30 < -3 ? 'text-red-400' : 'text-muted-foreground'}`}>
-                    {d.trend30 > 0 ? '+' : ''}{d.trend30}
-                  </p>
-                </div>
-                <div className="rounded-md bg-muted/50 p-3 text-center">
-                  <p className="text-[10px] text-muted-foreground">Pos 30-Day</p>
-                  <p className={`text-sm font-bold tabular-nums ${d.posTrend30 > 0 ? 'text-emerald-500' : d.posTrend30 < -2 ? 'text-red-400' : 'text-muted-foreground'}`}>
-                    {d.posTrend30 > 0 ? '+' : ''}{d.posTrend30}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
         </CardContent>
       </Card>
 

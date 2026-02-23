@@ -104,6 +104,9 @@ async function main() {
       tradeCount: v.tradeCount || 0,
       ageCurveTier: ageTier,
       ktcSlug: ktc.slug,
+      draftRound: ktc.pickRound || null,
+      draftPick: ktc.pickNum || null,
+      draftYear: ktc.draftYear || null,
       sf: sf ? {
         rank: sf.rank,
         positionalRank: sf.positionalRank,

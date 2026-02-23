@@ -69,6 +69,9 @@ export interface DynastyData extends DynastyFormatValues {
   team: string;
   ageCurveTier: string;
   ktcSlug: string;
+  draftRound: number | null;
+  draftPick: number | null;
+  draftYear: number | null;
   sf: DynastyFormatValues | null;
 }
 
