@@ -1725,8 +1725,8 @@ function getPositionMomentumMetrics(position: string | null) {
     { key: 'target_share', label: 'Target Share (Team)', pct: true, weight: 2 },
   ];
   if (position === 'WR' || position === 'TE') return [
-    { key: 'target_share', label: 'Target Share (Team)', pct: true, weight: 5 },
-    { key: 'rec_tgt', label: 'Targets/G', pct: false, weight: 3 },
+    { key: 'target_share', label: 'Target Share (Team)', pct: true, weight: 6 },
+    { key: 'rec_tgt', label: 'Targets/G', pct: false, weight: 2 },
     { key: 'team_pass_att', label: 'Team Pass Att/G', pct: false, weight: 2, context: true },
   ];
   if (position === 'K') return [
@@ -2021,10 +2021,16 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                         <Info className="w-3 h-3 text-muted-foreground/50" />
                       </span>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom" className="max-w-[260px] text-xs leading-relaxed">
-                      <p className="font-semibold mb-1">What is Role Direction?</p>
-                      <p className="mb-1.5">Measures whether opportunity is expanding or shrinking vs. full-season usage. Does not measure talent or fantasy production — only usage trends.</p>
-                      <p className="text-[10px] text-muted-foreground">80+ Expanding meaningfully | 60–79 Gradual expansion | 40–59 Stable | &lt;40 Shrinking opportunity</p>
+                    <TooltipContent side="bottom" className="max-w-[280px] text-xs leading-relaxed p-3">
+                      <p className="font-semibold mb-1.5">What does this measure?</p>
+                      <p className="mb-1">Measures whether a player's opportunity is expanding or shrinking compared to his season average.</p>
+                      <p className="mb-2 text-muted-foreground">Compares the last 4 games to full-season usage across key workload indicators. Does not measure fantasy performance or talent — only usage trends.</p>
+                      <div className="space-y-0.5 text-[10px]">
+                        <p><span className="font-semibold text-emerald-500">80+</span> <span className="text-muted-foreground">Role expanding significantly</span></p>
+                        <p><span className="font-semibold text-emerald-400">60–79</span> <span className="text-muted-foreground">Gradual expansion</span></p>
+                        <p><span className="font-semibold text-amber-400">40–59</span> <span className="text-muted-foreground">Stable usage</span></p>
+                        <p><span className="font-semibold text-red-400">0–39</span> <span className="text-muted-foreground">Shrinking opportunity</span></p>
+                      </div>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
