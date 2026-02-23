@@ -1926,8 +1926,9 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
     if (mean === 0) return null;
     const variance = vals.reduce((s, v) => s + (v - mean) ** 2, 0) / vals.length;
     const stdev = Math.sqrt(variance);
-    const unit = position === 'QB' ? 'weighted attempts' : position === 'RB' ? 'touches' : 'targets';
-    return `Workload varies ~${stdev.toFixed(1)} ${unit}/game`;
+    if (position === 'QB') return `Workload varies \u00B1${stdev.toFixed(1)} per game`;
+    if (position === 'RB') return `Workload varies \u00B1${stdev.toFixed(1)} touches per game`;
+    return `Targets vary \u00B1${stdev.toFixed(1)} per game`;
   }, [activeEntries, position]);
 
   const topDeltaRow = deltaRows.reduce((best, d) => Math.abs(d.delta) > Math.abs(best.delta) ? d : best, deltaRows[0]);
@@ -2106,15 +2107,16 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                         <TooltipTrigger asChild>
                           <span className="inline-flex cursor-help"><Info className="w-2.5 h-2.5 text-muted-foreground/40" /></span>
                         </TooltipTrigger>
-                        <TooltipContent side="bottom" className="max-w-[260px] text-xs leading-relaxed p-3">
+                        <TooltipContent side="bottom" className="max-w-[270px] text-xs leading-relaxed p-3">
                           <p className="font-semibold mb-1.5">What does this measure?</p>
                           <p className="mb-1">Measures how steady a player's weekly workload is throughout the season.</p>
-                          <p className="mb-2 text-muted-foreground">Evaluates how much opportunity fluctuates game-to-game. Does not measure fantasy points — only volume stability.</p>
-                          <div className="space-y-0.5 text-[10px]">
-                            <p><span className="font-semibold text-emerald-500">70+</span> <span className="text-muted-foreground">Extremely stable role</span></p>
-                            <p><span className="font-semibold text-amber-400">45–69</span> <span className="text-muted-foreground">Moderate volatility</span></p>
-                            <p><span className="font-semibold text-red-400">&lt;45</span> <span className="text-muted-foreground">Highly inconsistent workload</span></p>
+                          <p className="mb-2 text-muted-foreground">Evaluates how much opportunity fluctuates game-to-game, adjusted for what's normal at the position. Does not measure fantasy points — only usage stability.</p>
+                          <div className="space-y-0.5 text-[10px] mb-2">
+                            <p><span className="font-semibold text-emerald-500">70+</span> <span className="text-muted-foreground">Highly predictable weekly role</span></p>
+                            <p><span className="font-semibold text-amber-400">45–69</span> <span className="text-muted-foreground">Moderate variance</span></p>
+                            <p><span className="font-semibold text-red-400">&lt;45</span> <span className="text-muted-foreground">Volatile, game-script dependent</span></p>
                           </div>
+                          <p className="text-[10px] text-muted-foreground/70 border-t border-border/30 pt-1.5">{position === 'QB' ? 'QB workload combines pass attempts and rushing attempts (rushes weighted for higher fantasy leverage).' : position === 'RB' ? 'RB workload combines carries and receiving targets.' : 'Based on weekly target volume.'}</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
