@@ -33,8 +33,6 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  EyeOff,
-  Eye,
   Gauge,
   Info,
   Sparkles,
@@ -434,14 +432,37 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
 
   const scoreColor = (r: string) => r === 'W' ? 'text-green-600 dark:text-green-400' : r === 'L' ? 'text-red-500 dark:text-red-400' : 'text-muted-foreground';
 
-  const thClass = "py-1.5 pr-2 text-muted-foreground font-medium whitespace-nowrap cursor-pointer select-none transition-colors";
-  const thStatic = "py-1.5 pr-2 text-muted-foreground font-medium whitespace-nowrap select-none";
+  const ordinalSuffix = (n: number) => {
+    const s = ['th', 'st', 'nd', 'rd'];
+    const v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  };
+
+  const thClass = "py-2 px-2 text-[11px] uppercase tracking-[0.04em] text-slate-500 dark:text-slate-400 font-semibold whitespace-nowrap cursor-pointer select-none transition-colors hover:text-foreground sticky top-0 bg-card z-10";
+  const thStatic = "py-2 px-2 text-[11px] uppercase tracking-[0.04em] text-slate-500 dark:text-slate-400 font-semibold whitespace-nowrap select-none sticky top-0 bg-card z-10";
+
+  const fptsTooltip = (entry: GameLogEntry) => {
+    const parts: string[] = [];
+    const s = entry.stats;
+    if (s.pass_yd) parts.push(`${s.pass_yd} pass yds, ${s.pass_td || 0} TD${s.pass_int ? `, ${s.pass_int} INT` : ''}`);
+    if (s.rush_att) parts.push(`${s.rush_att} car, ${s.rush_yd || 0} rush yds${s.rush_td ? `, ${s.rush_td} TD` : ''}`);
+    if (s.rec_tgt) parts.push(`${s.rec_tgt} tgt, ${s.rec || 0} rec, ${s.rec_yd || 0} yds${s.rec_td ? `, ${s.rec_td} TD` : ''}`);
+    return parts.join(' | ');
+  };
+
+  const getRowAccent = (entry: GameLogEntry) => {
+    if (entry.game_status !== 'active') return '';
+    const pts = fpts(entry, format);
+    if (pts >= 20) return 'border-l-[3px] border-l-emerald-500/60';
+    if (pts < 5 && pts >= 0) return 'border-l-[3px] border-l-red-400/40';
+    return 'border-l-[3px] border-l-transparent';
+  };
 
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-xs" data-testid="table-game-log">
         <thead>
-          <tr className="border-b text-left">
+          <tr className="border-b border-border text-left">
             <th className={thClass} onClick={() => handleSort('week')} data-testid="sort-week">WK<SortIcon colKey="week" /></th>
             <th className={thStatic}>OPP</th>
             <th className={`${thStatic} text-center`}>SCORE</th>
@@ -452,18 +473,18 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
             ))}
             <th className={`${thClass} text-right`} onClick={() => handleSort('fpts')} data-testid="sort-fpts">FPTS<SortIcon colKey="fpts" /></th>
             <th className={`${thClass} text-right`} onClick={() => handleSort('finish')} data-testid="sort-finish">FINISH<SortIcon colKey="finish" /></th>
-            {hasDetail && <th className="py-1.5 pl-2 w-6"></th>}
+            {hasDetail && <th className="py-2 pl-2 w-6 sticky top-0 bg-card z-10"></th>}
           </tr>
         </thead>
         <tbody>
           {displayEntries.length > 0 ? (
             <>
-              {displayEntries.map((entry, i) => {
+              {displayEntries.map((entry) => {
                 const isExpanded = expandedRows.has(entry.week);
                 const rank = entry.pos_rank;
                 const tierBadge = getTierBadge(rank, position);
                 const oppRank = entry.opp_rank_vs_pos;
-                const oppRankSuffix = oppRank ? `${oppRank}${oppRank === 1 ? 'st' : oppRank === 2 ? 'nd' : oppRank === 3 ? 'rd' : 'th'}` : null;
+                const oppRankLabel = oppRank ? ordinalSuffix(oppRank) : null;
                 const isBye = entry.game_status === 'bye';
                 const isOut = entry.game_status === 'out';
                 const isInactive = isBye || isOut;
@@ -471,60 +492,64 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
 
                 if (isInactive) {
                   return (
-                    <tr key={entry.week} className="border-b last:border-0 opacity-40" data-testid={`row-gamelog-week-${entry.week}`}>
-                      <td className="py-1 pr-2 text-foreground font-medium">{entry.week}</td>
-                      <td className="py-1 pr-2 text-muted-foreground">{isBye ? 'BYE' : '\u2014'}</td>
-                      <td className="py-1 pr-2 text-center text-muted-foreground">
+                    <tr key={entry.week} className="border-b border-border/40 last:border-0 opacity-40 border-l-[3px] border-l-transparent" data-testid={`row-gamelog-week-${entry.week}`}>
+                      <td className="py-1 px-2 text-foreground font-medium">{entry.week}</td>
+                      <td className="py-1 px-2 text-muted-foreground">{isBye ? 'BYE' : '\u2014'}</td>
+                      <td className="py-1 px-2 text-center text-muted-foreground">
                         <Badge variant="secondary" className={`text-[8px] px-1.5 py-0 ${isBye ? 'bg-sky-500/10 text-sky-700 dark:text-sky-400' : 'bg-muted text-muted-foreground'}`} data-testid={`badge-status-${entry.week}`}>
                           {isBye ? 'BYE' : 'OUT'}
                         </Badge>
                       </td>
                       {allCols.map((col) => (
-                        <td key={col.key} className="py-1 pr-2 text-right text-muted-foreground">{'\u2014'}</td>
+                        <td key={col.key} className="py-1 px-2 text-right text-muted-foreground">{'\u2014'}</td>
                       ))}
-                      <td className="py-1 pr-2 text-right text-muted-foreground">{'\u2014'}</td>
-                      <td className="py-1 text-right text-muted-foreground">{'\u2014'}</td>
+                      <td className="py-1 px-2 text-right text-muted-foreground">{'\u2014'}</td>
+                      <td className="py-1 px-2 text-right text-muted-foreground">{'\u2014'}</td>
                       {hasDetail && <td className="py-1 pl-2"></td>}
                     </tr>
                   );
                 }
 
+                const pts = fpts(entry, format);
+
                 return (
                   <Fragment key={entry.week}>
                     <tr
-                      className={`border-b last:border-0 ${hasDetail ? 'cursor-pointer' : ''} ${isExpanded ? 'bg-muted/30 dark:bg-slate-800/30' : ''}`}
+                      className={`border-b border-border/40 last:border-0 transition-colors hover:bg-blue-50/40 dark:hover:bg-blue-950/20 ${hasDetail ? 'cursor-pointer' : ''} ${isExpanded ? 'bg-muted/30 dark:bg-slate-800/30' : ''} ${getRowAccent(entry)}`}
                       onClick={hasDetail ? () => toggleRow(entry.week) : undefined}
                       data-testid={`row-gamelog-week-${entry.week}`}
                     >
-                      <td className="py-1 pr-2 text-foreground font-medium">{entry.week}</td>
-                      <td className="py-1 pr-2 text-foreground whitespace-nowrap">
+                      <td className="py-[5px] px-2 text-foreground font-medium">{entry.week}</td>
+                      <td className="py-[5px] px-2 text-foreground whitespace-nowrap">
                         <div className="flex flex-col leading-tight">
-                          <span>{entry.opp}</span>
-                          {oppRankSuffix && <span className={`text-[9px] leading-none ${getOppRankColor(oppRank)}`}>{oppRankSuffix} vs {posLabel}</span>}
+                          <span className="font-medium">{entry.opp}</span>
+                          {oppRankLabel && <span className={`text-[9px] leading-none opacity-70 ${getOppRankColor(oppRank)}`}>{oppRankLabel} vs {posLabel}</span>}
                         </div>
                       </td>
-                      <td className="py-1 pr-2 text-center whitespace-nowrap" data-testid={`score-week-${entry.week}`}>
+                      <td className="py-[5px] px-2 text-center whitespace-nowrap" data-testid={`score-week-${entry.week}`}>
                         {sc ? (
                           <span className={`text-[10px] tabular-nums font-medium ${scoreColor(sc.r)}`}>
-                            {sc.r}, {sc.tm}–{sc.opp}
+                            {sc.r}, {sc.tm}\u2013{sc.opp}
                           </span>
                         ) : '\u2014'}
                       </td>
                       {allCols.map((col) => (
-                        <td key={col.key} className="py-1 pr-2 text-foreground text-right tabular-nums">
+                        <td key={col.key} className="py-[5px] px-2 text-foreground text-right tabular-nums">
                           {getStat(entry, col.key)}
                         </td>
                       ))}
-                      <td className="py-1 pr-2 text-right font-bold text-foreground tabular-nums">
-                        {fpts(entry, format).toFixed(1)}
+                      <td className="py-[5px] px-2 text-right tabular-nums" title={fptsTooltip(entry)}>
+                        <span className="text-[13px] font-bold text-foreground">{pts.toFixed(1)}</span>
                       </td>
-                      <td className="py-1 text-right" data-testid={`text-finish-week-${entry.week}`}>
-                        {rank ? (
-                          <span className={`tabular-nums text-[11px] font-semibold ${getRankColor(rank)}`}>{posLabel}{rank}</span>
+                      <td className="py-[5px] px-2 text-right" data-testid={`text-finish-week-${entry.week}`}>
+                        {tierBadge ? (
+                          <Badge variant="secondary" className={`text-[9px] px-1.5 py-0 font-semibold tabular-nums ${tierBadge.className}`}>{tierBadge.label}</Badge>
+                        ) : rank ? (
+                          <Badge variant="secondary" className="text-[9px] px-1.5 py-0 font-semibold tabular-nums bg-red-500/15 text-red-500 dark:text-red-400">{posLabel}{rank}</Badge>
                         ) : '\u2014'}
                       </td>
                       {hasDetail && (
-                        <td className="py-1 pl-2 text-center">
+                        <td className="py-[5px] pl-2 text-center">
                           <ChevronRight
                             className={`w-3 h-3 text-muted-foreground/50 transition-transform duration-200 inline-block ${isExpanded ? 'rotate-90' : ''}`}
                           />
@@ -565,9 +590,10 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
         </tbody>
         {activeInDisplay.length > 0 && !tierFilter && (
           <tfoot>
-            <tr className="border-t-2 border-foreground/20">
-              <td className="py-1.5 pr-2 text-foreground font-bold text-[10px] uppercase tracking-wider" colSpan={2} data-testid="text-totals-label">
+            <tr className="border-t-2 border-foreground/15 bg-muted/30 dark:bg-slate-800/20">
+              <td className="py-2 px-2 text-foreground font-bold text-[10px] uppercase tracking-wider" colSpan={2} data-testid="text-totals-label">
                 <div className="flex flex-col">
+                  <span className="text-[9px] text-muted-foreground/60 font-normal normal-case tracking-normal">Season {footerMode === 'avg' ? 'Avg' : 'Totals'}</span>
                   <button
                     className="text-left flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider"
                     onClick={() => setFooterMode(footerMode === 'avg' ? 'total' : 'avg')}
@@ -579,27 +605,33 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
                   <span className="text-[9px] text-muted-foreground font-normal normal-case tracking-normal">{gamesPlayed} games</span>
                 </div>
               </td>
-              <td className="py-1.5 pr-2"></td>
+              <td className="py-2 px-2"></td>
               {allCols.map((col) => {
                 const total = activeInDisplay.reduce((sum, e) => sum + getStat(e, col.key), 0);
                 const val = footerMode === 'avg' ? (gamesPlayed > 0 ? total / gamesPlayed : 0) : total;
                 return (
-                  <td key={col.key} className="py-1.5 pr-2 text-foreground text-right tabular-nums font-semibold">
+                  <td key={col.key} className="py-2 px-2 text-foreground text-right tabular-nums font-semibold">
                     {footerMode === 'total' ? val : (val % 1 === 0 ? val.toFixed(0) : val.toFixed(1))}
                   </td>
                 );
               })}
-              <td className="py-1.5 pr-2 text-right text-foreground tabular-nums font-bold">
-                {gamesPlayed > 0
-                  ? footerMode === 'avg'
-                    ? (activeInDisplay.reduce((sum, e) => sum + fpts(e, format), 0) / gamesPlayed).toFixed(1)
-                    : activeInDisplay.reduce((sum, e) => sum + fpts(e, format), 0).toFixed(1)
-                  : '0.0'}
+              <td className="py-2 px-2 text-right tabular-nums">
+                <span className="text-[13px] font-bold text-foreground">
+                  {gamesPlayed > 0
+                    ? footerMode === 'avg'
+                      ? (activeInDisplay.reduce((sum, e) => sum + fpts(e, format), 0) / gamesPlayed).toFixed(1)
+                      : activeInDisplay.reduce((sum, e) => sum + fpts(e, format), 0).toFixed(1)
+                    : '0.0'}
+                </span>
               </td>
-              <td className={`py-1.5 text-right tabular-nums text-[11px] font-semibold ${avgFinish ? getRankColor(Math.round(avgFinish)) : ''}`} data-testid="text-avg-finish">
-                {avgFinish ? `${posLabel}${Math.round(avgFinish)}` : '\u2014'}
+              <td className="py-2 px-2 text-right" data-testid="text-avg-finish">
+                {avgFinish ? (
+                  <Badge variant="secondary" className={`text-[9px] px-1.5 py-0 font-semibold tabular-nums ${(getTierBadge(Math.round(avgFinish), position) || { className: 'bg-red-500/15 text-red-500 dark:text-red-400' }).className}`}>
+                    {posLabel}{Math.round(avgFinish)}
+                  </Badge>
+                ) : '\u2014'}
               </td>
-              {hasDetail && <td className="py-1.5 pl-2"></td>}
+              {hasDetail && <td className="py-2 pl-2"></td>}
             </tr>
           </tfoot>
         )}
@@ -1698,18 +1730,26 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
         <GameDistributionBar entries={entries} position={player.position} activeTier={tierFilter} onTierClick={setTierFilter} format={format} />
       )}
 
-      <Card>
-        <CardContent className="p-3">
+      <Card className="bg-white dark:bg-card border border-border rounded-2xl shadow-[0_4px_18px_rgba(15,23,42,0.05)] dark:shadow-none overflow-hidden">
+        <CardContent className="p-4">
           {gameFilter === 'full' && (
-            <div className="flex items-center justify-end mb-1.5 gap-2 flex-wrap">
-              <button
-                className={`flex items-center gap-1 text-[10px] px-2 py-1 rounded-md transition-colors ${hideInactive ? 'bg-muted text-foreground ring-1 ring-border' : 'text-muted-foreground'}`}
-                onClick={() => setHideInactive(!hideInactive)}
-                data-testid="toggle-hide-inactive"
-              >
-                {hideInactive ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-                {hideInactive ? 'Showing Active Only' : 'Hide BYE/OUT'}
-              </button>
+            <div className="flex items-center justify-end mb-2 gap-1.5">
+              <div className="flex items-center rounded-lg border border-border overflow-hidden text-[10px] font-semibold" data-testid="toggle-hide-inactive">
+                <button
+                  onClick={() => setHideInactive(false)}
+                  className={`px-2.5 py-1 transition-colors ${!hideInactive ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                  data-testid="button-show-all"
+                >
+                  Show All
+                </button>
+                <button
+                  onClick={() => setHideInactive(true)}
+                  className={`px-2.5 py-1 transition-colors ${hideInactive ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                  data-testid="button-active-only"
+                >
+                  Active Only
+                </button>
+              </div>
             </div>
           )}
           {isSeasonLoading && !isDefaultSeason ? (
