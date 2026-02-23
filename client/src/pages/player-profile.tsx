@@ -3410,6 +3410,7 @@ interface InjuryData {
   source?: string;
   source_url?: string;
   report_label?: string;
+  report_updated_at?: string;
   fetched_at?: string;
 }
 
@@ -3509,13 +3510,8 @@ function NewsTab({ player }: { player: Player }) {
               return pos && inj ? `${pos} \u2022 ${inj}` : pos || inj;
             })();
 
-            const contextParts: string[] = [];
-            if (injuryData.report_label) contextParts.push(injuryData.report_label);
-            if (injuryData.fetched_at) {
-              const d = new Date(injuryData.fetched_at);
-              contextParts.push(`Updated ${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`);
-            }
-            const contextLine = contextParts.join(' \u2022 ');
+            const titleCase = (s: string) => s.replace(/\w\S*/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+            const reportLabelDisplay = injuryData.report_label ? `${titleCase(injuryData.report_label)} Injury Report` : 'Injury Report';
 
             const blurbParts: { text: string; bold: boolean }[] = (() => {
               const b = injuryData.blurb || '';
@@ -3529,15 +3525,25 @@ function NewsTab({ player }: { player: Player }) {
               return parts;
             })();
 
-            const updatedAgo = injuryData.fetched_at ? (() => {
-              const diff = Date.now() - new Date(injuryData.fetched_at).getTime();
-              const mins = Math.floor(diff / 60000);
-              if (mins < 1) return 'Updated just now';
-              if (mins < 60) return `Updated ${mins} minute${mins === 1 ? '' : 's'} ago`;
-              const hrs = Math.floor(mins / 60);
-              if (hrs < 24) return `Updated ${hrs} hour${hrs === 1 ? '' : 's'} ago`;
-              return 'From latest Patriots injury report';
-            })() : 'From latest Patriots injury report';
+            const formatRelative = (iso: string) => {
+              const d = new Date(iso);
+              if (isNaN(d.getTime())) return '';
+              const diff = Math.floor((Date.now() - d.getTime()) / 1000);
+              if (diff < 60) return 'just now';
+              if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+              if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+              return `${Math.floor(diff / 86400)}d ago`;
+            };
+            const formatShortDate = (iso: string) => {
+              const d = new Date(iso);
+              if (isNaN(d.getTime())) return '';
+              return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            };
+
+            const reportUpdatedLine = injuryData.report_updated_at ? `Report updated: ${formatShortDate(injuryData.report_updated_at)}` : null;
+            const lastCheckedLine = injuryData.fetched_at ? `Last checked: ${formatRelative(injuryData.fetched_at)}` : null;
+
+            const hasPractice = injuryData.practice && (injuryData.practice.wed || injuryData.practice.thu || injuryData.practice.fri);
 
             return (
               <div className={`sc-injury-card ${!injuryData.found ? 'sc-injury-card--empty' : ''}`} data-testid="injury-card">
@@ -3549,11 +3555,8 @@ function NewsTab({ player }: { player: Player }) {
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline', verticalAlign: '-2px', marginRight: '5px' }}>
                             <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                           </svg>
-                          Injury Status
+                          {reportLabelDisplay}
                         </div>
-                        {contextLine && (
-                          <div className="sc-injury-card__context" data-testid="text-injury-context">{contextLine}</div>
-                        )}
                         <div className="sc-injury-card__meta" data-testid="text-injury-meta">{injuryMeta}</div>
                       </div>
                       <div className={`sc-injury-pill ${getInjuryPillClass(injuryData.game_status || '')}`} data-testid="badge-injury-status">
@@ -3566,13 +3569,18 @@ function NewsTab({ player }: { player: Player }) {
                     <div className="sc-injury-card__blurb" data-testid="text-injury-blurb">
                       {blurbParts.map((p, i) => p.bold ? <strong key={i}>{p.text}</strong> : <span key={i}>{p.text}</span>)}
                     </div>
-                    <div className="sc-injury-card__bot">
-                      <span className={`sc-injury-chip ${getPracticeChipClass(injuryData.practice?.wed || '')}`} data-testid="chip-practice-wed">WED: {injuryData.practice?.wed || '-'}</span>
-                      <span className={`sc-injury-chip ${getPracticeChipClass(injuryData.practice?.thu || '')}`} data-testid="chip-practice-thu">THU: {injuryData.practice?.thu || '-'}</span>
-                      <span className={`sc-injury-chip ${getPracticeChipClass(injuryData.practice?.fri || '')}`} data-testid="chip-practice-fri">FRI: {injuryData.practice?.fri || '-'}</span>
-                    </div>
+                    {hasPractice && (
+                      <div className="sc-injury-card__bot">
+                        {injuryData.practice?.wed && <span className={`sc-injury-chip ${getPracticeChipClass(injuryData.practice.wed)}`} data-testid="chip-practice-wed">WED: {injuryData.practice.wed}</span>}
+                        {injuryData.practice?.thu && <span className={`sc-injury-chip ${getPracticeChipClass(injuryData.practice.thu)}`} data-testid="chip-practice-thu">THU: {injuryData.practice.thu}</span>}
+                        {injuryData.practice?.fri && <span className={`sc-injury-chip ${getPracticeChipClass(injuryData.practice.fri)}`} data-testid="chip-practice-fri">FRI: {injuryData.practice.fri}</span>}
+                      </div>
+                    )}
                     <div className="sc-injury-card__footer">
-                      <span className="sc-injury-card__updated" data-testid="text-injury-updated">{updatedAgo}</span>
+                      <div className="sc-injury-card__timestamps">
+                        {reportUpdatedLine && <span className="sc-injury-card__updated" data-testid="text-injury-report-date">{reportUpdatedLine}</span>}
+                        {lastCheckedLine && <span className="sc-injury-card__updated" data-testid="text-injury-checked">{lastCheckedLine}</span>}
+                      </div>
                       {injuryData.source_url && (
                         <a className="sc-injury-card__link" href={injuryData.source_url} target="_blank" rel="noopener noreferrer" data-testid="link-injury-source">
                           View Full Injury Report →
@@ -3582,15 +3590,23 @@ function NewsTab({ player }: { player: Player }) {
                   </>
                 ) : (
                   <>
-                    <div className="sc-injury-card__title">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline', verticalAlign: '-2px', marginRight: '5px' }}>
-                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                      </svg>
-                      Injury Status
+                    <div className="sc-injury-card__top">
+                      <div>
+                        <div className="sc-injury-card__title">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline', verticalAlign: '-2px', marginRight: '5px' }}>
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                          </svg>
+                          {reportLabelDisplay}
+                        </div>
+                      </div>
+                      <div className="sc-injury-pill sc-injury-pill--none" data-testid="badge-injury-status">Not Listed</div>
                     </div>
-                    <div className="sc-injury-card__blurb" data-testid="text-injury-blurb">{injuryData.blurb || 'No injury update available.'}</div>
+                    <div className="sc-injury-card__blurb" data-testid="text-injury-blurb">No injury designation listed on the latest report.</div>
                     <div className="sc-injury-card__footer">
-                      <span className="sc-injury-card__updated">{updatedAgo}</span>
+                      <div className="sc-injury-card__timestamps">
+                        {reportUpdatedLine && <span className="sc-injury-card__updated" data-testid="text-injury-report-date">{reportUpdatedLine}</span>}
+                        {lastCheckedLine && <span className="sc-injury-card__updated" data-testid="text-injury-checked">{lastCheckedLine}</span>}
+                      </div>
                       {injuryData.source_url && (
                         <a className="sc-injury-card__link" href={injuryData.source_url} target="_blank" rel="noopener noreferrer" data-testid="link-injury-source">
                           View Full Injury Report →

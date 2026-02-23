@@ -1345,8 +1345,28 @@ export async function registerRoutes(
           });
         }
 
+        let reportUpdatedAt: string | null = null;
+        const metaCandidates = [
+          $('meta[property="article:modified_time"]').attr("content"),
+          $('meta[property="article:published_time"]').attr("content"),
+          $('meta[name="last-modified"]').attr("content"),
+        ].filter(Boolean);
+        for (const c of metaCandidates) {
+          const d = new Date(c!);
+          if (!isNaN(d.getTime())) { reportUpdatedAt = d.toISOString(); break; }
+        }
+        if (!reportUpdatedAt) {
+          const bodyText = $("body").text().replace(/\s+/g, " ").trim();
+          const m = bodyText.match(/Updated\s+([A-Za-z]{3,9}\s+\d{1,2},\s+\d{4})/i);
+          if (m?.[1]) {
+            const d = new Date(m[1]);
+            if (!isNaN(d.getTime())) reportUpdatedAt = d.toISOString();
+          }
+        }
+
         patriotsInjuryCache.ts = now;
         patriotsInjuryCache.data = allRows;
+        (patriotsInjuryCache as any).reportUpdatedAt = reportUpdatedAt;
       }
 
       const target = normName(playerName);
@@ -1354,14 +1374,17 @@ export async function registerRoutes(
 
       const reportLabel = patriotsInjuryCache.reportLabel || '';
 
+      const reportUpdatedAt = (patriotsInjuryCache as any).reportUpdatedAt || null;
+
       if (!rowData) {
         return res.json({
           found: false,
           player_name: playerName,
-          blurb: `No injury designation listed for ${playerName} on the latest Patriots injury report.`,
+          blurb: `No injury designation listed for ${playerName} on the latest report.`,
           source: "Patriots.com",
           source_url: "https://www.patriots.com/team/injury-report/",
           report_label: reportLabel,
+          report_updated_at: reportUpdatedAt,
           fetched_at: new Date().toISOString(),
         });
       }
@@ -1387,6 +1410,7 @@ export async function registerRoutes(
         source: "Patriots.com",
         source_url: "https://www.patriots.com/team/injury-report/",
         report_label: reportLabel,
+        report_updated_at: reportUpdatedAt,
         fetched_at: new Date().toISOString(),
       });
     } catch (e: any) {
