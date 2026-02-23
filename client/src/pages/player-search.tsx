@@ -5,7 +5,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Sheet,
@@ -17,17 +16,15 @@ import {
 import {
   ArrowLeft,
   Search,
-  Users,
   TrendingUp,
   Keyboard,
   Trophy,
   BarChart3,
   FileText,
   Activity,
-  Calendar,
-  Shield,
   X,
   ChevronRight,
+  ChevronDown,
   Zap,
   ArrowLeftRight,
   ClipboardCheck,
@@ -107,7 +104,7 @@ const NFL_DIVISIONS: Record<string, Record<string, string[]>> = {
 
 const POSITION_ORDER = ["QB", "RB", "WR", "TE", "K", "DEF"];
 
-const STARTER_POSITIONS: Record<string, number> = {
+const STARTER_COUNTS: Record<string, number> = {
   QB: 1, RB: 1, WR: 1, TE: 1, K: 1, DEF: 1,
 };
 
@@ -124,55 +121,63 @@ function TeamRoster({
 }) {
   const teamColor = TEAM_COLORS[team] || "#666";
   const teamName = TEAM_FULL_NAMES[team] || team;
+  const [expanded, setExpanded] = useState(false);
+
+  const showExpanded = startersOnly ? true : expanded;
 
   return (
     <Card
-      className="h-full transition-all duration-200 hover-elevate overflow-visible"
+      className="sc-team-card h-full overflow-visible"
       data-testid={`card-team-${team}`}
     >
       <CardContent className="p-0">
         <div
-          className="px-4 py-3 flex items-center gap-2"
-          style={{ borderLeft: `3px solid ${teamColor}` }}
+          className="sc-team-header"
+          style={{ borderLeftColor: teamColor }}
         >
-          <h3 className="font-bold text-foreground text-sm tracking-wide" data-testid={`text-team-name-${team}`}>
-            {team}
-          </h3>
-          <span className="text-xs text-muted-foreground">{teamName}</span>
+          <div className="flex-1 min-w-0">
+            <h3 className="sc-team-header__name" data-testid={`text-team-name-${team}`}>
+              {team}
+            </h3>
+            <span className="sc-team-header__full">{teamName}</span>
+          </div>
+          {!startersOnly && (
+            <button
+              type="button"
+              className={`sc-expand-btn ${expanded ? 'sc-expand-btn--open' : ''}`}
+              onClick={() => setExpanded(!expanded)}
+              data-testid={`button-expand-${team}`}
+            >
+              <ChevronDown className="w-3.5 h-3.5" />
+              <span>{expanded ? 'Collapse' : 'Expand'}</span>
+            </button>
+          )}
         </div>
-        <Separator />
-        <div className="px-3 py-2">
-          {POSITION_ORDER.map((pos, posIdx) => {
+        <div className="sc-team-roster">
+          {POSITION_ORDER.map((pos) => {
             let players = positions[pos];
             if (!players || players.length === 0) return null;
-            if (startersOnly) {
-              players = players.slice(0, STARTER_POSITIONS[pos] || 1);
+            if (!showExpanded) {
+              players = players.slice(0, STARTER_COUNTS[pos] || 1);
+            } else if (startersOnly) {
+              players = players.slice(0, STARTER_COUNTS[pos] || 1);
             }
             return (
-              <div key={pos}>
-                {posIdx > 0 && positions[POSITION_ORDER[posIdx - 1]]?.length > 0 && (
-                  <Separator className="my-1 opacity-50" />
-                )}
-                <div className="mb-0.5">
-                  <span className="text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider">
-                    {pos}
-                  </span>
-                </div>
+              <div key={pos} className="sc-pos-group">
+                <div className="sc-pos-label">{pos}</div>
                 {players.map((p) => (
                   <div
                     key={p.slug}
-                    className="flex items-center gap-2 py-1 hover-elevate rounded px-1 cursor-pointer group flex-wrap"
+                    className="sc-player-row"
                     onClick={() => onPlayerClick(p)}
                     data-testid={`link-indexed-player-${p.slug}`}
                   >
                     <span className={POSITION_COLORS[pos] || ""}>{p.rank_label}</span>
-                    <span className="text-sm text-foreground truncate flex-1">{p.name}</span>
+                    <span className="sc-player-row__name">{p.name}</span>
                     {p.years_exp !== null && p.years_exp > 0 && (
-                      <span className="text-[10px] text-muted-foreground/50 font-mono">
-                        Yr {p.years_exp}
-                      </span>
+                      <span className="sc-player-row__exp">Yr {p.years_exp}</span>
                     )}
-                    <ChevronRight className="w-3 h-3 text-muted-foreground/30 invisible group-hover:visible flex-shrink-0" />
+                    <ChevronRight className="w-3 h-3 text-muted-foreground/30 opacity-0 group-hover:opacity-100 flex-shrink-0 transition-opacity" />
                   </div>
                 ))}
               </div>
@@ -237,7 +242,7 @@ function PlayerSlideOver({
             </div>
           </div>
 
-          <Separator />
+          <div className="h-px bg-border" />
 
           <div>
             <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3 font-semibold">Quick Actions</p>
@@ -304,6 +309,15 @@ export default function PlayerSearch() {
   });
 
   const isSearching = search.trim().length > 0 || posFilter !== "ALL";
+
+  const posCounts = useMemo(() => {
+    if (!players) return {} as Record<string, number>;
+    const counts: Record<string, number> = {};
+    for (const pos of POSITION_ORDER) {
+      counts[pos] = players.filter(p => p.position === pos).length;
+    }
+    return counts;
+  }, [players]);
 
   const autocompleteResults = useMemo(() => {
     if (!players || !search.trim()) return [];
@@ -415,15 +429,13 @@ export default function PlayerSearch() {
     setSheetOpen(true);
   }, []);
 
-  const divisions = NFL_DIVISIONS[conference] || {};
-
   const totalPlayers = indexedData?.slugs?.length || 352;
 
   return (
     <div className="min-h-screen bg-background">
 
       {stickyVisible && !isSearching && (
-        <div className="sticky top-0 z-40 border-b bg-card/95 backdrop-blur-sm" data-testid="sticky-filter-bar">
+        <div className="sc-sticky-bar" data-testid="sticky-filter-bar">
           <div className="max-w-7xl mx-auto px-4 py-2 flex items-center gap-3 flex-wrap">
             <div className="relative flex-1 max-w-xs">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -441,15 +453,16 @@ export default function PlayerSearch() {
             </div>
             <div className="flex items-center gap-1 flex-wrap">
               {POSITION_ORDER.map((pos) => (
-                <Button
+                <button
                   key={pos}
-                  variant={posFilter === pos ? "default" : "ghost"}
-                  size="sm"
+                  type="button"
+                  className={`sc-filter-pill ${posFilter === pos ? 'sc-filter-pill--active' : ''}`}
                   onClick={() => setPosFilter(posFilter === pos ? "ALL" : pos)}
                   data-testid={`button-sticky-filter-${pos}`}
                 >
                   {pos}
-                </Button>
+                  {posCounts[pos] ? <span className="sc-filter-pill__count">{posCounts[pos]}</span> : null}
+                </button>
               ))}
             </div>
             <div className="flex items-center gap-2 ml-auto flex-wrap">
@@ -473,7 +486,7 @@ export default function PlayerSearch() {
         className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white"
         data-testid="hero-section"
       >
-        <div className="max-w-7xl mx-auto px-4 py-8 md:py-10">
+        <div className="max-w-7xl mx-auto px-4 py-10 md:py-12">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
               <Link href="/">
@@ -486,11 +499,11 @@ export default function PlayerSearch() {
                 <Zap className="w-5 h-5 text-amber-400" />
                 <span className="text-xs font-semibold text-amber-400 uppercase tracking-widest">Command Index</span>
               </div>
-              <h1 className="text-2xl md:text-3xl font-bold text-white mb-2" data-testid="text-page-title">
+              <h1 className="sc-hero-title" data-testid="text-page-title">
                 NFL Player Command Index
               </h1>
-              <div className="w-12 h-0.5 bg-amber-400 mb-3" />
-              <p className="text-gray-300 text-sm md:text-base max-w-lg">
+              <div className="sc-hero-underline" />
+              <p className="text-gray-300 text-sm md:text-base max-w-lg mt-3">
                 Search, filter, and analyze every fantasy-relevant starter across all 32 NFL teams.
               </p>
             </div>
@@ -589,7 +602,7 @@ export default function PlayerSearch() {
                         className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors ${
                           i === activeIndex
                             ? "bg-accent"
-                            : "hover-elevate"
+                            : "hover:bg-muted/50"
                         }`}
                         onMouseEnter={() => setActiveIndex(i)}
                         onClick={() => setShowAutocomplete(false)}
@@ -619,20 +632,16 @@ export default function PlayerSearch() {
 
             <div className="flex items-center gap-2 mt-4 flex-wrap">
               {POSITION_ORDER.map((pos) => (
-                <Button
+                <button
                   key={pos}
-                  variant={posFilter === pos ? "default" : "outline"}
-                  size="sm"
-                  className={`border-white/20 ${
-                    posFilter === pos
-                      ? ""
-                      : "text-gray-300 bg-transparent"
-                  }`}
+                  type="button"
+                  className={`sc-filter-pill sc-filter-pill--hero ${posFilter === pos ? 'sc-filter-pill--active' : ''}`}
                   onClick={() => setPosFilter(posFilter === pos ? "ALL" : pos)}
                   data-testid={`button-filter-${pos}`}
                 >
                   {pos}
-                </Button>
+                  {posCounts[pos] ? <span className="sc-filter-pill__count">{posCounts[pos]}</span> : null}
+                </button>
               ))}
               {posFilter !== "ALL" && (
                 <Button
@@ -651,13 +660,13 @@ export default function PlayerSearch() {
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 py-6">
+      <main className="max-w-7xl mx-auto px-4 py-8">
         {isSearching ? (
           playersLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {Array.from({ length: 12 }).map((_, i) => (
                 <Card key={i}>
-                  <CardContent className="p-4">
+                  <CardContent className="p-5">
                     <div className="flex items-center gap-3">
                       <Skeleton className="w-10 h-10 rounded-md" />
                       <div className="flex-1">
@@ -671,7 +680,7 @@ export default function PlayerSearch() {
             </div>
           ) : (
             <>
-              <p className="text-sm text-muted-foreground mb-4" data-testid="text-results-count">
+              <p className="text-sm text-muted-foreground mb-5" data-testid="text-results-count">
                 {filtered.length === 100 ? "Showing first 100 results" : `${filtered.length} player${filtered.length !== 1 ? "s" : ""} found`}
                 {search.trim() && ` for "${search}"`}
               </p>
@@ -685,14 +694,14 @@ export default function PlayerSearch() {
                   </CardContent>
                 </Card>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filtered.map((player) => (
                     <Link key={player.id} href={`/nfl/players/${player.slug}/`}>
                       <Card
-                        className="hover-elevate cursor-pointer transition-all h-full"
+                        className="sc-team-card cursor-pointer h-full"
                         data-testid={`card-player-${player.slug}`}
                       >
-                        <CardContent className="p-4">
+                        <CardContent className="p-5">
                           <div className="flex items-center gap-3">
                             <div className="flex-shrink-0 w-10 h-10 rounded-md bg-muted flex items-center justify-center">
                               <span className="text-xs font-bold text-muted-foreground">
@@ -726,10 +735,10 @@ export default function PlayerSearch() {
             {Array.from({ length: 2 }).map((_, i) => (
               <div key={i}>
                 <Skeleton className="h-6 w-32 mb-3" />
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
                   {Array.from({ length: 4 }).map((_, j) => (
                     <Card key={j}>
-                      <CardContent className="p-4">
+                      <CardContent className="p-5">
                         <Skeleton className="h-5 w-12 mb-3" />
                         <div className="space-y-2">
                           {Array.from({ length: 6 }).map((_, k) => (
@@ -745,7 +754,7 @@ export default function PlayerSearch() {
           </div>
         ) : indexedData && indexedData.byTeam ? (
           <div>
-            <div className="flex items-center justify-between gap-4 mb-4 flex-wrap">
+            <div className="flex items-center justify-between gap-4 mb-5 flex-wrap">
               <p className="text-sm text-muted-foreground" data-testid="text-indexed-count">
                 {totalPlayers} fantasy-relevant players across 32 NFL teams
               </p>
@@ -758,13 +767,13 @@ export default function PlayerSearch() {
                   data-testid="button-starters-toggle"
                 >
                   <Zap className="w-3.5 h-3.5" />
-                  {startersOnly ? "Starters Only" : "All Relevant"}
+                  {startersOnly ? "Starters Only" : "Full Roster"}
                 </Button>
               </div>
             </div>
 
             <Tabs defaultValue="AFC" value={conference} onValueChange={setConference} data-testid="tabs-conference">
-              <TabsList className="mb-4" data-testid="tabs-conference-list">
+              <TabsList className="mb-5" data-testid="tabs-conference-list">
                 <TabsTrigger value="AFC" data-testid="tab-afc">AFC</TabsTrigger>
                 <TabsTrigger value="NFC" data-testid="tab-nfc">NFC</TabsTrigger>
               </TabsList>
@@ -772,7 +781,7 @@ export default function PlayerSearch() {
               {["AFC", "NFC"].map((conf) => (
                 <TabsContent key={conf} value={conf}>
                   <Tabs defaultValue="East">
-                    <TabsList className="mb-4" data-testid={`tabs-division-${conf.toLowerCase()}`}>
+                    <TabsList className="mb-5" data-testid={`tabs-division-${conf.toLowerCase()}`}>
                       {Object.keys(NFL_DIVISIONS[conf]).map((div) => (
                         <TabsTrigger key={div} value={div} data-testid={`tab-${conf.toLowerCase()}-${div.toLowerCase()}`}>
                           {div}
@@ -782,13 +791,13 @@ export default function PlayerSearch() {
                     {Object.entries(NFL_DIVISIONS[conf]).map(([divName, teams]) => (
                       <TabsContent key={divName} value={divName}>
                         <h2
-                          className="text-base font-bold text-foreground mb-3 flex items-center gap-2"
+                          className="sc-division-heading"
                           data-testid={`text-division-${conf.toLowerCase()}-${divName.toLowerCase()}`}
                         >
                           {conf} {divName}
                           <div className="flex-1 h-px bg-amber-400/30 ml-2" />
                         </h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                           {teams.map((team) => {
                             const teamData = indexedData.byTeam[team];
                             if (!teamData) return null;
