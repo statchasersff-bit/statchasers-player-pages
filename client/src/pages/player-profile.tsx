@@ -2649,15 +2649,29 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
 
         const leagueTdStdDev = bench?.posStdDev?.tdPerTarget ?? 1;
 
-        const tdDepFactor = Math.max(0.3, Math.min(1.5, tdPctBar / 30));
+        const posMedianTdPct = isQB ? 41 : isRB ? 23 : isTE ? 19 : 18;
+        const tdDepFactor = Math.max(0.3, Math.min(1.5, tdPctBar / posMedianTdPct));
         const tdZScore = leagueTdStdDev > 0 ? (tdPerOpp - tdRateLg) / leagueTdStdDev : 0;
         const absTdZ = Math.abs(tdZScore);
         const convexTdZ = absTdZ > 1 ? Math.sign(tdZScore) * (1 + (absTdZ - 1) * 1.8) : tdZScore;
-        const tdRateSignal = Math.max(-25, Math.min(25, convexTdZ * (isQB ? 7 : 9) * tdDepFactor));
+        const rawTdSignal = convexTdZ * (isQB ? 7 : 9) * tdDepFactor;
+        const tdRateSignal = rawTdSignal > 0
+          ? Math.min(25, rawTdSignal)
+          : Math.max(-12, rawTdSignal);
 
         const fpuStdDev = bench?.posStdDev?.fpPerUsage ?? 1;
+        const qbYardsOnlyPerUsage = isQB ? (() => {
+          const yardPtsOnly = activeEntries.reduce((sum, e) => {
+            const s = e.stats as Record<string, number>;
+            return sum + ((s.pass_yd || 0) * 0.04) + ((s.rush_yd || 0) * 0.1) + ((s.rec_yd || 0) * 0.1);
+          }, 0);
+          const passAtt = stat('pass_att') || 1;
+          const qbUsage = passAtt + 2 * stat('rush_att');
+          return yardPtsOnly / (qbUsage || 1);
+        })() : 0;
+        const qbYardsOnlyLg = 0.275;
         const yptSignal = isQB
-          ? Math.max(-20, Math.min(20, (fpuStdDev > 0 ? ((yardsPerOpp - yptLg) / fpuStdDev) : 0) * 12))
+          ? Math.max(-20, Math.min(20, (fpuStdDev > 0 ? ((qbYardsOnlyPerUsage - qbYardsOnlyLg) / fpuStdDev) : 0) * 12))
           : Math.max(-20, Math.min(20, (yardsPerOpp - yptLg) * 2.5));
         const stabSignal = Math.max(-12, Math.min(12, (usageStab - shareStabAvg) * 0.3));
         const volSignal = Math.max(-10, Math.min(10, (volumeScore - 50) * 0.25));
@@ -2879,7 +2893,25 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
             <Card data-testid="sustainability-score" className="border-border/60">
               <CardContent className="p-4 space-y-3">
                 <div className="flex items-center justify-between gap-3 flex-wrap">
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Sustainability Score</p>
+                  <TooltipProvider delayDuration={200}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold cursor-help border-b border-dotted border-muted-foreground/40">Sustainability Score</p>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" className="max-w-[280px] text-xs leading-relaxed p-3">
+                        <p className="font-semibold mb-1.5">What Is Sustainability?</p>
+                        <p className="text-muted-foreground">Measures how likely a player's current production level is to continue. It evaluates:</p>
+                        <ul className="text-muted-foreground mt-1 space-y-0.5 list-disc pl-3.5">
+                          <li>Touchdown rate vs league norms</li>
+                          <li>Efficiency per opportunity</li>
+                          <li>Weekly role stability</li>
+                          <li>Overall workload</li>
+                          {isQB && <li>Rushing floor</li>}
+                        </ul>
+                        <p className="text-muted-foreground mt-1.5">Players with extreme TD rates or unusually high efficiency face higher regression risk.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                   <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md ${sustainBg}`}>
                     {sustainIcon}
                     <span className={`text-[11px] font-bold ${sustainColor}`}>{sustainLabel}</span>
