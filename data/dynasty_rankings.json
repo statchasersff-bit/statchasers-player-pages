@@ -16,7 +16,21 @@
     "startupAdp": 3,
     "tradeCount": 29,
     "ageCurveTier": "Prime",
-    "ktcSlug": "bijan-robinson-1414"
+    "ktcSlug": "bijan-robinson-1414",
+    "sf": {
+      "rank": 2,
+      "positionalRank": 1,
+      "value": 9997,
+      "overallTier": 1,
+      "positionalTier": 1,
+      "trend30": -1,
+      "trend7": 0,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 60,
+      "startupAdp": 9,
+      "tradeCount": 134
+    }
   },
   "jamarr-chase": {
     "rank": 1,
@@ -35,7 +49,21 @@
     "startupAdp": 1,
     "tradeCount": 37,
     "ageCurveTier": "Prime",
-    "ktcSlug": "ja-marr-chase-1004"
+    "ktcSlug": "ja-marr-chase-1004",
+    "sf": {
+      "rank": 4,
+      "positionalRank": 2,
+      "value": 9829,
+      "overallTier": 1,
+      "positionalTier": 1,
+      "trend30": 2,
+      "trend7": 1,
+      "posTrend30": 1,
+      "posTrend7": 0,
+      "adp": 54,
+      "startupAdp": 4,
+      "tradeCount": 164
+    }
   },
   "jaxon-smith-njigba": {
     "rank": 3,
@@ -54,7 +82,21 @@
     "startupAdp": 23,
     "tradeCount": 42,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jaxon-smith-njigba-1437"
+    "ktcSlug": "jaxon-smith-njigba-1437",
+    "sf": {
+      "rank": 3,
+      "positionalRank": 1,
+      "value": 9939,
+      "overallTier": 1,
+      "positionalTier": 1,
+      "trend30": 1,
+      "trend7": 0,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 83,
+      "startupAdp": 32,
+      "tradeCount": 124
+    }
   },
   "jahmyr-gibbs": {
     "rank": 4,
@@ -73,7 +115,21 @@
     "startupAdp": 5,
     "tradeCount": 49,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jahmyr-gibbs-1415"
+    "ktcSlug": "jahmyr-gibbs-1415",
+    "sf": {
+      "rank": 7,
+      "positionalRank": 2,
+      "value": 9419,
+      "overallTier": 1,
+      "positionalTier": 1,
+      "trend30": 0,
+      "trend7": 0,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 57,
+      "startupAdp": 11,
+      "tradeCount": 138
+    }
   },
   "puka-nacua": {
     "rank": 5,
@@ -92,7 +148,21 @@
     "startupAdp": 9,
     "tradeCount": 40,
     "ageCurveTier": "Prime",
-    "ktcSlug": "puka-nacua-1426"
+    "ktcSlug": "puka-nacua-1426",
+    "sf": {
+      "rank": 6,
+      "positionalRank": 3,
+      "value": 9543,
+      "overallTier": 1,
+      "positionalTier": 1,
+      "trend30": -1,
+      "trend7": 0,
+      "posTrend30": -1,
+      "posTrend7": 0,
+      "adp": 73,
+      "startupAdp": 18,
+      "tradeCount": 141
+    }
   },
   "trey-mcbride": {
     "rank": 6,
@@ -111,7 +181,21 @@
     "startupAdp": 25,
     "tradeCount": 36,
     "ageCurveTier": "Prime",
-    "ktcSlug": "trey-mcbride-1253"
+    "ktcSlug": "trey-mcbride-1253",
+    "sf": {
+      "rank": 9,
+      "positionalRank": 1,
+      "value": 7698,
+      "overallTier": 2,
+      "positionalTier": 1,
+      "trend30": 0,
+      "trend7": 0,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 96,
+      "startupAdp": 19,
+      "tradeCount": 121
+    }
   },
   "brock-bowers": {
     "rank": 7,
@@ -130,7 +214,21 @@
     "startupAdp": 19,
     "tradeCount": 40,
     "ageCurveTier": "Rising",
-    "ktcSlug": "brock-bowers-1612"
+    "ktcSlug": "brock-bowers-1612",
+    "sf": {
+      "rank": 12,
+      "positionalRank": 2,
+      "value": 7618,
+      "overallTier": 2,
+      "positionalTier": 1,
+      "trend30": 0,
+      "trend7": 0,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 71,
+      "startupAdp": 10,
+      "tradeCount": 125
+    }
   },
   "malik-nabers": {
     "rank": 8,
@@ -149,7 +247,21 @@
     "startupAdp": 9,
     "tradeCount": 73,
     "ageCurveTier": "Rising",
-    "ktcSlug": "malik-nabers-1586"
+    "ktcSlug": "malik-nabers-1586",
+    "sf": {
+      "rank": 8,
+      "positionalRank": 4,
+      "value": 7731,
+      "overallTier": 2,
+      "positionalTier": 2,
+      "trend30": 0,
+      "trend7": 0,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 64,
+      "startupAdp": 11,
+      "tradeCount": 224
+    }
   },
   "amon-ra-st-brown": {
     "rank": 9,
@@ -168,7 +280,21 @@
     "startupAdp": 9,
     "tradeCount": 52,
     "ageCurveTier": "Prime",
-    "ktcSlug": "amon-ra-st-brown-1010"
+    "ktcSlug": "amon-ra-st-brown-1010",
+    "sf": {
+      "rank": 10,
+      "positionalRank": 5,
+      "value": 7646,
+      "overallTier": 2,
+      "positionalTier": 2,
+      "trend30": 0,
+      "trend7": 0,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 72,
+      "startupAdp": 17,
+      "tradeCount": 177
+    }
   },
   "devon-achane": {
     "rank": 10,
@@ -187,12 +313,26 @@
     "startupAdp": 16,
     "tradeCount": 50,
     "ageCurveTier": "Prime",
-    "ktcSlug": "de-von-achane-1398"
+    "ktcSlug": "de-von-achane-1398",
+    "sf": {
+      "rank": 19,
+      "positionalRank": 4,
+      "value": 7101,
+      "overallTier": 2,
+      "positionalTier": 2,
+      "trend30": -2,
+      "trend7": -1,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 92,
+      "startupAdp": 28,
+      "tradeCount": 200
+    }
   },
   "ashton-jeanty": {
     "rank": 11,
     "positionalRank": 4,
-    "value": 7746,
+    "value": 7748,
     "overallTier": 2,
     "positionalTier": 2,
     "trend30": 4,
@@ -206,7 +346,21 @@
     "startupAdp": 12,
     "tradeCount": 54,
     "ageCurveTier": "Rising",
-    "ktcSlug": "ashton-jeanty-1742"
+    "ktcSlug": "ashton-jeanty-1742",
+    "sf": {
+      "rank": 18,
+      "positionalRank": 3,
+      "value": 7206,
+      "overallTier": 2,
+      "positionalTier": 2,
+      "trend30": 2,
+      "trend7": 1,
+      "posTrend30": 1,
+      "posTrend7": 1,
+      "adp": 1,
+      "startupAdp": 20,
+      "tradeCount": 204
+    }
   },
   "justin-jefferson": {
     "rank": 12,
@@ -225,7 +379,21 @@
     "startupAdp": 5,
     "tradeCount": 69,
     "ageCurveTier": "Prime",
-    "ktcSlug": "justin-jefferson-542"
+    "ktcSlug": "justin-jefferson-542",
+    "sf": {
+      "rank": 15,
+      "positionalRank": 6,
+      "value": 7415,
+      "overallTier": 2,
+      "positionalTier": 2,
+      "trend30": 1,
+      "trend7": 0,
+      "posTrend30": 1,
+      "posTrend7": 0,
+      "adp": 62,
+      "startupAdp": 8,
+      "tradeCount": 261
+    }
   },
   "ceedee-lamb": {
     "rank": 13,
@@ -244,7 +412,21 @@
     "startupAdp": 5,
     "tradeCount": 79,
     "ageCurveTier": "Prime",
-    "ktcSlug": "ceedee-lamb-546"
+    "ktcSlug": "ceedee-lamb-546",
+    "sf": {
+      "rank": 16,
+      "positionalRank": 7,
+      "value": 7344,
+      "overallTier": 2,
+      "positionalTier": 2,
+      "trend30": -2,
+      "trend7": 0,
+      "posTrend30": -1,
+      "posTrend7": 0,
+      "adp": 69,
+      "startupAdp": 12,
+      "tradeCount": 244
+    }
   },
   "josh-allen": {
     "rank": 14,
@@ -263,7 +445,21 @@
     "startupAdp": 23,
     "tradeCount": 38,
     "ageCurveTier": "Prime",
-    "ktcSlug": "josh-allen-365"
+    "ktcSlug": "josh-allen-365",
+    "sf": {
+      "rank": 1,
+      "positionalRank": 1,
+      "value": 9999,
+      "overallTier": 1,
+      "positionalTier": 1,
+      "trend30": 2,
+      "trend7": 0,
+      "posTrend30": 1,
+      "posTrend7": 0,
+      "adp": 111,
+      "startupAdp": 2,
+      "tradeCount": 164
+    }
   },
   "drake-london": {
     "rank": 15,
@@ -282,7 +478,21 @@
     "startupAdp": 17,
     "tradeCount": 59,
     "ageCurveTier": "Prime",
-    "ktcSlug": "drake-london-1268"
+    "ktcSlug": "drake-london-1268",
+    "sf": {
+      "rank": 20,
+      "positionalRank": 8,
+      "value": 7007,
+      "overallTier": 2,
+      "positionalTier": 2,
+      "trend30": -1,
+      "trend7": 0,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 69,
+      "startupAdp": 24,
+      "tradeCount": 219
+    }
   },
   "omarion-hampton": {
     "rank": 16,
@@ -301,7 +511,21 @@
     "startupAdp": 31,
     "tradeCount": 65,
     "ageCurveTier": "Rising",
-    "ktcSlug": "omarion-hampton-1744"
+    "ktcSlug": "omarion-hampton-1744",
+    "sf": {
+      "rank": 24,
+      "positionalRank": 6,
+      "value": 6613,
+      "overallTier": 4,
+      "positionalTier": 2,
+      "trend30": -2,
+      "trend7": -1,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 3,
+      "startupAdp": 37,
+      "tradeCount": 211
+    }
   },
   "tetairoa-mcmillan": {
     "rank": 17,
@@ -320,7 +544,21 @@
     "startupAdp": 39,
     "tradeCount": 53,
     "ageCurveTier": "Rising",
-    "ktcSlug": "tetairoa-mcmillan-1771"
+    "ktcSlug": "tetairoa-mcmillan-1771",
+    "sf": {
+      "rank": 27,
+      "positionalRank": 9,
+      "value": 6584,
+      "overallTier": 4,
+      "positionalTier": 3,
+      "trend30": -3,
+      "trend7": -1,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 5,
+      "startupAdp": 48,
+      "tradeCount": 227
+    }
   },
   "james-cook": {
     "rank": 19,
@@ -339,7 +577,21 @@
     "startupAdp": 36,
     "tradeCount": 54,
     "ageCurveTier": "Aging",
-    "ktcSlug": "james-cook-1231"
+    "ktcSlug": "james-cook-1231",
+    "sf": {
+      "rank": 32,
+      "positionalRank": 8,
+      "value": 6173,
+      "overallTier": 6,
+      "positionalTier": 2,
+      "trend30": 0,
+      "trend7": -1,
+      "posTrend30": 0,
+      "posTrend7": -1,
+      "adp": 90,
+      "startupAdp": 61,
+      "tradeCount": 194
+    }
   },
   "jonathan-taylor": {
     "rank": 20,
@@ -358,7 +610,21 @@
     "startupAdp": 24,
     "tradeCount": 68,
     "ageCurveTier": "Aging",
-    "ktcSlug": "jonathan-taylor-634"
+    "ktcSlug": "jonathan-taylor-634",
+    "sf": {
+      "rank": 31,
+      "positionalRank": 7,
+      "value": 6189,
+      "overallTier": 6,
+      "positionalTier": 2,
+      "trend30": -2,
+      "trend7": -1,
+      "posTrend30": 0,
+      "posTrend7": -1,
+      "adp": 74,
+      "startupAdp": 46,
+      "tradeCount": 215
+    }
   },
   "george-pickens": {
     "rank": 22,
@@ -377,7 +643,21 @@
     "startupAdp": 60,
     "tradeCount": 61,
     "ageCurveTier": "Prime",
-    "ktcSlug": "george-pickens-1279"
+    "ktcSlug": "george-pickens-1279",
+    "sf": {
+      "rank": 33,
+      "positionalRank": 10,
+      "value": 6165,
+      "overallTier": 6,
+      "positionalTier": 4,
+      "trend30": 1,
+      "trend7": -1,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 106,
+      "startupAdp": 84,
+      "tradeCount": 230
+    }
   },
   "drake-maye": {
     "rank": 23,
@@ -396,7 +676,21 @@
     "startupAdp": 101,
     "tradeCount": 33,
     "ageCurveTier": "Rising",
-    "ktcSlug": "drake-maye-1551"
+    "ktcSlug": "drake-maye-1551",
+    "sf": {
+      "rank": 5,
+      "positionalRank": 2,
+      "value": 9718,
+      "overallTier": 1,
+      "positionalTier": 1,
+      "trend30": -3,
+      "trend7": -1,
+      "posTrend30": -1,
+      "posTrend7": 0,
+      "adp": 109,
+      "startupAdp": 26,
+      "tradeCount": 133
+    }
   },
   "emeka-egbuka": {
     "rank": 24,
@@ -415,7 +709,21 @@
     "startupAdp": 62,
     "tradeCount": 83,
     "ageCurveTier": "Rising",
-    "ktcSlug": "emeka-egbuka-1781"
+    "ktcSlug": "emeka-egbuka-1781",
+    "sf": {
+      "rank": 36,
+      "positionalRank": 11,
+      "value": 5998,
+      "overallTier": 6,
+      "positionalTier": 4,
+      "trend30": 2,
+      "trend7": 1,
+      "posTrend30": 2,
+      "posTrend7": 1,
+      "adp": 11,
+      "startupAdp": 68,
+      "tradeCount": 288
+    }
   },
   "treveyon-henderson": {
     "rank": 25,
@@ -434,7 +742,21 @@
     "startupAdp": 40,
     "tradeCount": 89,
     "ageCurveTier": "Prime",
-    "ktcSlug": "treveyon-henderson-1743"
+    "ktcSlug": "treveyon-henderson-1743",
+    "sf": {
+      "rank": 38,
+      "positionalRank": 9,
+      "value": 5958,
+      "overallTier": 6,
+      "positionalTier": 2,
+      "trend30": -11,
+      "trend7": -5,
+      "posTrend30": -3,
+      "posTrend7": -1,
+      "adp": 6,
+      "startupAdp": 47,
+      "tradeCount": 255
+    }
   },
   "nico-collins": {
     "rank": 26,
@@ -453,7 +775,21 @@
     "startupAdp": 13,
     "tradeCount": 84,
     "ageCurveTier": "Prime",
-    "ktcSlug": "nico-collins-1040"
+    "ktcSlug": "nico-collins-1040",
+    "sf": {
+      "rank": 37,
+      "positionalRank": 12,
+      "value": 5967,
+      "overallTier": 6,
+      "positionalTier": 4,
+      "trend30": -2,
+      "trend7": -1,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 61,
+      "startupAdp": 22,
+      "tradeCount": 287
+    }
   },
   "garrett-wilson": {
     "rank": 27,
@@ -472,7 +808,21 @@
     "startupAdp": 32,
     "tradeCount": 75,
     "ageCurveTier": "Prime",
-    "ktcSlug": "garrett-wilson-1270"
+    "ktcSlug": "garrett-wilson-1270",
+    "sf": {
+      "rank": 40,
+      "positionalRank": 13,
+      "value": 5821,
+      "overallTier": 7,
+      "positionalTier": 4,
+      "trend30": -1,
+      "trend7": 0,
+      "posTrend30": 1,
+      "posTrend7": 2,
+      "adp": 89,
+      "startupAdp": 38,
+      "tradeCount": 281
+    }
   },
   "chris-olave": {
     "rank": 29,
@@ -491,7 +841,21 @@
     "startupAdp": 64,
     "tradeCount": 74,
     "ageCurveTier": "Prime",
-    "ktcSlug": "chris-olave-1271"
+    "ktcSlug": "chris-olave-1271",
+    "sf": {
+      "rank": 41,
+      "positionalRank": 14,
+      "value": 5791,
+      "overallTier": 7,
+      "positionalTier": 4,
+      "trend30": 0,
+      "trend7": -2,
+      "posTrend30": 1,
+      "posTrend7": 0,
+      "adp": 101,
+      "startupAdp": 83,
+      "tradeCount": 255
+    }
   },
   "lamar-jackson": {
     "rank": 30,
@@ -510,7 +874,21 @@
     "startupAdp": 28,
     "tradeCount": 50,
     "ageCurveTier": "Prime",
-    "ktcSlug": "lamar-jackson-372"
+    "ktcSlug": "lamar-jackson-372",
+    "sf": {
+      "rank": 14,
+      "positionalRank": 5,
+      "value": 7517,
+      "overallTier": 2,
+      "positionalTier": 2,
+      "trend30": -1,
+      "trend7": -1,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 104,
+      "startupAdp": 3,
+      "tradeCount": 203
+    }
   },
   "breece-hall": {
     "rank": 31,
@@ -529,7 +907,21 @@
     "startupAdp": 34,
     "tradeCount": 111,
     "ageCurveTier": "Prime",
-    "ktcSlug": "breece-hall-1224"
+    "ktcSlug": "breece-hall-1224",
+    "sf": {
+      "rank": 47,
+      "positionalRank": 12,
+      "value": 5480,
+      "overallTier": 8,
+      "positionalTier": 3,
+      "trend30": 1,
+      "trend7": -1,
+      "posTrend30": 0,
+      "posTrend7": -1,
+      "adp": 94,
+      "startupAdp": 47,
+      "tradeCount": 319
+    }
   },
   "quinshon-judkins": {
     "rank": 32,
@@ -548,7 +940,21 @@
     "startupAdp": 73,
     "tradeCount": 78,
     "ageCurveTier": "Rising",
-    "ktcSlug": "quinshon-judkins-1751"
+    "ktcSlug": "quinshon-judkins-1751",
+    "sf": {
+      "rank": 45,
+      "positionalRank": 10,
+      "value": 5532,
+      "overallTier": 8,
+      "positionalTier": 3,
+      "trend30": -2,
+      "trend7": -1,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 9,
+      "startupAdp": 66,
+      "tradeCount": 280
+    }
   },
   "tyler-warren": {
     "rank": 33,
@@ -567,7 +973,21 @@
     "startupAdp": 70,
     "tradeCount": 62,
     "ageCurveTier": "Rising",
-    "ktcSlug": "tyler-warren-1802"
+    "ktcSlug": "tyler-warren-1802",
+    "sf": {
+      "rank": 43,
+      "positionalRank": 4,
+      "value": 5622,
+      "overallTier": 8,
+      "positionalTier": 2,
+      "trend30": -3,
+      "trend7": -1,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 10,
+      "startupAdp": 61,
+      "tradeCount": 198
+    }
   },
   "colston-loveland": {
     "rank": 35,
@@ -586,7 +1006,21 @@
     "startupAdp": 83,
     "tradeCount": 55,
     "ageCurveTier": "Rising",
-    "ktcSlug": "colston-loveland-1804"
+    "ktcSlug": "colston-loveland-1804",
+    "sf": {
+      "rank": 39,
+      "positionalRank": 3,
+      "value": 5852,
+      "overallTier": 7,
+      "positionalTier": 2,
+      "trend30": 7,
+      "trend7": 4,
+      "posTrend30": 1,
+      "posTrend7": 1,
+      "adp": 11,
+      "startupAdp": 67,
+      "tradeCount": 191
+    }
   },
   "bucky-irving": {
     "rank": 34,
@@ -605,7 +1039,21 @@
     "startupAdp": 24,
     "tradeCount": 74,
     "ageCurveTier": "Prime",
-    "ktcSlug": "bucky-irving-1569"
+    "ktcSlug": "bucky-irving-1569",
+    "sf": {
+      "rank": 46,
+      "positionalRank": 11,
+      "value": 5485,
+      "overallTier": 8,
+      "positionalTier": 3,
+      "trend30": -2,
+      "trend7": -1,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 74,
+      "startupAdp": 38,
+      "tradeCount": 244
+    }
   },
   "rashee-rice": {
     "rank": 36,
@@ -624,7 +1072,21 @@
     "startupAdp": 47,
     "tradeCount": 81,
     "ageCurveTier": "Prime",
-    "ktcSlug": "rashee-rice-1447"
+    "ktcSlug": "rashee-rice-1447",
+    "sf": {
+      "rank": 50,
+      "positionalRank": 16,
+      "value": 5386,
+      "overallTier": 8,
+      "positionalTier": 5,
+      "trend30": -13,
+      "trend7": -12,
+      "posTrend30": -4,
+      "posTrend7": -3,
+      "adp": 98,
+      "startupAdp": 50,
+      "tradeCount": 266
+    }
   },
   "ladd-mcconkey": {
     "rank": 37,
@@ -643,7 +1105,21 @@
     "startupAdp": 23,
     "tradeCount": 92,
     "ageCurveTier": "Prime",
-    "ktcSlug": "ladd-mcconkey-1598"
+    "ktcSlug": "ladd-mcconkey-1598",
+    "sf": {
+      "rank": 51,
+      "positionalRank": 17,
+      "value": 5382,
+      "overallTier": 8,
+      "positionalTier": 5,
+      "trend30": 0,
+      "trend7": -2,
+      "posTrend30": 0,
+      "posTrend7": -1,
+      "adp": 68,
+      "startupAdp": 29,
+      "tradeCount": 296
+    }
   },
   "jayden-daniels": {
     "rank": 39,
@@ -662,7 +1138,21 @@
     "startupAdp": 33,
     "tradeCount": 39,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jayden-daniels-1552"
+    "ktcSlug": "jayden-daniels-1552",
+    "sf": {
+      "rank": 11,
+      "positionalRank": 3,
+      "value": 7618,
+      "overallTier": 2,
+      "positionalTier": 2,
+      "trend30": 0,
+      "trend7": 0,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 96,
+      "startupAdp": 3,
+      "tradeCount": 169
+    }
   },
   "christian-mccaffrey": {
     "rank": 40,
@@ -681,7 +1171,21 @@
     "startupAdp": 21,
     "tradeCount": 70,
     "ageCurveTier": "Declining",
-    "ktcSlug": "christian-mccaffrey-283"
+    "ktcSlug": "christian-mccaffrey-283",
+    "sf": {
+      "rank": 54,
+      "positionalRank": 13,
+      "value": 5172,
+      "overallTier": 9,
+      "positionalTier": 4,
+      "trend30": -9,
+      "trend7": -6,
+      "posTrend30": -2,
+      "posTrend7": -1,
+      "adp": 72,
+      "startupAdp": 53,
+      "tradeCount": 215
+    }
   },
   "rome-odunze": {
     "rank": 42,
@@ -700,7 +1204,21 @@
     "startupAdp": 60,
     "tradeCount": 74,
     "ageCurveTier": "Rising",
-    "ktcSlug": "rome-odunze-1587"
+    "ktcSlug": "rome-odunze-1587",
+    "sf": {
+      "rank": 52,
+      "positionalRank": 18,
+      "value": 5228,
+      "overallTier": 9,
+      "positionalTier": 6,
+      "trend30": -2,
+      "trend7": -2,
+      "posTrend30": -2,
+      "posTrend7": -1,
+      "adp": 88,
+      "startupAdp": 61,
+      "tradeCount": 289
+    }
   },
   "luther-burden": {
     "rank": 45,
@@ -719,7 +1237,21 @@
     "startupAdp": 101,
     "tradeCount": 77,
     "ageCurveTier": "Rising",
-    "ktcSlug": "luther-burden-1770"
+    "ktcSlug": "luther-burden-1770",
+    "sf": {
+      "rank": 60,
+      "positionalRank": 22,
+      "value": 4973,
+      "overallTier": 10,
+      "positionalTier": 7,
+      "trend30": -3,
+      "trend7": -4,
+      "posTrend30": -2,
+      "posTrend7": -2,
+      "adp": 16,
+      "startupAdp": 100,
+      "tradeCount": 295
+    }
   },
   "joe-burrow": {
     "rank": 47,
@@ -738,7 +1270,21 @@
     "startupAdp": 41,
     "tradeCount": 44,
     "ageCurveTier": "Prime",
-    "ktcSlug": "joe-burrow-601"
+    "ktcSlug": "joe-burrow-601",
+    "sf": {
+      "rank": 17,
+      "positionalRank": 6,
+      "value": 7238,
+      "overallTier": 2,
+      "positionalTier": 2,
+      "trend30": 1,
+      "trend7": 0,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 99,
+      "startupAdp": 6,
+      "tradeCount": 164
+    }
   },
   "cam-skattebo": {
     "rank": 49,
@@ -757,7 +1303,21 @@
     "startupAdp": 91,
     "tradeCount": 75,
     "ageCurveTier": "Prime",
-    "ktcSlug": "cam-skattebo-1745"
+    "ktcSlug": "cam-skattebo-1745",
+    "sf": {
+      "rank": 67,
+      "positionalRank": 16,
+      "value": 4837,
+      "overallTier": 10,
+      "positionalTier": 5,
+      "trend30": -2,
+      "trend7": -5,
+      "posTrend30": 0,
+      "posTrend7": -2,
+      "adp": 18,
+      "startupAdp": 102,
+      "tradeCount": 204
+    }
   },
   "tee-higgins": {
     "rank": 51,
@@ -776,7 +1336,21 @@
     "startupAdp": 34,
     "tradeCount": 62,
     "ageCurveTier": "Prime",
-    "ktcSlug": "tee-higgins-543"
+    "ktcSlug": "tee-higgins-543",
+    "sf": {
+      "rank": 62,
+      "positionalRank": 23,
+      "value": 4884,
+      "overallTier": 10,
+      "positionalTier": 8,
+      "trend30": -4,
+      "trend7": -3,
+      "posTrend30": -2,
+      "posTrend7": -2,
+      "adp": 82,
+      "startupAdp": 49,
+      "tradeCount": 238
+    }
   },
   "kyren-williams": {
     "rank": 52,
@@ -795,7 +1369,21 @@
     "startupAdp": 27,
     "tradeCount": 58,
     "ageCurveTier": "Prime",
-    "ktcSlug": "kyren-williams-1226"
+    "ktcSlug": "kyren-williams-1226",
+    "sf": {
+      "rank": 68,
+      "positionalRank": 17,
+      "value": 4829,
+      "overallTier": 10,
+      "positionalTier": 5,
+      "trend30": -8,
+      "trend7": -3,
+      "posTrend30": -4,
+      "posTrend7": -1,
+      "adp": 75,
+      "startupAdp": 50,
+      "tradeCount": 220
+    }
   },
   "chase-brown": {
     "rank": 53,
@@ -814,7 +1402,21 @@
     "startupAdp": 32,
     "tradeCount": 55,
     "ageCurveTier": "Prime",
-    "ktcSlug": "chase-brown-1396"
+    "ktcSlug": "chase-brown-1396",
+    "sf": {
+      "rank": 65,
+      "positionalRank": 15,
+      "value": 4856,
+      "overallTier": 10,
+      "positionalTier": 5,
+      "trend30": -4,
+      "trend7": -8,
+      "posTrend30": -1,
+      "posTrend7": -2,
+      "adp": 93,
+      "startupAdp": 57,
+      "tradeCount": 194
+    }
   },
   "saquon-barkley": {
     "rank": 54,
@@ -833,7 +1435,21 @@
     "startupAdp": 13,
     "tradeCount": 100,
     "ageCurveTier": "Declining",
-    "ktcSlug": "saquon-barkley-1"
+    "ktcSlug": "saquon-barkley-1",
+    "sf": {
+      "rank": 71,
+      "positionalRank": 18,
+      "value": 4798,
+      "overallTier": 10,
+      "positionalTier": 5,
+      "trend30": -8,
+      "trend7": -7,
+      "posTrend30": -3,
+      "posTrend7": -3,
+      "adp": 87,
+      "startupAdp": 25,
+      "tradeCount": 261
+    }
   },
   "tucker-kraft": {
     "rank": 58,
@@ -852,7 +1468,21 @@
     "startupAdp": 104,
     "tradeCount": 68,
     "ageCurveTier": "Prime",
-    "ktcSlug": "tucker-kraft-1418"
+    "ktcSlug": "tucker-kraft-1418",
+    "sf": {
+      "rank": 66,
+      "positionalRank": 6,
+      "value": 4851,
+      "overallTier": 10,
+      "positionalTier": 3,
+      "trend30": -10,
+      "trend7": -6,
+      "posTrend30": -1,
+      "posTrend7": 0,
+      "adp": 117,
+      "startupAdp": 94,
+      "tradeCount": 206
+    }
   },
   "zay-flowers": {
     "rank": 59,
@@ -871,7 +1501,21 @@
     "startupAdp": 54,
     "tradeCount": 81,
     "ageCurveTier": "Prime",
-    "ktcSlug": "zay-flowers-1443"
+    "ktcSlug": "zay-flowers-1443",
+    "sf": {
+      "rank": 77,
+      "positionalRank": 27,
+      "value": 4699,
+      "overallTier": 10,
+      "positionalTier": 9,
+      "trend30": -3,
+      "trend7": -3,
+      "posTrend30": -1,
+      "posTrend7": -2,
+      "adp": 93,
+      "startupAdp": 71,
+      "tradeCount": 256
+    }
   },
   "jameson-williams": {
     "rank": 60,
@@ -890,7 +1534,21 @@
     "startupAdp": 61,
     "tradeCount": 78,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jameson-williams-1273"
+    "ktcSlug": "jameson-williams-1273",
+    "sf": {
+      "rank": 72,
+      "positionalRank": 25,
+      "value": 4783,
+      "overallTier": 10,
+      "positionalTier": 9,
+      "trend30": -6,
+      "trend7": -5,
+      "posTrend30": -3,
+      "posTrend7": -3,
+      "adp": 109,
+      "startupAdp": 79,
+      "tradeCount": 218
+    }
   },
   "patrick-mahomes": {
     "rank": 61,
@@ -909,7 +1567,21 @@
     "startupAdp": 62,
     "tradeCount": 29,
     "ageCurveTier": "Prime",
-    "ktcSlug": "patrick-mahomes-272"
+    "ktcSlug": "patrick-mahomes-272",
+    "sf": {
+      "rank": 26,
+      "positionalRank": 9,
+      "value": 6596,
+      "overallTier": 4,
+      "positionalTier": 3,
+      "trend30": -3,
+      "trend7": -1,
+      "posTrend30": -1,
+      "posTrend7": 0,
+      "adp": 113,
+      "startupAdp": 13,
+      "tradeCount": 171
+    }
   },
   "devonta-smith": {
     "rank": 62,
@@ -928,7 +1600,21 @@
     "startupAdp": 52,
     "tradeCount": 65,
     "ageCurveTier": "Prime",
-    "ktcSlug": "devonta-smith-1005"
+    "ktcSlug": "devonta-smith-1005",
+    "sf": {
+      "rank": 74,
+      "positionalRank": 26,
+      "value": 4735,
+      "overallTier": 10,
+      "positionalTier": 9,
+      "trend30": -1,
+      "trend7": -1,
+      "posTrend30": -1,
+      "posTrend7": -2,
+      "adp": 99,
+      "startupAdp": 67,
+      "tradeCount": 214
+    }
   },
   "caleb-williams": {
     "rank": 63,
@@ -947,7 +1633,21 @@
     "startupAdp": 97,
     "tradeCount": 39,
     "ageCurveTier": "Rising",
-    "ktcSlug": "caleb-williams-1550"
+    "ktcSlug": "caleb-williams-1550",
+    "sf": {
+      "rank": 13,
+      "positionalRank": 4,
+      "value": 7607,
+      "overallTier": 2,
+      "positionalTier": 2,
+      "trend30": 2,
+      "trend7": 1,
+      "posTrend30": 1,
+      "posTrend7": 1,
+      "adp": 108,
+      "startupAdp": 25,
+      "tradeCount": 125
+    }
   },
   "jaxson-dart": {
     "rank": 65,
@@ -966,7 +1666,21 @@
     "startupAdp": 122,
     "tradeCount": 55,
     "ageCurveTier": "Rising",
-    "ktcSlug": "jaxson-dart-1732"
+    "ktcSlug": "jaxson-dart-1732",
+    "sf": {
+      "rank": 25,
+      "positionalRank": 8,
+      "value": 6603,
+      "overallTier": 4,
+      "positionalTier": 3,
+      "trend30": 1,
+      "trend7": -1,
+      "posTrend30": 1,
+      "posTrend7": 0,
+      "adp": 13,
+      "startupAdp": 82,
+      "tradeCount": 192
+    }
   },
   "jalen-hurts": {
     "rank": 66,
@@ -985,7 +1699,21 @@
     "startupAdp": 40,
     "tradeCount": 52,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jalen-hurts-595"
+    "ktcSlug": "jalen-hurts-595",
+    "sf": {
+      "rank": 28,
+      "positionalRank": 10,
+      "value": 6382,
+      "overallTier": 5,
+      "positionalTier": 3,
+      "trend30": 0,
+      "trend7": -1,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 109,
+      "startupAdp": 7,
+      "tradeCount": 181
+    }
   },
   "aj-brown": {
     "rank": 67,
@@ -1004,7 +1732,21 @@
     "startupAdp": 25,
     "tradeCount": 67,
     "ageCurveTier": "Prime",
-    "ktcSlug": "aj-brown-217"
+    "ktcSlug": "aj-brown-217",
+    "sf": {
+      "rank": 78,
+      "positionalRank": 28,
+      "value": 4677,
+      "overallTier": 10,
+      "positionalTier": 9,
+      "trend30": -9,
+      "trend7": -7,
+      "posTrend30": -5,
+      "posTrend7": -5,
+      "adp": 71,
+      "startupAdp": 39,
+      "tradeCount": 250
+    }
   },
   "justin-herbert": {
     "rank": 68,
@@ -1023,7 +1765,21 @@
     "startupAdp": 115,
     "tradeCount": 39,
     "ageCurveTier": "Prime",
-    "ktcSlug": "justin-herbert-599"
+    "ktcSlug": "justin-herbert-599",
+    "sf": {
+      "rank": 21,
+      "positionalRank": 7,
+      "value": 6845,
+      "overallTier": 3,
+      "positionalTier": 2,
+      "trend30": 0,
+      "trend7": 0,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 117,
+      "startupAdp": 27,
+      "tradeCount": 151
+    }
   },
   "jaylen-waddle": {
     "rank": 69,
@@ -1042,7 +1798,21 @@
     "startupAdp": 65,
     "tradeCount": 77,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jaylen-waddle-1007"
+    "ktcSlug": "jaylen-waddle-1007",
+    "sf": {
+      "rank": 82,
+      "positionalRank": 29,
+      "value": 4565,
+      "overallTier": 10,
+      "positionalTier": 9,
+      "trend30": -6,
+      "trend7": -5,
+      "posTrend30": -2,
+      "posTrend7": -3,
+      "adp": 110,
+      "startupAdp": 84,
+      "tradeCount": 294
+    }
   },
   "javonte-williams": {
     "rank": 70,
@@ -1061,7 +1831,21 @@
     "startupAdp": 109,
     "tradeCount": 88,
     "ageCurveTier": "Prime",
-    "ktcSlug": "javonte-williams-1033"
+    "ktcSlug": "javonte-williams-1033",
+    "sf": {
+      "rank": 89,
+      "positionalRank": 22,
+      "value": 4389,
+      "overallTier": 11,
+      "positionalTier": 6,
+      "trend30": -3,
+      "trend7": -3,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 106,
+      "startupAdp": 148,
+      "tradeCount": 247
+    }
   },
   "rj-harvey": {
     "rank": 71,
@@ -1080,7 +1864,21 @@
     "startupAdp": 56,
     "tradeCount": 96,
     "ageCurveTier": "Prime",
-    "ktcSlug": "rj-harvey-1768"
+    "ktcSlug": "rj-harvey-1768",
+    "sf": {
+      "rank": 83,
+      "positionalRank": 19,
+      "value": 4532,
+      "overallTier": 10,
+      "positionalTier": 6,
+      "trend30": -16,
+      "trend7": -11,
+      "posTrend30": -2,
+      "posTrend7": -1,
+      "adp": 10,
+      "startupAdp": 68,
+      "tradeCount": 327
+    }
   },
   "travis-etienne": {
     "rank": 72,
@@ -1099,7 +1897,21 @@
     "startupAdp": 90,
     "tradeCount": 76,
     "ageCurveTier": "Aging",
-    "ktcSlug": "travis-etienne-1030"
+    "ktcSlug": "travis-etienne-1030",
+    "sf": {
+      "rank": 85,
+      "positionalRank": 20,
+      "value": 4489,
+      "overallTier": 10,
+      "positionalTier": 6,
+      "trend30": -4,
+      "trend7": -2,
+      "posTrend30": -1,
+      "posTrend7": 0,
+      "adp": 119,
+      "startupAdp": 124,
+      "tradeCount": 251
+    }
   },
   "sam-laporta": {
     "rank": 73,
@@ -1118,7 +1930,21 @@
     "startupAdp": 56,
     "tradeCount": 68,
     "ageCurveTier": "Prime",
-    "ktcSlug": "sam-laporta-1429"
+    "ktcSlug": "sam-laporta-1429",
+    "sf": {
+      "rank": 81,
+      "positionalRank": 7,
+      "value": 4588,
+      "overallTier": 10,
+      "positionalTier": 3,
+      "trend30": -4,
+      "trend7": -5,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 103,
+      "startupAdp": 45,
+      "tradeCount": 193
+    }
   },
   "josh-jacobs": {
     "rank": 74,
@@ -1137,7 +1963,21 @@
     "startupAdp": 32,
     "tradeCount": 88,
     "ageCurveTier": "Aging",
-    "ktcSlug": "josh-jacobs-303"
+    "ktcSlug": "josh-jacobs-303",
+    "sf": {
+      "rank": 87,
+      "positionalRank": 21,
+      "value": 4479,
+      "overallTier": 10,
+      "positionalTier": 6,
+      "trend30": -12,
+      "trend7": -6,
+      "posTrend30": -3,
+      "posTrend7": -2,
+      "adp": 83,
+      "startupAdp": 59,
+      "tradeCount": 233
+    }
   },
   "kyle-pitts": {
     "rank": 75,
@@ -1156,7 +1996,21 @@
     "startupAdp": 115,
     "tradeCount": 48,
     "ageCurveTier": "Prime",
-    "ktcSlug": "kyle-pitts-1051"
+    "ktcSlug": "kyle-pitts-1051",
+    "sf": {
+      "rank": 86,
+      "positionalRank": 8,
+      "value": 4484,
+      "overallTier": 10,
+      "positionalTier": 3,
+      "trend30": -2,
+      "trend7": -1,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 137,
+      "startupAdp": 107,
+      "tradeCount": 172
+    }
   },
   "bo-nix": {
     "rank": 80,
@@ -1175,7 +2029,21 @@
     "startupAdp": 79,
     "tradeCount": 38,
     "ageCurveTier": "Prime",
-    "ktcSlug": "bo-nix-1553"
+    "ktcSlug": "bo-nix-1553",
+    "sf": {
+      "rank": 30,
+      "positionalRank": 12,
+      "value": 6192,
+      "overallTier": 6,
+      "positionalTier": 3,
+      "trend30": 0,
+      "trend7": -1,
+      "posTrend30": -1,
+      "posTrend7": 0,
+      "adp": 100,
+      "startupAdp": 24,
+      "tradeCount": 147
+    }
   },
   "jordan-addison": {
     "rank": 81,
@@ -1194,7 +2062,21 @@
     "startupAdp": 77,
     "tradeCount": 85,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jordan-addison-1420"
+    "ktcSlug": "jordan-addison-1420",
+    "sf": {
+      "rank": 94,
+      "positionalRank": 32,
+      "value": 4062,
+      "overallTier": 13,
+      "positionalTier": 10,
+      "trend30": -6,
+      "trend7": -5,
+      "posTrend30": -4,
+      "posTrend7": -4,
+      "adp": 101,
+      "startupAdp": 83,
+      "tradeCount": 210
+    }
   },
   "travis-hunter": {
     "rank": 82,
@@ -1213,7 +2095,21 @@
     "startupAdp": 56,
     "tradeCount": 82,
     "ageCurveTier": "Rising",
-    "ktcSlug": "travis-hunter-1774"
+    "ktcSlug": "travis-hunter-1774",
+    "sf": {
+      "rank": 91,
+      "positionalRank": 30,
+      "value": 4205,
+      "overallTier": 12,
+      "positionalTier": 10,
+      "trend30": -20,
+      "trend7": -13,
+      "posTrend30": -6,
+      "posTrend7": -3,
+      "adp": 5,
+      "startupAdp": 46,
+      "tradeCount": 303
+    }
   },
   "ricky-pearsall": {
     "rank": 87,
@@ -1232,7 +2128,21 @@
     "startupAdp": 80,
     "tradeCount": 75,
     "ageCurveTier": "Prime",
-    "ktcSlug": "ricky-pearsall-1593"
+    "ktcSlug": "ricky-pearsall-1593",
+    "sf": {
+      "rank": 100,
+      "positionalRank": 34,
+      "value": 3903,
+      "overallTier": 13,
+      "positionalTier": 10,
+      "trend30": -8,
+      "trend7": -4,
+      "posTrend30": -4,
+      "posTrend7": -3,
+      "adp": 96,
+      "startupAdp": 97,
+      "tradeCount": 259
+    }
   },
   "derrick-henry": {
     "rank": 89,
@@ -1251,7 +2161,21 @@
     "startupAdp": 28,
     "tradeCount": 57,
     "ageCurveTier": "Declining",
-    "ktcSlug": "derrick-henry-296"
+    "ktcSlug": "derrick-henry-296",
+    "sf": {
+      "rank": 101,
+      "positionalRank": 24,
+      "value": 3901,
+      "overallTier": 13,
+      "positionalTier": 7,
+      "trend30": -7,
+      "trend7": -7,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 75,
+      "startupAdp": 59,
+      "tradeCount": 214
+    }
   },
   "jayden-higgins": {
     "rank": 90,
@@ -1270,7 +2194,21 @@
     "startupAdp": 112,
     "tradeCount": 47,
     "ageCurveTier": "Rising",
-    "ktcSlug": "jayden-higgins-1783"
+    "ktcSlug": "jayden-higgins-1783",
+    "sf": {
+      "rank": 105,
+      "positionalRank": 38,
+      "value": 3833,
+      "overallTier": 13,
+      "positionalTier": 10,
+      "trend30": -8,
+      "trend7": -13,
+      "posTrend30": -7,
+      "posTrend7": -9,
+      "adp": 18,
+      "startupAdp": 103,
+      "tradeCount": 178
+    }
   },
   "dk-metcalf": {
     "rank": 91,
@@ -1289,7 +2227,21 @@
     "startupAdp": 53,
     "tradeCount": 79,
     "ageCurveTier": "Prime",
-    "ktcSlug": "dk-metcalf-224"
+    "ktcSlug": "dk-metcalf-224",
+    "sf": {
+      "rank": 103,
+      "positionalRank": 36,
+      "value": 3849,
+      "overallTier": 13,
+      "positionalTier": 10,
+      "trend30": -5,
+      "trend7": -6,
+      "posTrend30": -4,
+      "posTrend7": -4,
+      "adp": 84,
+      "startupAdp": 76,
+      "tradeCount": 208
+    }
   },
   "alec-pierce": {
     "rank": 92,
@@ -1308,7 +2260,21 @@
     "startupAdp": 177,
     "tradeCount": 83,
     "ageCurveTier": "Prime",
-    "ktcSlug": "alec-pierce-1285"
+    "ktcSlug": "alec-pierce-1285",
+    "sf": {
+      "rank": 104,
+      "positionalRank": 37,
+      "value": 3845,
+      "overallTier": 13,
+      "positionalTier": 10,
+      "trend30": 0,
+      "trend7": -6,
+      "posTrend30": -3,
+      "posTrend7": -4,
+      "adp": 143,
+      "startupAdp": 221,
+      "tradeCount": 229
+    }
   },
   "jordan-love": {
     "rank": 93,
@@ -1327,7 +2293,21 @@
     "startupAdp": 129,
     "tradeCount": 45,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jordan-love-596"
+    "ktcSlug": "jordan-love-596",
+    "sf": {
+      "rank": 42,
+      "positionalRank": 14,
+      "value": 5699,
+      "overallTier": 8,
+      "positionalTier": 4,
+      "trend30": 0,
+      "trend7": -1,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 125,
+      "startupAdp": 40,
+      "tradeCount": 169
+    }
   },
   "michael-wilson": {
     "rank": 94,
@@ -1346,7 +2326,21 @@
     "startupAdp": 186,
     "tradeCount": 74,
     "ageCurveTier": "Prime",
-    "ktcSlug": "michael-wilson-1421"
+    "ktcSlug": "michael-wilson-1421",
+    "sf": {
+      "rank": 102,
+      "positionalRank": 35,
+      "value": 3887,
+      "overallTier": 13,
+      "positionalTier": 10,
+      "trend30": -11,
+      "trend7": -7,
+      "posTrend30": -6,
+      "posTrend7": -5,
+      "adp": 173,
+      "startupAdp": 238,
+      "tradeCount": 222
+    }
   },
   "dandre-swift": {
     "rank": 95,
@@ -1365,7 +2359,21 @@
     "startupAdp": 76,
     "tradeCount": 69,
     "ageCurveTier": "Aging",
-    "ktcSlug": "d-andre-swift-639"
+    "ktcSlug": "d-andre-swift-639",
+    "sf": {
+      "rank": 107,
+      "positionalRank": 25,
+      "value": 3740,
+      "overallTier": 14,
+      "positionalTier": 8,
+      "trend30": -4,
+      "trend7": -7,
+      "posTrend30": 0,
+      "posTrend7": -1,
+      "adp": 95,
+      "startupAdp": 106,
+      "tradeCount": 184
+    }
   },
   "brock-purdy": {
     "rank": 96,
@@ -1384,7 +2392,21 @@
     "startupAdp": 113,
     "tradeCount": 41,
     "ageCurveTier": "Prime",
-    "ktcSlug": "brock-purdy-1214"
+    "ktcSlug": "brock-purdy-1214",
+    "sf": {
+      "rank": 34,
+      "positionalRank": 13,
+      "value": 6107,
+      "overallTier": 6,
+      "positionalTier": 3,
+      "trend30": -1,
+      "trend7": 0,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 116,
+      "startupAdp": 40,
+      "tradeCount": 145
+    }
   },
   "wandale-robinson": {
     "rank": 100,
@@ -1403,7 +2425,21 @@
     "startupAdp": 151,
     "tradeCount": 57,
     "ageCurveTier": "Prime",
-    "ktcSlug": "wan-dale-robinson-1274"
+    "ktcSlug": "wan-dale-robinson-1274",
+    "sf": {
+      "rank": 111,
+      "positionalRank": 41,
+      "value": 3625,
+      "overallTier": 14,
+      "positionalTier": 12,
+      "trend30": -4,
+      "trend7": -8,
+      "posTrend30": -6,
+      "posTrend7": -6,
+      "adp": 129,
+      "startupAdp": 179,
+      "tradeCount": 148
+    }
   },
   "davante-adams": {
     "rank": 101,
@@ -1422,7 +2458,21 @@
     "startupAdp": 56,
     "tradeCount": 76,
     "ageCurveTier": "Declining",
-    "ktcSlug": "davante-adams-277"
+    "ktcSlug": "davante-adams-277",
+    "sf": {
+      "rank": 110,
+      "positionalRank": 40,
+      "value": 3673,
+      "overallTier": 14,
+      "positionalTier": 12,
+      "trend30": -1,
+      "trend7": -6,
+      "posTrend30": -3,
+      "posTrend7": -4,
+      "adp": 88,
+      "startupAdp": 96,
+      "tradeCount": 191
+    }
   },
   "dak-prescott": {
     "rank": 102,
@@ -1441,7 +2491,21 @@
     "startupAdp": 114,
     "tradeCount": 33,
     "ageCurveTier": "Aging",
-    "ktcSlug": "dak-prescott-371"
+    "ktcSlug": "dak-prescott-371",
+    "sf": {
+      "rank": 57,
+      "positionalRank": 17,
+      "value": 4981,
+      "overallTier": 10,
+      "positionalTier": 5,
+      "trend30": -4,
+      "trend7": -3,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 113,
+      "startupAdp": 53,
+      "tradeCount": 158
+    }
   },
   "michael-pittman": {
     "rank": 103,
@@ -1460,7 +2524,21 @@
     "startupAdp": 96,
     "tradeCount": 59,
     "ageCurveTier": "Prime",
-    "ktcSlug": "michael-pittman-536"
+    "ktcSlug": "michael-pittman-536",
+    "sf": {
+      "rank": 118,
+      "positionalRank": 43,
+      "value": 3564,
+      "overallTier": 14,
+      "positionalTier": 12,
+      "trend30": -10,
+      "trend7": -12,
+      "posTrend30": -7,
+      "posTrend7": -6,
+      "adp": 127,
+      "startupAdp": 127,
+      "tradeCount": 156
+    }
   },
   "xavier-worthy": {
     "rank": 105,
@@ -1479,7 +2557,21 @@
     "startupAdp": 52,
     "tradeCount": 65,
     "ageCurveTier": "Rising",
-    "ktcSlug": "xavier-worthy-1591"
+    "ktcSlug": "xavier-worthy-1591",
+    "sf": {
+      "rank": 120,
+      "positionalRank": 45,
+      "value": 3528,
+      "overallTier": 14,
+      "positionalTier": 12,
+      "trend30": -10,
+      "trend7": -9,
+      "posTrend30": -7,
+      "posTrend7": -6,
+      "adp": 97,
+      "startupAdp": 65,
+      "tradeCount": 222
+    }
   },
   "bhayshul-tuten": {
     "rank": 106,
@@ -1498,7 +2590,21 @@
     "startupAdp": 117,
     "tradeCount": 52,
     "ageCurveTier": "Prime",
-    "ktcSlug": "bhayshul-tuten-1752"
+    "ktcSlug": "bhayshul-tuten-1752",
+    "sf": {
+      "rank": 127,
+      "positionalRank": 29,
+      "value": 3458,
+      "overallTier": 14,
+      "positionalTier": 8,
+      "trend30": -2,
+      "trend7": -6,
+      "posTrend30": 1,
+      "posTrend7": 0,
+      "adp": 23,
+      "startupAdp": 119,
+      "tradeCount": 154
+    }
   },
   "zach-charbonnet": {
     "rank": 107,
@@ -1517,7 +2623,21 @@
     "startupAdp": 98,
     "tradeCount": 54,
     "ageCurveTier": "Prime",
-    "ktcSlug": "zach-charbonnet-1384"
+    "ktcSlug": "zach-charbonnet-1384",
+    "sf": {
+      "rank": 117,
+      "positionalRank": 27,
+      "value": 3571,
+      "overallTier": 14,
+      "positionalTier": 8,
+      "trend30": -21,
+      "trend7": -16,
+      "posTrend30": -3,
+      "posTrend7": -2,
+      "adp": 126,
+      "startupAdp": 127,
+      "tradeCount": 135
+    }
   },
   "baker-mayfield": {
     "rank": 108,
@@ -1536,7 +2656,21 @@
     "startupAdp": 86,
     "tradeCount": 28,
     "ageCurveTier": "Prime",
-    "ktcSlug": "baker-mayfield-215"
+    "ktcSlug": "baker-mayfield-215",
+    "sf": {
+      "rank": 73,
+      "positionalRank": 20,
+      "value": 4769,
+      "overallTier": 10,
+      "positionalTier": 5,
+      "trend30": -5,
+      "trend7": -7,
+      "posTrend30": -2,
+      "posTrend7": -1,
+      "adp": 127,
+      "startupAdp": 37,
+      "tradeCount": 171
+    }
   },
   "matthew-golden": {
     "rank": 109,
@@ -1555,7 +2689,21 @@
     "startupAdp": 75,
     "tradeCount": 52,
     "ageCurveTier": "Rising",
-    "ktcSlug": "matthew-golden-1775"
+    "ktcSlug": "matthew-golden-1775",
+    "sf": {
+      "rank": 119,
+      "positionalRank": 44,
+      "value": 3534,
+      "overallTier": 14,
+      "positionalTier": 12,
+      "trend30": -7,
+      "trend7": -10,
+      "posTrend30": -5,
+      "posTrend7": -6,
+      "adp": 14,
+      "startupAdp": 82,
+      "tradeCount": 227
+    }
   },
   "dalton-kincaid": {
     "rank": 111,
@@ -1574,7 +2722,21 @@
     "startupAdp": 120,
     "tradeCount": 45,
     "ageCurveTier": "Prime",
-    "ktcSlug": "dalton-kincaid-1428"
+    "ktcSlug": "dalton-kincaid-1428",
+    "sf": {
+      "rank": 116,
+      "positionalRank": 11,
+      "value": 3573,
+      "overallTier": 14,
+      "positionalTier": 5,
+      "trend30": 2,
+      "trend7": -1,
+      "posTrend30": 1,
+      "posTrend7": 0,
+      "adp": 132,
+      "startupAdp": 103,
+      "tradeCount": 167
+    }
   },
   "blake-corum": {
     "rank": 113,
@@ -1593,7 +2755,21 @@
     "startupAdp": 167,
     "tradeCount": 55,
     "ageCurveTier": "Prime",
-    "ktcSlug": "blake-corum-1564"
+    "ktcSlug": "blake-corum-1564",
+    "sf": {
+      "rank": 123,
+      "positionalRank": 28,
+      "value": 3510,
+      "overallTier": 14,
+      "positionalTier": 8,
+      "trend30": -6,
+      "trend7": -6,
+      "posTrend30": -1,
+      "posTrend7": -2,
+      "adp": 133,
+      "startupAdp": 205,
+      "tradeCount": 135
+    }
   },
   "jaylen-warren": {
     "rank": 114,
@@ -1612,7 +2788,21 @@
     "startupAdp": 92,
     "tradeCount": 53,
     "ageCurveTier": "Aging",
-    "ktcSlug": "jaylen-warren-1201"
+    "ktcSlug": "jaylen-warren-1201",
+    "sf": {
+      "rank": 128,
+      "positionalRank": 30,
+      "value": 3447,
+      "overallTier": 14,
+      "positionalTier": 8,
+      "trend30": -10,
+      "trend7": -8,
+      "posTrend30": -2,
+      "posTrend7": -2,
+      "adp": 98,
+      "startupAdp": 137,
+      "tradeCount": 166
+    }
   },
   "george-kittle": {
     "rank": 115,
@@ -1631,7 +2821,21 @@
     "startupAdp": 51,
     "tradeCount": 33,
     "ageCurveTier": "Declining",
-    "ktcSlug": "george-kittle-298"
+    "ktcSlug": "george-kittle-298",
+    "sf": {
+      "rank": 125,
+      "positionalRank": 12,
+      "value": 3484,
+      "overallTier": 14,
+      "positionalTier": 5,
+      "trend30": -26,
+      "trend7": -17,
+      "posTrend30": -2,
+      "posTrend7": -2,
+      "adp": 94,
+      "startupAdp": 58,
+      "tradeCount": 108
+    }
   },
   "trevor-lawrence": {
     "rank": 116,
@@ -1650,7 +2854,21 @@
     "startupAdp": 138,
     "tradeCount": 36,
     "ageCurveTier": "Prime",
-    "ktcSlug": "trevor-lawrence-1094"
+    "ktcSlug": "trevor-lawrence-1094",
+    "sf": {
+      "rank": 29,
+      "positionalRank": 11,
+      "value": 6304,
+      "overallTier": 5,
+      "positionalTier": 3,
+      "trend30": 2,
+      "trend7": -1,
+      "posTrend30": 1,
+      "posTrend7": 0,
+      "adp": 138,
+      "startupAdp": 47,
+      "tradeCount": 160
+    }
   },
   "trey-benson": {
     "rank": 118,
@@ -1669,7 +2887,21 @@
     "startupAdp": 119,
     "tradeCount": 47,
     "ageCurveTier": "Prime",
-    "ktcSlug": "trey-benson-1565"
+    "ktcSlug": "trey-benson-1565",
+    "sf": {
+      "rank": 134,
+      "positionalRank": 32,
+      "value": 3327,
+      "overallTier": 14,
+      "positionalTier": 9,
+      "trend30": -12,
+      "trend7": -11,
+      "posTrend30": -3,
+      "posTrend7": -2,
+      "adp": 131,
+      "startupAdp": 126,
+      "tradeCount": 169
+    }
   },
   "jake-ferguson": {
     "rank": 120,
@@ -1688,7 +2920,21 @@
     "startupAdp": 128,
     "tradeCount": 53,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jake-ferguson-1258"
+    "ktcSlug": "jake-ferguson-1258",
+    "sf": {
+      "rank": 129,
+      "positionalRank": 13,
+      "value": 3410,
+      "overallTier": 14,
+      "positionalTier": 5,
+      "trend30": -13,
+      "trend7": -10,
+      "posTrend30": -2,
+      "posTrend7": -1,
+      "adp": 132,
+      "startupAdp": 131,
+      "tradeCount": 131
+    }
   },
   "terry-mclaurin": {
     "rank": 123,
@@ -1707,7 +2953,21 @@
     "startupAdp": 48,
     "tradeCount": 92,
     "ageCurveTier": "Aging",
-    "ktcSlug": "terry-mclaurin-328"
+    "ktcSlug": "terry-mclaurin-328",
+    "sf": {
+      "rank": 132,
+      "positionalRank": 49,
+      "value": 3364,
+      "overallTier": 14,
+      "positionalTier": 13,
+      "trend30": 0,
+      "trend7": -5,
+      "posTrend30": -1,
+      "posTrend7": -4,
+      "adp": 93,
+      "startupAdp": 79,
+      "tradeCount": 233
+    }
   },
   "courtland-sutton": {
     "rank": 124,
@@ -1726,7 +2986,21 @@
     "startupAdp": 61,
     "tradeCount": 56,
     "ageCurveTier": "Aging",
-    "ktcSlug": "courtland-sutton-226"
+    "ktcSlug": "courtland-sutton-226",
+    "sf": {
+      "rank": 136,
+      "positionalRank": 50,
+      "value": 3292,
+      "overallTier": 14,
+      "positionalTier": 14,
+      "trend30": -15,
+      "trend7": -12,
+      "posTrend30": -8,
+      "posTrend7": -7,
+      "adp": 97,
+      "startupAdp": 96,
+      "tradeCount": 184
+    }
   },
   "cj-stroud": {
     "rank": 125,
@@ -1745,7 +3019,21 @@
     "startupAdp": 121,
     "tradeCount": 34,
     "ageCurveTier": "Rising",
-    "ktcSlug": "cj-stroud-1403"
+    "ktcSlug": "cj-stroud-1403",
+    "sf": {
+      "rank": 61,
+      "positionalRank": 18,
+      "value": 4942,
+      "overallTier": 10,
+      "positionalTier": 5,
+      "trend30": -14,
+      "trend7": -9,
+      "posTrend30": -3,
+      "posTrend7": -3,
+      "adp": 112,
+      "startupAdp": 34,
+      "tradeCount": 212
+    }
   },
   "jayden-reed": {
     "rank": 126,
@@ -1764,7 +3052,21 @@
     "startupAdp": 102,
     "tradeCount": 58,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jayden-reed-1419"
+    "ktcSlug": "jayden-reed-1419",
+    "sf": {
+      "rank": 139,
+      "positionalRank": 52,
+      "value": 3261,
+      "overallTier": 14,
+      "positionalTier": 14,
+      "trend30": -13,
+      "trend7": -11,
+      "posTrend30": -8,
+      "posTrend7": -6,
+      "adp": 127,
+      "startupAdp": 115,
+      "tradeCount": 119
+    }
   },
   "dj-moore": {
     "rank": 128,
@@ -1783,7 +3085,21 @@
     "startupAdp": 52,
     "tradeCount": 76,
     "ageCurveTier": "Prime",
-    "ktcSlug": "dj-moore-304"
+    "ktcSlug": "dj-moore-304",
+    "sf": {
+      "rank": 137,
+      "positionalRank": 51,
+      "value": 3286,
+      "overallTier": 14,
+      "positionalTier": 14,
+      "trend30": -10,
+      "trend7": -11,
+      "posTrend30": -6,
+      "posTrend7": -7,
+      "adp": 92,
+      "startupAdp": 81,
+      "tradeCount": 168
+    }
   },
   "tyler-allgeier": {
     "rank": 130,
@@ -1802,7 +3118,21 @@
     "startupAdp": 153,
     "tradeCount": 92,
     "ageCurveTier": "Prime",
-    "ktcSlug": "tyler-allgeier-1228"
+    "ktcSlug": "tyler-allgeier-1228",
+    "sf": {
+      "rank": 141,
+      "positionalRank": 34,
+      "value": 3209,
+      "overallTier": 14,
+      "positionalTier": 10,
+      "trend30": -8,
+      "trend7": -6,
+      "posTrend30": -2,
+      "posTrend7": -2,
+      "adp": 150,
+      "startupAdp": 185,
+      "tradeCount": 213
+    }
   },
   "rico-dowdle": {
     "rank": 131,
@@ -1821,7 +3151,21 @@
     "startupAdp": 156,
     "tradeCount": 60,
     "ageCurveTier": "Aging",
-    "ktcSlug": "rico-dowdle-555"
+    "ktcSlug": "rico-dowdle-555",
+    "sf": {
+      "rank": 144,
+      "positionalRank": 36,
+      "value": 3153,
+      "overallTier": 14,
+      "positionalTier": 10,
+      "trend30": -15,
+      "trend7": -15,
+      "posTrend30": -5,
+      "posTrend7": -5,
+      "adp": 158,
+      "startupAdp": 205,
+      "tradeCount": 162
+    }
   },
   "cam-ward": {
     "rank": 132,
@@ -1840,7 +3184,21 @@
     "startupAdp": 129,
     "tradeCount": 54,
     "ageCurveTier": "Rising",
-    "ktcSlug": "cam-ward-1730"
+    "ktcSlug": "cam-ward-1730",
+    "sf": {
+      "rank": 56,
+      "positionalRank": 16,
+      "value": 5025,
+      "overallTier": 10,
+      "positionalTier": 5,
+      "trend30": -1,
+      "trend7": -1,
+      "posTrend30": 1,
+      "posTrend7": 1,
+      "adp": 5,
+      "startupAdp": 52,
+      "tradeCount": 239
+    }
   },
   "brenton-strange": {
     "rank": 133,
@@ -1859,7 +3217,21 @@
     "startupAdp": 171,
     "tradeCount": 45,
     "ageCurveTier": "Prime",
-    "ktcSlug": "brenton-strange-1461"
+    "ktcSlug": "brenton-strange-1461",
+    "sf": {
+      "rank": 138,
+      "positionalRank": 14,
+      "value": 3270,
+      "overallTier": 14,
+      "positionalTier": 5,
+      "trend30": -14,
+      "trend7": -13,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 75,
+      "startupAdp": 153,
+      "tradeCount": 171
+    }
   },
   "josh-downs": {
     "rank": 134,
@@ -1878,7 +3250,21 @@
     "startupAdp": 106,
     "tradeCount": 51,
     "ageCurveTier": "Prime",
-    "ktcSlug": "josh-downs-1440"
+    "ktcSlug": "josh-downs-1440",
+    "sf": {
+      "rank": 145,
+      "positionalRank": 54,
+      "value": 3142,
+      "overallTier": 14,
+      "positionalTier": 15,
+      "trend30": -14,
+      "trend7": -15,
+      "posTrend30": -7,
+      "posTrend7": -7,
+      "adp": 105,
+      "startupAdp": 112,
+      "tradeCount": 122
+    }
   },
   "khalil-shakir": {
     "rank": 135,
@@ -1897,7 +3283,21 @@
     "startupAdp": 98,
     "tradeCount": 52,
     "ageCurveTier": "Prime",
-    "ktcSlug": "khalil-shakir-1278"
+    "ktcSlug": "khalil-shakir-1278",
+    "sf": {
+      "rank": 146,
+      "positionalRank": 55,
+      "value": 3111,
+      "overallTier": 14,
+      "positionalTier": 15,
+      "trend30": -11,
+      "trend7": -12,
+      "posTrend30": -6,
+      "posTrend7": -5,
+      "adp": 129,
+      "startupAdp": 119,
+      "tradeCount": 124
+    }
   },
   "sam-darnold": {
     "rank": 137,
@@ -1916,7 +3316,21 @@
     "startupAdp": 167,
     "tradeCount": 32,
     "ageCurveTier": "Prime",
-    "ktcSlug": "sam-darnold-331"
+    "ktcSlug": "sam-darnold-331",
+    "sf": {
+      "rank": 70,
+      "positionalRank": 19,
+      "value": 4802,
+      "overallTier": 10,
+      "positionalTier": 5,
+      "trend30": 2,
+      "trend7": -7,
+      "posTrend30": 0,
+      "posTrend7": -1,
+      "adp": 152,
+      "startupAdp": 102,
+      "tradeCount": 182
+    }
   },
   "jared-goff": {
     "rank": 139,
@@ -1935,7 +3349,21 @@
     "startupAdp": 119,
     "tradeCount": 37,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jared-goff-388"
+    "ktcSlug": "jared-goff-388",
+    "sf": {
+      "rank": 79,
+      "positionalRank": 21,
+      "value": 4624,
+      "overallTier": 10,
+      "positionalTier": 5,
+      "trend30": 0,
+      "trend7": -4,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 120,
+      "startupAdp": 51,
+      "tradeCount": 176
+    }
   },
   "chuba-hubbard": {
     "rank": 140,
@@ -1954,7 +3382,21 @@
     "startupAdp": 61,
     "tradeCount": 75,
     "ageCurveTier": "Aging",
-    "ktcSlug": "chuba-hubbard-1014"
+    "ktcSlug": "chuba-hubbard-1014",
+    "sf": {
+      "rank": 149,
+      "positionalRank": 37,
+      "value": 3059,
+      "overallTier": 14,
+      "positionalTier": 11,
+      "trend30": -8,
+      "trend7": -10,
+      "posTrend30": -4,
+      "posTrend7": -4,
+      "adp": 81,
+      "startupAdp": 81,
+      "tradeCount": 170
+    }
   },
   "jalen-coker": {
     "rank": 142,
@@ -1973,7 +3415,21 @@
     "startupAdp": 178,
     "tradeCount": 61,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jalen-coker-1653"
+    "ktcSlug": "jalen-coker-1653",
+    "sf": {
+      "rank": 143,
+      "positionalRank": 53,
+      "value": 3162,
+      "overallTier": 14,
+      "positionalTier": 15,
+      "trend30": -5,
+      "trend7": -10,
+      "posTrend30": -3,
+      "posTrend7": -4,
+      "adp": 82,
+      "startupAdp": 208,
+      "tradeCount": 179
+    }
   },
   "isaiah-likely": {
     "rank": 145,
@@ -1992,7 +3448,21 @@
     "startupAdp": 158,
     "tradeCount": 47,
     "ageCurveTier": "Prime",
-    "ktcSlug": "isaiah-likely-1257"
+    "ktcSlug": "isaiah-likely-1257",
+    "sf": {
+      "rank": 152,
+      "positionalRank": 15,
+      "value": 3025,
+      "overallTier": 14,
+      "positionalTier": 6,
+      "trend30": 0,
+      "trend7": -7,
+      "posTrend30": 1,
+      "posTrend7": 0,
+      "adp": 157,
+      "startupAdp": 129,
+      "tradeCount": 131
+    }
   },
   "pat-bryant": {
     "rank": 146,
@@ -2011,7 +3481,21 @@
     "startupAdp": 153,
     "tradeCount": 59,
     "ageCurveTier": "Rising",
-    "ktcSlug": "pat-bryant-1782"
+    "ktcSlug": "pat-bryant-1782",
+    "sf": {
+      "rank": 156,
+      "positionalRank": 58,
+      "value": 2972,
+      "overallTier": 14,
+      "positionalTier": 16,
+      "trend30": -5,
+      "trend7": -8,
+      "posTrend30": -1,
+      "posTrend7": -4,
+      "adp": 36,
+      "startupAdp": 167,
+      "tradeCount": 131
+    }
   },
   "romeo-doubs": {
     "rank": 147,
@@ -2030,7 +3514,21 @@
     "startupAdp": 181,
     "tradeCount": 43,
     "ageCurveTier": "Prime",
-    "ktcSlug": "romeo-doubs-1238"
+    "ktcSlug": "romeo-doubs-1238",
+    "sf": {
+      "rank": 155,
+      "positionalRank": 57,
+      "value": 2978,
+      "overallTier": 14,
+      "positionalTier": 16,
+      "trend30": -15,
+      "trend7": -15,
+      "posTrend30": -6,
+      "posTrend7": -5,
+      "adp": 145,
+      "startupAdp": 206,
+      "tradeCount": 106
+    }
   },
   "rhamondre-stevenson": {
     "rank": 150,
@@ -2049,7 +3547,21 @@
     "startupAdp": 120,
     "tradeCount": 58,
     "ageCurveTier": "Aging",
-    "ktcSlug": "rhamondre-stevenson-1036"
+    "ktcSlug": "rhamondre-stevenson-1036",
+    "sf": {
+      "rank": 154,
+      "positionalRank": 38,
+      "value": 2981,
+      "overallTier": 14,
+      "positionalTier": 11,
+      "trend30": 0,
+      "trend7": -11,
+      "posTrend30": -2,
+      "posTrend7": -4,
+      "adp": 131,
+      "startupAdp": 163,
+      "tradeCount": 162
+    }
   },
   "mason-taylor": {
     "rank": 151,
@@ -2068,7 +3580,21 @@
     "startupAdp": 145,
     "tradeCount": 24,
     "ageCurveTier": "Rising",
-    "ktcSlug": "mason-taylor-1806"
+    "ktcSlug": "mason-taylor-1806",
+    "sf": {
+      "rank": 158,
+      "positionalRank": 16,
+      "value": 2919,
+      "overallTier": 15,
+      "positionalTier": 6,
+      "trend30": -21,
+      "trend7": -16,
+      "posTrend30": -2,
+      "posTrend7": -2,
+      "adp": 22,
+      "startupAdp": 112,
+      "tradeCount": 104
+    }
   },
   "jacory-croskey-merritt": {
     "rank": 152,
@@ -2087,7 +3613,21 @@
     "startupAdp": 127,
     "tradeCount": 54,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jacory-croskey-merritt-1832"
+    "ktcSlug": "jacory-croskey-merritt-1832",
+    "sf": {
+      "rank": 161,
+      "positionalRank": 39,
+      "value": 2891,
+      "overallTier": 15,
+      "positionalTier": 12,
+      "trend30": -18,
+      "trend7": -15,
+      "posTrend30": -5,
+      "posTrend7": -4,
+      "adp": 47,
+      "startupAdp": 191,
+      "tradeCount": 169
+    }
   },
   "elic-ayomanor": {
     "rank": 153,
@@ -2106,7 +3646,21 @@
     "startupAdp": 137,
     "tradeCount": 34,
     "ageCurveTier": "Rising",
-    "ktcSlug": "elic-ayomanor-1773"
+    "ktcSlug": "elic-ayomanor-1773",
+    "sf": {
+      "rank": 168,
+      "positionalRank": 64,
+      "value": 2841,
+      "overallTier": 15,
+      "positionalTier": 17,
+      "trend30": -20,
+      "trend7": -18,
+      "posTrend30": -8,
+      "posTrend7": -8,
+      "adp": 40,
+      "startupAdp": 182,
+      "tradeCount": 99
+    }
   },
   "jauan-jennings": {
     "rank": 155,
@@ -2125,7 +3679,21 @@
     "startupAdp": 90,
     "tradeCount": 47,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jauan-jennings-576"
+    "ktcSlug": "jauan-jennings-576",
+    "sf": {
+      "rank": 166,
+      "positionalRank": 63,
+      "value": 2848,
+      "overallTier": 15,
+      "positionalTier": 17,
+      "trend30": -22,
+      "trend7": -19,
+      "posTrend30": -10,
+      "posTrend7": -10,
+      "adp": 69,
+      "startupAdp": 132,
+      "tradeCount": 102
+    }
   },
   "david-montgomery": {
     "rank": 156,
@@ -2144,7 +3712,21 @@
     "startupAdp": 79,
     "tradeCount": 51,
     "ageCurveTier": "Declining",
-    "ktcSlug": "david-montgomery-288"
+    "ktcSlug": "david-montgomery-288",
+    "sf": {
+      "rank": 179,
+      "positionalRank": 43,
+      "value": 2794,
+      "overallTier": 15,
+      "positionalTier": 12,
+      "trend30": -17,
+      "trend7": -14,
+      "posTrend30": -6,
+      "posTrend7": -4,
+      "adp": 107,
+      "startupAdp": 107,
+      "tradeCount": 137
+    }
   },
   "tyjae-spears": {
     "rank": 157,
@@ -2163,7 +3745,21 @@
     "startupAdp": 139,
     "tradeCount": 45,
     "ageCurveTier": "Prime",
-    "ktcSlug": "tyjae-spears-1417"
+    "ktcSlug": "tyjae-spears-1417",
+    "sf": {
+      "rank": 172,
+      "positionalRank": 41,
+      "value": 2822,
+      "overallTier": 15,
+      "positionalTier": 12,
+      "trend30": -10,
+      "trend7": -10,
+      "posTrend30": -3,
+      "posTrend7": -3,
+      "adp": 133,
+      "startupAdp": 157,
+      "tradeCount": 109
+    }
   },
   "braelon-allen": {
     "rank": 158,
@@ -2182,7 +3778,21 @@
     "startupAdp": 140,
     "tradeCount": 44,
     "ageCurveTier": "Rising",
-    "ktcSlug": "braelon-allen-1567"
+    "ktcSlug": "braelon-allen-1567",
+    "sf": {
+      "rank": 167,
+      "positionalRank": 40,
+      "value": 2847,
+      "overallTier": 15,
+      "positionalTier": 12,
+      "trend30": -2,
+      "trend7": -15,
+      "posTrend30": 0,
+      "posTrend7": -3,
+      "adp": 131,
+      "startupAdp": 165,
+      "tradeCount": 125
+    }
   },
   "rashid-shaheed": {
     "rank": 159,
@@ -2201,7 +3811,21 @@
     "startupAdp": 132,
     "tradeCount": 47,
     "ageCurveTier": "Prime",
-    "ktcSlug": "rashid-shaheed-1360"
+    "ktcSlug": "rashid-shaheed-1360",
+    "sf": {
+      "rank": 170,
+      "positionalRank": 66,
+      "value": 2838,
+      "overallTier": 15,
+      "positionalTier": 17,
+      "trend30": 0,
+      "trend7": -1,
+      "posTrend30": 0,
+      "posTrend7": -2,
+      "adp": 134,
+      "startupAdp": 161,
+      "tradeCount": 98
+    }
   },
   "terrance-ferguson": {
     "rank": 161,
@@ -2220,7 +3844,21 @@
     "startupAdp": 139,
     "tradeCount": 28,
     "ageCurveTier": "Rising",
-    "ktcSlug": "terrance-ferguson-1807"
+    "ktcSlug": "terrance-ferguson-1807",
+    "sf": {
+      "rank": 159,
+      "positionalRank": 17,
+      "value": 2903,
+      "overallTier": 15,
+      "positionalTier": 6,
+      "trend30": 1,
+      "trend7": -4,
+      "posTrend30": 0,
+      "posTrend7": 0,
+      "adp": 26,
+      "startupAdp": 132,
+      "tradeCount": 136
+    }
   },
   "daniel-jones": {
     "rank": 164,
@@ -2239,7 +3877,21 @@
     "startupAdp": 173,
     "tradeCount": 29,
     "ageCurveTier": "Prime",
-    "ktcSlug": "daniel-jones-87"
+    "ktcSlug": "daniel-jones-87",
+    "sf": {
+      "rank": 97,
+      "positionalRank": 24,
+      "value": 3967,
+      "overallTier": 13,
+      "positionalTier": 6,
+      "trend30": -2,
+      "trend7": -6,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 162,
+      "startupAdp": 164,
+      "tradeCount": 183
+    }
   },
   "aj-barner": {
     "rank": 166,
@@ -2258,7 +3910,21 @@
     "startupAdp": 164,
     "tradeCount": 38,
     "ageCurveTier": "Rising",
-    "ktcSlug": "aj-barner-1629"
+    "ktcSlug": "aj-barner-1629",
+    "sf": {
+      "rank": 162,
+      "positionalRank": 18,
+      "value": 2876,
+      "overallTier": 15,
+      "positionalTier": 6,
+      "trend30": -12,
+      "trend7": -10,
+      "posTrend30": -3,
+      "posTrend7": -2,
+      "adp": 117,
+      "startupAdp": 257,
+      "tradeCount": 136
+    }
   },
   "mike-evans": {
     "rank": 167,
@@ -2277,7 +3943,21 @@
     "startupAdp": 55,
     "tradeCount": 68,
     "ageCurveTier": "Declining",
-    "ktcSlug": "mike-evans-275"
+    "ktcSlug": "mike-evans-275",
+    "sf": {
+      "rank": 163,
+      "positionalRank": 60,
+      "value": 2873,
+      "overallTier": 15,
+      "positionalTier": 17,
+      "trend30": 4,
+      "trend7": -6,
+      "posTrend30": 3,
+      "posTrend7": -2,
+      "adp": 86,
+      "startupAdp": 91,
+      "tradeCount": 124
+    }
   },
   "tre-harris": {
     "rank": 169,
@@ -2296,7 +3976,21 @@
     "startupAdp": 119,
     "tradeCount": 34,
     "ageCurveTier": "Prime",
-    "ktcSlug": "tre-harris-1772"
+    "ktcSlug": "tre-harris-1772",
+    "sf": {
+      "rank": 169,
+      "positionalRank": 65,
+      "value": 2839,
+      "overallTier": 15,
+      "positionalTier": 17,
+      "trend30": -16,
+      "trend7": -8,
+      "posTrend30": -7,
+      "posTrend7": -5,
+      "adp": 20,
+      "startupAdp": 117,
+      "tradeCount": 131
+    }
   },
   "theo-johnson": {
     "rank": 170,
@@ -2315,7 +4009,21 @@
     "startupAdp": 196,
     "tradeCount": 37,
     "ageCurveTier": "Prime",
-    "ktcSlug": "theo-johnson-1620"
+    "ktcSlug": "theo-johnson-1620",
+    "sf": {
+      "rank": 177,
+      "positionalRank": 19,
+      "value": 2796,
+      "overallTier": 15,
+      "positionalTier": 6,
+      "trend30": -16,
+      "trend7": -19,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 143,
+      "startupAdp": 189,
+      "tradeCount": 125
+    }
   },
   "isaac-teslaa": {
     "rank": 172,
@@ -2334,7 +4042,21 @@
     "startupAdp": 176,
     "tradeCount": 25,
     "ageCurveTier": "Prime",
-    "ktcSlug": "isaac-teslaa-1813"
+    "ktcSlug": "isaac-teslaa-1813",
+    "sf": {
+      "rank": 171,
+      "positionalRank": 67,
+      "value": 2832,
+      "overallTier": 15,
+      "positionalTier": 17,
+      "trend30": -25,
+      "trend7": -22,
+      "posTrend30": -12,
+      "posTrend7": -12,
+      "adp": 40,
+      "startupAdp": 184,
+      "tradeCount": 108
+    }
   },
   "bryce-young": {
     "rank": 174,
@@ -2353,7 +4075,21 @@
     "startupAdp": 160,
     "tradeCount": 35,
     "ageCurveTier": "Rising",
-    "ktcSlug": "bryce-young-1456"
+    "ktcSlug": "bryce-young-1456",
+    "sf": {
+      "rank": 84,
+      "positionalRank": 23,
+      "value": 4498,
+      "overallTier": 10,
+      "positionalTier": 5,
+      "trend30": -4,
+      "trend7": -2,
+      "posTrend30": -2,
+      "posTrend7": -1,
+      "adp": 135,
+      "startupAdp": 67,
+      "tradeCount": 188
+    }
   },
   "chris-godwin": {
     "rank": 175,
@@ -2372,7 +4108,21 @@
     "startupAdp": 91,
     "tradeCount": 48,
     "ageCurveTier": "Aging",
-    "ktcSlug": "chris-godwin-299"
+    "ktcSlug": "chris-godwin-299",
+    "sf": {
+      "rank": 183,
+      "positionalRank": 72,
+      "value": 2767,
+      "overallTier": 15,
+      "positionalTier": 17,
+      "trend30": -10,
+      "trend7": -13,
+      "posTrend30": -5,
+      "posTrend7": -7,
+      "adp": 113,
+      "startupAdp": 119,
+      "tradeCount": 133
+    }
   },
   "jk-dobbins": {
     "rank": 177,
@@ -2391,7 +4141,21 @@
     "startupAdp": 121,
     "tradeCount": 43,
     "ageCurveTier": "Aging",
-    "ktcSlug": "jk-dobbins-636"
+    "ktcSlug": "jk-dobbins-636",
+    "sf": {
+      "rank": 184,
+      "positionalRank": 44,
+      "value": 2756,
+      "overallTier": 15,
+      "positionalTier": 12,
+      "trend30": -7,
+      "trend7": -16,
+      "posTrend30": 0,
+      "posTrend7": -3,
+      "adp": 120,
+      "startupAdp": 163,
+      "tradeCount": 135
+    }
   },
   "adonai-mitchell": {
     "rank": 178,
@@ -2410,7 +4174,21 @@
     "startupAdp": 178,
     "tradeCount": 40,
     "ageCurveTier": "Rising",
-    "ktcSlug": "adonai-mitchell-1597"
+    "ktcSlug": "adonai-mitchell-1597",
+    "sf": {
+      "rank": 182,
+      "positionalRank": 71,
+      "value": 2769,
+      "overallTier": 15,
+      "positionalTier": 17,
+      "trend30": -25,
+      "trend7": -18,
+      "posTrend30": -11,
+      "posTrend7": -9,
+      "adp": 141,
+      "startupAdp": 203,
+      "tradeCount": 110
+    }
   },
   "jj-mccarthy": {
     "rank": 180,
@@ -2429,7 +4207,21 @@
     "startupAdp": 147,
     "tradeCount": 29,
     "ageCurveTier": "Rising",
-    "ktcSlug": "jj-mccarthy-1555"
+    "ktcSlug": "jj-mccarthy-1555",
+    "sf": {
+      "rank": 121,
+      "positionalRank": 28,
+      "value": 3527,
+      "overallTier": 14,
+      "positionalTier": 7,
+      "trend30": -19,
+      "trend7": -14,
+      "posTrend30": -3,
+      "posTrend7": -2,
+      "adp": 122,
+      "startupAdp": 48,
+      "tradeCount": 174
+    }
   },
   "tyrone-tracy": {
     "rank": 181,
@@ -2448,7 +4240,21 @@
     "startupAdp": 87,
     "tradeCount": 42,
     "ageCurveTier": "Aging",
-    "ktcSlug": "tyrone-tracy-1632"
+    "ktcSlug": "tyrone-tracy-1632",
+    "sf": {
+      "rank": 186,
+      "positionalRank": 45,
+      "value": 2738,
+      "overallTier": 15,
+      "positionalTier": 12,
+      "trend30": -20,
+      "trend7": -19,
+      "posTrend30": -4,
+      "posTrend7": -5,
+      "adp": 105,
+      "startupAdp": 118,
+      "tradeCount": 87
+    }
   },
   "brandon-aiyuk": {
     "rank": 182,
@@ -2467,7 +4273,21 @@
     "startupAdp": 110,
     "tradeCount": 63,
     "ageCurveTier": "Prime",
-    "ktcSlug": "brandon-aiyuk-538"
+    "ktcSlug": "brandon-aiyuk-538",
+    "sf": {
+      "rank": 188,
+      "positionalRank": 74,
+      "value": 2696,
+      "overallTier": 15,
+      "positionalTier": 17,
+      "trend30": -12,
+      "trend7": -11,
+      "posTrend30": -6,
+      "posTrend7": -6,
+      "adp": 120,
+      "startupAdp": 114,
+      "tradeCount": 159
+    }
   },
   "kaleb-johnson": {
     "rank": 183,
@@ -2486,7 +4306,21 @@
     "startupAdp": 72,
     "tradeCount": 78,
     "ageCurveTier": "Rising",
-    "ktcSlug": "kaleb-johnson-1748"
+    "ktcSlug": "kaleb-johnson-1748",
+    "sf": {
+      "rank": 191,
+      "positionalRank": 49,
+      "value": 2673,
+      "overallTier": 15,
+      "positionalTier": 12,
+      "trend30": -11,
+      "trend7": -17,
+      "posTrend30": -4,
+      "posTrend7": -6,
+      "adp": 11,
+      "startupAdp": 69,
+      "tradeCount": 195
+    }
   },
   "tony-pollard": {
     "rank": 186,
@@ -2505,7 +4339,21 @@
     "startupAdp": 87,
     "tradeCount": 36,
     "ageCurveTier": "Declining",
-    "ktcSlug": "tony-pollard-344"
+    "ktcSlug": "tony-pollard-344",
+    "sf": {
+      "rank": 190,
+      "positionalRank": 48,
+      "value": 2679,
+      "overallTier": 15,
+      "positionalTier": 12,
+      "trend30": -15,
+      "trend7": -15,
+      "posTrend30": -5,
+      "posTrend7": -4,
+      "adp": 110,
+      "startupAdp": 122,
+      "tradeCount": 107
+    }
   },
   "stefon-diggs": {
     "rank": 190,
@@ -2524,7 +4372,21 @@
     "startupAdp": 101,
     "tradeCount": 42,
     "ageCurveTier": "Declining",
-    "ktcSlug": "stefon-diggs-262"
+    "ktcSlug": "stefon-diggs-262",
+    "sf": {
+      "rank": 196,
+      "positionalRank": 78,
+      "value": 2634,
+      "overallTier": 15,
+      "positionalTier": 17,
+      "trend30": -28,
+      "trend7": -20,
+      "posTrend30": -14,
+      "posTrend7": -11,
+      "adp": 108,
+      "startupAdp": 143,
+      "tradeCount": 90
+    }
   },
   "matthew-stafford": {
     "rank": 191,
@@ -2543,7 +4405,21 @@
     "startupAdp": 166,
     "tradeCount": 37,
     "ageCurveTier": "Declining",
-    "ktcSlug": "matthew-stafford-356"
+    "ktcSlug": "matthew-stafford-356",
+    "sf": {
+      "rank": 109,
+      "positionalRank": 25,
+      "value": 3709,
+      "overallTier": 14,
+      "positionalTier": 7,
+      "trend30": -9,
+      "trend7": -7,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 153,
+      "startupAdp": 112,
+      "tradeCount": 137
+    }
   },
   "kyler-murray": {
     "rank": 192,
@@ -2562,7 +4438,21 @@
     "startupAdp": 92,
     "tradeCount": 32,
     "ageCurveTier": "Prime",
-    "ktcSlug": "kyler-murray-379"
+    "ktcSlug": "kyler-murray-379",
+    "sf": {
+      "rank": 112,
+      "positionalRank": 26,
+      "value": 3621,
+      "overallTier": 14,
+      "positionalTier": 7,
+      "trend30": 2,
+      "trend7": -2,
+      "posTrend30": 1,
+      "posTrend7": 1,
+      "adp": 113,
+      "startupAdp": 34,
+      "tradeCount": 233
+    }
   },
   "ollie-gordon": {
     "rank": 194,
@@ -2581,7 +4471,21 @@
     "startupAdp": 140,
     "tradeCount": 32,
     "ageCurveTier": "Rising",
-    "ktcSlug": "ollie-gordon-1759"
+    "ktcSlug": "ollie-gordon-1759",
+    "sf": {
+      "rank": 202,
+      "positionalRank": 52,
+      "value": 2587,
+      "overallTier": 15,
+      "positionalTier": 13,
+      "trend30": -17,
+      "trend7": -16,
+      "posTrend30": -5,
+      "posTrend7": -5,
+      "adp": 45,
+      "startupAdp": 204,
+      "tradeCount": 54
+    }
   },
   "jerry-jeudy": {
     "rank": 198,
@@ -2600,7 +4504,21 @@
     "startupAdp": 73,
     "tradeCount": 46,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jerry-jeudy-545"
+    "ktcSlug": "jerry-jeudy-545",
+    "sf": {
+      "rank": 194,
+      "positionalRank": 77,
+      "value": 2647,
+      "overallTier": 15,
+      "positionalTier": 17,
+      "trend30": -13,
+      "trend7": -12,
+      "posTrend30": -8,
+      "posTrend7": -8,
+      "adp": 100,
+      "startupAdp": 95,
+      "tradeCount": 103
+    }
   },
   "tj-hockenson": {
     "rank": 199,
@@ -2619,7 +4537,21 @@
     "startupAdp": 85,
     "tradeCount": 43,
     "ageCurveTier": "Prime",
-    "ktcSlug": "tj-hockenson-247"
+    "ktcSlug": "tj-hockenson-247",
+    "sf": {
+      "rank": 198,
+      "positionalRank": 20,
+      "value": 2618,
+      "overallTier": 15,
+      "positionalTier": 7,
+      "trend30": -20,
+      "trend7": -15,
+      "posTrend30": -1,
+      "posTrend7": 0,
+      "adp": 115,
+      "startupAdp": 72,
+      "tradeCount": 120
+    }
   },
   "dallas-goedert": {
     "rank": 200,
@@ -2638,7 +4570,21 @@
     "startupAdp": 145,
     "tradeCount": 24,
     "ageCurveTier": "Aging",
-    "ktcSlug": "dallas-goedert-382"
+    "ktcSlug": "dallas-goedert-382",
+    "sf": {
+      "rank": 200,
+      "positionalRank": 21,
+      "value": 2606,
+      "overallTier": 15,
+      "positionalTier": 7,
+      "trend30": -18,
+      "trend7": -21,
+      "posTrend30": -1,
+      "posTrend7": -2,
+      "adp": 138,
+      "startupAdp": 153,
+      "tradeCount": 87
+    }
   },
   "elijah-arroyo": {
     "rank": 201,
@@ -2657,7 +4603,21 @@
     "startupAdp": 143,
     "tradeCount": 17,
     "ageCurveTier": "Rising",
-    "ktcSlug": "elijah-arroyo-1808"
+    "ktcSlug": "elijah-arroyo-1808",
+    "sf": {
+      "rank": 203,
+      "positionalRank": 22,
+      "value": 2578,
+      "overallTier": 15,
+      "positionalTier": 7,
+      "trend30": -14,
+      "trend7": -16,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 27,
+      "startupAdp": 134,
+      "tradeCount": 55
+    }
   },
   "rachaad-white": {
     "rank": 202,
@@ -2676,7 +4636,21 @@
     "startupAdp": 129,
     "tradeCount": 44,
     "ageCurveTier": "Aging",
-    "ktcSlug": "rachaad-white-1180"
+    "ktcSlug": "rachaad-white-1180",
+    "sf": {
+      "rank": 204,
+      "positionalRank": 53,
+      "value": 2575,
+      "overallTier": 15,
+      "positionalTier": 13,
+      "trend30": -7,
+      "trend7": -13,
+      "posTrend30": -1,
+      "posTrend7": -3,
+      "adp": 123,
+      "startupAdp": 166,
+      "tradeCount": 103
+    }
   },
   "jordan-mason": {
     "rank": 204,
@@ -2695,7 +4669,21 @@
     "startupAdp": 115,
     "tradeCount": 41,
     "ageCurveTier": "Aging",
-    "ktcSlug": "jordan-mason-1330"
+    "ktcSlug": "jordan-mason-1330",
+    "sf": {
+      "rank": 215,
+      "positionalRank": 57,
+      "value": 2476,
+      "overallTier": 15,
+      "positionalTier": 13,
+      "trend30": -25,
+      "trend7": -22,
+      "posTrend30": -8,
+      "posTrend7": -6,
+      "adp": 93,
+      "startupAdp": 143,
+      "tradeCount": 88
+    }
   },
   "deebo-samuel": {
     "rank": 205,
@@ -2714,7 +4702,21 @@
     "startupAdp": 100,
     "tradeCount": 49,
     "ageCurveTier": "Aging",
-    "ktcSlug": "deebo-samuel-383"
+    "ktcSlug": "deebo-samuel-383",
+    "sf": {
+      "rank": 207,
+      "positionalRank": 79,
+      "value": 2538,
+      "overallTier": 15,
+      "positionalTier": 18,
+      "trend30": -20,
+      "trend7": -22,
+      "posTrend30": -8,
+      "posTrend7": -9,
+      "adp": 121,
+      "startupAdp": 137,
+      "tradeCount": 97
+    }
   },
   "tre-tucker": {
     "rank": 206,
@@ -2733,7 +4735,21 @@
     "startupAdp": 195,
     "tradeCount": 34,
     "ageCurveTier": "Prime",
-    "ktcSlug": "tre-tucker-1460"
+    "ktcSlug": "tre-tucker-1460",
+    "sf": {
+      "rank": 210,
+      "positionalRank": 80,
+      "value": 2514,
+      "overallTier": 15,
+      "positionalTier": 18,
+      "trend30": -26,
+      "trend7": -22,
+      "posTrend30": -10,
+      "posTrend7": -9,
+      "adp": 128,
+      "startupAdp": 254,
+      "tradeCount": 64
+    }
   },
   "mark-andrews": {
     "rank": 207,
@@ -2752,7 +4768,21 @@
     "startupAdp": 94,
     "tradeCount": 36,
     "ageCurveTier": "Aging",
-    "ktcSlug": "mark-andrews-366"
+    "ktcSlug": "mark-andrews-366",
+    "sf": {
+      "rank": 206,
+      "positionalRank": 24,
+      "value": 2546,
+      "overallTier": 15,
+      "positionalTier": 7,
+      "trend30": -15,
+      "trend7": -14,
+      "posTrend30": -2,
+      "posTrend7": -2,
+      "adp": 116,
+      "startupAdp": 100,
+      "tradeCount": 99
+    }
   },
   "keon-coleman": {
     "rank": 208,
@@ -2771,7 +4801,21 @@
     "startupAdp": 110,
     "tradeCount": 78,
     "ageCurveTier": "Rising",
-    "ktcSlug": "keon-coleman-1588"
+    "ktcSlug": "keon-coleman-1588",
+    "sf": {
+      "rank": 213,
+      "positionalRank": 82,
+      "value": 2482,
+      "overallTier": 15,
+      "positionalTier": 18,
+      "trend30": -10,
+      "trend7": -14,
+      "posTrend30": -8,
+      "posTrend7": -8,
+      "adp": 106,
+      "startupAdp": 122,
+      "tradeCount": 150
+    }
   },
   "david-njoku": {
     "rank": 209,
@@ -2790,7 +4834,21 @@
     "startupAdp": 96,
     "tradeCount": 50,
     "ageCurveTier": "Prime",
-    "ktcSlug": "david-njoku-252"
+    "ktcSlug": "david-njoku-252",
+    "sf": {
+      "rank": 205,
+      "positionalRank": 23,
+      "value": 2568,
+      "overallTier": 15,
+      "positionalTier": 7,
+      "trend30": -1,
+      "trend7": -9,
+      "posTrend30": 1,
+      "posTrend7": 0,
+      "adp": 116,
+      "startupAdp": 102,
+      "tradeCount": 120
+    }
   },
   "marvin-mims": {
     "rank": 211,
@@ -2809,7 +4867,21 @@
     "startupAdp": 150,
     "tradeCount": 29,
     "ageCurveTier": "Rising",
-    "ktcSlug": "marvin-mims-1442"
+    "ktcSlug": "marvin-mims-1442",
+    "sf": {
+      "rank": 216,
+      "positionalRank": 83,
+      "value": 2474,
+      "overallTier": 15,
+      "positionalTier": 18,
+      "trend30": -15,
+      "trend7": -23,
+      "posTrend30": -10,
+      "posTrend7": -11,
+      "adp": 108,
+      "startupAdp": 165,
+      "tradeCount": 64
+    }
   },
   "tank-bigsby": {
     "rank": 212,
@@ -2828,7 +4900,21 @@
     "startupAdp": 137,
     "tradeCount": 36,
     "ageCurveTier": "Prime",
-    "ktcSlug": "tank-bigsby-1401"
+    "ktcSlug": "tank-bigsby-1401",
+    "sf": {
+      "rank": 212,
+      "positionalRank": 55,
+      "value": 2488,
+      "overallTier": 15,
+      "positionalTier": 13,
+      "trend30": -20,
+      "trend7": -17,
+      "posTrend30": -5,
+      "posTrend7": -3,
+      "adp": 130,
+      "startupAdp": 155,
+      "tradeCount": 89
+    }
   },
   "kendre-miller": {
     "rank": 216,
@@ -2847,7 +4933,21 @@
     "startupAdp": 192,
     "tradeCount": 27,
     "ageCurveTier": "Prime",
-    "ktcSlug": "kendre-miller-1386"
+    "ktcSlug": "kendre-miller-1386",
+    "sf": {
+      "rank": 239,
+      "positionalRank": 63,
+      "value": 2281,
+      "overallTier": 15,
+      "positionalTier": 14,
+      "trend30": -25,
+      "trend7": -21,
+      "posTrend30": -6,
+      "posTrend7": -5,
+      "adp": 133,
+      "startupAdp": 220,
+      "tradeCount": 44
+    }
   },
   "brian-robinson": {
     "rank": 223,
@@ -2866,7 +4966,21 @@
     "startupAdp": 119,
     "tradeCount": 9,
     "ageCurveTier": "Aging",
-    "ktcSlug": "brian-robinson-1232"
+    "ktcSlug": "brian-robinson-1232",
+    "sf": {
+      "rank": 226,
+      "positionalRank": 58,
+      "value": 2356,
+      "overallTier": 15,
+      "positionalTier": 14,
+      "trend30": -28,
+      "trend7": -23,
+      "posTrend30": -5,
+      "posTrend7": -5,
+      "adp": 123,
+      "startupAdp": 131,
+      "tradeCount": 59
+    }
   },
   "juwan-johnson": {
     "rank": 224,
@@ -2885,7 +4999,21 @@
     "startupAdp": 200,
     "tradeCount": 31,
     "ageCurveTier": "Prime",
-    "ktcSlug": "juwan-johnson-575"
+    "ktcSlug": "juwan-johnson-575",
+    "sf": {
+      "rank": 229,
+      "positionalRank": 27,
+      "value": 2344,
+      "overallTier": 15,
+      "positionalTier": 8,
+      "trend30": -18,
+      "trend7": -15,
+      "posTrend30": -1,
+      "posTrend7": 0,
+      "adp": 159,
+      "startupAdp": 221,
+      "tradeCount": 81
+    }
   },
   "alvin-kamara": {
     "rank": 228,
@@ -2904,7 +5032,21 @@
     "startupAdp": 57,
     "tradeCount": 49,
     "ageCurveTier": "Declining",
-    "ktcSlug": "alvin-kamara-282"
+    "ktcSlug": "alvin-kamara-282",
+    "sf": {
+      "rank": 230,
+      "positionalRank": 60,
+      "value": 2343,
+      "overallTier": 15,
+      "positionalTier": 14,
+      "trend30": -12,
+      "trend7": -17,
+      "posTrend30": -2,
+      "posTrend7": -4,
+      "adp": 78,
+      "startupAdp": 90,
+      "tradeCount": 121
+    }
   },
   "hunter-henry": {
     "rank": 230,
@@ -2923,7 +5065,21 @@
     "startupAdp": 160,
     "tradeCount": 12,
     "ageCurveTier": "Aging",
-    "ktcSlug": "hunter-henry-212"
+    "ktcSlug": "hunter-henry-212",
+    "sf": {
+      "rank": 222,
+      "positionalRank": 25,
+      "value": 2391,
+      "overallTier": 15,
+      "positionalTier": 8,
+      "trend30": -26,
+      "trend7": -22,
+      "posTrend30": -2,
+      "posTrend7": -1,
+      "adp": 130,
+      "startupAdp": 177,
+      "tradeCount": 61
+    }
   },
   "gunnar-helm": {
     "rank": 232,
@@ -2942,7 +5098,21 @@
     "startupAdp": 175,
     "tradeCount": 35,
     "ageCurveTier": "Rising",
-    "ktcSlug": "gunnar-helm-1805"
+    "ktcSlug": "gunnar-helm-1805",
+    "sf": {
+      "rank": 232,
+      "positionalRank": 28,
+      "value": 2336,
+      "overallTier": 15,
+      "positionalTier": 8,
+      "trend30": -22,
+      "trend7": -24,
+      "posTrend30": -3,
+      "posTrend7": -3,
+      "adp": 46,
+      "startupAdp": 214,
+      "tradeCount": 103
+    }
   },
   "cade-otton": {
     "rank": 233,
@@ -2961,7 +5131,21 @@
     "startupAdp": 184,
     "tradeCount": 17,
     "ageCurveTier": "Prime",
-    "ktcSlug": "cade-otton-1261"
+    "ktcSlug": "cade-otton-1261",
+    "sf": {
+      "rank": 234,
+      "positionalRank": 29,
+      "value": 2328,
+      "overallTier": 15,
+      "positionalTier": 8,
+      "trend30": -21,
+      "trend7": -22,
+      "posTrend30": -2,
+      "posTrend7": -3,
+      "adp": 163,
+      "startupAdp": 163,
+      "tradeCount": 45
+    }
   },
   "xavier-legette": {
     "rank": 234,
@@ -2980,7 +5164,21 @@
     "startupAdp": 173,
     "tradeCount": 30,
     "ageCurveTier": "Prime",
-    "ktcSlug": "xavier-legette-1610"
+    "ktcSlug": "xavier-legette-1610",
+    "sf": {
+      "rank": 245,
+      "positionalRank": 92,
+      "value": 2207,
+      "overallTier": 15,
+      "positionalTier": 20,
+      "trend30": -25,
+      "trend7": -21,
+      "posTrend30": -14,
+      "posTrend7": -12,
+      "adp": 128,
+      "startupAdp": 174,
+      "tradeCount": 42
+    }
   },
   "dalton-schultz": {
     "rank": 235,
@@ -2999,7 +5197,21 @@
     "startupAdp": 197,
     "tradeCount": 13,
     "ageCurveTier": "Prime",
-    "ktcSlug": "dalton-schultz-487"
+    "ktcSlug": "dalton-schultz-487",
+    "sf": {
+      "rank": 228,
+      "positionalRank": 26,
+      "value": 2350,
+      "overallTier": 15,
+      "positionalTier": 8,
+      "trend30": -12,
+      "trend7": -12,
+      "posTrend30": 2,
+      "posTrend7": 2,
+      "adp": 163,
+      "startupAdp": 212,
+      "tradeCount": 38
+    }
   },
   "michael-mayer": {
     "rank": 236,
@@ -3018,7 +5230,21 @@
     "startupAdp": 217,
     "tradeCount": 12,
     "ageCurveTier": "Rising",
-    "ktcSlug": "michael-mayer-1427"
+    "ktcSlug": "michael-mayer-1427",
+    "sf": {
+      "rank": 238,
+      "positionalRank": 30,
+      "value": 2290,
+      "overallTier": 15,
+      "positionalTier": 8,
+      "trend30": -17,
+      "trend7": -21,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 182,
+      "startupAdp": 228,
+      "tradeCount": 45
+    }
   },
   "demario-douglas": {
     "rank": 238,
@@ -3037,7 +5263,21 @@
     "startupAdp": 177,
     "tradeCount": 14,
     "ageCurveTier": "Prime",
-    "ktcSlug": "demario-douglas-1468"
+    "ktcSlug": "demario-douglas-1468",
+    "sf": {
+      "rank": 241,
+      "positionalRank": 90,
+      "value": 2234,
+      "overallTier": 15,
+      "positionalTier": 20,
+      "trend30": -14,
+      "trend7": -15,
+      "posTrend30": -9,
+      "posTrend7": -9,
+      "adp": 122,
+      "startupAdp": 199,
+      "tradeCount": 27
+    }
   },
   "cedric-tillman": {
     "rank": 242,
@@ -3056,7 +5296,21 @@
     "startupAdp": 162,
     "tradeCount": 19,
     "ageCurveTier": "Prime",
-    "ktcSlug": "cedric-tillman-1444"
+    "ktcSlug": "cedric-tillman-1444",
+    "sf": {
+      "rank": 258,
+      "positionalRank": 95,
+      "value": 2123,
+      "overallTier": 15,
+      "positionalTier": 20,
+      "trend30": -20,
+      "trend7": -15,
+      "posTrend30": -12,
+      "posTrend7": -11,
+      "adp": 131,
+      "startupAdp": 176,
+      "tradeCount": 30
+    }
   },
   "malik-washington": {
     "rank": 243,
@@ -3075,12 +5329,26 @@
     "startupAdp": 191,
     "tradeCount": 23,
     "ageCurveTier": "Prime",
-    "ktcSlug": "malik-washington-1623"
+    "ktcSlug": "malik-washington-1623",
+    "sf": {
+      "rank": 251,
+      "positionalRank": 93,
+      "value": 2173,
+      "overallTier": 15,
+      "positionalTier": 20,
+      "trend30": -19,
+      "trend7": -21,
+      "posTrend30": -11,
+      "posTrend7": -11,
+      "adp": 138,
+      "startupAdp": 254,
+      "tradeCount": 41
+    }
   },
   "isiah-pacheco": {
     "rank": 244,
     "positionalRank": 67,
-    "value": 2650,
+    "value": 2647,
     "overallTier": 15,
     "positionalTier": 17,
     "trend30": -35,
@@ -3094,7 +5362,21 @@
     "startupAdp": 87,
     "tradeCount": 35,
     "ageCurveTier": "Aging",
-    "ktcSlug": "isiah-pacheco-1266"
+    "ktcSlug": "isiah-pacheco-1266",
+    "sf": {
+      "rank": 256,
+      "positionalRank": 67,
+      "value": 2134,
+      "overallTier": 15,
+      "positionalTier": 15,
+      "trend30": -32,
+      "trend7": -28,
+      "posTrend30": -7,
+      "posTrend7": -7,
+      "adp": 93,
+      "startupAdp": 115,
+      "tradeCount": 55
+    }
   },
   "aaron-jones": {
     "rank": 245,
@@ -3113,7 +5395,21 @@
     "startupAdp": 88,
     "tradeCount": 35,
     "ageCurveTier": "Declining",
-    "ktcSlug": "aaron-jones-301"
+    "ktcSlug": "aaron-jones-301",
+    "sf": {
+      "rank": 246,
+      "positionalRank": 65,
+      "value": 2205,
+      "overallTier": 15,
+      "positionalTier": 15,
+      "trend30": -23,
+      "trend7": -17,
+      "posTrend30": -6,
+      "posTrend7": -4,
+      "adp": 122,
+      "startupAdp": 129,
+      "tradeCount": 75
+    }
   },
   "jaydon-blue": {
     "rank": 246,
@@ -3132,7 +5428,21 @@
     "startupAdp": 136,
     "tradeCount": 20,
     "ageCurveTier": "Rising",
-    "ktcSlug": "jaydon-blue-1769"
+    "ktcSlug": "jaydon-blue-1769",
+    "sf": {
+      "rank": 253,
+      "positionalRank": 66,
+      "value": 2170,
+      "overallTier": 15,
+      "positionalTier": 15,
+      "trend30": -18,
+      "trend7": -30,
+      "posTrend30": -2,
+      "posTrend7": -7,
+      "adp": 28,
+      "startupAdp": 135,
+      "tradeCount": 89
+    }
   },
   "donte-thornton": {
     "rank": 255,
@@ -3151,7 +5461,21 @@
     "startupAdp": 162,
     "tradeCount": 22,
     "ageCurveTier": "Rising",
-    "ktcSlug": "dont-e-thornton-1787"
+    "ktcSlug": "dont-e-thornton-1787",
+    "sf": {
+      "rank": 261,
+      "positionalRank": 96,
+      "value": 2111,
+      "overallTier": 15,
+      "positionalTier": 20,
+      "trend30": -20,
+      "trend7": -25,
+      "posTrend30": -12,
+      "posTrend7": -13,
+      "adp": 47,
+      "startupAdp": 199,
+      "tradeCount": 56
+    }
   },
   "jatavion-sanders": {
     "rank": 256,
@@ -3170,7 +5494,21 @@
     "startupAdp": 193,
     "tradeCount": 16,
     "ageCurveTier": "Rising",
-    "ktcSlug": "ja-tavion-sanders-1614"
+    "ktcSlug": "ja-tavion-sanders-1614",
+    "sf": {
+      "rank": 265,
+      "positionalRank": 37,
+      "value": 2088,
+      "overallTier": 15,
+      "positionalTier": 10,
+      "trend30": -23,
+      "trend7": -21,
+      "posTrend30": -4,
+      "posTrend7": -2,
+      "adp": 140,
+      "startupAdp": 184,
+      "tradeCount": 31
+    }
   },
   "tyler-shough": {
     "rank": 259,
@@ -3189,7 +5527,21 @@
     "startupAdp": 135,
     "tradeCount": 46,
     "ageCurveTier": "Prime",
-    "ktcSlug": "tyler-shough-1739"
+    "ktcSlug": "tyler-shough-1739",
+    "sf": {
+      "rank": 80,
+      "positionalRank": 22,
+      "value": 4597,
+      "overallTier": 10,
+      "positionalTier": 5,
+      "trend30": 5,
+      "trend7": -1,
+      "posTrend30": 0,
+      "posTrend7": -1,
+      "adp": 25,
+      "startupAdp": 131,
+      "tradeCount": 262
+    }
   },
   "cole-kmet": {
     "rank": 260,
@@ -3208,7 +5560,21 @@
     "startupAdp": 185,
     "tradeCount": 12,
     "ageCurveTier": "Prime",
-    "ktcSlug": "cole-kmet-569"
+    "ktcSlug": "cole-kmet-569",
+    "sf": {
+      "rank": 262,
+      "positionalRank": 36,
+      "value": 2099,
+      "overallTier": 15,
+      "positionalTier": 10,
+      "trend30": -22,
+      "trend7": -22,
+      "posTrend30": -4,
+      "posTrend7": -3,
+      "adp": 152,
+      "startupAdp": 206,
+      "tradeCount": 48
+    }
   },
   "pat-freiermuth": {
     "rank": 262,
@@ -3227,7 +5593,21 @@
     "startupAdp": 172,
     "tradeCount": 21,
     "ageCurveTier": "Prime",
-    "ktcSlug": "pat-freiermuth-1053"
+    "ktcSlug": "pat-freiermuth-1053",
+    "sf": {
+      "rank": 269,
+      "positionalRank": 38,
+      "value": 2042,
+      "overallTier": 15,
+      "positionalTier": 10,
+      "trend30": -25,
+      "trend7": -24,
+      "posTrend30": -3,
+      "posTrend7": -2,
+      "adp": 138,
+      "startupAdp": 164,
+      "tradeCount": 46
+    }
   },
   "darnell-mooney": {
     "rank": 263,
@@ -3246,7 +5626,21 @@
     "startupAdp": 136,
     "tradeCount": 17,
     "ageCurveTier": "Prime",
-    "ktcSlug": "darnell-mooney-911"
+    "ktcSlug": "darnell-mooney-911",
+    "sf": {
+      "rank": 277,
+      "positionalRank": 99,
+      "value": 1980,
+      "overallTier": 15,
+      "positionalTier": 21,
+      "trend30": -31,
+      "trend7": -25,
+      "posTrend30": -13,
+      "posTrend7": -13,
+      "adp": 136,
+      "startupAdp": 162,
+      "tradeCount": 30
+    }
   },
   "jalen-milroe": {
     "rank": 264,
@@ -3265,7 +5659,21 @@
     "startupAdp": 148,
     "tradeCount": 8,
     "ageCurveTier": "Rising",
-    "ktcSlug": "jalen-milroe-1733"
+    "ktcSlug": "jalen-milroe-1733",
+    "sf": {
+      "rank": 223,
+      "positionalRank": 37,
+      "value": 2390,
+      "overallTier": 15,
+      "positionalTier": 9,
+      "trend30": -17,
+      "trend7": -19,
+      "posTrend30": -4,
+      "posTrend7": -4,
+      "adp": 23,
+      "startupAdp": 123,
+      "tradeCount": 37
+    }
   },
   "rashod-bateman": {
     "rank": 266,
@@ -3284,7 +5692,21 @@
     "startupAdp": 138,
     "tradeCount": 14,
     "ageCurveTier": "Prime",
-    "ktcSlug": "rashod-bateman-1070"
+    "ktcSlug": "rashod-bateman-1070",
+    "sf": {
+      "rank": 282,
+      "positionalRank": 102,
+      "value": 1956,
+      "overallTier": 15,
+      "positionalTier": 21,
+      "trend30": -37,
+      "trend7": -31,
+      "posTrend30": -17,
+      "posTrend7": -17,
+      "adp": 118,
+      "startupAdp": 167,
+      "tradeCount": 40
+    }
   },
   "dj-giddens": {
     "rank": 268,
@@ -3303,7 +5725,21 @@
     "startupAdp": 159,
     "tradeCount": 15,
     "ageCurveTier": "Rising",
-    "ktcSlug": "dj-giddens-1760"
+    "ktcSlug": "dj-giddens-1760",
+    "sf": {
+      "rank": 273,
+      "positionalRank": 74,
+      "value": 2009,
+      "overallTier": 15,
+      "positionalTier": 15,
+      "trend30": -24,
+      "trend7": -23,
+      "posTrend30": -8,
+      "posTrend7": -6,
+      "adp": 39,
+      "startupAdp": 176,
+      "tradeCount": 43
+    }
   },
   "ben-sinnott": {
     "rank": 269,
@@ -3322,7 +5758,21 @@
     "startupAdp": 214,
     "tradeCount": 12,
     "ageCurveTier": "Rising",
-    "ktcSlug": "ben-sinnott-1615"
+    "ktcSlug": "ben-sinnott-1615",
+    "sf": {
+      "rank": 260,
+      "positionalRank": 35,
+      "value": 2115,
+      "overallTier": 15,
+      "positionalTier": 10,
+      "trend30": -21,
+      "trend7": -18,
+      "posTrend30": -4,
+      "posTrend7": -1,
+      "adp": 141,
+      "startupAdp": 187,
+      "tradeCount": 67
+    }
   },
   "james-conner": {
     "rank": 270,
@@ -3341,7 +5791,21 @@
     "startupAdp": 70,
     "tradeCount": 32,
     "ageCurveTier": "Declining",
-    "ktcSlug": "james-conner-268"
+    "ktcSlug": "james-conner-268",
+    "sf": {
+      "rank": 272,
+      "positionalRank": 73,
+      "value": 2012,
+      "overallTier": 15,
+      "positionalTier": 15,
+      "trend30": -17,
+      "trend7": -26,
+      "posTrend30": -5,
+      "posTrend7": -8,
+      "adp": 99,
+      "startupAdp": 110,
+      "tradeCount": 57
+    }
   },
   "ray-davis": {
     "rank": 271,
@@ -3360,7 +5824,21 @@
     "startupAdp": 143,
     "tradeCount": 13,
     "ageCurveTier": "Aging",
-    "ktcSlug": "ray-davis-1574"
+    "ktcSlug": "ray-davis-1574",
+    "sf": {
+      "rank": 278,
+      "positionalRank": 75,
+      "value": 1979,
+      "overallTier": 15,
+      "positionalTier": 15,
+      "trend30": -24,
+      "trend7": -29,
+      "posTrend30": -8,
+      "posTrend7": -8,
+      "adp": 133,
+      "startupAdp": 170,
+      "tradeCount": 41
+    }
   },
   "justin-fields": {
     "rank": 272,
@@ -3379,7 +5857,21 @@
     "startupAdp": 140,
     "tradeCount": 11,
     "ageCurveTier": "Prime",
-    "ktcSlug": "justin-fields-1015"
+    "ktcSlug": "justin-fields-1015",
+    "sf": {
+      "rank": 267,
+      "positionalRank": 39,
+      "value": 2067,
+      "overallTier": 15,
+      "positionalTier": 11,
+      "trend30": -31,
+      "trend7": -27,
+      "posTrend30": -3,
+      "posTrend7": -3,
+      "adp": 131,
+      "startupAdp": 66,
+      "tradeCount": 56
+    }
   },
   "travis-kelce": {
     "rank": 273,
@@ -3398,7 +5890,21 @@
     "startupAdp": 99,
     "tradeCount": 26,
     "ageCurveTier": "Declining",
-    "ktcSlug": "travis-kelce-264"
+    "ktcSlug": "travis-kelce-264",
+    "sf": {
+      "rank": 283,
+      "positionalRank": 41,
+      "value": 1939,
+      "overallTier": 15,
+      "positionalTier": 10,
+      "trend30": -21,
+      "trend7": -22,
+      "posTrend30": -1,
+      "posTrend7": -2,
+      "adp": 117,
+      "startupAdp": 111,
+      "tradeCount": 66
+    }
   },
   "tua-tagovailoa": {
     "rank": 280,
@@ -3417,7 +5923,21 @@
     "startupAdp": 177,
     "tradeCount": 13,
     "ageCurveTier": "Prime",
-    "ktcSlug": "tua-tagovailoa-600"
+    "ktcSlug": "tua-tagovailoa-600",
+    "sf": {
+      "rank": 195,
+      "positionalRank": 33,
+      "value": 2637,
+      "overallTier": 15,
+      "positionalTier": 9,
+      "trend30": -9,
+      "trend7": -16,
+      "posTrend30": -2,
+      "posTrend7": -2,
+      "adp": 134,
+      "startupAdp": 84,
+      "tradeCount": 106
+    }
   },
   "christian-kirk": {
     "rank": 282,
@@ -3436,7 +5956,21 @@
     "startupAdp": 155,
     "tradeCount": 6,
     "ageCurveTier": "Aging",
-    "ktcSlug": "christian-kirk-221"
+    "ktcSlug": "christian-kirk-221",
+    "sf": {
+      "rank": 280,
+      "positionalRank": 100,
+      "value": 1964,
+      "overallTier": 15,
+      "positionalTier": 21,
+      "trend30": -12,
+      "trend7": -21,
+      "posTrend30": -7,
+      "posTrend7": -10,
+      "adp": 130,
+      "startupAdp": 190,
+      "tradeCount": 23
+    }
   },
   "najee-harris": {
     "rank": 287,
@@ -3455,7 +5989,21 @@
     "startupAdp": 129,
     "tradeCount": 17,
     "ageCurveTier": "Aging",
-    "ktcSlug": "najee-harris-1031"
+    "ktcSlug": "najee-harris-1031",
+    "sf": {
+      "rank": 295,
+      "positionalRank": 76,
+      "value": 1851,
+      "overallTier": 15,
+      "positionalTier": 16,
+      "trend30": -25,
+      "trend7": -29,
+      "posTrend30": -4,
+      "posTrend7": -6,
+      "adp": 142,
+      "startupAdp": 161,
+      "tradeCount": 49
+    }
   },
   "luke-musgrave": {
     "rank": 290,
@@ -3474,7 +6022,21 @@
     "startupAdp": 246,
     "tradeCount": 4,
     "ageCurveTier": "Prime",
-    "ktcSlug": "luke-musgrave-1430"
+    "ktcSlug": "luke-musgrave-1430",
+    "sf": {
+      "rank": 291,
+      "positionalRank": 44,
+      "value": 1877,
+      "overallTier": 15,
+      "positionalTier": 10,
+      "trend30": -31,
+      "trend7": -27,
+      "posTrend30": -5,
+      "posTrend7": -4,
+      "adp": 201,
+      "startupAdp": 247,
+      "tradeCount": 13
+    }
   },
   "jalen-nailor": {
     "rank": 291,
@@ -3493,7 +6055,21 @@
     "startupAdp": 219,
     "tradeCount": 12,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jalen-nailor-1245"
+    "ktcSlug": "jalen-nailor-1245",
+    "sf": {
+      "rank": 303,
+      "positionalRank": 110,
+      "value": 1797,
+      "overallTier": 15,
+      "positionalTier": 21,
+      "trend30": -40,
+      "trend7": -38,
+      "posTrend30": -18,
+      "posTrend7": -17,
+      "adp": 132,
+      "startupAdp": 294,
+      "tradeCount": 18
+    }
   },
   "shedeur-sanders": {
     "rank": 292,
@@ -3512,7 +6088,21 @@
     "startupAdp": 128,
     "tradeCount": 30,
     "ageCurveTier": "Rising",
-    "ktcSlug": "shedeur-sanders-1731"
+    "ktcSlug": "shedeur-sanders-1731",
+    "sf": {
+      "rank": 160,
+      "positionalRank": 31,
+      "value": 2895,
+      "overallTier": 15,
+      "positionalTier": 9,
+      "trend30": -21,
+      "trend7": -16,
+      "posTrend30": -3,
+      "posTrend7": -2,
+      "adp": 29,
+      "startupAdp": 147,
+      "tradeCount": 140
+    }
   },
   "tahj-brooks": {
     "rank": 294,
@@ -3531,7 +6121,21 @@
     "startupAdp": 169,
     "tradeCount": 11,
     "ageCurveTier": "Prime",
-    "ktcSlug": "tahj-brooks-1758"
+    "ktcSlug": "tahj-brooks-1758",
+    "sf": {
+      "rank": 315,
+      "positionalRank": 81,
+      "value": 1724,
+      "overallTier": 15,
+      "positionalTier": 17,
+      "trend30": -32,
+      "trend7": -31,
+      "posTrend30": -7,
+      "posTrend7": -7,
+      "adp": 46,
+      "startupAdp": 209,
+      "tradeCount": 18
+    }
   },
   "evan-engram": {
     "rank": 296,
@@ -3550,7 +6154,21 @@
     "startupAdp": 113,
     "tradeCount": 11,
     "ageCurveTier": "Aging",
-    "ktcSlug": "evan-engram-229"
+    "ktcSlug": "evan-engram-229",
+    "sf": {
+      "rank": 286,
+      "positionalRank": 42,
+      "value": 1897,
+      "overallTier": 15,
+      "positionalTier": 10,
+      "trend30": -29,
+      "trend7": -30,
+      "posTrend30": -4,
+      "posTrend7": -4,
+      "adp": 118,
+      "startupAdp": 117,
+      "tradeCount": 41
+    }
   },
   "roman-wilson": {
     "rank": 297,
@@ -3569,7 +6187,21 @@
     "startupAdp": 206,
     "tradeCount": 3,
     "ageCurveTier": "Prime",
-    "ktcSlug": "roman-wilson-1600"
+    "ktcSlug": "roman-wilson-1600",
+    "sf": {
+      "rank": 313,
+      "positionalRank": 115,
+      "value": 1730,
+      "overallTier": 15,
+      "positionalTier": 21,
+      "trend30": -40,
+      "trend7": -39,
+      "posTrend30": -19,
+      "posTrend7": -19,
+      "adp": 118,
+      "startupAdp": 222,
+      "tradeCount": 11
+    }
   },
   "mac-jones": {
     "rank": 298,
@@ -3588,7 +6220,21 @@
     "startupAdp": 180,
     "tradeCount": 12,
     "ageCurveTier": "Prime",
-    "ktcSlug": "mac-jones-1018"
+    "ktcSlug": "mac-jones-1018",
+    "sf": {
+      "rank": 176,
+      "positionalRank": 32,
+      "value": 2797,
+      "overallTier": 15,
+      "positionalTier": 9,
+      "trend30": -5,
+      "trend7": -5,
+      "posTrend30": -3,
+      "posTrend7": -2,
+      "adp": 190,
+      "startupAdp": 284,
+      "tradeCount": 119
+    }
   },
   "andrei-iosivas": {
     "rank": 299,
@@ -3607,7 +6253,21 @@
     "startupAdp": 200,
     "tradeCount": 5,
     "ageCurveTier": "Prime",
-    "ktcSlug": "andrei-iosivas-1422"
+    "ktcSlug": "andrei-iosivas-1422",
+    "sf": {
+      "rank": 309,
+      "positionalRank": 112,
+      "value": 1757,
+      "overallTier": 15,
+      "positionalTier": 21,
+      "trend30": -34,
+      "trend7": -30,
+      "posTrend30": -14,
+      "posTrend7": -13,
+      "adp": 171,
+      "startupAdp": 263,
+      "tradeCount": 15
+    }
   },
   "noah-gray": {
     "rank": 300,
@@ -3626,7 +6286,21 @@
     "startupAdp": 207,
     "tradeCount": 6,
     "ageCurveTier": "Prime",
-    "ktcSlug": "noah-gray-1059"
+    "ktcSlug": "noah-gray-1059",
+    "sf": {
+      "rank": 299,
+      "positionalRank": 45,
+      "value": 1818,
+      "overallTier": 15,
+      "positionalTier": 10,
+      "trend30": -19,
+      "trend7": -26,
+      "posTrend30": -4,
+      "posTrend7": -4,
+      "adp": 116,
+      "startupAdp": 221,
+      "tradeCount": 20
+    }
   },
   "anthony-richardson": {
     "rank": 302,
@@ -3645,7 +6319,21 @@
     "startupAdp": 174,
     "tradeCount": 14,
     "ageCurveTier": "Rising",
-    "ktcSlug": "anthony-richardson-1405"
+    "ktcSlug": "anthony-richardson-1405",
+    "sf": {
+      "rank": 219,
+      "positionalRank": 35,
+      "value": 2436,
+      "overallTier": 15,
+      "positionalTier": 9,
+      "trend30": -10,
+      "trend7": -10,
+      "posTrend30": -1,
+      "posTrend7": -1,
+      "adp": 162,
+      "startupAdp": 118,
+      "tradeCount": 102
+    }
   },
   "keenan-allen": {
     "rank": 303,
@@ -3664,7 +6352,21 @@
     "startupAdp": 161,
     "tradeCount": 19,
     "ageCurveTier": "Declining",
-    "ktcSlug": "keenan-allen-265"
+    "ktcSlug": "keenan-allen-265",
+    "sf": {
+      "rank": 310,
+      "positionalRank": 113,
+      "value": 1748,
+      "overallTier": 15,
+      "positionalTier": 21,
+      "trend30": -39,
+      "trend7": -40,
+      "posTrend30": -19,
+      "posTrend7": -19,
+      "adp": 138,
+      "startupAdp": 221,
+      "tradeCount": 27
+    }
   },
   "marshawn-lloyd": {
     "rank": 309,
@@ -3683,7 +6385,21 @@
     "startupAdp": 189,
     "tradeCount": 4,
     "ageCurveTier": "Prime",
-    "ktcSlug": "marshawn-lloyd-1575"
+    "ktcSlug": "marshawn-lloyd-1575",
+    "sf": {
+      "rank": 326,
+      "positionalRank": 85,
+      "value": 1652,
+      "overallTier": 15,
+      "positionalTier": 17,
+      "trend30": -29,
+      "trend7": -39,
+      "posTrend30": -7,
+      "posTrend7": -9,
+      "adp": 118,
+      "startupAdp": 206,
+      "tradeCount": 21
+    }
   },
   "devaughn-vele": {
     "rank": 315,
@@ -3702,7 +6418,21 @@
     "startupAdp": 213,
     "tradeCount": 13,
     "ageCurveTier": "Prime",
-    "ktcSlug": "devaughn-vele-1643"
+    "ktcSlug": "devaughn-vele-1643",
+    "sf": {
+      "rank": 300,
+      "positionalRank": 109,
+      "value": 1798,
+      "overallTier": 15,
+      "positionalTier": 21,
+      "trend30": -28,
+      "trend7": -25,
+      "posTrend30": -14,
+      "posTrend7": -12,
+      "adp": 120,
+      "startupAdp": 273,
+      "tradeCount": 26
+    }
   },
   "darius-slayton": {
     "rank": 316,
@@ -3721,7 +6451,21 @@
     "startupAdp": 211,
     "tradeCount": 7,
     "ageCurveTier": "Aging",
-    "ktcSlug": "darius-slayton-77"
+    "ktcSlug": "darius-slayton-77",
+    "sf": {
+      "rank": 339,
+      "positionalRank": 125,
+      "value": 1588,
+      "overallTier": 15,
+      "positionalTier": 22,
+      "trend30": -55,
+      "trend7": -47,
+      "posTrend30": -23,
+      "posTrend7": -22,
+      "adp": 153,
+      "startupAdp": 270,
+      "tradeCount": 15
+    }
   },
   "calvin-ridley": {
     "rank": 318,
@@ -3740,7 +6484,21 @@
     "startupAdp": 85,
     "tradeCount": 15,
     "ageCurveTier": "Declining",
-    "ktcSlug": "calvin-ridley-293"
+    "ktcSlug": "calvin-ridley-293",
+    "sf": {
+      "rank": 323,
+      "positionalRank": 118,
+      "value": 1664,
+      "overallTier": 15,
+      "positionalTier": 22,
+      "trend30": -33,
+      "trend7": -34,
+      "posTrend30": -14,
+      "posTrend7": -16,
+      "adp": 111,
+      "startupAdp": 118,
+      "tradeCount": 48
+    }
   },
   "dawson-knox": {
     "rank": 323,
@@ -3759,7 +6517,21 @@
     "startupAdp": 236,
     "tradeCount": 5,
     "ageCurveTier": "Prime",
-    "ktcSlug": "dawson-knox-88"
+    "ktcSlug": "dawson-knox-88",
+    "sf": {
+      "rank": 334,
+      "positionalRank": 47,
+      "value": 1617,
+      "overallTier": 15,
+      "positionalTier": 11,
+      "trend30": -35,
+      "trend7": -36,
+      "posTrend30": -5,
+      "posTrend7": -5,
+      "adp": 236,
+      "startupAdp": 296,
+      "tradeCount": 6
+    }
   },
   "joe-mixon": {
     "rank": 325,
@@ -3778,7 +6550,21 @@
     "startupAdp": 104,
     "tradeCount": 29,
     "ageCurveTier": "Declining",
-    "ktcSlug": "joe-mixon-273"
+    "ktcSlug": "joe-mixon-273",
+    "sf": {
+      "rank": 330,
+      "positionalRank": 86,
+      "value": 1626,
+      "overallTier": 15,
+      "positionalTier": 17,
+      "trend30": -29,
+      "trend7": -36,
+      "posTrend30": -6,
+      "posTrend7": -8,
+      "adp": 121,
+      "startupAdp": 122,
+      "tradeCount": 80
+    }
   },
   "cooper-kupp": {
     "rank": 328,
@@ -3797,7 +6583,21 @@
     "startupAdp": 112,
     "tradeCount": 20,
     "ageCurveTier": "Declining",
-    "ktcSlug": "cooper-kupp-310"
+    "ktcSlug": "cooper-kupp-310",
+    "sf": {
+      "rank": 332,
+      "positionalRank": 122,
+      "value": 1623,
+      "overallTier": 15,
+      "positionalTier": 22,
+      "trend30": -24,
+      "trend7": -33,
+      "posTrend30": -15,
+      "posTrend7": -16,
+      "adp": 125,
+      "startupAdp": 153,
+      "tradeCount": 30
+    }
   },
   "jonnu-smith": {
     "rank": 330,
@@ -3816,7 +6616,21 @@
     "startupAdp": 154,
     "tradeCount": 5,
     "ageCurveTier": "Aging",
-    "ktcSlug": "jonnu-smith-84"
+    "ktcSlug": "jonnu-smith-84",
+    "sf": {
+      "rank": 337,
+      "positionalRank": 48,
+      "value": 1595,
+      "overallTier": 15,
+      "positionalTier": 11,
+      "trend30": -28,
+      "trend7": -27,
+      "posTrend30": -5,
+      "posTrend7": -5,
+      "adp": 146,
+      "startupAdp": 152,
+      "tradeCount": 14
+    }
   },
   "joshua-palmer": {
     "rank": 335,
@@ -3835,12 +6649,26 @@
     "startupAdp": 189,
     "tradeCount": 1,
     "ageCurveTier": "Prime",
-    "ktcSlug": "joshua-palmer-1065"
+    "ktcSlug": "joshua-palmer-1065",
+    "sf": {
+      "rank": 352,
+      "positionalRank": 128,
+      "value": 1491,
+      "overallTier": 15,
+      "positionalTier": 23,
+      "trend30": -31,
+      "trend7": -33,
+      "posTrend30": -16,
+      "posTrend7": -17,
+      "adp": 131,
+      "startupAdp": 219,
+      "tradeCount": 9
+    }
   },
   "jahan-dotson": {
     "rank": 337,
     "positionalRank": 129,
-    "value": 1760,
+    "value": 1757,
     "overallTier": 18,
     "positionalTier": 24,
     "trend30": -33,
@@ -3854,7 +6682,21 @@
     "startupAdp": 219,
     "tradeCount": 1,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jahan-dotson-1272"
+    "ktcSlug": "jahan-dotson-1272",
+    "sf": {
+      "rank": 357,
+      "positionalRank": 131,
+      "value": 1448,
+      "overallTier": 15,
+      "positionalTier": 23,
+      "trend30": -35,
+      "trend7": -37,
+      "posTrend30": -18,
+      "posTrend7": -19,
+      "adp": 120,
+      "startupAdp": 309,
+      "tradeCount": 7
+    }
   },
   "jerome-ford": {
     "rank": 341,
@@ -3873,7 +6715,21 @@
     "startupAdp": 146,
     "tradeCount": 3,
     "ageCurveTier": "Aging",
-    "ktcSlug": "jerome-ford-1229"
+    "ktcSlug": "jerome-ford-1229",
+    "sf": {
+      "rank": 363,
+      "positionalRank": 94,
+      "value": 1415,
+      "overallTier": 15,
+      "positionalTier": 18,
+      "trend30": -30,
+      "trend7": -33,
+      "posTrend30": -7,
+      "posTrend7": -7,
+      "adp": 113,
+      "startupAdp": 191,
+      "tradeCount": 13
+    }
   },
   "kareem-hunt": {
     "rank": 344,
@@ -3892,7 +6748,21 @@
     "startupAdp": 183,
     "tradeCount": 6,
     "ageCurveTier": "Declining",
-    "ktcSlug": "kareem-hunt-214"
+    "ktcSlug": "kareem-hunt-214",
+    "sf": {
+      "rank": 364,
+      "positionalRank": 95,
+      "value": 1405,
+      "overallTier": 15,
+      "positionalTier": 18,
+      "trend30": -48,
+      "trend7": -43,
+      "posTrend30": -12,
+      "posTrend7": -11,
+      "adp": 87,
+      "startupAdp": 238,
+      "tradeCount": 17
+    }
   },
   "dillon-gabriel": {
     "rank": 347,
@@ -3911,7 +6781,21 @@
     "startupAdp": 98,
     "tradeCount": 1,
     "ageCurveTier": "Prime",
-    "ktcSlug": "dillon-gabriel-1737"
+    "ktcSlug": "dillon-gabriel-1737",
+    "sf": {
+      "rank": 336,
+      "positionalRank": 48,
+      "value": 1604,
+      "overallTier": 15,
+      "positionalTier": 12,
+      "trend30": -43,
+      "trend7": -35,
+      "posTrend30": -6,
+      "posTrend7": -5,
+      "adp": 46,
+      "startupAdp": 220,
+      "tradeCount": 25
+    }
   },
   "jalen-tolbert": {
     "rank": 349,
@@ -3930,7 +6814,21 @@
     "startupAdp": 211,
     "tradeCount": 1,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jalen-tolbert-1247"
+    "ktcSlug": "jalen-tolbert-1247",
+    "sf": {
+      "rank": 365,
+      "positionalRank": 135,
+      "value": 1405,
+      "overallTier": 15,
+      "positionalTier": 23,
+      "trend30": -42,
+      "trend7": -42,
+      "posTrend30": -21,
+      "posTrend7": -21,
+      "adp": 159,
+      "startupAdp": 263,
+      "tradeCount": 0
+    }
   },
   "tommy-tremble": {
     "rank": 354,
@@ -3949,7 +6847,21 @@
     "startupAdp": null,
     "tradeCount": 1,
     "ageCurveTier": "Prime",
-    "ktcSlug": "tommy-tremble-1054"
+    "ktcSlug": "tommy-tremble-1054",
+    "sf": {
+      "rank": 372,
+      "positionalRank": 50,
+      "value": 1343,
+      "overallTier": 15,
+      "positionalTier": 13,
+      "trend30": -48,
+      "trend7": -44,
+      "posTrend30": -6,
+      "posTrend7": -5,
+      "adp": 128,
+      "startupAdp": 306,
+      "tradeCount": 3
+    }
   },
   "noah-fant": {
     "rank": 356,
@@ -3968,7 +6880,21 @@
     "startupAdp": 245,
     "tradeCount": 1,
     "ageCurveTier": "Prime",
-    "ktcSlug": "noah-fant-243"
+    "ktcSlug": "noah-fant-243",
+    "sf": {
+      "rank": 375,
+      "positionalRank": 52,
+      "value": 1332,
+      "overallTier": 15,
+      "positionalTier": 13,
+      "trend30": -47,
+      "trend7": -44,
+      "posTrend30": -6,
+      "posTrend7": -6,
+      "adp": 159,
+      "startupAdp": 231,
+      "tradeCount": 6
+    }
   },
   "mike-gesicki": {
     "rank": 359,
@@ -3987,7 +6913,21 @@
     "startupAdp": 193,
     "tradeCount": 4,
     "ageCurveTier": "Aging",
-    "ktcSlug": "mike-gesicki-330"
+    "ktcSlug": "mike-gesicki-330",
+    "sf": {
+      "rank": 362,
+      "positionalRank": 49,
+      "value": 1423,
+      "overallTier": 15,
+      "positionalTier": 12,
+      "trend30": -33,
+      "trend7": -36,
+      "posTrend30": -2,
+      "posTrend7": -5,
+      "adp": 159,
+      "startupAdp": 202,
+      "tradeCount": 5
+    }
   },
   "daniel-bellinger": {
     "rank": 362,
@@ -4006,7 +6946,21 @@
     "startupAdp": null,
     "tradeCount": 2,
     "ageCurveTier": "Prime",
-    "ktcSlug": "daniel-bellinger-1322"
+    "ktcSlug": "daniel-bellinger-1322",
+    "sf": {
+      "rank": 377,
+      "positionalRank": 53,
+      "value": 1326,
+      "overallTier": 15,
+      "positionalTier": 13,
+      "trend30": -42,
+      "trend7": -38,
+      "posTrend30": -5,
+      "posTrend7": -4,
+      "adp": 150,
+      "startupAdp": 322,
+      "tradeCount": 3
+    }
   },
   "cade-stover": {
     "rank": 363,
@@ -4025,7 +6979,21 @@
     "startupAdp": 265,
     "tradeCount": 1,
     "ageCurveTier": "Prime",
-    "ktcSlug": "cade-stover-1613"
+    "ktcSlug": "cade-stover-1613",
+    "sf": {
+      "rank": 379,
+      "positionalRank": 54,
+      "value": 1308,
+      "overallTier": 15,
+      "positionalTier": 13,
+      "trend30": -42,
+      "trend7": -45,
+      "posTrend30": -5,
+      "posTrend7": -6,
+      "adp": 129,
+      "startupAdp": 275,
+      "tradeCount": 6
+    }
   },
   "tutu-atwell": {
     "rank": 364,
@@ -4044,7 +7012,21 @@
     "startupAdp": 235,
     "tradeCount": 2,
     "ageCurveTier": "Prime",
-    "ktcSlug": "tutu-atwell-1078"
+    "ktcSlug": "tutu-atwell-1078",
+    "sf": {
+      "rank": 376,
+      "positionalRank": 138,
+      "value": 1329,
+      "overallTier": 15,
+      "positionalTier": 23,
+      "trend30": -46,
+      "trend7": -42,
+      "posTrend30": -22,
+      "posTrend7": -20,
+      "adp": 141,
+      "startupAdp": 292,
+      "tradeCount": 2
+    }
   },
   "roschon-johnson": {
     "rank": 368,
@@ -4063,7 +7045,21 @@
     "startupAdp": 179,
     "tradeCount": 1,
     "ageCurveTier": "Prime",
-    "ktcSlug": "roschon-johnson-1390"
+    "ktcSlug": "roschon-johnson-1390",
+    "sf": {
+      "rank": 383,
+      "positionalRank": 101,
+      "value": 1272,
+      "overallTier": 15,
+      "positionalTier": 18,
+      "trend30": -47,
+      "trend7": -46,
+      "posTrend30": -13,
+      "posTrend7": -12,
+      "adp": 139,
+      "startupAdp": 211,
+      "tradeCount": 9
+    }
   },
   "aaron-rodgers": {
     "rank": 369,
@@ -4082,7 +7078,21 @@
     "startupAdp": 203,
     "tradeCount": 2,
     "ageCurveTier": "Declining",
-    "ktcSlug": "aaron-rodgers-235"
+    "ktcSlug": "aaron-rodgers-235",
+    "sf": {
+      "rank": 317,
+      "positionalRank": 45,
+      "value": 1705,
+      "overallTier": 15,
+      "positionalTier": 12,
+      "trend30": -25,
+      "trend7": -24,
+      "posTrend30": -5,
+      "posTrend7": -4,
+      "adp": 139,
+      "startupAdp": 159,
+      "tradeCount": 52
+    }
   },
   "justice-hill": {
     "rank": 372,
@@ -4101,7 +7111,21 @@
     "startupAdp": 189,
     "tradeCount": 5,
     "ageCurveTier": "Declining",
-    "ktcSlug": "justice-hill-368"
+    "ktcSlug": "justice-hill-368",
+    "sf": {
+      "rank": 386,
+      "positionalRank": 102,
+      "value": 1250,
+      "overallTier": 15,
+      "positionalTier": 18,
+      "trend30": -34,
+      "trend7": -38,
+      "posTrend30": -11,
+      "posTrend7": -12,
+      "adp": 145,
+      "startupAdp": 247,
+      "tradeCount": 4
+    }
   },
   "joe-milton": {
     "rank": 376,
@@ -4120,7 +7144,21 @@
     "startupAdp": 251,
     "tradeCount": 2,
     "ageCurveTier": "Prime",
-    "ktcSlug": "joe-milton-1556"
+    "ktcSlug": "joe-milton-1556",
+    "sf": {
+      "rank": 308,
+      "positionalRank": 43,
+      "value": 1759,
+      "overallTier": 15,
+      "positionalTier": 12,
+      "trend30": -21,
+      "trend7": -32,
+      "posTrend30": -4,
+      "posTrend7": -5,
+      "adp": 75,
+      "startupAdp": 237,
+      "tradeCount": 19
+    }
   },
   "greg-dortch": {
     "rank": 378,
@@ -4139,7 +7177,21 @@
     "startupAdp": null,
     "tradeCount": 3,
     "ageCurveTier": "Prime",
-    "ktcSlug": "greg-dortch-10"
+    "ktcSlug": "greg-dortch-10",
+    "sf": {
+      "rank": 387,
+      "positionalRank": 143,
+      "value": 1249,
+      "overallTier": 15,
+      "positionalTier": 23,
+      "trend30": -61,
+      "trend7": -49,
+      "posTrend30": -28,
+      "posTrend7": -24,
+      "adp": 119,
+      "startupAdp": 343,
+      "tradeCount": 3
+    }
   },
   "trey-palmer": {
     "rank": 380,
@@ -4158,7 +7210,21 @@
     "startupAdp": null,
     "tradeCount": 0,
     "ageCurveTier": "Prime",
-    "ktcSlug": "trey-palmer-1452"
+    "ktcSlug": "trey-palmer-1452",
+    "sf": {
+      "rank": 401,
+      "positionalRank": 150,
+      "value": 1157,
+      "overallTier": 15,
+      "positionalTier": 23,
+      "trend30": -42,
+      "trend7": -50,
+      "posTrend30": -20,
+      "posTrend7": -23,
+      "adp": 60,
+      "startupAdp": 447,
+      "tradeCount": 1
+    }
   },
   "darren-waller": {
     "rank": 385,
@@ -4177,7 +7243,21 @@
     "startupAdp": 182,
     "tradeCount": 5,
     "ageCurveTier": "Declining",
-    "ktcSlug": "darren-waller-349"
+    "ktcSlug": "darren-waller-349",
+    "sf": {
+      "rank": 391,
+      "positionalRank": 55,
+      "value": 1217,
+      "overallTier": 15,
+      "positionalTier": 14,
+      "trend30": -52,
+      "trend7": -45,
+      "posTrend30": -5,
+      "posTrend7": -5,
+      "adp": 59,
+      "startupAdp": 215,
+      "tradeCount": 17
+    }
   },
   "geno-smith": {
     "rank": 387,
@@ -4196,7 +7276,21 @@
     "startupAdp": 194,
     "tradeCount": 0,
     "ageCurveTier": "Aging",
-    "ktcSlug": "geno-smith-671"
+    "ktcSlug": "geno-smith-671",
+    "sf": {
+      "rank": 356,
+      "positionalRank": 51,
+      "value": 1449,
+      "overallTier": 15,
+      "positionalTier": 13,
+      "trend30": -44,
+      "trend7": -38,
+      "posTrend30": -4,
+      "posTrend7": -4,
+      "adp": 142,
+      "startupAdp": 110,
+      "tradeCount": 26
+    }
   },
   "spencer-rattler": {
     "rank": 392,
@@ -4215,7 +7309,21 @@
     "startupAdp": 242,
     "tradeCount": 2,
     "ageCurveTier": "Prime",
-    "ktcSlug": "spencer-rattler-1557"
+    "ktcSlug": "spencer-rattler-1557",
+    "sf": {
+      "rank": 316,
+      "positionalRank": 44,
+      "value": 1706,
+      "overallTier": 15,
+      "positionalTier": 12,
+      "trend30": -23,
+      "trend7": -30,
+      "posTrend30": -3,
+      "posTrend7": -4,
+      "adp": 123,
+      "startupAdp": 219,
+      "tradeCount": 20
+    }
   },
   "malik-willis": {
     "rank": 394,
@@ -4234,7 +7342,21 @@
     "startupAdp": 145,
     "tradeCount": 43,
     "ageCurveTier": "Prime",
-    "ktcSlug": "malik-willis-1210"
+    "ktcSlug": "malik-willis-1210",
+    "sf": {
+      "rank": 140,
+      "positionalRank": 29,
+      "value": 3231,
+      "overallTier": 14,
+      "positionalTier": 8,
+      "trend30": 39,
+      "trend7": 1,
+      "posTrend30": 1,
+      "posTrend7": -1,
+      "adp": 155,
+      "startupAdp": 278,
+      "tradeCount": 279
+    }
   },
   "luke-schoonmaker": {
     "rank": 403,
@@ -4253,7 +7375,21 @@
     "startupAdp": 237,
     "tradeCount": 1,
     "ageCurveTier": "Prime",
-    "ktcSlug": "luke-schoonmaker-1382"
+    "ktcSlug": "luke-schoonmaker-1382",
+    "sf": {
+      "rank": 408,
+      "positionalRank": 58,
+      "value": 1135,
+      "overallTier": 15,
+      "positionalTier": 15,
+      "trend30": -41,
+      "trend7": -43,
+      "posTrend30": -5,
+      "posTrend7": -5,
+      "adp": 176,
+      "startupAdp": 286,
+      "tradeCount": 1
+    }
   },
   "elijah-higgins": {
     "rank": 405,
@@ -4272,7 +7408,21 @@
     "startupAdp": null,
     "tradeCount": 0,
     "ageCurveTier": "Prime",
-    "ktcSlug": "elijah-higgins-1469"
+    "ktcSlug": "elijah-higgins-1469",
+    "sf": {
+      "rank": 412,
+      "positionalRank": 60,
+      "value": 1114,
+      "overallTier": 15,
+      "positionalTier": 15,
+      "trend30": -55,
+      "trend7": -42,
+      "posTrend30": -9,
+      "posTrend7": -6,
+      "adp": 256,
+      "startupAdp": 353,
+      "tradeCount": 1
+    }
   },
   "tyler-higbee": {
     "rank": 407,
@@ -4291,7 +7441,21 @@
     "startupAdp": 188,
     "tradeCount": 1,
     "ageCurveTier": "Declining",
-    "ktcSlug": "tyler-higbee-159"
+    "ktcSlug": "tyler-higbee-159",
+    "sf": {
+      "rank": 403,
+      "positionalRank": 57,
+      "value": 1154,
+      "overallTier": 15,
+      "positionalTier": 15,
+      "trend30": -33,
+      "trend7": -40,
+      "posTrend30": -2,
+      "posTrend7": -5,
+      "adp": 137,
+      "startupAdp": 251,
+      "tradeCount": 2
+    }
   },
   "nick-chubb": {
     "rank": 408,
@@ -4310,7 +7474,21 @@
     "startupAdp": 150,
     "tradeCount": 4,
     "ageCurveTier": "Declining",
-    "ktcSlug": "nick-chubb-274"
+    "ktcSlug": "nick-chubb-274",
+    "sf": {
+      "rank": 421,
+      "positionalRank": 109,
+      "value": 1069,
+      "overallTier": 15,
+      "positionalTier": 19,
+      "trend30": -47,
+      "trend7": -53,
+      "posTrend30": -13,
+      "posTrend7": -14,
+      "adp": 139,
+      "startupAdp": 210,
+      "tradeCount": 14
+    }
   },
   "zach-ertz": {
     "rank": 411,
@@ -4329,7 +7507,21 @@
     "startupAdp": 168,
     "tradeCount": 4,
     "ageCurveTier": "Declining",
-    "ktcSlug": "zach-ertz-305"
+    "ktcSlug": "zach-ertz-305",
+    "sf": {
+      "rank": 460,
+      "positionalRank": 65,
+      "value": 907,
+      "overallTier": 15,
+      "positionalTier": 16,
+      "trend30": -57,
+      "trend7": -56,
+      "posTrend30": -6,
+      "posTrend7": -5,
+      "adp": 133,
+      "startupAdp": 194,
+      "tradeCount": 9
+    }
   },
   "jacoby-brissett": {
     "rank": 415,
@@ -4348,7 +7540,21 @@
     "startupAdp": 165,
     "tradeCount": 10,
     "ageCurveTier": "Aging",
-    "ktcSlug": "jacoby-brissett-20"
+    "ktcSlug": "jacoby-brissett-20",
+    "sf": {
+      "rank": 220,
+      "positionalRank": 36,
+      "value": 2424,
+      "overallTier": 15,
+      "positionalTier": 9,
+      "trend30": -25,
+      "trend7": -23,
+      "posTrend30": -4,
+      "posTrend7": -4,
+      "adp": 206,
+      "startupAdp": 340,
+      "tradeCount": 46
+    }
   },
   "brock-wright": {
     "rank": 432,
@@ -4367,7 +7573,21 @@
     "startupAdp": null,
     "tradeCount": 2,
     "ageCurveTier": "Prime",
-    "ktcSlug": "brock-wright-1162"
+    "ktcSlug": "brock-wright-1162",
+    "sf": {
+      "rank": 432,
+      "positionalRank": 62,
+      "value": 1021,
+      "overallTier": 15,
+      "positionalTier": 15,
+      "trend30": -51,
+      "trend7": -48,
+      "posTrend30": -5,
+      "posTrend7": -5,
+      "adp": 77,
+      "startupAdp": 408,
+      "tradeCount": 1
+    }
   },
   "joe-flacco": {
     "rank": 436,
@@ -4386,7 +7606,21 @@
     "startupAdp": 199,
     "tradeCount": 2,
     "ageCurveTier": "Declining",
-    "ktcSlug": "joe-flacco-722"
+    "ktcSlug": "joe-flacco-722",
+    "sf": {
+      "rank": 445,
+      "positionalRank": 63,
+      "value": 950,
+      "overallTier": 15,
+      "positionalTier": 15,
+      "trend30": -39,
+      "trend7": -34,
+      "posTrend30": -4,
+      "posTrend7": -5,
+      "adp": 108,
+      "startupAdp": 231,
+      "tradeCount": 10
+    }
   },
   "marcus-mariota": {
     "rank": 438,
@@ -4405,7 +7639,21 @@
     "startupAdp": 192,
     "tradeCount": 0,
     "ageCurveTier": "Aging",
-    "ktcSlug": "marcus-mariota-23"
+    "ktcSlug": "marcus-mariota-23",
+    "sf": {
+      "rank": 333,
+      "positionalRank": 47,
+      "value": 1618,
+      "overallTier": 15,
+      "positionalTier": 12,
+      "trend30": -38,
+      "trend7": -33,
+      "posTrend30": -4,
+      "posTrend7": -5,
+      "adp": 119,
+      "startupAdp": 319,
+      "tradeCount": 16
+    }
   },
   "jamari-thrash": {
     "rank": 445,
@@ -4424,7 +7672,21 @@
     "startupAdp": null,
     "tradeCount": 0,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jamari-thrash-1595"
+    "ktcSlug": "jamari-thrash-1595",
+    "sf": {
+      "rank": 458,
+      "positionalRank": 172,
+      "value": 919,
+      "overallTier": 15,
+      "positionalTier": 23,
+      "trend30": -45,
+      "trend7": -48,
+      "posTrend30": -21,
+      "posTrend7": -23,
+      "adp": 152,
+      "startupAdp": 365,
+      "tradeCount": 1
+    }
   },
   "jeremy-ruckert": {
     "rank": 448,
@@ -4443,7 +7705,21 @@
     "startupAdp": null,
     "tradeCount": 1,
     "ageCurveTier": "Prime",
-    "ktcSlug": "jeremy-ruckert-1255"
+    "ktcSlug": "jeremy-ruckert-1255",
+    "sf": {
+      "rank": 468,
+      "positionalRank": 67,
+      "value": 873,
+      "overallTier": 15,
+      "positionalTier": 16,
+      "trend30": -45,
+      "trend7": -44,
+      "posTrend30": -5,
+      "posTrend7": -5,
+      "adp": 306,
+      "startupAdp": 349,
+      "tradeCount": 0
+    }
   },
   "deandre-hopkins": {
     "rank": 449,
@@ -4462,7 +7738,21 @@
     "startupAdp": 203,
     "tradeCount": 2,
     "ageCurveTier": "Declining",
-    "ktcSlug": "deandre-hopkins-280"
+    "ktcSlug": "deandre-hopkins-280",
+    "sf": {
+      "rank": 469,
+      "positionalRank": 174,
+      "value": 872,
+      "overallTier": 15,
+      "positionalTier": 23,
+      "trend30": -45,
+      "trend7": -46,
+      "posTrend30": -19,
+      "posTrend7": -19,
+      "adp": 162,
+      "startupAdp": 260,
+      "tradeCount": 2
+    }
   },
   "will-dissly": {
     "rank": 457,
@@ -4481,7 +7771,21 @@
     "startupAdp": 198,
     "tradeCount": 0,
     "ageCurveTier": "Prime",
-    "ktcSlug": "will-dissly-86"
+    "ktcSlug": "will-dissly-86",
+    "sf": {
+      "rank": 464,
+      "positionalRank": 66,
+      "value": 898,
+      "overallTier": 15,
+      "positionalTier": 16,
+      "trend30": -48,
+      "trend7": -49,
+      "posTrend30": -5,
+      "posTrend7": -5,
+      "adp": 163,
+      "startupAdp": 271,
+      "tradeCount": 0
+    }
   },
   "noah-brown": {
     "rank": 463,
@@ -4500,7 +7804,21 @@
     "startupAdp": 259,
     "tradeCount": 2,
     "ageCurveTier": "Aging",
-    "ktcSlug": "noah-brown-776"
+    "ktcSlug": "noah-brown-776",
+    "sf": {
+      "rank": 476,
+      "positionalRank": 178,
+      "value": 851,
+      "overallTier": 15,
+      "positionalTier": 23,
+      "trend30": -49,
+      "trend7": -47,
+      "posTrend30": -21,
+      "posTrend7": -20,
+      "adp": 184,
+      "startupAdp": 333,
+      "tradeCount": 0
+    }
   },
   "grant-calcaterra": {
     "rank": 464,
@@ -4519,7 +7837,21 @@
     "startupAdp": null,
     "tradeCount": 0,
     "ageCurveTier": "Prime",
-    "ktcSlug": "grant-calcaterra-1263"
+    "ktcSlug": "grant-calcaterra-1263",
+    "sf": {
+      "rank": 477,
+      "positionalRank": 68,
+      "value": 850,
+      "overallTier": 15,
+      "positionalTier": 16,
+      "trend30": -48,
+      "trend7": -44,
+      "posTrend30": -5,
+      "posTrend7": -5,
+      "adp": 159,
+      "startupAdp": 304,
+      "tradeCount": 0
+    }
   },
   "kirk-cousins": {
     "rank": 468,
@@ -4538,7 +7870,21 @@
     "startupAdp": 176,
     "tradeCount": 4,
     "ageCurveTier": "Declining",
-    "ktcSlug": "kirk-cousins-396"
+    "ktcSlug": "kirk-cousins-396",
+    "sf": {
+      "rank": 321,
+      "positionalRank": 46,
+      "value": 1667,
+      "overallTier": 15,
+      "positionalTier": 12,
+      "trend30": -16,
+      "trend7": -19,
+      "posTrend30": -2,
+      "posTrend7": -2,
+      "adp": 214,
+      "startupAdp": 225,
+      "tradeCount": 60
+    }
   },
   "josh-oliver": {
     "rank": 476,
@@ -4557,7 +7903,21 @@
     "startupAdp": null,
     "tradeCount": 0,
     "ageCurveTier": "Prime",
-    "ktcSlug": "josh-oliver-7"
+    "ktcSlug": "josh-oliver-7",
+    "sf": {
+      "rank": 481,
+      "positionalRank": 70,
+      "value": 825,
+      "overallTier": 15,
+      "positionalTier": 16,
+      "trend30": -49,
+      "trend7": -46,
+      "posTrend30": -6,
+      "posTrend7": -6,
+      "adp": 176,
+      "startupAdp": 360,
+      "tradeCount": 1
+    }
   },
   "tyler-conklin": {
     "rank": 486,
@@ -4576,7 +7936,21 @@
     "startupAdp": 224,
     "tradeCount": 0,
     "ageCurveTier": "Aging",
-    "ktcSlug": "tyler-conklin-489"
+    "ktcSlug": "tyler-conklin-489",
+    "sf": {
+      "rank": 497,
+      "positionalRank": 72,
+      "value": 742,
+      "overallTier": 15,
+      "positionalTier": 17,
+      "trend30": -48,
+      "trend7": -47,
+      "posTrend30": -5,
+      "posTrend7": -5,
+      "adp": 147,
+      "startupAdp": 265,
+      "tradeCount": 0
+    }
   },
   "trey-lance": {
     "rank": 488,
@@ -4595,7 +7969,21 @@
     "startupAdp": 194,
     "tradeCount": 0,
     "ageCurveTier": "Prime",
-    "ktcSlug": "trey-lance-1017"
+    "ktcSlug": "trey-lance-1017",
+    "sf": {
+      "rank": 394,
+      "positionalRank": 54,
+      "value": 1189,
+      "overallTier": 15,
+      "positionalTier": 14,
+      "trend30": -39,
+      "trend7": -44,
+      "posTrend30": -5,
+      "posTrend7": -6,
+      "adp": 160,
+      "startupAdp": 328,
+      "tradeCount": 10
+    }
   },
   "kenny-pickett": {
     "rank": 501,
@@ -4614,7 +8002,21 @@
     "startupAdp": null,
     "tradeCount": 0,
     "ageCurveTier": "Prime",
-    "ktcSlug": "kenny-pickett-1208"
+    "ktcSlug": "kenny-pickett-1208",
+    "sf": {
+      "rank": 405,
+      "positionalRank": 57,
+      "value": 1138,
+      "overallTier": 15,
+      "positionalTier": 14,
+      "trend30": -49,
+      "trend7": -43,
+      "posTrend30": -7,
+      "posTrend7": -5,
+      "adp": 104,
+      "startupAdp": 272,
+      "tradeCount": 1
+    }
   },
   "zach-wilson": {
     "rank": 503,
@@ -4633,7 +8035,21 @@
     "startupAdp": null,
     "tradeCount": 0,
     "ageCurveTier": "Prime",
-    "ktcSlug": "zach-wilson-1016"
+    "ktcSlug": "zach-wilson-1016",
+    "sf": {
+      "rank": 413,
+      "positionalRank": 58,
+      "value": 1113,
+      "overallTier": 15,
+      "positionalTier": 14,
+      "trend30": -41,
+      "trend7": -40,
+      "posTrend30": -5,
+      "posTrend7": -5,
+      "adp": 128,
+      "startupAdp": 303,
+      "tradeCount": 4
+    }
   },
   "tanner-mckee": {
     "rank": 525,
@@ -4652,7 +8068,21 @@
     "startupAdp": null,
     "tradeCount": 0,
     "ageCurveTier": "Prime",
-    "ktcSlug": "tanner-mckee-1218"
+    "ktcSlug": "tanner-mckee-1218",
+    "sf": {
+      "rank": 396,
+      "positionalRank": 55,
+      "value": 1175,
+      "overallTier": 15,
+      "positionalTier": 14,
+      "trend30": -34,
+      "trend7": -40,
+      "posTrend30": -4,
+      "posTrend7": -4,
+      "adp": 68,
+      "startupAdp": 288,
+      "tradeCount": 9
+    }
   },
   "mason-rudolph": {
     "rank": 538,
@@ -4671,7 +8101,21 @@
     "startupAdp": 277,
     "tradeCount": 0,
     "ageCurveTier": "Prime",
-    "ktcSlug": "mason-rudolph-110"
+    "ktcSlug": "mason-rudolph-110",
+    "sf": {
+      "rank": 454,
+      "positionalRank": 65,
+      "value": 929,
+      "overallTier": 15,
+      "positionalTier": 15,
+      "trend30": -57,
+      "trend7": -42,
+      "posTrend30": -9,
+      "posTrend7": -6,
+      "adp": 103,
+      "startupAdp": 275,
+      "tradeCount": 3
+    }
   },
   "gardner-minshew": {
     "rank": 557,
@@ -4690,7 +8134,21 @@
     "startupAdp": null,
     "tradeCount": 0,
     "ageCurveTier": "Prime",
-    "ktcSlug": "gardner-minshew-47"
+    "ktcSlug": "gardner-minshew-47",
+    "sf": {
+      "rank": 447,
+      "positionalRank": 64,
+      "value": 944,
+      "overallTier": 15,
+      "positionalTier": 15,
+      "trend30": -47,
+      "trend7": -44,
+      "posTrend30": -7,
+      "posTrend7": -7,
+      "adp": 220,
+      "startupAdp": 325,
+      "tradeCount": 6
+    }
   },
   "tyson-bagent": {
     "rank": 626,
@@ -4709,7 +8167,21 @@
     "startupAdp": null,
     "tradeCount": 0,
     "ageCurveTier": "Prime",
-    "ktcSlug": "tyson-bagent-1478"
+    "ktcSlug": "tyson-bagent-1478",
+    "sf": {
+      "rank": 416,
+      "positionalRank": 59,
+      "value": 1095,
+      "overallTier": 15,
+      "positionalTier": 14,
+      "trend30": -31,
+      "trend7": -40,
+      "posTrend30": -5,
+      "posTrend7": -5,
+      "adp": 122,
+      "startupAdp": 316,
+      "tradeCount": 17
+    }
   },
   "davis-mills": {
     "rank": 630,
@@ -4728,7 +8200,21 @@
     "startupAdp": null,
     "tradeCount": 1,
     "ageCurveTier": "Prime",
-    "ktcSlug": "davis-mills-1029"
+    "ktcSlug": "davis-mills-1029",
+    "sf": {
+      "rank": 344,
+      "positionalRank": 50,
+      "value": 1547,
+      "overallTier": 15,
+      "positionalTier": 12,
+      "trend30": -37,
+      "trend7": -31,
+      "posTrend30": -4,
+      "posTrend7": -4,
+      "adp": 128,
+      "startupAdp": 361,
+      "tradeCount": 20
+    }
   },
   "tyrod-taylor": {
     "rank": 635,
@@ -4747,6 +8233,20 @@
     "startupAdp": null,
     "tradeCount": 2,
     "ageCurveTier": "Declining",
-    "ktcSlug": "tyrod-taylor-647"
+    "ktcSlug": "tyrod-taylor-647",
+    "sf": {
+      "rank": 482,
+      "positionalRank": 67,
+      "value": 814,
+      "overallTier": 15,
+      "positionalTier": 16,
+      "trend30": -60,
+      "trend7": -45,
+      "posTrend30": -6,
+      "posTrend7": -6,
+      "adp": 110,
+      "startupAdp": 327,
+      "tradeCount": 5
+    }
   }
 }

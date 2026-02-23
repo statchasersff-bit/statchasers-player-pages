@@ -48,7 +48,7 @@ export interface PlayerTrends {
   weeklyFantasyPoints: number[];
 }
 
-export interface DynastyData {
+export interface DynastyFormatValues {
   rank: number;
   positionalRank: number;
   value: number;
@@ -58,14 +58,18 @@ export interface DynastyData {
   trend7: number;
   posTrend30: number;
   posTrend7: number;
-  age: number;
-  position: string;
-  team: string;
   adp: number | null;
   startupAdp: number | null;
   tradeCount: number;
+}
+
+export interface DynastyData extends DynastyFormatValues {
+  age: number;
+  position: string;
+  team: string;
   ageCurveTier: string;
   ktcSlug: string;
+  sf: DynastyFormatValues | null;
 }
 
 export interface Player {

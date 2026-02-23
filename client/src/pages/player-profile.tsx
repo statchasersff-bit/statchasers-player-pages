@@ -2946,6 +2946,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
 
 function RankingsTab({ player }: { player: Player }) {
   const dynasty = player.dynasty;
+  const [dynastyFormat, setDynastyFormat] = useState<'1qb' | 'sf'>('1qb');
 
   if (!dynasty) {
     return (
@@ -2959,11 +2960,13 @@ function RankingsTab({ player }: { player: Player }) {
     );
   }
 
-  const tierLabel = `${dynasty.position}${dynasty.positionalTier <= 1 ? '1' : dynasty.positionalTier <= 3 ? '2' : '3+'}`;
-  const tierDesc = dynasty.positionalTier <= 1 ? 'Elite' : dynasty.positionalTier <= 3 ? 'Mid' : dynasty.positionalTier <= 6 ? 'Low-End' : 'Deep';
-  const trendDirection = dynasty.trend30 > 3 ? 'Rising' : dynasty.trend30 < -3 ? 'Falling' : 'Stable';
-  const trendColor = dynasty.trend30 > 3 ? 'text-emerald-500' : dynasty.trend30 < -3 ? 'text-red-400' : 'text-muted-foreground';
-  const trendArrow = dynasty.trend30 > 3 ? '\u25B2' : dynasty.trend30 < -3 ? '\u25BC' : '\u25B6';
+  const d = dynastyFormat === 'sf' && dynasty.sf ? { ...dynasty, ...dynasty.sf } : dynasty;
+
+  const tierLabel = `${dynasty.position}${d.positionalTier <= 1 ? '1' : d.positionalTier <= 3 ? '2' : '3+'}`;
+  const tierDesc = d.positionalTier <= 1 ? 'Elite' : d.positionalTier <= 3 ? 'Mid' : d.positionalTier <= 6 ? 'Low-End' : 'Deep';
+  const trendDirection = d.trend30 > 3 ? 'Rising' : d.trend30 < -3 ? 'Falling' : 'Stable';
+  const trendColor = d.trend30 > 3 ? 'text-emerald-500' : d.trend30 < -3 ? 'text-red-400' : 'text-muted-foreground';
+  const trendArrow = d.trend30 > 3 ? '\u25B2' : d.trend30 < -3 ? '\u25BC' : '\u25B6';
   const ageTierColor = dynasty.ageCurveTier === 'Rising' ? 'text-emerald-500' : dynasty.ageCurveTier === 'Prime' ? 'text-blue-500' : dynasty.ageCurveTier === 'Aging' ? 'text-amber-500' : 'text-red-400';
 
   return (
@@ -2975,27 +2978,47 @@ function RankingsTab({ player }: { player: Player }) {
               <Trophy className="w-4 h-4 text-amber-500" />
               <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Dynasty Market Snapshot</p>
             </div>
-            <a
-              href={`https://keeptradecut.com/dynasty-rankings/players/${dynasty.ktcSlug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[10px] text-muted-foreground/50 hover:text-primary transition-colors flex items-center gap-1"
-              data-testid="link-ktc-profile"
-            >
-              KeepTradeCut <ExternalLink className="w-2.5 h-2.5" />
-            </a>
+            <div className="flex items-center gap-3">
+              {dynasty.sf && (
+                <div className="flex items-center rounded-md border border-border overflow-hidden text-[10px] font-semibold" data-testid="toggle-dynasty-format">
+                  <button
+                    onClick={() => setDynastyFormat('1qb')}
+                    className={`px-2.5 py-1 transition-colors ${dynastyFormat === '1qb' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                    data-testid="button-dynasty-1qb"
+                  >
+                    1QB
+                  </button>
+                  <button
+                    onClick={() => setDynastyFormat('sf')}
+                    className={`px-2.5 py-1 transition-colors ${dynastyFormat === 'sf' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                    data-testid="button-dynasty-sf"
+                  >
+                    SF
+                  </button>
+                </div>
+              )}
+              <a
+                href={`https://keeptradecut.com/dynasty-rankings/players/${dynasty.ktcSlug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[10px] text-muted-foreground/50 hover:text-primary transition-colors flex items-center gap-1"
+                data-testid="link-ktc-profile"
+              >
+                KeepTradeCut <ExternalLink className="w-2.5 h-2.5" />
+              </a>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div data-testid="dynasty-overall-rank">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Overall Rank</p>
-              <p className="text-3xl font-bold text-foreground mt-1 tabular-nums">{dynasty.rank}</p>
+              <p className="text-3xl font-bold text-foreground mt-1 tabular-nums">{d.rank}</p>
               <p className="text-[10px] text-muted-foreground">of 500+</p>
             </div>
             <div data-testid="dynasty-positional-rank">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Positional Rank</p>
-              <p className="text-3xl font-bold text-foreground mt-1 tabular-nums">{dynasty.position}{dynasty.positionalRank}</p>
-              <p className="text-[10px] text-muted-foreground">Tier {dynasty.positionalTier}</p>
+              <p className="text-3xl font-bold text-foreground mt-1 tabular-nums">{dynasty.position}{d.positionalRank}</p>
+              <p className="text-[10px] text-muted-foreground">Tier {d.positionalTier}</p>
             </div>
             <div data-testid="dynasty-age-curve">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Age Curve</p>
@@ -3005,7 +3028,7 @@ function RankingsTab({ player }: { player: Player }) {
             <div data-testid="dynasty-value-trend">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">30-Day Trend</p>
               <p className={`text-lg font-bold mt-1 ${trendColor}`}>
-                {trendArrow} {dynasty.trend30 > 0 ? '+' : ''}{dynasty.trend30}
+                {trendArrow} {d.trend30 > 0 ? '+' : ''}{d.trend30}
               </p>
               <p className={`text-[10px] font-medium ${trendColor}`}>{trendDirection}</p>
             </div>
@@ -3020,38 +3043,38 @@ function RankingsTab({ player }: { player: Player }) {
               <div>
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Market Tier</p>
                 <p className="text-sm font-bold text-foreground mt-1">
-                  {dynasty.value >= 8000 ? 'Elite' : dynasty.value >= 6000 ? 'Premium' : dynasty.value >= 4000 ? 'Solid' : dynasty.value >= 2000 ? 'Roster' : 'Fringe'}
+                  {d.value >= 8000 ? 'Elite' : d.value >= 6000 ? 'Premium' : d.value >= 4000 ? 'Solid' : d.value >= 2000 ? 'Roster' : 'Fringe'}
                 </p>
               </div>
-              {dynasty.startupAdp && (
+              {d.startupAdp && (
                 <div>
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Startup ADP</p>
-                  <p className="text-sm font-bold text-foreground mt-1 tabular-nums">{dynasty.startupAdp.toFixed(1)}</p>
+                  <p className="text-sm font-bold text-foreground mt-1 tabular-nums">{d.startupAdp.toFixed(1)}</p>
                 </div>
               )}
-              {dynasty.tradeCount > 0 && (
+              {d.tradeCount > 0 && (
                 <div>
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Recent Trades</p>
-                  <p className="text-sm font-bold text-foreground mt-1 tabular-nums">{dynasty.tradeCount}</p>
+                  <p className="text-sm font-bold text-foreground mt-1 tabular-nums">{d.tradeCount}</p>
                 </div>
               )}
             </div>
           </div>
 
-          {dynasty.adp && dynasty.startupAdp && (
+          {d.adp && d.startupAdp && (
             <div className="border-t border-border pt-4">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-2">ADP Comparison</p>
               <div className="grid grid-cols-2 gap-4">
                 <div className="rounded-md bg-muted/50 p-3">
                   <p className="text-[10px] text-muted-foreground">Redraft ADP</p>
-                  <p className="text-lg font-bold text-foreground tabular-nums">{dynasty.adp.toFixed(1)}</p>
+                  <p className="text-lg font-bold text-foreground tabular-nums">{d.adp.toFixed(1)}</p>
                 </div>
                 <div className="rounded-md bg-muted/50 p-3">
                   <p className="text-[10px] text-muted-foreground">Startup ADP</p>
-                  <p className="text-lg font-bold text-foreground tabular-nums">{dynasty.startupAdp.toFixed(1)}</p>
-                  {dynasty.adp && (
-                    <p className={`text-[10px] font-medium mt-0.5 ${dynasty.startupAdp < dynasty.adp ? 'text-emerald-500' : dynasty.startupAdp > dynasty.adp ? 'text-red-400' : 'text-muted-foreground'}`}>
-                      {dynasty.startupAdp < dynasty.adp ? `${(dynasty.adp - dynasty.startupAdp).toFixed(0)} picks higher` : dynasty.startupAdp > dynasty.adp ? `${(dynasty.startupAdp - dynasty.adp).toFixed(0)} picks lower` : 'Same as redraft'}
+                  <p className="text-lg font-bold text-foreground tabular-nums">{d.startupAdp.toFixed(1)}</p>
+                  {d.adp && (
+                    <p className={`text-[10px] font-medium mt-0.5 ${d.startupAdp < d.adp ? 'text-emerald-500' : d.startupAdp > d.adp ? 'text-red-400' : 'text-muted-foreground'}`}>
+                      {d.startupAdp < d.adp ? `${(d.adp - d.startupAdp).toFixed(0)} picks higher` : d.startupAdp > d.adp ? `${(d.startupAdp - d.adp).toFixed(0)} picks lower` : 'Same as redraft'}
                     </p>
                   )}
                 </div>
@@ -3059,26 +3082,26 @@ function RankingsTab({ player }: { player: Player }) {
             </div>
           )}
 
-          {dynasty.trend7 !== undefined && (
+          {d.trend7 !== undefined && (
             <div className="border-t border-border pt-4">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-2">Market Movement</p>
               <div className="grid grid-cols-3 gap-3">
                 <div className="rounded-md bg-muted/50 p-3 text-center">
                   <p className="text-[10px] text-muted-foreground">7-Day</p>
-                  <p className={`text-sm font-bold tabular-nums ${dynasty.trend7 > 0 ? 'text-emerald-500' : dynasty.trend7 < -2 ? 'text-red-400' : 'text-muted-foreground'}`}>
-                    {dynasty.trend7 > 0 ? '+' : ''}{dynasty.trend7}
+                  <p className={`text-sm font-bold tabular-nums ${d.trend7 > 0 ? 'text-emerald-500' : d.trend7 < -2 ? 'text-red-400' : 'text-muted-foreground'}`}>
+                    {d.trend7 > 0 ? '+' : ''}{d.trend7}
                   </p>
                 </div>
                 <div className="rounded-md bg-muted/50 p-3 text-center">
                   <p className="text-[10px] text-muted-foreground">30-Day</p>
-                  <p className={`text-sm font-bold tabular-nums ${dynasty.trend30 > 0 ? 'text-emerald-500' : dynasty.trend30 < -3 ? 'text-red-400' : 'text-muted-foreground'}`}>
-                    {dynasty.trend30 > 0 ? '+' : ''}{dynasty.trend30}
+                  <p className={`text-sm font-bold tabular-nums ${d.trend30 > 0 ? 'text-emerald-500' : d.trend30 < -3 ? 'text-red-400' : 'text-muted-foreground'}`}>
+                    {d.trend30 > 0 ? '+' : ''}{d.trend30}
                   </p>
                 </div>
                 <div className="rounded-md bg-muted/50 p-3 text-center">
                   <p className="text-[10px] text-muted-foreground">Pos 30-Day</p>
-                  <p className={`text-sm font-bold tabular-nums ${dynasty.posTrend30 > 0 ? 'text-emerald-500' : dynasty.posTrend30 < -2 ? 'text-red-400' : 'text-muted-foreground'}`}>
-                    {dynasty.posTrend30 > 0 ? '+' : ''}{dynasty.posTrend30}
+                  <p className={`text-sm font-bold tabular-nums ${d.posTrend30 > 0 ? 'text-emerald-500' : d.posTrend30 < -2 ? 'text-red-400' : 'text-muted-foreground'}`}>
+                    {d.posTrend30 > 0 ? '+' : ''}{d.posTrend30}
                   </p>
                 </div>
               </div>

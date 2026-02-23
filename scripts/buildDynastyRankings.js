@@ -81,6 +81,7 @@ async function main() {
     if (!ourSlug || !ourSlugToId[ourSlug]) continue;
 
     const v = ktc.oneQBValues;
+    const sf = ktc.superflexValues;
     if (!v) continue;
 
     const ageTier = getAgeCurveTier(ktc.position, ktc.age);
@@ -103,6 +104,20 @@ async function main() {
       tradeCount: v.tradeCount || 0,
       ageCurveTier: ageTier,
       ktcSlug: ktc.slug,
+      sf: sf ? {
+        rank: sf.rank,
+        positionalRank: sf.positionalRank,
+        value: sf.value,
+        overallTier: sf.overallTier,
+        positionalTier: sf.positionalTier,
+        trend30: sf.overallTrend || 0,
+        trend7: sf.overall7DayTrend || 0,
+        posTrend30: sf.positionalTrend || 0,
+        posTrend7: sf.positional7DayTrend || 0,
+        adp: sf.adp || null,
+        startupAdp: sf.startupAdp || null,
+        tradeCount: sf.tradeCount || 0,
+      } : null,
     };
     matched++;
   }
