@@ -2593,6 +2593,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
         const { high: tdHighThreshold, mid: tdMidThreshold } = getTdThresholds(position);
         const tdIsHigh = tdPctBar >= tdHighThreshold;
 
+        const isTE = position === 'TE';
         const volumeScore = (() => {
           let score = 50;
           if (isQB) {
@@ -2601,6 +2602,10 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
             score += Math.min(10, (usageStab - 50) * 0.2);
           } else if (isRB) {
             score += Math.min(15, (tgtsPerGame - 15) * 1.5);
+            score += Math.min(10, (usageStab - 50) * 0.2);
+          } else if (isTE) {
+            score += Math.min(15, (shareAvg - 8) * 1.5);
+            score += Math.min(10, (tgtsPerGame - 3) * 3);
             score += Math.min(10, (usageStab - 50) * 0.2);
           } else {
             score += Math.min(15, (shareAvg - 15) * 1);
@@ -2611,34 +2616,34 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
         })();
 
         const bench = player.productionRiskBenchmarks as Record<string, any> | null;
-        const tdRateLg = bench?.posAvg?.tdPerTarget ?? (isQB ? 4.5 : isRB ? 3.0 : 5.0);
+        const tdRateLg = bench?.posAvg?.tdPerTarget ?? (isQB ? 4.5 : isRB ? 3.0 : position === 'TE' ? 4.0 : 5.0);
         const yptLg = isQB
           ? (bench?.posAvg?.fpPerUsage ?? 0.55)
-          : (bench?.posAvg?.yardsPerCatch ?? (isRB ? 4.2 : 7.5));
-        const catchLgBench = bench?.posAvg?.catchPct ?? (isQB ? 64 : isRB ? 75 : 65);
+          : (bench?.posAvg?.yardsPerCatch ?? (isRB ? 4.2 : position === 'TE' ? 8.0 : 11.0));
+        const catchLgBench = bench?.posAvg?.catchPct ?? (isQB ? 64 : isRB ? 75 : position === 'TE' ? 68 : 65);
 
         const efficiencyScore = (() => {
           let score = 50;
           if (isQB) {
-            score += (catchPct - 62) * 0.8;
+            score += (catchPct - (catchLgBench)) * 0.8;
             score += (yardsPerOpp - (yptLg || 0.55)) * 80;
-            score += (tdPerOpp - 4) * 3;
+            score += (tdPerOpp - tdRateLg) * 3;
           } else if (isRB) {
-            score += (yardsPerOpp - 4.0) * 5;
-            score += (catchPct - 70) * 0.3;
-            score += (tdPerOpp - 3) * 4;
+            score += (yardsPerOpp - yptLg) * 5;
+            score += (catchPct - catchLgBench) * 0.3;
+            score += (tdPerOpp - tdRateLg) * 4;
           } else {
-            score += (yardsPerOpp - 8) * 2;
-            score += (catchPct - 65) * 0.5;
-            score += (tdPerOpp - 5) * 3;
+            score += (yardsPerOpp - yptLg) * 2;
+            score += (catchPct - catchLgBench) * 0.5;
+            score += (tdPerOpp - tdRateLg) * 3;
           }
           return Math.max(0, Math.min(100, Math.round(score)));
         })();
 
         const productionDriver = volumeScore > efficiencyScore + 15
-          ? { label: 'Volume-Backed Production', color: 'text-emerald-500', bg: 'bg-emerald-500/10 border-emerald-500/20' }
+          ? { label: 'Volume-Backed', color: 'text-emerald-500', bg: 'bg-emerald-500/10 border-emerald-500/20' }
           : efficiencyScore > volumeScore + 15
-            ? { label: 'Efficiency-Driven (Regression Risk)', color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20' }
+            ? { label: 'Efficiency-Driven', color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20' }
             : { label: 'Balanced', color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' };
         const shareStabAvg = 55;
 
@@ -2793,9 +2798,20 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] text-muted-foreground/60">Production Driver:</span>
                     <Badge variant="outline" className={`text-[10px] px-2.5 py-0.5 ${productionDriver.bg} ${productionDriver.color}`} data-testid="badge-production-driver">
-                      {productionDriver.label === 'Volume-Backed Production' ? <TrendingUp className="w-3 h-3 mr-1" /> : productionDriver.label === 'Balanced' ? <Activity className="w-3 h-3 mr-1" /> : <AlertTriangle className="w-3 h-3 mr-1" />}
+                      {productionDriver.label === 'Volume-Backed' ? <TrendingUp className="w-3 h-3 mr-1" /> : productionDriver.label === 'Balanced' ? <Activity className="w-3 h-3 mr-1" /> : <AlertTriangle className="w-3 h-3 mr-1" />}
                       {productionDriver.label}
                     </Badge>
+                    <TooltipProvider delayDuration={200}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="inline-flex cursor-help"><Info className="w-2.5 h-2.5 text-muted-foreground/40" /></span>
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom" className="max-w-[240px] text-xs leading-relaxed p-3">
+                          <p className="font-semibold mb-1">Production Driver</p>
+                          <p className="text-muted-foreground">{productionDriver.label === 'Volume-Backed' ? 'Scoring is anchored by workload volume rather than elevated efficiency. Lower regression risk.' : productionDriver.label === 'Efficiency-Driven' ? 'Scoring exceeds what workload alone would produce. If efficiency normalizes toward league averages, production may decline.' : 'A mix of volume and efficiency — neither dominates the scoring profile.'}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </div>
                 </div>
               </CardContent>
