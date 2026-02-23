@@ -758,6 +758,13 @@ export async function registerRoutes(
       : null;
 
     const multiSeasonStats: { season: number; ppg: number; gamesPlayed: number; pos1Pct: number; pos2Pct: number; pos3Pct: number; bustPct: number }[] = [];
+    const careerSeasonStats: {
+      season: number; gp: number; ppg: number; posRank: number | null;
+      pass_att: number; pass_cmp: number; pass_yd: number; pass_td: number; pass_int: number;
+      rush_att: number; rush_yd: number; rush_td: number;
+      targets: number; receptions: number; rec_yd: number; rec_td: number;
+      total_td: number; scrimmage_yd: number;
+    }[] = [];
 
     for (const s of seasons) {
       const sLogs = loadGameLogs(s);
@@ -787,6 +794,48 @@ export async function registerRoutes(
         pos2Pct: (pos2Games / gp) * 100,
         pos3Pct: (pos3Games / gp) * 100,
         bustPct: (bustGames / gp) * 100,
+      });
+
+      let pass_att = 0, pass_cmp = 0, pass_yd = 0, pass_td = 0, pass_int = 0;
+      let rush_att = 0, rush_yd = 0, rush_td = 0;
+      let targets = 0, receptions = 0, rec_yd = 0, rec_td = 0;
+      for (const e of played) {
+        const st = e.stats as unknown as Record<string, number | null | undefined>;
+        pass_att += (st.pass_att as number) || 0;
+        pass_cmp += (st.pass_cmp as number) || 0;
+        pass_yd += (st.pass_yd as number) || 0;
+        pass_td += (st.pass_td as number) || 0;
+        pass_int += (st.pass_int as number) || 0;
+        rush_att += (st.rush_att as number) || 0;
+        rush_yd += (st.rush_yd as number) || 0;
+        rush_td += (st.rush_td as number) || 0;
+        targets += (st.rec_tgt as number) || 0;
+        receptions += (st.rec as number) || 0;
+        rec_yd += (st.rec_yd as number) || 0;
+        rec_td += (st.rec_td as number) || 0;
+      }
+      const total_td = pass_td + rush_td + rec_td;
+      const scrimmage_yd = rush_yd + rec_yd;
+
+      const seasonPpgAll: { id: string; ppg: number }[] = [];
+      for (const [pid, pl] of Object.entries(sLogs)) {
+        const p = allPlayers.find(ap => ap.id === pid);
+        if (!p || p.position !== player.position) continue;
+        const pp = pl.filter(e => hasParticipation(e.stats, p.position));
+        if (pp.length < 4) continue;
+        const tp = pp.reduce((sum, e) => sum + getEntryPoints(e.stats, format), 0);
+        seasonPpgAll.push({ id: pid, ppg: tp / pp.length });
+      }
+      seasonPpgAll.sort((a, b) => b.ppg - a.ppg);
+      const posIdx = seasonPpgAll.findIndex(x => x.id === player.id);
+      const posRank = posIdx >= 0 ? posIdx + 1 : null;
+
+      careerSeasonStats.push({
+        season: s, gp, ppg: totalPts / gp, posRank,
+        pass_att, pass_cmp, pass_yd, pass_td, pass_int,
+        rush_att, rush_yd, rush_td,
+        targets, receptions, rec_yd, rec_td,
+        total_td, scrimmage_yd,
       });
     }
 
@@ -924,6 +973,7 @@ export async function registerRoutes(
       news: player.news ?? [],
       availableSeasons: seasons,
       multiSeasonStats,
+      careerSeasonStats,
       careerProfile,
       dynasty,
       productionRiskBenchmarks,

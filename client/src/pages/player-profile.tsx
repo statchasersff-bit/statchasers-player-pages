@@ -895,6 +895,27 @@ interface CareerProfile {
   smallSample: boolean;
 }
 
+interface CareerSeasonStat {
+  season: number;
+  gp: number;
+  ppg: number;
+  posRank: number | null;
+  pass_att: number;
+  pass_cmp: number;
+  pass_yd: number;
+  pass_td: number;
+  pass_int: number;
+  rush_att: number;
+  rush_yd: number;
+  rush_td: number;
+  targets: number;
+  receptions: number;
+  rec_yd: number;
+  rec_td: number;
+  total_td: number;
+  scrimmage_yd: number;
+}
+
 type BenchmarkData = {
   position: string;
   season: number;
@@ -909,6 +930,7 @@ type PlayerWithSeasons = Player & {
   seasonLabel?: string | null;
   seasonRank?: number | null;
   multiSeasonStats?: SeasonStat[];
+  careerSeasonStats?: CareerSeasonStat[];
   careerProfile?: CareerProfile | null;
   productionRiskBenchmarks?: BenchmarkData;
 };
@@ -1700,7 +1722,153 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
           )}
         </CardContent>
       </Card>
+
+      {player.careerSeasonStats && player.careerSeasonStats.length > 0 && (
+        <CareerStatsTable stats={player.careerSeasonStats} position={player.position} format={format} onSeasonClick={(s) => { setSelectedSeason(s); setGameFilter('full'); }} />
+      )}
     </div>
+  );
+}
+
+function CareerStatsTable({ stats, position, format, onSeasonClick }: {
+  stats: CareerSeasonStat[];
+  position: string | null;
+  format: ScoringFormat;
+  onSeasonClick: (season: number) => void;
+}) {
+  const pos = position || '';
+  const sorted = [...stats].sort((a, b) => b.season - a.season);
+
+  const totalGp = sorted.reduce((s, r) => s + r.gp, 0);
+  const totalPts = sorted.reduce((s, r) => s + r.ppg * r.gp, 0);
+  const careerPpg = totalGp > 0 ? totalPts / totalGp : 0;
+  const bestSeason = sorted.length > 0 ? sorted.reduce((best, r) => r.ppg > best.ppg ? r : best, sorted[0]) : null;
+
+  type Col = { key: string; label: string; align?: string; bold?: boolean };
+  let columns: Col[] = [];
+
+  if (pos === 'QB') {
+    columns = [
+      { key: 'season', label: 'Year', align: 'left' },
+      { key: 'gp', label: 'GP' },
+      { key: 'pass_yd', label: 'Pass Yds' },
+      { key: 'pass_td', label: 'Pass TD' },
+      { key: 'pass_int', label: 'INT' },
+      { key: 'rush_yd', label: 'Rush Yds' },
+      { key: 'rush_td', label: 'Rush TD' },
+      { key: 'ppg', label: 'PPG', bold: true },
+    ];
+  } else if (pos === 'WR' || pos === 'TE') {
+    columns = [
+      { key: 'season', label: 'Year', align: 'left' },
+      { key: 'gp', label: 'GP' },
+      { key: 'targets', label: 'Targets' },
+      { key: 'receptions', label: 'Rec' },
+      { key: 'rec_yd', label: 'Rec Yds' },
+      { key: 'total_td', label: 'TD' },
+      { key: 'ppg', label: 'PPG', bold: true },
+    ];
+  } else {
+    columns = [
+      { key: 'season', label: 'Year', align: 'left' },
+      { key: 'gp', label: 'GP' },
+      { key: 'rush_att', label: 'Rush Att' },
+      { key: 'rush_yd', label: 'Rush Yds' },
+      { key: 'ypc', label: 'YPC' },
+      { key: 'receptions', label: 'Rec' },
+      { key: 'rec_yd', label: 'Rec Yds' },
+      { key: 'total_td', label: 'Total TD' },
+      { key: 'ppg', label: 'PPG', bold: true },
+    ];
+  }
+
+  const getValue = (row: CareerSeasonStat, key: string): string | number => {
+    if (key === 'ypc') return row.rush_att > 0 ? (row.rush_yd / row.rush_att).toFixed(1) : '0.0';
+    if (key === 'ppg') return row.ppg.toFixed(1);
+    return (row as unknown as Record<string, number>)[key] ?? 0;
+  };
+
+  const formatLabel = format === 'ppr' ? 'PPR' : format === 'half' ? 'Half-PPR' : 'Standard';
+
+  return (
+    <Card data-testid="career-stats-table">
+      <CardContent className="p-4 space-y-3">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <h3 className="text-sm font-semibold text-foreground" data-testid="text-career-stats-heading">Career Stats</h3>
+            <p className="text-[10px] text-muted-foreground mt-0.5">Season totals &middot; {formatLabel} fantasy output</p>
+          </div>
+        </div>
+
+        {bestSeason && sorted.length > 1 && (
+          <div className="text-[11px] text-muted-foreground leading-relaxed" data-testid="text-career-trend-line">
+            <span>Best season: <span className="font-semibold text-foreground">{bestSeason.season}</span> ({bestSeason.ppg.toFixed(1)} PPG{bestSeason.posRank ? `, ${pos}${bestSeason.posRank}` : ''})</span>
+            <span className="mx-2">&middot;</span>
+            <span>Career avg: <span className="font-semibold text-foreground">{careerPpg.toFixed(1)} PPG</span> across {totalGp} games</span>
+          </div>
+        )}
+
+        <div className="overflow-x-auto -mx-1">
+          <table className="w-full text-xs" data-testid="table-career-stats">
+            <thead>
+              <tr className="border-b border-border">
+                {columns.map(col => (
+                  <th
+                    key={col.key}
+                    className={`py-2 px-2 font-semibold text-[10px] uppercase tracking-wider text-muted-foreground whitespace-nowrap ${col.align === 'left' ? 'text-left' : 'text-right'} sticky top-0 bg-card`}
+                  >
+                    {col.label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {sorted.map((row) => (
+                <tr key={row.season} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                  {columns.map(col => {
+                    if (col.key === 'season') {
+                      return (
+                        <td key={col.key} className="py-1.5 px-2 text-left">
+                          <button
+                            onClick={() => onSeasonClick(row.season)}
+                            className="text-xs font-semibold text-primary hover:underline tabular-nums"
+                            data-testid={`link-season-${row.season}`}
+                          >
+                            {row.season}
+                          </button>
+                        </td>
+                      );
+                    }
+                    if (col.key === 'ppg') {
+                      const tierBadge = getTierBadge(row.posRank, position);
+                      return (
+                        <td key={col.key} className="py-1.5 px-2 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <span className="font-bold text-foreground tabular-nums">{row.ppg.toFixed(1)}</span>
+                            {tierBadge && (
+                              <Badge variant="secondary" className={`text-[8px] px-1 py-0 ${tierBadge.className}`}>{tierBadge.label}</Badge>
+                            )}
+                            {!tierBadge && row.posRank && (
+                              <span className={`text-[9px] tabular-nums ${getRankColor(row.posRank)}`}>{pos}{row.posRank}</span>
+                            )}
+                          </div>
+                        </td>
+                      );
+                    }
+                    const val = getValue(row, col.key);
+                    return (
+                      <td key={col.key} className={`py-1.5 px-2 text-right tabular-nums text-muted-foreground ${col.bold ? 'font-bold text-foreground' : ''}`}>
+                        {typeof val === 'number' ? val.toLocaleString() : val}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
