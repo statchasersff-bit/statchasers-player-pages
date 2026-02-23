@@ -277,6 +277,7 @@ function getTierLabel(position: string | null, tier: number): string {
 
 function hasParticipation(stats: GameLogEntry['stats'], position: string | null): boolean {
   const s = stats as unknown as Record<string, number | null | undefined>;
+  if ((s.off_snp ?? 0) > 0) return true;
   if (position === 'QB') return (s.pass_att ?? 0) > 0 || (s.rush_att ?? 0) > 0;
   if (position === 'K') return (s.fga ?? 0) > 0 || (s.xpa ?? 0) > 0;
   return (s.rec_tgt ?? 0) > 0 || (s.rec ?? 0) > 0 || (s.rush_att ?? 0) > 0 || (s.pass_att ?? 0) > 0;
