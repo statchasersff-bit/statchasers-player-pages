@@ -484,48 +484,48 @@ export default function PlayerSearch() {
 
       <div
         ref={heroRef}
-        className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white"
+        className="sc-header"
         data-testid="hero-section"
       >
-        <div className="max-w-7xl mx-auto px-4 py-10 md:py-12">
+        <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
               <Link href="/">
-                <Button variant="ghost" size="sm" className="mb-3 -ml-1 text-gray-300 hover:text-white" data-testid="button-back-home">
+                <Button variant="ghost" size="sm" className="mb-3 -ml-1 sc-header__back-btn" data-testid="button-back-home">
                   <ArrowLeft className="w-4 h-4 mr-1" />
                   Back
                 </Button>
               </Link>
               <div className="flex items-center gap-2 mb-1">
-                <Zap className="w-5 h-5 text-amber-400" />
-                <span className="text-xs font-semibold text-amber-400 uppercase tracking-widest">Command Index</span>
+                <Zap className="w-5 h-5 sc-header__gold-icon" />
+                <span className="sc-header__kicker">Command Index</span>
               </div>
               <h1 className="sc-hero-title" data-testid="text-page-title">
                 NFL Player Command Index
               </h1>
               <div className="sc-hero-underline" />
-              <p className="text-gray-300 text-sm md:text-base max-w-lg mt-3">
+              <p className="sc-header__sub mt-3">
                 Search, filter, and analyze every fantasy-relevant starter across all 32 NFL teams.
               </p>
             </div>
             <div className="flex flex-col items-end gap-3">
               <div
-                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-md px-4 py-2.5 flex items-center gap-2"
+                className="sc-stat-card"
                 data-testid="badge-player-count"
               >
-                <Activity className="w-4 h-4 text-amber-400" />
+                <Activity className="w-4 h-4 sc-header__gold-icon" />
                 <div>
-                  <p className="text-xl font-bold text-white font-mono leading-none">{totalPlayers}</p>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-wider">Fantasy Starters</p>
+                  <p className="sc-stat-card__number">{totalPlayers}</p>
+                  <p className="sc-stat-card__label">Fantasy Starters</p>
                 </div>
               </div>
               <div className="flex items-center gap-1.5 flex-wrap" data-testid="tools-button-group">
-                <span className="text-[10px] text-gray-500 uppercase tracking-wider mr-1">Use in Tools</span>
+                <span className="sc-header__tools-label">Use in Tools</span>
                 <Button
                   variant="outline"
                   size="sm"
                   disabled
-                  className="border-white/15 text-gray-400 bg-white/5 gap-1.5 opacity-60"
+                  className="sc-header__tool-btn"
                   data-testid="button-tradechasers"
                 >
                   <ArrowLeftRight className="w-3.5 h-3.5" />
@@ -535,7 +535,7 @@ export default function PlayerSearch() {
                   variant="outline"
                   size="sm"
                   disabled
-                  className="border-white/15 text-gray-400 bg-white/5 gap-1.5 opacity-60"
+                  className="sc-header__tool-btn"
                   data-testid="button-report-card"
                 >
                   <ClipboardCheck className="w-3.5 h-3.5" />
@@ -545,7 +545,7 @@ export default function PlayerSearch() {
                   variant="outline"
                   size="sm"
                   disabled
-                  className="border-white/15 text-gray-400 bg-white/5 gap-1.5 opacity-60"
+                  className="sc-header__tool-btn"
                   data-testid="button-waiver-wizard"
                 >
                   <Wand2 className="w-3.5 h-3.5" />
@@ -557,7 +557,7 @@ export default function PlayerSearch() {
 
           <div className="mt-6" ref={searchRef}>
             <div className="relative max-w-2xl group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 sc-search__icon z-10" />
               <Input
                 ref={inputRef}
                 type="search"
@@ -571,7 +571,7 @@ export default function PlayerSearch() {
                   if (search.trim()) setShowAutocomplete(true);
                 }}
                 onKeyDown={handleKeyDown}
-                className="pl-12 pr-20 bg-white/10 border-white/20 text-white placeholder:text-gray-400 rounded-md focus:bg-white/15 focus:border-amber-400/50 focus:ring-amber-400/20 transition-all"
+                className="sc-search"
                 autoComplete="off"
                 role="combobox"
                 aria-expanded={showAutocomplete && autocompleteResults.length > 0}
@@ -580,7 +580,7 @@ export default function PlayerSearch() {
                 data-testid="input-player-search"
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
-                <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-white/10 border border-white/20 text-[10px] text-gray-400 font-mono">
+                <kbd className="sc-search__kbd">
                   <Keyboard className="w-2.5 h-2.5" />
                   /
                 </kbd>
@@ -591,7 +591,7 @@ export default function PlayerSearch() {
                   id="autocomplete-list"
                   ref={listRef}
                   role="listbox"
-                  className="absolute top-full left-0 right-0 mt-1 bg-card border rounded-md shadow-lg z-50 overflow-hidden max-h-80 overflow-y-auto"
+                  className="absolute top-full left-0 right-0 mt-1 bg-white border border-[rgba(15,23,42,0.12)] rounded-xl shadow-lg z-50 overflow-hidden max-h-80 overflow-y-auto"
                   data-testid="autocomplete-dropdown"
                 >
                   {autocompleteResults.map((player, i) => (
@@ -602,28 +602,28 @@ export default function PlayerSearch() {
                         aria-selected={i === activeIndex}
                         className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors ${
                           i === activeIndex
-                            ? "bg-accent"
-                            : "hover:bg-muted/50"
+                            ? "bg-[rgba(15,23,42,0.04)]"
+                            : "hover:bg-[rgba(15,23,42,0.02)]"
                         }`}
                         onMouseEnter={() => setActiveIndex(i)}
                         onClick={() => setShowAutocomplete(false)}
                         data-testid={`autocomplete-item-${player.slug}`}
                       >
-                        <div className="flex-shrink-0 w-8 h-8 rounded-md bg-muted flex items-center justify-center">
-                          <span className="text-[10px] font-bold text-muted-foreground">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-md bg-[rgba(15,23,42,0.04)] flex items-center justify-center">
+                          <span className="text-[10px] font-bold text-[#64748b]">
                             {player.position || "?"}
                           </span>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <span className="font-medium text-sm text-foreground truncate block">
+                          <span className="font-medium text-sm text-[#0f172a] truncate block">
                             {player.name}
                           </span>
                           <div className="flex items-center gap-1.5 mt-0.5">
                             <span className={POSITION_COLORS[player.position || ""] || ""}>{player.position}</span>
-                            <span className="text-xs text-muted-foreground">{player.team}</span>
+                            <span className="text-xs text-[#64748b]">{player.team}</span>
                           </div>
                         </div>
-                        <TrendingUp className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                        <TrendingUp className="w-3.5 h-3.5 text-[#64748b] flex-shrink-0" />
                       </div>
                     </Link>
                   ))}
@@ -636,7 +636,7 @@ export default function PlayerSearch() {
                 <button
                   key={pos}
                   type="button"
-                  className={`sc-filter-pill sc-filter-pill--hero ${posFilter === pos ? 'sc-filter-pill--active' : ''}`}
+                  className={`sc-filter-pill ${posFilter === pos ? 'sc-filter-pill--active' : ''}`}
                   onClick={() => setPosFilter(posFilter === pos ? "ALL" : pos)}
                   data-testid={`button-filter-${pos}`}
                 >
@@ -648,7 +648,7 @@ export default function PlayerSearch() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-gray-400"
+                  className="text-[#64748b] hover:text-[#0f172a]"
                   onClick={() => setPosFilter("ALL")}
                   data-testid="button-clear-filter"
                 >
