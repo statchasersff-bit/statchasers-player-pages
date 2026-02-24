@@ -1,0 +1,159 @@
+Right now your default view is:
+
+“Expanded roster browser”
+
+What you’re proposing becomes:
+
+“League Command Map”
+
+That is MUCH cleaner, more scalable, and more premium.
+
+🔥 Why Collapsing to Team-Only First Is Smart
+1️⃣ Visual Density Drops Immediately
+
+Right now:
+
+4 expanded rosters per row
+
+Tons of names
+
+Scroll heavy
+
+If you collapse to just teams:
+
+Entire AFC fits on one screen
+
+All 4 divisions visible at once
+
+Instantly scannable
+
+Premium UI = less noise.
+
+💎 New Recommended Structure
+Default View = League Overview (Team Grid)
+
+Instead of this:
+
+QB
+RB
+WR
+TE
+K
+DEF
+
+You show:
+
+AFC EAST
+[ BUF ] [ MIA ] [ NE ] [ NYJ ]
+
+AFC NORTH
+[ BAL ] [ CIN ] [ CLE ] [ PIT ]
+...
+
+Each team card becomes:
+
+Team logo
+
+Abbreviation
+
+Team name
+
+Optional: small stat summary (fantasy strength score)
+
+That’s it.
+
+Clean. Powerful. Elegant.
+
+When User Clicks a Team
+
+THEN transition into:
+
+Team Board View (player cards like your screenshot idea)
+
+This creates a natural flow:
+
+League → Team → Player
+
+Instead of dumping everything at once.
+
+🧠 UX Flow After This Change
+Page Load:
+
+All 32 teams visible
+
+Conference and Division filters still work
+
+“Team Board” toggle disappears (because that becomes default when selecting team)
+
+Click Team:
+
+Smooth transition animation
+
+Team header expands
+
+Player board renders
+
+Add a clear:
+
+← Back to League Overview
+
+This is key.
+
+🎯 What This Improves
+✅ Scannability
+
+Users can quickly jump:
+
+“Show me AFC North”
+
+“Where are the Cowboys?”
+
+“Compare NFC West teams”
+
+✅ Premium Feel
+
+It stops feeling like a spreadsheet.
+
+✅ Performance
+
+Less DOM rendering initially = faster load.
+
+✅ Mobile Experience
+
+Huge improvement. Your current layout is dense on mobile.
+
+🏆 Make Team Cards Feel Premium
+
+If you do this, don’t make them plain boxes.
+
+Upgrade them.
+
+Team Card Should Include:
+
+Logo (centered or left)
+
+Abbreviation bold
+
+Small accent bar (team primary color)
+
+Subtle hover glow
+
+Example CSS:
+
+.team-tile {
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.team-tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+Add a small gold underline when active division selected.
+
+That’s StatChasers identity.

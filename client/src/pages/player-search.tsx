@@ -29,7 +29,25 @@ import {
   ArrowLeftRight,
   ClipboardCheck,
   Wand2,
+  LayoutGrid,
+  List,
+  Users,
+  ChevronsUpDown,
+  Check,
 } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 type LightPlayer = {
   id: string;
@@ -107,6 +125,26 @@ const POSITION_ORDER = ["QB", "RB", "WR", "TE", "K", "DEF"];
 const STARTER_COUNTS: Record<string, number> = {
   QB: 1, RB: 1, WR: 1, TE: 1, K: 1, DEF: 1,
 };
+
+const ROSTER_SLOTS = [
+  { pos: "QB", idx: 0, label: "QB" },
+  { pos: "RB", idx: 0, label: "RB1" },
+  { pos: "RB", idx: 1, label: "RB2" },
+  { pos: "WR", idx: 0, label: "WR1" },
+  { pos: "WR", idx: 1, label: "WR2" },
+  { pos: "WR", idx: 2, label: "WR3" },
+  { pos: "TE", idx: 0, label: "TE" },
+  { pos: "K", idx: 0, label: "K" },
+  { pos: "DEF", idx: 0, label: "DEF" },
+];
+
+const BOARD_HOVER_GLOW = "rgba(202,161,74,0.18)";
+
+const ALL_TEAMS_SORTED = Object.keys(TEAM_FULL_NAMES).sort((a, b) => {
+  const na = TEAM_FULL_NAMES[a] || a;
+  const nb = TEAM_FULL_NAMES[b] || b;
+  return na.localeCompare(nb);
+});
 
 function TeamRoster({
   team,
@@ -284,6 +322,97 @@ function PlayerSlideOver({
   );
 }
 
+function TeamBoard({
+  team,
+  positions,
+  onBack,
+}: {
+  team: string;
+  positions: Record<string, IndexedPlayer[]>;
+  onBack: () => void;
+}) {
+  const [, navigate] = useLocation();
+  const teamColor = TEAM_COLORS[team] || "#666";
+  const teamName = TEAM_FULL_NAMES[team] || team;
+
+  return (
+    <div className="sc-board" data-testid="team-board-view">
+      <div className="sc-board__header">
+        <div className="sc-board__header-inner">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              className="sc-board__back"
+              onClick={onBack}
+              data-testid="button-back-league"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              League View
+            </button>
+            <div className="sc-board__team-badge" style={{ '--team-color': teamColor } as React.CSSProperties}>
+              <span className="sc-board__team-dot" style={{ backgroundColor: teamColor }} />
+              <h2 className="sc-board__team-name" data-testid="text-team-board-name">
+                {team} {teamName}
+              </h2>
+            </div>
+          </div>
+          <div className="sc-board__subtitle" data-testid="text-board-subtitle">
+            <Zap className="w-3.5 h-3.5 text-amber-400" />
+            Fantasy Roster Board
+          </div>
+        </div>
+      </div>
+
+      <div className="sc-board__content">
+        <div className="sc-board-grid" data-testid="board-grid">
+          {ROSTER_SLOTS.map((slot) => {
+            const players = positions[slot.pos];
+            const player = players?.[slot.idx] || null;
+            const glowColor = BOARD_HOVER_GLOW;
+
+            return (
+              <div
+                key={slot.label}
+                className={`sc-board-slot ${player ? 'sc-board-slot--filled' : 'sc-board-slot--empty'}`}
+                style={{ '--slot-glow': glowColor, '--slot-border': teamColor } as React.CSSProperties}
+                onClick={() => player && navigate(`/nfl/players/${player.slug}/`)}
+                data-testid={`board-slot-${slot.label}`}
+              >
+                <div className="sc-board-slot__label" data-testid={`board-label-${slot.label}`}>
+                  <span className={POSITION_COLORS[slot.pos] || ""}>{slot.label}</span>
+                </div>
+                {player ? (
+                  <>
+                    <div className="sc-board-slot__avatar" data-testid={`board-avatar-${slot.label}`}>
+                      <span>
+                        {player.name.split(' ').map(n => n[0]).join('')}
+                      </span>
+                    </div>
+                    <div className="sc-board-slot__name" data-testid={`board-name-${slot.label}`}>
+                      {player.name}
+                    </div>
+                    <div className="sc-board-slot__meta">
+                      <span className="sc-board-slot__depth" data-testid={`board-depth-${slot.label}`}>{player.rank_label}</span>
+                      {player.years_exp !== null && player.years_exp > 0 && (
+                        <span className="sc-board-slot__exp" data-testid={`board-exp-${slot.label}`}>Yr {player.years_exp}</span>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <div className="sc-board-slot__empty-label" data-testid={`board-empty-${slot.label}`}>
+                    <Users className="w-5 h-5" />
+                    <span>Empty</span>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function PlayerSearch() {
   const [search, setSearch] = useState("");
   const [posFilter, setPosFilter] = useState("ALL");
@@ -294,6 +423,9 @@ export default function PlayerSearch() {
   const [selectedPlayer, setSelectedPlayer] = useState<IndexedPlayer | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [stickyVisible, setStickyVisible] = useState(false);
+  const [viewMode, setViewMode] = useState<'league' | 'team'>('league');
+  const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
+  const [teamPickerOpen, setTeamPickerOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -660,7 +792,7 @@ export default function PlayerSearch() {
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className={viewMode === 'team' && selectedTeam ? '' : 'max-w-7xl mx-auto px-4 py-8'}>
         {isSearching ? (
           playersLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -753,22 +885,97 @@ export default function PlayerSearch() {
             ))}
           </div>
         ) : indexedData && indexedData.byTeam ? (
+          viewMode === 'team' && selectedTeam && indexedData.byTeam[selectedTeam] ? (
+            <TeamBoard
+              team={selectedTeam}
+              positions={indexedData.byTeam[selectedTeam]}
+              onBack={() => {
+                setViewMode('league');
+                setSelectedTeam(null);
+              }}
+            />
+          ) : (
           <div>
             <div className="flex items-center justify-between gap-4 mb-5 flex-wrap">
-              <p className="text-sm text-muted-foreground" data-testid="text-indexed-count">
-                {totalPlayers} fantasy-relevant players across 32 NFL teams
-              </p>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant={startersOnly ? "default" : "outline"}
-                  size="sm"
-                  className="gap-1.5"
-                  onClick={() => setStartersOnly(!startersOnly)}
-                  data-testid="button-starters-toggle"
-                >
-                  <Zap className="w-3.5 h-3.5" />
-                  {startersOnly ? "Starters Only" : "Full Roster"}
-                </Button>
+              <div className="flex items-center gap-3 flex-wrap">
+                <p className="text-sm text-muted-foreground" data-testid="text-indexed-count">
+                  {totalPlayers} fantasy-relevant players across 32 NFL teams
+                </p>
+              </div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <Popover open={teamPickerOpen} onOpenChange={setTeamPickerOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-1.5 min-w-[140px] justify-between"
+                      role="combobox"
+                      aria-expanded={teamPickerOpen}
+                      data-testid="button-team-picker"
+                    >
+                      {selectedTeam ? (
+                        <span className="flex items-center gap-1.5">
+                          <span
+                            className="w-2 h-2 rounded-full flex-shrink-0"
+                            style={{ backgroundColor: TEAM_COLORS[selectedTeam] || '#666' }}
+                          />
+                          {selectedTeam} {TEAM_FULL_NAMES[selectedTeam]}
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-1.5">
+                          <LayoutGrid className="w-3.5 h-3.5" />
+                          Team Board
+                        </span>
+                      )}
+                      <ChevronsUpDown className="w-3.5 h-3.5 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[220px] p-0" align="end">
+                    <Command>
+                      <CommandInput placeholder="Search team..." data-testid="input-team-search" />
+                      <CommandList>
+                        <CommandEmpty>No team found.</CommandEmpty>
+                        <CommandGroup>
+                          {ALL_TEAMS_SORTED.map((abbr) => (
+                            <CommandItem
+                              key={abbr}
+                              value={`${abbr} ${TEAM_FULL_NAMES[abbr]}`}
+                              onSelect={() => {
+                                setSelectedTeam(abbr);
+                                setViewMode('team');
+                                setTeamPickerOpen(false);
+                              }}
+                              data-testid={`team-option-${abbr}`}
+                            >
+                              <span
+                                className="w-2.5 h-2.5 rounded-full mr-2 flex-shrink-0"
+                                style={{ backgroundColor: TEAM_COLORS[abbr] || '#666' }}
+                              />
+                              <span className="font-medium mr-1">{abbr}</span>
+                              <span className="text-muted-foreground">{TEAM_FULL_NAMES[abbr]}</span>
+                              {selectedTeam === abbr && (
+                                <Check className="w-3.5 h-3.5 ml-auto" />
+                              )}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+
+                {viewMode === 'league' && (
+                  <Button
+                    variant={startersOnly ? "default" : "outline"}
+                    size="sm"
+                    className="gap-1.5"
+                    onClick={() => setStartersOnly(!startersOnly)}
+                    data-testid="button-starters-toggle"
+                  >
+                    <Zap className="w-3.5 h-3.5" />
+                    {startersOnly ? "Starters Only" : "Full Roster"}
+                  </Button>
+                )}
               </div>
             </div>
 
@@ -819,6 +1026,7 @@ export default function PlayerSearch() {
               ))}
             </Tabs>
           </div>
+          )
         ) : null}
       </main>
 
