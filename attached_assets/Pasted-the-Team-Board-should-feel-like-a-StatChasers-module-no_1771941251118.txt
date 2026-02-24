@@ -1,0 +1,220 @@
+the Team Board should feel like a StatChasers module, not a separate “mode” with a totally different theme.
+
+So: white-first, navy for structure, gold for premium accents, and position colors only as small utility accents (not the visual identity).
+
+Here’s a StatChasers-native design system for the Team Board (layout + card styling) that will match your site instantly.
+
+StatChasers Team Board Theme Rules
+Color hierarchy (non-negotiable)
+
+Background: White (#ffffff)
+
+Structure / text: Navy (#0b1220 / #0f172a)
+
+Accents: Gold gradient (#caa14a → #f4d27a)
+
+Position colors: tiny elements only (pill / 3px border)
+
+Premium feel comes from:
+
+white space
+
+soft shadows
+
+rounded corners
+
+subtle borders
+
+gold used sparingly
+
+✅ Layout that matches StatChasers
+Page header (white, not dark)
+
+Top bar (same spacing as your other tools):
+
+← League View button (outline)
+
+Team pill (logo + “BUF Bills”)
+
+Right side: “Fantasy Roster Board” label + optional toggle (“Show Depth”)
+
+Gold underline below header (thin, subtle).
+
+✅ Player cards (StatChasers style)
+
+Instead of full-bleed dark image cards, do a white card with an image block at top.
+
+Card anatomy
+
+Top: image area (light background, not dark)
+
+Bottom: name area (white)
+
+Micro-row: role tags (WR1, Starter, etc)
+
+Position pill uses Sleeper color
+
+Why this fits your brand
+
+It matches your current tiles and pill design language, but upgrades it.
+
+Drop-in CSS Tokens (use across the whole module)
+:root{
+  --sc-bg: #ffffff;
+  --sc-navy: #0b1220;
+  --sc-navy-2: #0f172a;
+  --sc-muted: #64748b;
+  --sc-border: rgba(15, 23, 42, 0.10);
+  --sc-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+
+  --sc-gold-1: #caa14a;
+  --sc-gold-2: #f4d27a;
+
+  /* Sleeper-esque position accents */
+  --pos-qb: #F44336;
+  --pos-rb: #4CAF50;
+  --pos-wr: #2196F3;
+  --pos-te: #FF9800;
+  --pos-k:  #9C27B0;
+  --pos-def:#1E3A8A;
+}
+✅ Team Board container (white, premium spacing)
+.sc-teamboard{
+  background: var(--sc-bg);
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 22px 16px 44px;
+}
+
+.sc-teamboard__top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom: 14px;
+}
+
+.sc-teamboard__divider{
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, var(--sc-gold-1), var(--sc-gold-2), transparent);
+  opacity: .75;
+  margin: 10px 0 18px;
+}
+✅ Position sections (clean + scannable)
+.sc-pos-section{
+  margin: 18px 0 24px;
+}
+
+.sc-pos-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight: 900;
+  color: var(--sc-navy-2);
+  font-size: 13px;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.sc-pos-title::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background: rgba(15,23,42,.08);
+}
+
+.sc-pos-grid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+}
+✅ StatChasers Player Card (white-first)
+.sc-playercard{
+  width: 210px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--sc-border);
+  background: #fff;
+  box-shadow: var(--sc-shadow);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  cursor:pointer;
+}
+
+.sc-playercard:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(15,23,42,0.12);
+  border-color: rgba(15,23,42,.16);
+}
+
+/* top image zone */
+.sc-playercard__img{
+  position: relative;
+  height: 155px;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(202,161,74,.25), rgba(15,23,42,.02)),
+    linear-gradient(180deg, rgba(15,23,42,.02), rgba(15,23,42,.0));
+}
+
+.sc-playercard__img img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  display:block;
+}
+
+/* position pill */
+.sc-playercard__pos{
+  position:absolute;
+  top:10px;
+  right:10px;
+  padding:6px 10px;
+  border-radius:999px;
+  font-weight:900;
+  font-size:11px;
+  color:#fff;
+  background: rgba(11,18,32,.72);
+  backdrop-filter: blur(6px);
+}
+
+/* body */
+.sc-playercard__body{
+  padding: 12px 12px 14px;
+  background:#fff;
+}
+
+.sc-playercard__name{
+  font-weight: 900;
+  color: var(--sc-navy-2);
+  font-size: 15px;
+  line-height: 1.1;
+}
+
+.sc-playercard__meta{
+  margin-top: 6px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color: var(--sc-muted);
+  font-size: 12px;
+}
+
+/* tiny gold “tier” accent line */
+.sc-playercard__gold{
+  height: 3px;
+  background: linear-gradient(90deg, var(--sc-gold-1), var(--sc-gold-2));
+}
+
+Add the gold line inside the card either at the very top or between image/body. That “gold signature” makes it feel like StatChasers immediately.
+
+✅ Use Sleeper colors as a small left accent (not the whole card)
+/* small left border accent */
+.sc-playercard.sc-qb { box-shadow: var(--sc-shadow), inset 3px 0 0 var(--pos-qb); }
+.sc-playercard.sc-rb { box-shadow: var(--sc-shadow), inset 3px 0 0 var(--pos-rb); }
+.sc-playercard.sc-wr { box-shadow: var(--sc-shadow), inset 3px 0 0 var(--pos-wr); }
+.sc-playercard.sc-te { box-shadow: var(--sc-shadow), inset 3px 0 0 var(--pos-te); }
+.sc-playercard.sc-k  { box-shadow: var(--sc-shadow), inset 3px 0 0 var(--pos-k); }
+.sc-playercard.sc-def{ box-shadow: var(--sc-shadow), inset 3px 0 0 var(--pos-def); }
+
+This keeps your brand dominant while still giving positional context.

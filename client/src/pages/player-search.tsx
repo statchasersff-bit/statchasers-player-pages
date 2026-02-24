@@ -18,7 +18,6 @@ import {
   ArrowLeftRight,
   ClipboardCheck,
   Wand2,
-  Users,
 } from "lucide-react";
 
 type LightPlayer = {
@@ -94,47 +93,28 @@ const NFL_DIVISIONS: Record<string, Record<string, string[]>> = {
 
 const POSITION_ORDER = ["QB", "RB", "WR", "TE", "K", "DEF"];
 
-const STARTER_COUNTS: Record<string, number> = {
-  QB: 1, RB: 1, WR: 1, TE: 1, K: 1, DEF: 1,
+
+const POS_DISPLAY_LIMITS: Record<string, number> = {
+  QB: 2, RB: 4, WR: 5, TE: 3, K: 1, DEF: 1,
 };
 
-const FORMATION_ROWS = [
-  [{ pos: "QB", idx: 0, label: "QB" }],
-  [{ pos: "RB", idx: 0, label: "RB1" }, { pos: "RB", idx: 1, label: "RB2" }],
-  [{ pos: "WR", idx: 0, label: "WR1" }, { pos: "WR", idx: 1, label: "WR2" }, { pos: "WR", idx: 2, label: "WR3" }],
-  [{ pos: "TE", idx: 0, label: "TE" }, { pos: "RB", idx: 2, label: "FLEX" }],
-  [{ pos: "K", idx: 0, label: "K" }, { pos: "DEF", idx: 0, label: "DEF" }],
-];
-
-const POS_ACCENT_COLORS: Record<string, string> = {
-  QB: "#E53935", RB: "#43A047", WR: "#1E88E5", TE: "#FB8C00", K: "#8E24AA", DEF: "#1E3A8A",
-};
-
-function getSlotTier(depthOrder: number | null): number {
-  if (depthOrder === null || depthOrder <= 1) return 1;
-  if (depthOrder === 2) return 2;
-  return 3;
+function getTeamLogoUrl(team: string) {
+  return `https://sleepercdn.com/images/team_logos/nfl/${team.toLowerCase()}.png`;
 }
 
+function getHeadshotUrl(playerId: string) {
+  return `https://sleepercdn.com/content/nfl/players/thumb/${playerId}.jpg`;
+}
 
 function TeamTile({
   team,
-  positions,
   onClick,
 }: {
   team: string;
-  positions: Record<string, IndexedPlayer[]>;
   onClick: () => void;
 }) {
   const teamColor = TEAM_COLORS[team] || "#666";
   const teamName = TEAM_FULL_NAMES[team] || team;
-
-  const starterCount = POSITION_ORDER.reduce((sum, pos) => {
-    const players = positions[pos];
-    return sum + Math.min(players?.length || 0, STARTER_COUNTS[pos] || 1);
-  }, 0);
-
-  const qb = positions["QB"]?.[0];
 
   return (
     <div
@@ -144,59 +124,73 @@ function TeamTile({
       data-testid={`tile-team-${team}`}
     >
       <div className="sc-team-tile__accent" style={{ backgroundColor: teamColor }} />
-      <div className="sc-team-tile__body">
+      <div className="sc-team-tile__logo">
+        <img
+          src={getTeamLogoUrl(team)}
+          alt={`${team} ${teamName} logo`}
+          loading="lazy"
+          data-testid={`img-team-logo-${team}`}
+        />
+      </div>
+      <div className="sc-team-tile__meta">
         <div className="sc-team-tile__abbr" data-testid={`text-team-abbr-${team}`}>{team}</div>
         <div className="sc-team-tile__name" data-testid={`text-team-name-${team}`}>{teamName}</div>
-        {qb && (
-          <div className="sc-team-tile__qb">
-            <span className="sc-pos-pill sc-pos-qb" style={{ fontSize: '9px', padding: '1px 5px' }}>QB</span>
-            <span>{qb.name}</span>
-          </div>
-        )}
-        <div className="sc-team-tile__count">{starterCount} starters</div>
       </div>
       <ChevronRight className="sc-team-tile__arrow" />
     </div>
   );
 }
 
-function getStarterSlugSet(positions: Record<string, IndexedPlayer[]>): Set<string> {
-  const slugs = new Set<string>();
-  for (const row of FORMATION_ROWS) {
-    for (const slot of row) {
-      const player = positions[slot.pos]?.[slot.idx];
-      if (player) slugs.add(player.slug);
-    }
-  }
-  return slugs;
-}
+function PlayerCard({
+  player,
+  pos,
+  depthLabel,
+  teamColor,
+  onClick,
+}: {
+  player: IndexedPlayer;
+  pos: string;
+  depthLabel: string;
+  teamColor: string;
+  onClick: () => void;
+}) {
+  const nameParts = player.name.split(' ');
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ') || firstName;
 
-function getBenchPlayers(positions: Record<string, IndexedPlayer[]>) {
-  const starterSlugs = getStarterSlugSet(positions);
-  const grouped: Record<string, { pos: string; player: IndexedPlayer; depthLabel: string }[]> = {};
-
-  for (const pos of POSITION_ORDER) {
-    const players = positions[pos];
-    if (!players) continue;
-    let benchIdx = 0;
-    for (const player of players) {
-      if (starterSlugs.has(player.slug)) continue;
-      benchIdx++;
-      const posCount = FORMATION_ROWS.flat().filter(s => s.pos === pos).length;
-      const label = `${pos}${posCount + benchIdx}`;
-      if (!grouped[pos]) grouped[pos] = [];
-      grouped[pos].push({ pos, player, depthLabel: label });
-    }
-  }
-
-  const result: { pos: string; player: IndexedPlayer; depthLabel: string }[] = [];
-  for (const pos of POSITION_ORDER) {
-    if (grouped[pos]) {
-      grouped[pos].sort((a, b) => (a.player.depth_chart_order ?? 99) - (b.player.depth_chart_order ?? 99));
-      result.push(...grouped[pos]);
-    }
-  }
-  return result;
+  return (
+    <div
+      className={`sc-card sc-card--${pos.toLowerCase()}`}
+      onClick={onClick}
+      data-testid={`card-player-${player.slug}`}
+    >
+      <div className="sc-card__img" style={{ '--card-team-color': teamColor } as React.CSSProperties}>
+        <img
+          src={getHeadshotUrl(player.id)}
+          alt={player.name}
+          loading="lazy"
+          onError={(e) => {
+            const img = e.currentTarget;
+            img.onerror = null;
+            img.style.display = 'none';
+            img.parentElement?.classList.add('sc-card__img--fallback');
+          }}
+          data-testid={`img-headshot-${player.slug}`}
+        />
+        <div className="sc-card__pos" data-testid={`card-pos-${player.slug}`}>{pos}</div>
+        <div className="sc-card__fallback-initials">
+          {player.name.split(' ').map(n => n[0]).join('')}
+        </div>
+      </div>
+      <div className="sc-card__info">
+        <div className="sc-card__name">
+          <span className="sc-card__first" data-testid={`card-first-${player.slug}`}>{firstName.toUpperCase()}</span>
+          <span className="sc-card__last" data-testid={`card-last-${player.slug}`}>{lastName.toUpperCase()}</span>
+        </div>
+        <span className="sc-card__depth" data-testid={`card-depth-${player.slug}`}>{depthLabel}</span>
+      </div>
+    </div>
+  );
 }
 
 function TeamBoard({
@@ -213,7 +207,17 @@ function TeamBoard({
   const teamColor = TEAM_COLORS[team] || "#666";
   const teamName = TEAM_FULL_NAMES[team] || team;
 
-  const benchPlayers = useMemo(() => getBenchPlayers(positions), [positions]);
+  const sections = useMemo(() => {
+    return POSITION_ORDER.map(pos => {
+      const players = positions[pos] || [];
+      const limit = POS_DISPLAY_LIMITS[pos] || 1;
+      const starters = players.slice(0, limit);
+      const bench = players.slice(limit);
+      return { pos, starters, bench };
+    });
+  }, [positions]);
+
+  const totalBench = sections.reduce((s, sec) => s + sec.bench.length, 0);
 
   return (
     <div className="sc-board" data-testid="team-board-view">
@@ -230,75 +234,37 @@ function TeamBoard({
               League View
             </button>
             <div className="sc-board__team-badge" style={{ '--team-color': teamColor } as React.CSSProperties}>
-              <span className="sc-board__team-dot" style={{ backgroundColor: teamColor }} />
+              <img src={getTeamLogoUrl(team)} alt="" className="sc-board__team-logo" />
               <h2 className="sc-board__team-name" data-testid="text-team-board-name">
                 {team} {teamName}
               </h2>
             </div>
           </div>
-          <div className="sc-board__subtitle" data-testid="text-board-subtitle">
-            <Zap className="w-3.5 h-3.5 text-amber-400" />
-            Fantasy Roster Board
-          </div>
         </div>
       </div>
 
-      <div className="sc-board__content">
-        <div className="sc-board-formation" data-testid="board-grid">
-          {FORMATION_ROWS.map((row, ri) => (
-            <div key={ri} className={`sc-board-row sc-board-row--${row.length}`}>
-              {row.map((slot) => {
-                const players = positions[slot.pos];
-                const player = players?.[slot.idx] || null;
-                const isQB = slot.label === "QB";
-                const tier = player ? getSlotTier(player.depth_chart_order) : 3;
-                const accentColor = POS_ACCENT_COLORS[slot.pos] || "#666";
-
-                return (
-                  <div
-                    key={slot.label}
-                    className={`sc-board-slot ${isQB ? 'sc-board-slot--qb' : ''} sc-board-slot--tier-${tier} ${player ? 'sc-board-slot--filled' : 'sc-board-slot--empty'}`}
-                    onClick={() => player && navigate(`/nfl/players/${player.slug}/`)}
-                    data-testid={`board-slot-${slot.label}`}
-                  >
-                    <div className="sc-board-slot__accent-bar" style={{ backgroundColor: accentColor }} />
-                    {player ? (
-                      <>
-                        <div className="sc-board-slot__avatar" data-testid={`board-avatar-${slot.label}`}>
-                          <span>
-                            {player.name.split(' ').map(n => n[0]).join('')}
-                          </span>
-                        </div>
-                        <div className="sc-board-slot__name" data-testid={`board-name-${slot.label}`}>
-                          {player.name}
-                        </div>
-                        <div className="sc-board-slot__role">
-                          <span className={POSITION_COLORS[slot.pos] || ""} data-testid={`board-label-${slot.label}`}>{slot.label}</span>
-                          <span className="sc-board-slot__rank" data-testid={`board-depth-${slot.label}`}>{player.rank_label}</span>
-                        </div>
-                        <div className="sc-board-slot__stat" data-testid={`board-stat-${slot.label}`}>
-                          {player.years_exp !== null && player.years_exp > 0
-                            ? `${player.years_exp} yr${player.years_exp !== 1 ? 's' : ''} exp`
-                            : 'Rookie'}
-                        </div>
-                        <div className={`sc-board-slot__tier sc-board-slot__tier--${tier}`} data-testid={`board-tier-${slot.label}`}>
-                          {tier === 1 ? 'Starter' : tier === 2 ? 'Backup' : 'Depth'}
-                        </div>
-                      </>
-                    ) : (
-                      <div className="sc-board-slot__empty-label" data-testid={`board-empty-${slot.label}`}>
-                        <Users className="w-5 h-5" />
-                        <span>Empty</span>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+      <div className="sc-board__wall" data-testid="board-grid">
+        {sections.map(({ pos, starters }) => (
+          starters.length > 0 && (
+            <div key={pos} className="sc-board__section" data-testid={`board-section-${pos}`}>
+              <h3 className="sc-board__section-title">{pos}</h3>
+              <div className="sc-board__cards">
+                {starters.map((player, i) => (
+                  <PlayerCard
+                    key={player.slug}
+                    player={player}
+                    pos={pos}
+                    depthLabel={`${pos}${i + 1}`}
+                    teamColor={teamColor}
+                    onClick={() => navigate(`/nfl/players/${player.slug}/`)}
+                  />
+                ))}
+              </div>
             </div>
-          ))}
-        </div>
+          )
+        ))}
 
-        {benchPlayers.length > 0 && (
+        {totalBench > 0 && (
           <div className="sc-bench" data-testid="bench-section">
             <button
               type="button"
@@ -308,33 +274,23 @@ function TeamBoard({
             >
               <ChevronRight className={`sc-bench__toggle-icon ${showBench ? 'sc-bench__toggle-icon--open' : ''}`} />
               <span>{showBench ? 'Hide Full Roster' : 'Show Full Roster'}</span>
-              <span className="sc-bench__count">{benchPlayers.length}</span>
+              <span className="sc-bench__count">{totalBench}</span>
             </button>
 
             {showBench && (
-              <div className="sc-bench__list" data-testid="bench-list">
-                {benchPlayers.map(({ pos, player, depthLabel }) => {
-                  const tier = getSlotTier(player.depth_chart_order);
-                  return (
-                    <div
+              <div className="sc-bench__cards" data-testid="bench-list">
+                {sections.map(({ pos, starters, bench }) =>
+                  bench.map((player, i) => (
+                    <PlayerCard
                       key={player.slug}
-                      className="sc-bench__row"
+                      player={player}
+                      pos={pos}
+                      depthLabel={`${pos}${starters.length + i + 1}`}
+                      teamColor={teamColor}
                       onClick={() => navigate(`/nfl/players/${player.slug}/`)}
-                      data-testid={`bench-player-${player.slug}`}
-                    >
-                      <span className={POSITION_COLORS[pos] || ""}>{depthLabel}</span>
-                      <span className="sc-bench__row-name">{player.name}</span>
-                      <span className="sc-bench__row-rank">{player.rank_label}</span>
-                      {player.years_exp !== null && player.years_exp > 0 && (
-                        <span className="sc-bench__row-exp">Yr {player.years_exp}</span>
-                      )}
-                      <span className={`sc-bench__row-tier sc-bench__row-tier--${tier}`}>
-                        {tier === 1 ? 'Starter' : tier === 2 ? 'Backup' : 'Depth'}
-                      </span>
-                      <ChevronRight className="sc-bench__row-arrow" />
-                    </div>
-                  );
-                })}
+                    />
+                  ))
+                )}
               </div>
             )}
           </div>
@@ -834,7 +790,6 @@ export default function PlayerSearch() {
                               <TeamTile
                                 key={team}
                                 team={team}
-                                positions={teamData}
                                 onClick={() => setSelectedTeam(team)}
                               />
                             );
