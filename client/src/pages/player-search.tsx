@@ -98,16 +98,12 @@ const STARTER_COUNTS: Record<string, number> = {
   QB: 1, RB: 1, WR: 1, TE: 1, K: 1, DEF: 1,
 };
 
-const ROSTER_SLOTS = [
-  { pos: "QB", idx: 0, label: "QB" },
-  { pos: "RB", idx: 0, label: "RB1" },
-  { pos: "RB", idx: 1, label: "RB2" },
-  { pos: "WR", idx: 0, label: "WR1" },
-  { pos: "WR", idx: 1, label: "WR2" },
-  { pos: "WR", idx: 2, label: "WR3" },
-  { pos: "TE", idx: 0, label: "TE" },
-  { pos: "K", idx: 0, label: "K" },
-  { pos: "DEF", idx: 0, label: "DEF" },
+const FORMATION_ROWS = [
+  [{ pos: "QB", idx: 0, label: "QB" }],
+  [{ pos: "RB", idx: 0, label: "RB1" }, { pos: "RB", idx: 1, label: "RB2" }],
+  [{ pos: "WR", idx: 0, label: "WR1" }, { pos: "WR", idx: 1, label: "WR2" }, { pos: "WR", idx: 2, label: "WR3" }],
+  [{ pos: "TE", idx: 0, label: "TE" }, { pos: "RB", idx: 2, label: "FLEX" }],
+  [{ pos: "K", idx: 0, label: "K" }, { pos: "DEF", idx: 0, label: "DEF" }],
 ];
 
 const BOARD_HOVER_GLOW = "rgba(202,161,74,0.18)";
@@ -198,49 +194,53 @@ function TeamBoard({
       </div>
 
       <div className="sc-board__content">
-        <div className="sc-board-grid" data-testid="board-grid">
-          {ROSTER_SLOTS.map((slot) => {
-            const players = positions[slot.pos];
-            const player = players?.[slot.idx] || null;
-            const glowColor = BOARD_HOVER_GLOW;
+        <div className="sc-board-formation" data-testid="board-grid">
+          {FORMATION_ROWS.map((row, ri) => (
+            <div key={ri} className={`sc-board-row sc-board-row--${row.length}`}>
+              {row.map((slot) => {
+                const players = positions[slot.pos];
+                const player = players?.[slot.idx] || null;
+                const isQB = slot.label === "QB";
 
-            return (
-              <div
-                key={slot.label}
-                className={`sc-board-slot ${player ? 'sc-board-slot--filled' : 'sc-board-slot--empty'}`}
-                style={{ '--slot-glow': glowColor, '--slot-border': teamColor } as React.CSSProperties}
-                onClick={() => player && navigate(`/nfl/players/${player.slug}/`)}
-                data-testid={`board-slot-${slot.label}`}
-              >
-                <div className="sc-board-slot__label" data-testid={`board-label-${slot.label}`}>
-                  <span className={POSITION_COLORS[slot.pos] || ""}>{slot.label}</span>
-                </div>
-                {player ? (
-                  <>
-                    <div className="sc-board-slot__avatar" data-testid={`board-avatar-${slot.label}`}>
-                      <span>
-                        {player.name.split(' ').map(n => n[0]).join('')}
-                      </span>
+                return (
+                  <div
+                    key={slot.label}
+                    className={`sc-board-slot ${isQB ? 'sc-board-slot--qb' : ''} ${player ? 'sc-board-slot--filled' : 'sc-board-slot--empty'}`}
+                    style={{ '--slot-glow': BOARD_HOVER_GLOW, '--slot-border': teamColor } as React.CSSProperties}
+                    onClick={() => player && navigate(`/nfl/players/${player.slug}/`)}
+                    data-testid={`board-slot-${slot.label}`}
+                  >
+                    <div className="sc-board-slot__label" data-testid={`board-label-${slot.label}`}>
+                      <span className={POSITION_COLORS[slot.pos] || ""}>{slot.label}</span>
                     </div>
-                    <div className="sc-board-slot__name" data-testid={`board-name-${slot.label}`}>
-                      {player.name}
-                    </div>
-                    <div className="sc-board-slot__meta">
-                      <span className="sc-board-slot__depth" data-testid={`board-depth-${slot.label}`}>{player.rank_label}</span>
-                      {player.years_exp !== null && player.years_exp > 0 && (
-                        <span className="sc-board-slot__exp" data-testid={`board-exp-${slot.label}`}>Yr {player.years_exp}</span>
-                      )}
-                    </div>
-                  </>
-                ) : (
-                  <div className="sc-board-slot__empty-label" data-testid={`board-empty-${slot.label}`}>
-                    <Users className="w-5 h-5" />
-                    <span>Empty</span>
+                    {player ? (
+                      <>
+                        <div className="sc-board-slot__avatar" data-testid={`board-avatar-${slot.label}`}>
+                          <span>
+                            {player.name.split(' ').map(n => n[0]).join('')}
+                          </span>
+                        </div>
+                        <div className="sc-board-slot__name" data-testid={`board-name-${slot.label}`}>
+                          {player.name}
+                        </div>
+                        <div className="sc-board-slot__meta">
+                          <span className="sc-board-slot__depth" data-testid={`board-depth-${slot.label}`}>{player.rank_label}</span>
+                          {player.years_exp !== null && player.years_exp > 0 && (
+                            <span className="sc-board-slot__exp" data-testid={`board-exp-${slot.label}`}>Yr {player.years_exp}</span>
+                          )}
+                        </div>
+                      </>
+                    ) : (
+                      <div className="sc-board-slot__empty-label" data-testid={`board-empty-${slot.label}`}>
+                        <Users className="w-5 h-5" />
+                        <span>Empty</span>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            );
-          })}
+                );
+              })}
+            </div>
+          ))}
         </div>
       </div>
     </div>
