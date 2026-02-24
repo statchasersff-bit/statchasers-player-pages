@@ -1,3 +1,5 @@
+@import "./sc-components.css";
+
 @tailwind components;
 @tailwind utilities;
 
