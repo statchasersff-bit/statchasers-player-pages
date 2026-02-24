@@ -1,11 +1,11 @@
 {
-  "index.html": {
-    "file": "assets/index-BqhGZfQl.js",
-    "name": "index",
-    "src": "index.html",
+  "src/wp-entry.tsx": {
+    "file": "assets/wp-entry-B0VxI8lF.js",
+    "name": "wp-entry",
+    "src": "src/wp-entry.tsx",
     "isEntry": true,
     "css": [
-      "assets/index-C-YiVx7t.css"
+      "assets/wp-entry-AQe__DLs.css"
     ]
   }
 }
