@@ -328,30 +328,41 @@ export default function PlayerSearch() {
 
   const isSearching = search.trim().length > 0 || posFilter !== "ALL";
 
+  const indexedFlat = useMemo(() => {
+    if (!indexedData?.byTeam) return [] as IndexedPlayer[];
+    const all: IndexedPlayer[] = [];
+    for (const teamPositions of Object.values(indexedData.byTeam)) {
+      for (const posPlayers of Object.values(teamPositions)) {
+        all.push(...posPlayers);
+      }
+    }
+    return all;
+  }, [indexedData]);
+
   const posCounts = useMemo(() => {
-    if (!players) return {} as Record<string, number>;
     const counts: Record<string, number> = {};
     for (const pos of POSITION_ORDER) {
-      counts[pos] = players.filter(p => p.position === pos).length;
+      counts[pos] = indexedFlat.filter(p => p.position === pos).length;
     }
     return counts;
-  }, [players]);
+  }, [indexedFlat]);
 
   const autocompleteResults = useMemo(() => {
-    if (!players || !search.trim()) return [];
+    if (!search.trim()) return [];
     const q = search.toLowerCase().trim();
-    return players
-      .filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.team.toLowerCase().includes(q)
-      )
+    const indexedMatches = indexedFlat
+      .filter(p => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q))
       .slice(0, 8);
-  }, [players, search]);
+    if (indexedMatches.length >= 4) return indexedMatches;
+    const indexedSlugs = new Set(indexedMatches.map(p => p.slug));
+    const extras = (players || [])
+      .filter(p => !indexedSlugs.has(p.slug) && (p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q)))
+      .slice(0, 8 - indexedMatches.length);
+    return [...indexedMatches, ...extras];
+  }, [indexedFlat, players, search]);
 
   const filtered = useMemo(() => {
-    if (!players) return [];
-    let result = players;
+    let result: (IndexedPlayer | LightPlayer)[] = indexedFlat;
     if (posFilter !== "ALL") {
       result = result.filter((p) => p.position === posFilter);
     }
@@ -364,7 +375,7 @@ export default function PlayerSearch() {
       );
     }
     return result.slice(0, 100);
-  }, [players, search, posFilter]);
+  }, [indexedFlat, search, posFilter]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -663,7 +674,7 @@ export default function PlayerSearch() {
 
       <main className={selectedTeam ? '' : 'max-w-7xl mx-auto px-4 py-8'}>
         {isSearching ? (
-          playersLoading ? (
+          indexedLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {Array.from({ length: 12 }).map((_, i) => (
                 <Card key={i}>
