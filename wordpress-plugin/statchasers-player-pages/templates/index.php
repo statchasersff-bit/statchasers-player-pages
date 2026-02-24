@@ -68,8 +68,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
     .scpp-root .sc-players .sc-pos-RB { background: rgba(59,130,246,0.12); color: #2563eb; }
     .scpp-root .sc-players .sc-pos-WR { background: rgba(34,197,94,0.12); color: #16a34a; }
     .scpp-root .sc-players .sc-pos-TE { background: rgba(249,115,22,0.12); color: #ea580c; }
-    .scpp-root .sc-players .sc-pos-K  { background: rgba(168,85,247,0.12); color: #9333ea; }
-    .scpp-root .sc-players .sc-pos-DEF { background: rgba(107,114,128,0.12); color: #4b5563; }
 </style>
 
 <?php /* Config passed via wp_localize_script; players.js enqueued with filemtime cache-busting */ ?>

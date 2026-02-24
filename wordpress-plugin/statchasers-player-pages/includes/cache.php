@@ -133,13 +133,12 @@ function sc_refresh_players_data() {
         return false;
     }
 
-    $valid_positions = array( 'QB', 'RB', 'WR', 'TE', 'K', 'DEF' );
+    $valid_positions = array( 'QB', 'RB', 'WR', 'TE' );
     $players = array();
     $slug_set = array();
-    $teams_with_def = array();
 
     foreach ( $players_map as $player_id => $p ) {
-        if ( empty( $p['full_name'] ) && ( ! isset( $p['position'] ) || $p['position'] !== 'DEF' ) ) {
+        if ( empty( $p['full_name'] ) ) {
             continue;
         }
         if ( ! isset( $p['position'] ) || ! in_array( $p['position'], $valid_positions, true ) ) {
@@ -158,10 +157,6 @@ function sc_refresh_players_data() {
 
         $team = sc_normalize_team( isset( $p['team'] ) ? $p['team'] : '' );
 
-        if ( $p['position'] === 'DEF' && $team !== 'FA' ) {
-            $teams_with_def[ $team ] = true;
-        }
-
         $players[] = array(
             'id'            => (string) $player_id,
             'name'          => $name,
@@ -178,34 +173,8 @@ function sc_refresh_players_data() {
         );
     }
 
-    $nfl_teams_list = array_keys( sc_get_team_full_names() );
-    $full_names = sc_get_team_full_names();
-    foreach ( $nfl_teams_list as $t ) {
-        if ( ! isset( $teams_with_def[ $t ] ) ) {
-            $def_name = isset( $full_names[ $t ] ) ? $full_names[ $t ] : $t;
-            $def_slug = sc_build_slug( $def_name );
-            if ( ! isset( $slug_set[ $def_slug ] ) ) {
-                $slug_set[ $def_slug ] = true;
-                $players[] = array(
-                    'id'               => 'DEF-' . $t,
-                    'name'             => $def_name,
-                    'slug'             => $def_slug,
-                    'position'         => 'DEF',
-                    'team'             => $t,
-                    'status'           => 'Active',
-                    'injury_status'    => null,
-                    'age'              => null,
-                    'height'           => null,
-                    'weight'           => null,
-                    'depth_chart_order' => 1,
-                    'years_exp'        => null,
-                );
-            }
-        }
-    }
-
     usort( $players, function ( $a, $b ) {
-        $pos_order = array( 'QB' => 0, 'RB' => 1, 'WR' => 2, 'TE' => 3, 'K' => 4, 'DEF' => 5 );
+        $pos_order = array( 'QB' => 0, 'RB' => 1, 'WR' => 2, 'TE' => 3 );
         $pa = isset( $pos_order[ $a['position'] ] ) ? $pos_order[ $a['position'] ] : 99;
         $pb = isset( $pos_order[ $b['position'] ] ) ? $pos_order[ $b['position'] ] : 99;
         if ( $pa !== $pb ) return $pa - $pb;
@@ -296,11 +265,9 @@ function sc_generate_indexed_players() {
 
     $position_limits = array(
         'QB'  => 2,
-        'RB'  => 2,
-        'WR'  => 3,
-        'TE'  => 2,
-        'K'   => 1,
-        'DEF' => 1,
+        'RB'  => 4,
+        'WR'  => 6,
+        'TE'  => 3,
     );
 
     $nfl_teams = array_keys( sc_get_team_full_names() );
@@ -326,7 +293,7 @@ function sc_generate_indexed_players() {
 
     $all_slugs = array();
     $by_team = array();
-    $counts = array( 'total' => 0, 'QB' => 0, 'RB' => 0, 'WR' => 0, 'TE' => 0, 'K' => 0, 'DEF' => 0 );
+    $counts = array( 'total' => 0, 'QB' => 0, 'RB' => 0, 'WR' => 0, 'TE' => 0 );
 
     foreach ( $nfl_teams as $team ) {
         $by_team[ $team ] = array();

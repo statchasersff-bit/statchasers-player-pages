@@ -117,9 +117,9 @@ function sc_render_admin_page() {
     $pages           = get_pages( array( 'post_status' => 'publish', 'sort_column' => 'post_title' ) );
     if ( ! is_array( $pages ) ) $pages = array();
     ?>
-    <!-- SCPP ADMIN OK v0.3.2 -->
+    <!-- SCPP ADMIN OK v0.5.0 -->
     <div class="wrap">
-        <h1>StatChasers Player Pages <small style="font-size: 12px; color: #999;">v0.3.2</small></h1>
+        <h1>StatChasers Player Pages <small style="font-size: 12px; color: #999;">v0.5.0</small></h1>
 
         <?php settings_errors( 'statchasers' ); ?>
 
@@ -187,7 +187,7 @@ function sc_render_admin_page() {
             <table class="form-table">
                 <tr>
                     <th>Plugin Version</th>
-                    <td><code>0.3.2</code></td>
+                    <td><code>0.5.0</code></td>
                 </tr>
                 <tr>
                     <th>Container Page</th>
@@ -313,7 +313,7 @@ function sc_render_admin_page() {
                     <th>Position Breakdown</th>
                     <td>
                         <?php
-                        $positions = array( 'QB', 'RB', 'WR', 'TE', 'K', 'DEF' );
+                        $positions = array( 'QB', 'RB', 'WR', 'TE' );
                         foreach ( $positions as $pos ) :
                             $pos_count = isset( $indexed_data['counts'][ $pos ] ) ? $indexed_data['counts'][ $pos ] : 0;
                         ?>
@@ -413,7 +413,7 @@ function sc_render_admin_page() {
                 <li>Click <strong>Auto-Create NFL/Players Pages and Set Container</strong> above (or select an existing page).</li>
                 <li>Click <strong>Flush Rewrite Rules Now</strong> above, OR go to <strong>Settings &gt; Permalinks</strong> and click <strong>Save Changes</strong>.</li>
                 <li>Visit <a href="<?php echo esc_url( home_url( '/nfl/players/' ) ); ?>" target="_blank">/nfl/players/</a> to verify.</li>
-                <li>View page source and search for <code>&lt;!-- SCPP v0.3.2</code> to confirm new code is live.</li>
+                <li>View page source and search for <code>&lt;!-- SCPP v0.5.0</code> to confirm new code is live.</li>
             </ol>
         </div>
     </div>

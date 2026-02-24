@@ -1,4 +1,4 @@
-<!-- SCPP v0.4.0 React Mount -->
+<!-- SCPP v0.5.0 React Mount -->
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 

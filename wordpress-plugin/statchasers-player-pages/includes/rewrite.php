@@ -257,9 +257,9 @@ function sc_inject_content( $content ) {
     $route = $r['route'];
     $slug  = $r['slug'];
 
-    $deploy_marker = "\n<!-- SCPP LIVE OUTPUT: 2026-02-19-PLAYERPAGES -->\n";
+    $deploy_marker = "\n<!-- SCPP LIVE OUTPUT: 2026-02-24-PLAYERPAGES -->\n";
 
-    $debug = '<!-- SCPP v0.3.2: container=' . $container_id . ' route=' . esc_html( $route );
+    $debug = '<!-- SCPP v0.5.0: container=' . $container_id . ' route=' . esc_html( $route );
     if ( $slug ) {
         $debug .= ' slug=' . esc_html( $slug );
     }
