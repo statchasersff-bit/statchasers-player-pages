@@ -3334,7 +3334,7 @@ type PatriotsNewsItem = {
   published_at?: string;
 };
 
-function FeaturedNewsCard({ item, player, teamColor }: { item: PatriotsNewsItem; player: Player; teamColor: string }) {
+function FeaturedNewsCard({ item, player, teamColor, sourceName }: { item: PatriotsNewsItem; player: Player; teamColor: string; sourceName: string }) {
   const [imgError, setImgError] = useState(false);
   const headshotUrl = getHeadshotUrl(player.id);
   const accentColor = teamColor || '#caa14a';
@@ -3371,7 +3371,7 @@ function FeaturedNewsCard({ item, player, teamColor }: { item: PatriotsNewsItem;
           <div>
             <div className="sc-player-news__name">{player.name} – {player.position}</div>
             <div className="sc-player-news__posted">
-              {item.type === 'video' ? '🎥 Video' : '📰 Article'} • Patriots.com
+              {item.type === 'video' ? '🎥 Video' : '📰 Article'} • {sourceName}
             </div>
           </div>
         </div>
@@ -3391,7 +3391,7 @@ function FeaturedNewsCard({ item, player, teamColor }: { item: PatriotsNewsItem;
         </div>
 
         <div className="sc-player-news__footer">
-          <span className="sc-player-news__source">Source: Patriots.com</span>
+          <span className="sc-player-news__source">Source: {sourceName}</span>
           <span className="sc-player-news__link">View Original →</span>
         </div>
       </div>
@@ -3430,42 +3430,52 @@ function getPracticeChipClass(val: string): string {
   return '';
 }
 
+const SUPPORTED_TEAM_SITES: Record<string, string> = {
+  NE: "Patriots",
+  BUF: "Bills",
+  MIA: "Dolphins",
+  NYJ: "Jets",
+};
+
 function NewsTab({ player }: { player: Player }) {
-  const isNE = player.team === 'NE';
-  const teamColor = TEAM_PRIMARY_COLORS[player.team || ''] || '#caa14a';
+  const teamAbbr = player.team || '';
+  const teamSiteLabel = SUPPORTED_TEAM_SITES[teamAbbr] || null;
+  const hasTeamSite = !!teamSiteLabel;
+  const teamColor = TEAM_PRIMARY_COLORS[teamAbbr] || '#caa14a';
   const [newsFilter, setNewsFilter] = useState<'articles' | 'injuries'>('articles');
 
-  const { data: patriotsNews, isLoading: patriotsLoading, refetch, isFetching } = useQuery({
-    queryKey: ["/api/patriots/player-news", player.name],
+  const { data: teamNews, isLoading: teamNewsLoading, refetch, isFetching } = useQuery({
+    queryKey: ["/api/team/news", teamAbbr, player.name],
     queryFn: async () => {
-      const res = await fetch(`/api/patriots/player-news?player_name=${encodeURIComponent(player.name)}&limit=8`);
+      const res = await fetch(`/api/team/news?team=${encodeURIComponent(teamAbbr)}&player_name=${encodeURIComponent(player.name)}&limit=8`);
       if (!res.ok) throw new Error("Failed to load news");
-      return res.json() as Promise<{ found: boolean; items: PatriotsNewsItem[]; patriots_profile_url?: string }>;
+      return res.json() as Promise<{ found: boolean; items: PatriotsNewsItem[]; team_profile_url?: string; source?: string }>;
     },
-    enabled: isNE,
+    enabled: hasTeamSite,
     staleTime: 30 * 60 * 1000,
   });
 
   const { data: injuryData, isLoading: injuryLoading } = useQuery({
-    queryKey: ["/api/patriots/injury", player.name],
+    queryKey: ["/api/team/injury", teamAbbr, player.name],
     queryFn: async () => {
-      const res = await fetch(`/api/patriots/injury?player_name=${encodeURIComponent(player.name)}`);
+      const res = await fetch(`/api/team/injury?team=${encodeURIComponent(teamAbbr)}&player_name=${encodeURIComponent(player.name)}`);
       if (!res.ok) throw new Error("Failed to load injury");
       return res.json() as Promise<InjuryData>;
     },
-    enabled: isNE && newsFilter === 'injuries',
+    enabled: hasTeamSite && newsFilter === 'injuries',
     staleTime: 30 * 60 * 1000,
   });
 
   const staticEntries = player.news || [];
-  const patriotsItems = patriotsNews?.items || [];
-  const featuredItem = patriotsItems[0] || null;
-  const compactItems = patriotsItems.slice(1);
-  const hasContent = staticEntries.length > 0 || patriotsItems.length > 0;
+  const teamItems = teamNews?.items || [];
+  const featuredItem = teamItems[0] || null;
+  const compactItems = teamItems.slice(1);
+  const hasContent = staticEntries.length > 0 || teamItems.length > 0;
+  const sourceName = teamNews?.source || (teamSiteLabel ? `${teamSiteLabel}.com` : '');
 
   return (
     <div className="space-y-6" data-testid="news-tab">
-      {isNE && (
+      {hasTeamSite && (
         <div className="sc-news-filter" data-testid="news-filter-toggle">
           <button
             type="button"
@@ -3486,7 +3496,7 @@ function NewsTab({ player }: { player: Player }) {
         </div>
       )}
 
-      {isNE && newsFilter === 'injuries' && (
+      {hasTeamSite && newsFilter === 'injuries' && (
         <>
           {injuryLoading && (
             <div className="sc-injury-card">
@@ -3621,9 +3631,9 @@ function NewsTab({ player }: { player: Player }) {
         </>
       )}
 
-      {isNE && newsFilter !== 'articles' ? null : (
+      {hasTeamSite && newsFilter !== 'articles' ? null : (
       <>
-      {isNE && patriotsLoading && (
+      {hasTeamSite && teamNewsLoading && (
         <div className="space-y-5">
           <div className="sc-player-news" style={{ '--team-accent': teamColor } as React.CSSProperties}>
             <div style={{ height: 4, borderRadius: '6px 6px 0 0', background: `linear-gradient(90deg, ${teamColor}, ${teamColor}88)`, margin: '-24px -24px 20px -24px' }} />
@@ -3656,17 +3666,17 @@ function NewsTab({ player }: { player: Player }) {
       )}
 
       {featuredItem && (
-        <FeaturedNewsCard item={featuredItem} player={player} teamColor={teamColor} />
+        <FeaturedNewsCard item={featuredItem} player={player} teamColor={teamColor} sourceName={sourceName} />
       )}
 
       {compactItems.length > 0 && (
-        <div className="sc-teamnews" data-testid="patriots-news-list">
+        <div className="sc-teamnews" data-testid="team-news-list">
           <div className="sc-teamnews__head">
             <div className="sc-teamnews__head-left">
               <div className="sc-teamnews__icon" aria-hidden="true">📰</div>
               <div>
-                <div className="sc-teamnews__kicker">Latest from Patriots.com</div>
-                <div className="sc-teamnews__sub">{patriotsItems.length} updates</div>
+                <div className="sc-teamnews__kicker">Latest from {sourceName}</div>
+                <div className="sc-teamnews__sub">{teamItems.length} updates</div>
               </div>
             </div>
             <div>
@@ -3691,7 +3701,7 @@ function NewsTab({ player }: { player: Player }) {
                 href={item.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                data-testid={`link-patriots-news-${i}`}
+                data-testid={`link-team-news-${i}`}
               >
                 <div className="sc-teamnews__card-left" aria-hidden="true">
                   <div className="sc-teamnews__doc">
@@ -3704,7 +3714,7 @@ function NewsTab({ player }: { player: Player }) {
                 <div className="sc-teamnews__card-mid">
                   <div className="sc-teamnews__meta">
                     <span className="sc-pill sc-pill--type" data-testid={`badge-news-type-${i}`}>{(item.type || 'news').toUpperCase()}</span>
-                    <span className="sc-teamnews__source">Patriots.com</span>
+                    <span className="sc-teamnews__source">{sourceName}</span>
                     {item.impact && (
                       <span className={`sc-pill sc-pill--impact sc-pill--impact-${item.impact.toLowerCase()}`}>{item.impact}</span>
                     )}
@@ -3727,16 +3737,16 @@ function NewsTab({ player }: { player: Player }) {
             ))}
           </div>
 
-          {patriotsNews?.patriots_profile_url && (
+          {teamNews?.team_profile_url && (
             <div style={{ padding: '0 14px 12px' }}>
               <a
-                href={patriotsNews.patriots_profile_url}
+                href={teamNews.team_profile_url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="sc-teamnews__profile-link"
-                data-testid="link-patriots-profile"
+                data-testid="link-team-profile"
               >
-                View full profile on Patriots.com
+                View full profile on {sourceName}
                 <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
                   <path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z" />
                 </svg>
@@ -3746,16 +3756,16 @@ function NewsTab({ player }: { player: Player }) {
         </div>
       )}
 
-      {patriotsItems.length === 1 && patriotsNews?.patriots_profile_url && (
+      {teamItems.length === 1 && teamNews?.team_profile_url && (
         <div style={{ marginTop: -8 }}>
           <a
-            href={patriotsNews.patriots_profile_url}
+            href={teamNews.team_profile_url}
             target="_blank"
             rel="noopener noreferrer"
             className="sc-teamnews__profile-link"
-            data-testid="link-patriots-profile"
+            data-testid="link-team-profile-single"
           >
-            View full profile on Patriots.com
+            View full profile on {sourceName}
             <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true">
               <path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z" />
             </svg>
@@ -3817,7 +3827,7 @@ function NewsTab({ player }: { player: Player }) {
         </div>
       )}
 
-      {!hasContent && !patriotsLoading && (
+      {!hasContent && !teamNewsLoading && (
         <div className="sc-teamnews">
           <div className="sc-teamnews__head">
             <div className="sc-teamnews__head-left">

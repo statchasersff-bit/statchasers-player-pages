@@ -24,5 +24,5 @@ The project is built on an Express, Vite, and React (TypeScript) stack. It sourc
 - **Sleeper API:** (`https://api.sleeper.app/v1/players/nfl`) Primary data source for NFL player data, game statistics, and depth charts.
 - **ESPN API:** Used by `scripts/buildGameScores.js` to fetch NFL game scores.
 - **KeepTradeCut:** Integrated for dynasty consensus rankings, market value, and ADP data.
-- **Patriots.com:** Scraped for injury reports and player news/videos for New England Patriots players.
+- **NFL Team Sites:** Scraped for injury reports and player news/videos. Supported teams: Patriots (NE), Bills (BUF), Dolphins (MIA), Jets (NYJ). Unified API routes `/api/team/news` and `/api/team/injury` accept a `team` parameter. Legacy `/api/patriots/*` routes maintained for backward compatibility. Team site configs defined in `TEAM_SITE_CONFIGS` in `server/routes.ts`.
 - **GitHub Pages:** Used to host static JSON data files for the WordPress plugin.

@@ -1082,10 +1082,57 @@ export async function registerRoutes(
     });
   });
 
-  const patriotsRosterCache: { ts: number; map: Map<string, string> } = { ts: 0, map: new Map() };
   const ROSTER_TTL = 6 * 60 * 60 * 1000;
-  const patriotsNewsCache: Map<string, { ts: number; items: any[] }> = new Map();
   const NEWS_TTL = 30 * 60 * 1000;
+  const INJURY_TTL = 30 * 60 * 1000;
+
+  interface TeamSiteConfig {
+    abbr: string;
+    label: string;
+    domain: string;
+    rosterUrl: string;
+    injuryUrl: string;
+    newsUrl: string;
+  }
+
+  const TEAM_SITE_CONFIGS: Record<string, TeamSiteConfig> = {
+    NE: {
+      abbr: "NE",
+      label: "Patriots",
+      domain: "https://www.patriots.com",
+      rosterUrl: "https://www.patriots.com/team/players-roster/",
+      injuryUrl: "https://www.patriots.com/team/injury-report/",
+      newsUrl: "https://www.patriots.com/news/",
+    },
+    BUF: {
+      abbr: "BUF",
+      label: "Bills",
+      domain: "https://www.buffalobills.com",
+      rosterUrl: "https://www.buffalobills.com/team/players-roster/",
+      injuryUrl: "https://www.buffalobills.com/team/injury-report/",
+      newsUrl: "https://www.buffalobills.com/news/",
+    },
+    MIA: {
+      abbr: "MIA",
+      label: "Dolphins",
+      domain: "https://www.miamidolphins.com",
+      rosterUrl: "https://www.miamidolphins.com/team/players-roster/",
+      injuryUrl: "https://www.miamidolphins.com/team/injury-report/",
+      newsUrl: "https://www.miamidolphins.com/news/latest-news",
+    },
+    NYJ: {
+      abbr: "NYJ",
+      label: "Jets",
+      domain: "https://www.newyorkjets.com",
+      rosterUrl: "https://www.newyorkjets.com/team/players-roster/",
+      injuryUrl: "https://www.newyorkjets.com/team/injury-report/",
+      newsUrl: "https://www.newyorkjets.com/news/",
+    },
+  };
+
+  const teamRosterCaches: Record<string, { ts: number; map: Map<string, string> }> = {};
+  const teamNewsCaches: Record<string, Map<string, { ts: number; items: any[] }>> = {};
+  const teamInjuryCaches: Record<string, { ts: number; data: any; reportLabel: string; reportUpdatedAt: string | null }> = {};
 
   function normName(name: string): string {
     return name.toLowerCase().replace(/\./g, "").replace(/['']/g, "").replace(/\s+(jr|sr|ii|iii|iv|v)\b/g, "").replace(/\s+/g, " ").trim();
@@ -1102,28 +1149,33 @@ export async function registerRoutes(
     return await res.text();
   }
 
-  async function getPatriotsRosterMap(): Promise<Map<string, string>> {
+  function getTeamConfig(team: string): TeamSiteConfig | null {
+    const upper = (team || "").toUpperCase().trim();
+    return TEAM_SITE_CONFIGS[upper] || null;
+  }
+
+  async function getTeamRosterMap(cfg: TeamSiteConfig): Promise<Map<string, string>> {
     const now = Date.now();
-    if (patriotsRosterCache.map.size && now - patriotsRosterCache.ts < ROSTER_TTL) {
-      return patriotsRosterCache.map;
+    const cache = teamRosterCaches[cfg.abbr];
+    if (cache && cache.map.size && now - cache.ts < ROSTER_TTL) {
+      return cache.map;
     }
-    const html = await fetchHtml("https://www.patriots.com/team/players-roster/");
+    const html = await fetchHtml(cfg.rosterUrl);
     const $ = cheerio.load(html);
     const map = new Map<string, string>();
     $('a[href*="/team/players-roster/"]').each((_, a) => {
       const href = $(a).attr("href");
       const text = $(a).text().trim();
       if (!href || !text || text.length < 3) return;
-      if (href === "/team/players-roster/" || href.endsWith("/index")) return;
-      const full = href.startsWith("http") ? href : `https://www.patriots.com${href}`;
+      if (href === "/team/players-roster/" || href.endsWith("/index") || href.endsWith("/players-roster/")) return;
+      const full = href.startsWith("http") ? href : `${cfg.domain}${href}`;
       map.set(normName(text), full);
     });
-    patriotsRosterCache.ts = now;
-    patriotsRosterCache.map = map;
+    teamRosterCaches[cfg.abbr] = { ts: now, map };
     return map;
   }
 
-  function extractRelatedContent($: cheerio.CheerioAPI): { title: string; url: string; type: string }[] {
+  function extractRelatedContent($: cheerio.CheerioAPI, domain: string): { title: string; url: string; type: string }[] {
     const results: { title: string; url: string; type: string }[] = [];
     const seen = new Set<string>();
 
@@ -1137,7 +1189,7 @@ export async function registerRoutes(
         const el = $(a);
         const href = el.attr("href");
         if (!href) return;
-        const url = href.startsWith("http") ? href : `https://www.patriots.com${href}`;
+        const url = href.startsWith("http") ? href : `${domain}${href}`;
         if (seen.has(url)) return;
         seen.add(url);
         const h3 = el.find("h3").first();
@@ -1154,56 +1206,6 @@ export async function registerRoutes(
     }
     return results;
   }
-
-  app.get("/api/patriots/player-news", async (req, res) => {
-    try {
-      const playerName = (req.query.player_name || "").toString().trim();
-      const limit = Math.min(parseInt(req.query.limit as string || "6", 10), 10);
-
-      if (!playerName) {
-        return res.status(400).json({ error: "player_name is required" });
-      }
-
-      const cacheKey = normName(playerName);
-      const cached = patriotsNewsCache.get(cacheKey);
-      if (cached && Date.now() - cached.ts < NEWS_TTL) {
-        const rosterMap = await getPatriotsRosterMap();
-        return res.json({
-          player_name: playerName,
-          found: true,
-          patriots_profile_url: rosterMap.get(cacheKey) || null,
-          items: cached.items.slice(0, limit),
-          cached: true,
-        });
-      }
-
-      const rosterMap = await getPatriotsRosterMap();
-      const profileUrl = rosterMap.get(cacheKey);
-
-      if (!profileUrl) {
-        return res.json({ player_name: playerName, found: false, items: [] });
-      }
-
-      const html = await fetchHtml(profileUrl);
-      const $ = cheerio.load(html);
-      const items = extractRelatedContent($);
-
-      patriotsNewsCache.set(cacheKey, { ts: Date.now(), items });
-
-      res.json({
-        player_name: playerName,
-        found: true,
-        patriots_profile_url: profileUrl,
-        items: items.slice(0, limit),
-      });
-    } catch (e: any) {
-      console.error("Patriots news error:", e.message);
-      res.status(500).json({ error: "Failed to fetch news" });
-    }
-  });
-
-  const patriotsInjuryCache: { ts: number; data: any; reportLabel: string } = { ts: 0, data: null, reportLabel: '' };
-  const INJURY_TTL = 30 * 60 * 1000;
 
   function cleanText(s: string | null | undefined): string {
     return String(s || "").replace(/\s+/g, " ").trim();
@@ -1272,21 +1274,279 @@ export async function registerRoutes(
     return `${opts.player_name} is dealing with ${injLabel}${opts.week_label ? ` heading into ${opts.week_label}` : ""}. ${ps ? `${capitalize(ps)} and` : ""} is not listed with a game designation${likelyPlay ? " \u2014 expected to play." : "."}`.replace(/\s+/g, " ").trim();
   }
 
-  app.get("/api/patriots/injury", async (req, res) => {
+  app.get("/api/team/news", async (req, res) => {
     try {
+      const teamParam = (req.query.team || "").toString().trim();
+      const playerName = (req.query.player_name || "").toString().trim();
+      const limit = Math.min(parseInt(req.query.limit as string || "6", 10), 10);
+
+      if (!playerName) return res.status(400).json({ error: "player_name is required" });
+      if (!teamParam) return res.status(400).json({ error: "team is required" });
+
+      const cfg = getTeamConfig(teamParam);
+      if (!cfg) return res.status(400).json({ error: `Unsupported team: ${teamParam}` });
+
+      const cacheKey = normName(playerName);
+      if (!teamNewsCaches[cfg.abbr]) teamNewsCaches[cfg.abbr] = new Map();
+      const teamCache = teamNewsCaches[cfg.abbr];
+
+      const cached = teamCache.get(cacheKey);
+      if (cached && Date.now() - cached.ts < NEWS_TTL) {
+        const rosterMap = await getTeamRosterMap(cfg);
+        return res.json({
+          player_name: playerName,
+          team: cfg.abbr,
+          found: true,
+          team_profile_url: rosterMap.get(cacheKey) || null,
+          items: cached.items.slice(0, limit),
+          cached: true,
+          source: `${cfg.label}.com`,
+        });
+      }
+
+      const rosterMap = await getTeamRosterMap(cfg);
+      const profileUrl = rosterMap.get(cacheKey);
+
+      if (!profileUrl) {
+        return res.json({ player_name: playerName, team: cfg.abbr, found: false, items: [], source: `${cfg.label}.com` });
+      }
+
+      const html = await fetchHtml(profileUrl);
+      const $ = cheerio.load(html);
+      const items = extractRelatedContent($, cfg.domain);
+
+      teamCache.set(cacheKey, { ts: Date.now(), items });
+
+      res.json({
+        player_name: playerName,
+        team: cfg.abbr,
+        found: true,
+        team_profile_url: profileUrl,
+        items: items.slice(0, limit),
+        source: `${cfg.label}.com`,
+      });
+    } catch (e: any) {
+      console.error("Team news error:", e.message);
+      res.status(500).json({ error: "Failed to fetch news" });
+    }
+  });
+
+  app.get("/api/patriots/player-news", async (req, res) => {
+    try {
+      const playerName = (req.query.player_name || "").toString().trim();
+      const limit = Math.min(parseInt(req.query.limit as string || "6", 10), 10);
+      if (!playerName) return res.status(400).json({ error: "player_name is required" });
+
+      const cfg = TEAM_SITE_CONFIGS["NE"];
+      const cacheKey = normName(playerName);
+      if (!teamNewsCaches[cfg.abbr]) teamNewsCaches[cfg.abbr] = new Map();
+      const teamCache = teamNewsCaches[cfg.abbr];
+
+      const cached = teamCache.get(cacheKey);
+      if (cached && Date.now() - cached.ts < NEWS_TTL) {
+        const rosterMap = await getTeamRosterMap(cfg);
+        return res.json({
+          player_name: playerName,
+          found: true,
+          patriots_profile_url: rosterMap.get(cacheKey) || null,
+          items: cached.items.slice(0, limit),
+          cached: true,
+        });
+      }
+
+      const rosterMap = await getTeamRosterMap(cfg);
+      const profileUrl = rosterMap.get(cacheKey);
+      if (!profileUrl) return res.json({ player_name: playerName, found: false, items: [] });
+
+      const html = await fetchHtml(profileUrl);
+      const $ = cheerio.load(html);
+      const items = extractRelatedContent($, cfg.domain);
+      teamCache.set(cacheKey, { ts: Date.now(), items });
+
+      res.json({
+        player_name: playerName,
+        found: true,
+        patriots_profile_url: profileUrl,
+        items: items.slice(0, limit),
+      });
+    } catch (e: any) {
+      console.error("Patriots news error:", e.message);
+      res.status(500).json({ error: "Failed to fetch news" });
+    }
+  });
+
+  app.get("/api/team/injury", async (req, res) => {
+    try {
+      const teamParam = cleanText(req.query.team as string);
       const playerName = cleanText(req.query.player_name as string);
       const weekLabel = cleanText(req.query.week_label as string);
 
       if (!playerName) return res.status(400).json({ error: "player_name is required" });
+      if (!teamParam) return res.status(400).json({ error: "team is required" });
+
+      const cfg = getTeamConfig(teamParam);
+      if (!cfg) return res.status(400).json({ error: `Unsupported team: ${teamParam}` });
 
       const now = Date.now();
+      let cache = teamInjuryCaches[cfg.abbr];
       let allRows: any[] = [];
 
-      if (patriotsInjuryCache.data && now - patriotsInjuryCache.ts < INJURY_TTL) {
-        allRows = patriotsInjuryCache.data;
+      if (cache && cache.data && now - cache.ts < INJURY_TTL) {
+        allRows = cache.data;
       } else {
-        const url = "https://www.patriots.com/team/injury-report/";
-        const html = await fetchHtml(url);
+        const html = await fetchHtml(cfg.injuryUrl);
+        const $ = cheerio.load(html);
+        const tables = $("table");
+
+        let reportLabel = '';
+        const headingEl = $("h1, h2, h3, .nfl-o-matchup-cards__title, .d3-o-section-title").first();
+        if (headingEl.length) {
+          const raw = cleanText(headingEl.text());
+          const match = raw.match(/(?:Week\s+\d+|Wild Card|Divisional|Conference|Super Bowl|Pro Bowl)/i);
+          if (match) reportLabel = match[0];
+        }
+        tables.each((_, tbl) => {
+          const captionEl = $(tbl).find("caption").first();
+          if (!reportLabel && captionEl.length) {
+            const cap = cleanText(captionEl.text());
+            const capMatch = cap.match(/(?:Week\s+\d+|Wild Card|Divisional|Conference|Super Bowl|Pro Bowl)/i);
+            if (capMatch) reportLabel = capMatch[0];
+          }
+        });
+        if (!reportLabel) {
+          const pageText = $("body").text();
+          const weekMatch = pageText.match(/(?:Week\s+\d+|Wild Card|Divisional|Conference Championship|Super Bowl|Pro Bowl)/i);
+          if (weekMatch) reportLabel = weekMatch[0];
+        }
+
+        tables.each((_, tbl) => {
+          const table = $(tbl);
+          const headers: string[] = [];
+          table.find("thead th").each((__, th) => { headers.push(cleanText($(th).text()).toLowerCase()); });
+          if (!headers.some(h => h.includes("player"))) return;
+
+          const idx = {
+            player: headers.findIndex(h => h.includes("player")),
+            position: headers.findIndex(h => h.includes("pos")),
+            injury: headers.findIndex(h => h.includes("injury")),
+            wed: headers.findIndex(h => h === "wed"),
+            thu: headers.findIndex(h => h === "thu"),
+            fri: headers.findIndex(h => h === "fri"),
+            tue: headers.findIndex(h => h === "tue"),
+            status: headers.findIndex(h => h.includes("status") || h.includes("designation")),
+          };
+
+          table.find("tbody tr").each((__, tr) => {
+            const tds = $(tr).find("td");
+            if (!tds.length) return;
+            const playerCell = idx.player >= 0 ? tds.eq(idx.player) : tds.eq(0);
+            const name = cleanText(playerCell.text());
+            if (!name) return;
+            allRows.push({
+              player_name: name,
+              norm: normName(name),
+              position: idx.position >= 0 ? cleanText(tds.eq(idx.position).text()) : "",
+              injury: idx.injury >= 0 ? cleanText(tds.eq(idx.injury).text()) : "",
+              practice: {
+                wed: idx.wed >= 0 ? cleanText(tds.eq(idx.wed).text()) : "",
+                thu: idx.thu >= 0 ? cleanText(tds.eq(idx.thu).text()) : "",
+                fri: idx.fri >= 0 ? cleanText(tds.eq(idx.fri).text()) : "",
+              },
+              game_status: idx.status >= 0 ? cleanText(tds.eq(idx.status).text()) : "",
+            });
+          });
+        });
+
+        let reportUpdatedAt: string | null = null;
+        const metaCandidates = [
+          $('meta[property="article:modified_time"]').attr("content"),
+          $('meta[property="article:published_time"]').attr("content"),
+          $('meta[name="last-modified"]').attr("content"),
+        ].filter(Boolean);
+        for (const c of metaCandidates) {
+          const d = new Date(c!);
+          if (!isNaN(d.getTime())) { reportUpdatedAt = d.toISOString(); break; }
+        }
+        if (!reportUpdatedAt) {
+          const bodyText = $("body").text().replace(/\s+/g, " ").trim();
+          const m = bodyText.match(/Updated\s+([A-Za-z]{3,9}\s+\d{1,2},\s+\d{4})/i);
+          if (m?.[1]) {
+            const d = new Date(m[1]);
+            if (!isNaN(d.getTime())) reportUpdatedAt = d.toISOString();
+          }
+        }
+
+        teamInjuryCaches[cfg.abbr] = { ts: now, data: allRows, reportLabel, reportUpdatedAt };
+        cache = teamInjuryCaches[cfg.abbr];
+      }
+
+      const target = normName(playerName);
+      const rowData = allRows.find((r: any) => r.norm === target);
+
+      const reportLabel = cache!.reportLabel || '';
+      const reportUpdatedAt = cache!.reportUpdatedAt || null;
+      const sourceLabel = `${cfg.label}.com`;
+
+      if (!rowData) {
+        return res.json({
+          found: false,
+          player_name: playerName,
+          team: cfg.abbr,
+          blurb: `No injury designation listed for ${playerName} on the latest report.`,
+          source: sourceLabel,
+          source_url: cfg.injuryUrl,
+          report_label: reportLabel,
+          report_updated_at: reportUpdatedAt,
+          fetched_at: new Date().toISOString(),
+        });
+      }
+
+      const blurb = buildInjuryBlurb({
+        player_name: rowData.player_name,
+        injury: rowData.injury,
+        wed: rowData.practice.wed,
+        thu: rowData.practice.thu,
+        fri: rowData.practice.fri,
+        game_status: rowData.game_status,
+        week_label: weekLabel || reportLabel,
+      });
+
+      res.json({
+        found: true,
+        player_name: rowData.player_name,
+        team: cfg.abbr,
+        injury: rowData.injury,
+        position: rowData.position,
+        practice: rowData.practice,
+        game_status: rowData.game_status,
+        blurb,
+        source: sourceLabel,
+        source_url: cfg.injuryUrl,
+        report_label: reportLabel,
+        report_updated_at: reportUpdatedAt,
+        fetched_at: new Date().toISOString(),
+      });
+    } catch (e: any) {
+      console.error("Team injury error:", e.message);
+      res.status(500).json({ error: "Failed to fetch injury report" });
+    }
+  });
+
+  app.get("/api/patriots/injury", async (req, res) => {
+    try {
+      const playerName = cleanText(req.query.player_name as string);
+      const weekLabel = cleanText(req.query.week_label as string);
+      if (!playerName) return res.status(400).json({ error: "player_name is required" });
+
+      const cfg = TEAM_SITE_CONFIGS["NE"];
+      const now = Date.now();
+      let cache = teamInjuryCaches[cfg.abbr];
+      let allRows: any[] = [];
+
+      if (cache && cache.data && now - cache.ts < INJURY_TTL) {
+        allRows = cache.data;
+      } else {
+        const html = await fetchHtml(cfg.injuryUrl);
         const $ = cheerio.load(html);
         const table = $("table").first();
 
@@ -1308,7 +1568,6 @@ export async function registerRoutes(
           const weekMatch = pageText.match(/(?:Week\s+\d+|Wild Card|Divisional|Conference Championship|Super Bowl|Pro Bowl)/i);
           if (weekMatch) reportLabel = weekMatch[0];
         }
-        patriotsInjuryCache.reportLabel = reportLabel;
 
         if (table.length) {
           const headers: string[] = [];
@@ -1364,17 +1623,14 @@ export async function registerRoutes(
           }
         }
 
-        patriotsInjuryCache.ts = now;
-        patriotsInjuryCache.data = allRows;
-        (patriotsInjuryCache as any).reportUpdatedAt = reportUpdatedAt;
+        teamInjuryCaches[cfg.abbr] = { ts: now, data: allRows, reportLabel, reportUpdatedAt };
+        cache = teamInjuryCaches[cfg.abbr];
       }
 
       const target = normName(playerName);
       const rowData = allRows.find((r: any) => r.norm === target);
-
-      const reportLabel = patriotsInjuryCache.reportLabel || '';
-
-      const reportUpdatedAt = (patriotsInjuryCache as any).reportUpdatedAt || null;
+      const reportLabel = cache!.reportLabel || '';
+      const reportUpdatedAt = cache!.reportUpdatedAt || null;
 
       if (!rowData) {
         return res.json({
@@ -1382,7 +1638,7 @@ export async function registerRoutes(
           player_name: playerName,
           blurb: `No injury designation listed for ${playerName} on the latest report.`,
           source: "Patriots.com",
-          source_url: "https://www.patriots.com/team/injury-report/",
+          source_url: cfg.injuryUrl,
           report_label: reportLabel,
           report_updated_at: reportUpdatedAt,
           fetched_at: new Date().toISOString(),
@@ -1408,7 +1664,7 @@ export async function registerRoutes(
         game_status: rowData.game_status,
         blurb,
         source: "Patriots.com",
-        source_url: "https://www.patriots.com/team/injury-report/",
+        source_url: cfg.injuryUrl,
         report_label: reportLabel,
         report_updated_at: reportUpdatedAt,
         fetched_at: new Date().toISOString(),
