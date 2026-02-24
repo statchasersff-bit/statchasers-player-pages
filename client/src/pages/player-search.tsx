@@ -15,9 +15,6 @@ import {
   X,
   ChevronRight,
   Zap,
-  ArrowLeftRight,
-  ClipboardCheck,
-  Wand2,
 } from "lucide-react";
 
 type LightPlayer = {
@@ -529,39 +526,6 @@ export default function PlayerSearch() {
                   <p className="sc-stat-card__number">{totalPlayers}</p>
                   <p className="sc-stat-card__label">Fantasy Starters</p>
                 </div>
-              </div>
-              <div className="flex items-center gap-1.5 flex-wrap" data-testid="tools-button-group">
-                <span className="sc-header__tools-label">Use in Tools</span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled
-                  className="sc-header__tool-btn"
-                  data-testid="button-tradechasers"
-                >
-                  <ArrowLeftRight className="w-3.5 h-3.5" />
-                  TradeChasers
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled
-                  className="sc-header__tool-btn"
-                  data-testid="button-report-card"
-                >
-                  <ClipboardCheck className="w-3.5 h-3.5" />
-                  Report Card
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled
-                  className="sc-header__tool-btn"
-                  data-testid="button-waiver-wizard"
-                >
-                  <Wand2 className="w-3.5 h-3.5" />
-                  Waiver Wizard
-                </Button>
               </div>
             </div>
           </div>
