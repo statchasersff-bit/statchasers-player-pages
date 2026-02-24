@@ -106,7 +106,15 @@ const FORMATION_ROWS = [
   [{ pos: "K", idx: 0, label: "K" }, { pos: "DEF", idx: 0, label: "DEF" }],
 ];
 
-const BOARD_HOVER_GLOW = "rgba(202,161,74,0.18)";
+const POS_ACCENT_COLORS: Record<string, string> = {
+  QB: "#E53935", RB: "#43A047", WR: "#1E88E5", TE: "#FB8C00", K: "#8E24AA", DEF: "#1E3A8A",
+};
+
+function getSlotTier(depthOrder: number | null): number {
+  if (depthOrder === null || depthOrder <= 1) return 1;
+  if (depthOrder === 2) return 2;
+  return 3;
+}
 
 
 function TeamTile({
@@ -201,18 +209,17 @@ function TeamBoard({
                 const players = positions[slot.pos];
                 const player = players?.[slot.idx] || null;
                 const isQB = slot.label === "QB";
+                const tier = player ? getSlotTier(player.depth_chart_order) : 3;
+                const accentColor = POS_ACCENT_COLORS[slot.pos] || "#666";
 
                 return (
                   <div
                     key={slot.label}
-                    className={`sc-board-slot ${isQB ? 'sc-board-slot--qb' : ''} ${player ? 'sc-board-slot--filled' : 'sc-board-slot--empty'}`}
-                    style={{ '--slot-glow': BOARD_HOVER_GLOW, '--slot-border': teamColor } as React.CSSProperties}
+                    className={`sc-board-slot ${isQB ? 'sc-board-slot--qb' : ''} sc-board-slot--tier-${tier} ${player ? 'sc-board-slot--filled' : 'sc-board-slot--empty'}`}
                     onClick={() => player && navigate(`/nfl/players/${player.slug}/`)}
                     data-testid={`board-slot-${slot.label}`}
                   >
-                    <div className="sc-board-slot__label" data-testid={`board-label-${slot.label}`}>
-                      <span className={POSITION_COLORS[slot.pos] || ""}>{slot.label}</span>
-                    </div>
+                    <div className="sc-board-slot__accent-bar" style={{ backgroundColor: accentColor }} />
                     {player ? (
                       <>
                         <div className="sc-board-slot__avatar" data-testid={`board-avatar-${slot.label}`}>
@@ -223,11 +230,17 @@ function TeamBoard({
                         <div className="sc-board-slot__name" data-testid={`board-name-${slot.label}`}>
                           {player.name}
                         </div>
-                        <div className="sc-board-slot__meta">
-                          <span className="sc-board-slot__depth" data-testid={`board-depth-${slot.label}`}>{player.rank_label}</span>
-                          {player.years_exp !== null && player.years_exp > 0 && (
-                            <span className="sc-board-slot__exp" data-testid={`board-exp-${slot.label}`}>Yr {player.years_exp}</span>
-                          )}
+                        <div className="sc-board-slot__role">
+                          <span className={POSITION_COLORS[slot.pos] || ""} data-testid={`board-label-${slot.label}`}>{slot.label}</span>
+                          <span className="sc-board-slot__rank" data-testid={`board-depth-${slot.label}`}>{player.rank_label}</span>
+                        </div>
+                        <div className="sc-board-slot__stat" data-testid={`board-stat-${slot.label}`}>
+                          {player.years_exp !== null && player.years_exp > 0
+                            ? `${player.years_exp} yr${player.years_exp !== 1 ? 's' : ''} exp`
+                            : 'Rookie'}
+                        </div>
+                        <div className={`sc-board-slot__tier sc-board-slot__tier--${tier}`} data-testid={`board-tier-${slot.label}`}>
+                          {tier === 1 ? 'Starter' : tier === 2 ? 'Backup' : 'Depth'}
                         </div>
                       </>
                     ) : (
