@@ -1,0 +1,11 @@
+{
+  "src/wp-entry.tsx": {
+    "file": "assets/wp-entry-C6X-Lxzc.js",
+    "name": "wp-entry",
+    "src": "src/wp-entry.tsx",
+    "isEntry": true,
+    "css": [
+      "assets/wp-entry-DUN58DZ6.css"
+    ]
+  }
+}
