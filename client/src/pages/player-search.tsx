@@ -91,11 +91,11 @@ const NFL_DIVISIONS: Record<string, Record<string, string[]>> = {
   },
 };
 
-const POSITION_ORDER = ["QB", "RB", "WR", "TE", "K", "DEF"];
+const POSITION_ORDER = ["QB", "RB", "WR", "TE"];
 
 
 const POS_DISPLAY_LIMITS: Record<string, number> = {
-  QB: 2, RB: 4, WR: 6, TE: 3, K: 1, DEF: 1,
+  QB: 2, RB: 4, WR: 6, TE: 3,
 };
 
 function getTeamLogoUrl(team: string) {
