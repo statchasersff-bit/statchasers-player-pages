@@ -1,0 +1,5897 @@
+{
+  "generated_at": "2026-02-24T14:15:38.588Z",
+  "source": "ourlads.com",
+  "teams": {
+    "BUF": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Josh Allen",
+            "depth_order": 1,
+            "sleeper_id": "4984",
+            "sleeper_name": "Josh Allen",
+            "sleeper_slug": "josh-allen"
+          },
+          {
+            "name": "Mitchell Trubisky",
+            "depth_order": 2,
+            "sleeper_id": "3976",
+            "sleeper_name": "Mitchell Trubisky",
+            "sleeper_slug": "mitchell-trubisky"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "James Cook III",
+            "depth_order": 1,
+            "sleeper_id": "8138",
+            "sleeper_name": "James Cook",
+            "sleeper_slug": "james-cook"
+          },
+          {
+            "name": "Ty Johnson",
+            "depth_order": 2,
+            "sleeper_id": "6039",
+            "sleeper_name": "Ty Johnson",
+            "sleeper_slug": "ty-johnson"
+          },
+          {
+            "name": "Ray Davis",
+            "depth_order": 3,
+            "sleeper_id": "11575",
+            "sleeper_name": "Ray Davis",
+            "sleeper_slug": "ray-davis"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Brandin Cooks",
+            "depth_order": 1,
+            "sleeper_id": "2197",
+            "sleeper_name": "Brandin Cooks",
+            "sleeper_slug": "brandin-cooks"
+          },
+          {
+            "name": "Keon Coleman",
+            "depth_order": 2,
+            "sleeper_id": "11637",
+            "sleeper_name": "Keon Coleman",
+            "sleeper_slug": "keon-coleman"
+          },
+          {
+            "name": "Gabe Davis",
+            "depth_order": 3,
+            "sleeper_id": "6943",
+            "sleeper_name": "Gabe Davis",
+            "sleeper_slug": "gabe-davis"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Joshua Palmer",
+            "depth_order": 1,
+            "sleeper_id": "7670",
+            "sleeper_name": "Joshua Palmer",
+            "sleeper_slug": "joshua-palmer"
+          },
+          {
+            "name": "Tyrell Shavers",
+            "depth_order": 2,
+            "sleeper_id": "11377",
+            "sleeper_name": "Tyrell Shavers",
+            "sleeper_slug": "tyrell-shavers"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Khalil Shakir",
+            "depth_order": 1,
+            "sleeper_id": "8134",
+            "sleeper_name": "Khalil Shakir",
+            "sleeper_slug": "khalil-shakir"
+          },
+          {
+            "name": "Curtis Samuel",
+            "depth_order": 2,
+            "sleeper_id": "4082",
+            "sleeper_name": "Curtis Samuel",
+            "sleeper_slug": "curtis-samuel"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Dawson Knox",
+            "depth_order": 1,
+            "sleeper_id": "5906",
+            "sleeper_name": "Dawson Knox",
+            "sleeper_slug": "dawson-knox"
+          },
+          {
+            "name": "Dalton Kincaid",
+            "depth_order": 2,
+            "sleeper_id": "10236",
+            "sleeper_name": "Dalton Kincaid",
+            "sleeper_slug": "dalton-kincaid"
+          },
+          {
+            "name": "Jackson Hawes",
+            "depth_order": 3,
+            "sleeper_id": "12658",
+            "sleeper_name": "Jackson Hawes",
+            "sleeper_slug": "jackson-hawes"
+          },
+          {
+            "name": "Keleki Latu",
+            "depth_order": 4,
+            "sleeper_id": "12765",
+            "sleeper_name": "Keleki Latu",
+            "sleeper_slug": "keleki-latu"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Tyler Bass",
+            "depth_order": 1,
+            "sleeper_id": "7042",
+            "sleeper_name": "Tyler Bass",
+            "sleeper_slug": "tyler-bass"
+          },
+          {
+            "name": "Matt Prater",
+            "depth_order": 2,
+            "sleeper_id": "17",
+            "sleeper_name": "Matt Prater",
+            "sleeper_slug": "matt-prater"
+          }
+        ]
+      }
+    ],
+    "MIA": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Quinn Ewers",
+            "depth_order": 1,
+            "sleeper_id": "12500",
+            "sleeper_name": "Quinn Ewers",
+            "sleeper_slug": "quinn-ewers"
+          },
+          {
+            "name": "Zach Wilson",
+            "depth_order": 2,
+            "sleeper_id": "7538",
+            "sleeper_name": "Zach Wilson",
+            "sleeper_slug": "zach-wilson"
+          },
+          {
+            "name": "Tua Tagovailoa",
+            "depth_order": 3,
+            "sleeper_id": "6768",
+            "sleeper_name": "Tua Tagovailoa",
+            "sleeper_slug": "tua-tagovailoa"
+          },
+          {
+            "name": "Cam Miller",
+            "depth_order": 4,
+            "sleeper_id": "12688",
+            "sleeper_name": "Cam Miller",
+            "sleeper_slug": "cam-miller"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "De'Von Achane",
+            "depth_order": 1,
+            "sleeper_id": "9226",
+            "sleeper_name": "De'Von Achane",
+            "sleeper_slug": "devon-achane"
+          },
+          {
+            "name": "Jaylen Wright",
+            "depth_order": 2,
+            "sleeper_id": "11643",
+            "sleeper_name": "Jaylen Wright",
+            "sleeper_slug": "jaylen-wright"
+          },
+          {
+            "name": "Ollie Gordon II",
+            "depth_order": 3,
+            "sleeper_id": "12495",
+            "sleeper_name": "Ollie Gordon",
+            "sleeper_slug": "ollie-gordon"
+          },
+          {
+            "name": "Alexander Mattison",
+            "depth_order": 4,
+            "sleeper_id": "5987",
+            "sleeper_name": "Alexander Mattison",
+            "sleeper_slug": "alexander-mattison"
+          },
+          {
+            "name": "Donovan Edwards",
+            "depth_order": 5,
+            "sleeper_id": "12515",
+            "sleeper_name": "Donovan Edwards",
+            "sleeper_slug": "donovan-edwards"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Jaylen Waddle",
+            "depth_order": 1,
+            "sleeper_id": "7526",
+            "sleeper_name": "Jaylen Waddle",
+            "sleeper_slug": "jaylen-waddle"
+          },
+          {
+            "name": "Dee Eskridge",
+            "depth_order": 2,
+            "sleeper_id": "7612",
+            "sleeper_name": "Dee Eskridge",
+            "sleeper_slug": "dee-eskridge"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Cedrick Wilson JR.",
+            "depth_order": 1,
+            "sleeper_id": "5113",
+            "sleeper_name": "Cedrick Wilson",
+            "sleeper_slug": "cedrick-wilson"
+          },
+          {
+            "name": "Theo Wease JR.",
+            "depth_order": 2,
+            "sleeper_id": "12860",
+            "sleeper_name": "Theo Wease",
+            "sleeper_slug": "theo-wease"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Malik Washington",
+            "depth_order": 1,
+            "sleeper_id": "11610",
+            "sleeper_name": "Malik Washington",
+            "sleeper_slug": "malik-washington"
+          },
+          {
+            "name": "Tahj Washington",
+            "depth_order": 2,
+            "sleeper_id": "11821",
+            "sleeper_name": "Tahj Washington",
+            "sleeper_slug": "tahj-washington"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Darren Waller",
+            "depth_order": 1,
+            "sleeper_id": "2505",
+            "sleeper_name": "Darren Waller",
+            "sleeper_slug": "darren-waller"
+          },
+          {
+            "name": "Julian Hill",
+            "depth_order": 2,
+            "sleeper_id": "11371",
+            "sleeper_name": "Julian Hill",
+            "sleeper_slug": "julian-hill"
+          },
+          {
+            "name": "Greg Dulcich",
+            "depth_order": 3,
+            "sleeper_id": "8172",
+            "sleeper_name": "Greg Dulcich",
+            "sleeper_slug": "greg-dulcich"
+          },
+          {
+            "name": "Jalin Conyers",
+            "depth_order": 4,
+            "sleeper_id": "12866",
+            "sleeper_name": "Jalin Conyers",
+            "sleeper_slug": "jalin-conyers"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Jason Sanders",
+            "depth_order": 1,
+            "sleeper_id": "5119",
+            "sleeper_name": "Jason Sanders",
+            "sleeper_slug": "jason-sanders"
+          },
+          {
+            "name": "Riley Patterson",
+            "depth_order": 2,
+            "sleeper_id": "7922",
+            "sleeper_name": "Riley Patterson",
+            "sleeper_slug": "riley-patterson"
+          }
+        ]
+      }
+    ],
+    "NE": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Drake Maye",
+            "depth_order": 1,
+            "sleeper_id": "11564",
+            "sleeper_name": "Drake Maye",
+            "sleeper_slug": "drake-maye"
+          },
+          {
+            "name": "Joshua Dobbs",
+            "depth_order": 2,
+            "sleeper_id": "4179",
+            "sleeper_name": "Joshua Dobbs",
+            "sleeper_slug": "joshua-dobbs"
+          },
+          {
+            "name": "Tommy Devito",
+            "depth_order": 3,
+            "sleeper_id": "11292",
+            "sleeper_name": "Tommy DeVito",
+            "sleeper_slug": "tommy-devito"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Rhamondre Stevenson",
+            "depth_order": 1,
+            "sleeper_id": "7611",
+            "sleeper_name": "Rhamondre Stevenson",
+            "sleeper_slug": "rhamondre-stevenson"
+          },
+          {
+            "name": "Treveyon Henderson",
+            "depth_order": 2,
+            "sleeper_id": "12529",
+            "sleeper_name": "TreVeyon Henderson",
+            "sleeper_slug": "treveyon-henderson"
+          },
+          {
+            "name": "Lan Larison",
+            "depth_order": 3,
+            "sleeper_id": "12969",
+            "sleeper_name": "Lan Larison",
+            "sleeper_slug": "lan-larison"
+          },
+          {
+            "name": "Terrell Jennings",
+            "depth_order": 4,
+            "sleeper_id": "12412",
+            "sleeper_name": "Terrell Jennings",
+            "sleeper_slug": "terrell-jennings"
+          },
+          {
+            "name": "Deneric Prince",
+            "depth_order": 5,
+            "sleeper_id": "10870",
+            "sleeper_name": "Deneric Prince",
+            "sleeper_slug": "deneric-prince"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Kayshon Boutte",
+            "depth_order": 1,
+            "sleeper_id": "9504",
+            "sleeper_name": "Kayshon Boutte",
+            "sleeper_slug": "kayshon-boutte"
+          },
+          {
+            "name": "Kyle Williams",
+            "depth_order": 2,
+            "sleeper_id": "12547",
+            "sleeper_name": "Kyle Williams",
+            "sleeper_slug": "kyle-williams-12547"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Mack Hollins",
+            "depth_order": 1,
+            "sleeper_id": "4177",
+            "sleeper_name": "Mack Hollins",
+            "sleeper_slug": "mack-hollins"
+          },
+          {
+            "name": "Efton Chism III",
+            "depth_order": 2,
+            "sleeper_id": "12542",
+            "sleeper_name": "Efton Chism",
+            "sleeper_slug": "efton-chism"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Stefon Diggs",
+            "depth_order": 1,
+            "sleeper_id": "2449",
+            "sleeper_name": "Stefon Diggs",
+            "sleeper_slug": "stefon-diggs"
+          },
+          {
+            "name": "Demario Douglas",
+            "depth_order": 2,
+            "sleeper_id": "9501",
+            "sleeper_name": "DeMario Douglas",
+            "sleeper_slug": "demario-douglas"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Hunter Henry",
+            "depth_order": 1,
+            "sleeper_id": "3214",
+            "sleeper_name": "Hunter Henry",
+            "sleeper_slug": "hunter-henry"
+          },
+          {
+            "name": "Austin Hooper",
+            "depth_order": 2,
+            "sleeper_id": "3202",
+            "sleeper_name": "Austin Hooper",
+            "sleeper_slug": "austin-hooper"
+          },
+          {
+            "name": "Cj Dippre",
+            "depth_order": 3,
+            "sleeper_id": "12984",
+            "sleeper_name": "CJ Dippre",
+            "sleeper_slug": "cj-dippre"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Andy Borregales",
+            "depth_order": 1,
+            "sleeper_id": "12713",
+            "sleeper_name": "Andy Borregales",
+            "sleeper_slug": "andy-borregales"
+          }
+        ]
+      }
+    ],
+    "NYJ": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Justin Fields",
+            "depth_order": 1,
+            "sleeper_id": "7591",
+            "sleeper_name": "Justin Fields",
+            "sleeper_slug": "justin-fields"
+          },
+          {
+            "name": "Brady Cook",
+            "depth_order": 2,
+            "sleeper_id": "12538",
+            "sleeper_name": "Brady Cook",
+            "sleeper_slug": "brady-cook"
+          },
+          {
+            "name": "Tyrod Taylor",
+            "depth_order": 3,
+            "sleeper_id": "827",
+            "sleeper_name": "Tyrod Taylor",
+            "sleeper_slug": "tyrod-taylor"
+          },
+          {
+            "name": "Hendon Hooker",
+            "depth_order": 4,
+            "sleeper_id": "9998",
+            "sleeper_name": "Hendon Hooker",
+            "sleeper_slug": "hendon-hooker"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Breece Hall",
+            "depth_order": 1,
+            "sleeper_id": "8155",
+            "sleeper_name": "Breece Hall",
+            "sleeper_slug": "breece-hall"
+          },
+          {
+            "name": "Braelon Allen",
+            "depth_order": 2,
+            "sleeper_id": "11576",
+            "sleeper_name": "Braelon Allen",
+            "sleeper_slug": "braelon-allen"
+          },
+          {
+            "name": "Isaiah Davis",
+            "depth_order": 3,
+            "sleeper_id": "11571",
+            "sleeper_name": "Isaiah Davis",
+            "sleeper_slug": "isaiah-davis"
+          },
+          {
+            "name": "Kene Nwangwu",
+            "depth_order": 4,
+            "sleeper_id": "7720",
+            "sleeper_name": "Kene Nwangwu",
+            "sleeper_slug": "kene-nwangwu"
+          },
+          {
+            "name": "Khalil Herbert",
+            "depth_order": 5,
+            "sleeper_id": "7608",
+            "sleeper_name": "Khalil Herbert",
+            "sleeper_slug": "khalil-herbert"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Adonai Mitchell",
+            "depth_order": 1,
+            "sleeper_id": "11625",
+            "sleeper_name": "Adonai Mitchell",
+            "sleeper_slug": "adonai-mitchell"
+          },
+          {
+            "name": "Arian Smith",
+            "depth_order": 2,
+            "sleeper_id": "12539",
+            "sleeper_name": "Arian Smith",
+            "sleeper_slug": "arian-smith"
+          },
+          {
+            "name": "Irvin Charles",
+            "depth_order": 3,
+            "sleeper_id": "8861",
+            "sleeper_name": "Irvin Charles",
+            "sleeper_slug": "irvin-charles"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Garrett Wilson",
+            "depth_order": 1,
+            "sleeper_id": "8146",
+            "sleeper_name": "Garrett Wilson",
+            "sleeper_slug": "garrett-wilson"
+          },
+          {
+            "name": "Josh Reynolds",
+            "depth_order": 2,
+            "sleeper_id": "4171",
+            "sleeper_name": "Josh Reynolds",
+            "sleeper_slug": "josh-reynolds"
+          },
+          {
+            "name": "Quentin Skinner",
+            "depth_order": 3,
+            "sleeper_id": "12907",
+            "sleeper_name": "Quentin Skinner",
+            "sleeper_slug": "quentin-skinner"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "John Metchie III",
+            "depth_order": 1,
+            "sleeper_id": "8147",
+            "sleeper_name": "John Metchie",
+            "sleeper_slug": "john-metchie"
+          },
+          {
+            "name": "Isaiah Williams",
+            "depth_order": 2,
+            "sleeper_id": "11608",
+            "sleeper_name": "Isaiah Williams",
+            "sleeper_slug": "isaiah-williams"
+          },
+          {
+            "name": "Tyler Johnson",
+            "depth_order": 3,
+            "sleeper_id": "6960",
+            "sleeper_name": "Tyler Johnson",
+            "sleeper_slug": "tyler-johnson"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Mason Taylor",
+            "depth_order": 1,
+            "sleeper_id": "12498",
+            "sleeper_name": "Mason Taylor",
+            "sleeper_slug": "mason-taylor"
+          },
+          {
+            "name": "Jeremy Ruckert",
+            "depth_order": 2,
+            "sleeper_id": "8145",
+            "sleeper_name": "Jeremy Ruckert",
+            "sleeper_slug": "jeremy-ruckert"
+          },
+          {
+            "name": "Stone Smartt",
+            "depth_order": 3,
+            "sleeper_id": "8583",
+            "sleeper_name": "Stone Smartt",
+            "sleeper_slug": "stone-smartt"
+          },
+          {
+            "name": "Jelani Woods",
+            "depth_order": 4,
+            "sleeper_id": "8219",
+            "sleeper_name": "Jelani Woods",
+            "sleeper_slug": "jelani-woods"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Nick Folk",
+            "depth_order": 1,
+            "sleeper_id": "650",
+            "sleeper_name": "Nick Folk",
+            "sleeper_slug": "nick-folk"
+          }
+        ]
+      }
+    ],
+    "BAL": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Lamar Jackson",
+            "depth_order": 1,
+            "sleeper_id": "4881",
+            "sleeper_name": "Lamar Jackson",
+            "sleeper_slug": "lamar-jackson"
+          },
+          {
+            "name": "Tyler Huntley",
+            "depth_order": 2,
+            "sleeper_id": "7083",
+            "sleeper_name": "Tyler Huntley",
+            "sleeper_slug": "tyler-huntley"
+          },
+          {
+            "name": "Cooper Rush",
+            "depth_order": 3,
+            "sleeper_id": "4574",
+            "sleeper_name": "Cooper Rush",
+            "sleeper_slug": "cooper-rush"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Derrick Henry",
+            "depth_order": 1,
+            "sleeper_id": "3198",
+            "sleeper_name": "Derrick Henry",
+            "sleeper_slug": "derrick-henry"
+          },
+          {
+            "name": "Justice Hill",
+            "depth_order": 2,
+            "sleeper_id": "5995",
+            "sleeper_name": "Justice Hill",
+            "sleeper_slug": "justice-hill"
+          },
+          {
+            "name": "Keaton Mitchell",
+            "depth_order": 3,
+            "sleeper_id": "9511",
+            "sleeper_name": "Keaton Mitchell",
+            "sleeper_slug": "keaton-mitchell"
+          },
+          {
+            "name": "Rasheen Ali",
+            "depth_order": 4,
+            "sleeper_id": "11570",
+            "sleeper_name": "Rasheen Ali",
+            "sleeper_slug": "rasheen-ali"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Rashod Bateman",
+            "depth_order": 1,
+            "sleeper_id": "7571",
+            "sleeper_name": "Rashod Bateman",
+            "sleeper_slug": "rashod-bateman"
+          },
+          {
+            "name": "Deandre Hopkins",
+            "depth_order": 2,
+            "sleeper_id": "1426",
+            "sleeper_name": "DeAndre Hopkins",
+            "sleeper_slug": "deandre-hopkins"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Devontez Walker",
+            "depth_order": 1,
+            "sleeper_id": "11629",
+            "sleeper_name": "Devontez Walker",
+            "sleeper_slug": "devontez-walker"
+          },
+          {
+            "name": "Tylan Wallace",
+            "depth_order": 2,
+            "sleeper_id": "7595",
+            "sleeper_name": "Tylan Wallace",
+            "sleeper_slug": "tylan-wallace"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Zay Flowers",
+            "depth_order": 1,
+            "sleeper_id": "9997",
+            "sleeper_name": "Zay Flowers",
+            "sleeper_slug": "zay-flowers"
+          },
+          {
+            "name": "Lajohntay Wester",
+            "depth_order": 2,
+            "sleeper_id": "12699",
+            "sleeper_name": "LaJohntay Wester",
+            "sleeper_slug": "lajohntay-wester"
+          },
+          {
+            "name": "Dayton Wade",
+            "depth_order": 3,
+            "sleeper_id": "11964",
+            "sleeper_name": "Dayton Wade",
+            "sleeper_slug": "dayton-wade"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Mark Andrews",
+            "depth_order": 1,
+            "sleeper_id": "5012",
+            "sleeper_name": "Mark Andrews",
+            "sleeper_slug": "mark-andrews"
+          },
+          {
+            "name": "Isaiah Likely",
+            "depth_order": 2,
+            "sleeper_id": "8131",
+            "sleeper_name": "Isaiah Likely",
+            "sleeper_slug": "isaiah-likely"
+          },
+          {
+            "name": "Charlie Kolar",
+            "depth_order": 3,
+            "sleeper_id": "8127",
+            "sleeper_name": "Charlie Kolar",
+            "sleeper_slug": "charlie-kolar"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Tyler Loop",
+            "depth_order": 1,
+            "sleeper_id": "12711",
+            "sleeper_name": "Tyler Loop",
+            "sleeper_slug": "tyler-loop"
+          }
+        ]
+      }
+    ],
+    "CIN": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Joe Burrow",
+            "depth_order": 1,
+            "sleeper_id": "6770",
+            "sleeper_name": "Joe Burrow",
+            "sleeper_slug": "joe-burrow"
+          },
+          {
+            "name": "Joe Flacco",
+            "depth_order": 2,
+            "sleeper_id": "19",
+            "sleeper_name": "Joe Flacco",
+            "sleeper_slug": "joe-flacco"
+          },
+          {
+            "name": "Jake Browning",
+            "depth_order": 3,
+            "sleeper_id": "6111",
+            "sleeper_name": "Jake Browning",
+            "sleeper_slug": "jake-browning"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Chase Brown",
+            "depth_order": 1,
+            "sleeper_id": "9224",
+            "sleeper_name": "Chase Brown",
+            "sleeper_slug": "chase-brown"
+          },
+          {
+            "name": "Samaje Perine",
+            "depth_order": 2,
+            "sleeper_id": "4147",
+            "sleeper_name": "Samaje Perine",
+            "sleeper_slug": "samaje-perine"
+          },
+          {
+            "name": "Tahj Brooks",
+            "depth_order": 3,
+            "sleeper_id": "12543",
+            "sleeper_name": "Tahj Brooks",
+            "sleeper_slug": "tahj-brooks"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Ja'marr Chase",
+            "depth_order": 1,
+            "sleeper_id": "7564",
+            "sleeper_name": "Ja'Marr Chase",
+            "sleeper_slug": "jamarr-chase"
+          },
+          {
+            "name": "Ke'shawn Williams",
+            "depth_order": 2,
+            "sleeper_id": "12971",
+            "sleeper_name": "Ke'Shawn Williams",
+            "sleeper_slug": "keshawn-williams"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Tee Higgins",
+            "depth_order": 1,
+            "sleeper_id": "6801",
+            "sleeper_name": "Tee Higgins",
+            "sleeper_slug": "tee-higgins"
+          },
+          {
+            "name": "Mitch Tinsley",
+            "depth_order": 2,
+            "sleeper_id": "11068",
+            "sleeper_name": "Mitch Tinsley",
+            "sleeper_slug": "mitch-tinsley"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Andrei Iosivas",
+            "depth_order": 1,
+            "sleeper_id": "10226",
+            "sleeper_name": "Andrei Iosivas",
+            "sleeper_slug": "andrei-iosivas"
+          },
+          {
+            "name": "Charlie Jones",
+            "depth_order": 2,
+            "sleeper_id": "10228",
+            "sleeper_name": "Charlie Jones",
+            "sleeper_slug": "charlie-jones"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Mike Gesicki",
+            "depth_order": 1,
+            "sleeper_id": "4993",
+            "sleeper_name": "Mike Gesicki",
+            "sleeper_slug": "mike-gesicki"
+          },
+          {
+            "name": "Drew Sample",
+            "depth_order": 2,
+            "sleeper_id": "6001",
+            "sleeper_name": "Drew Sample",
+            "sleeper_slug": "drew-sample"
+          },
+          {
+            "name": "Noah Fant",
+            "depth_order": 3,
+            "sleeper_id": "5857",
+            "sleeper_name": "Noah Fant",
+            "sleeper_slug": "noah-fant"
+          },
+          {
+            "name": "Erick All JR.",
+            "depth_order": 4,
+            "sleeper_id": "11592",
+            "sleeper_name": "Erick All",
+            "sleeper_slug": "erick-all"
+          },
+          {
+            "name": "Tanner Hudson",
+            "depth_order": 5,
+            "sleeper_id": "5409",
+            "sleeper_name": "Tanner Hudson",
+            "sleeper_slug": "tanner-hudson"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Cam Grandy",
+            "depth_order": 1,
+            "sleeper_id": "12062",
+            "sleeper_name": "Cam Grandy",
+            "sleeper_slug": "cam-grandy"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Evan McPherson",
+            "depth_order": 1,
+            "sleeper_id": "7839",
+            "sleeper_name": "Evan McPherson",
+            "sleeper_slug": "evan-mcpherson"
+          }
+        ]
+      }
+    ],
+    "CLE": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Shedeur Sanders",
+            "depth_order": 1,
+            "sleeper_id": "12524",
+            "sleeper_name": "Shedeur Sanders",
+            "sleeper_slug": "shedeur-sanders"
+          },
+          {
+            "name": "Dillon Gabriel",
+            "depth_order": 2,
+            "sleeper_id": "12486",
+            "sleeper_name": "Dillon Gabriel",
+            "sleeper_slug": "dillon-gabriel"
+          },
+          {
+            "name": "Deshaun Watson",
+            "depth_order": 3,
+            "sleeper_id": "4017",
+            "sleeper_name": "Deshaun Watson",
+            "sleeper_slug": "deshaun-watson"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Quinshon Judkins",
+            "depth_order": 1,
+            "sleeper_id": "12512",
+            "sleeper_name": "Quinshon Judkins",
+            "sleeper_slug": "quinshon-judkins"
+          },
+          {
+            "name": "Dylan Sampson",
+            "depth_order": 2,
+            "sleeper_id": "12469",
+            "sleeper_name": "Dylan Sampson",
+            "sleeper_slug": "dylan-sampson"
+          },
+          {
+            "name": "Jerome Ford",
+            "depth_order": 3,
+            "sleeper_id": "8143",
+            "sleeper_name": "Jerome Ford",
+            "sleeper_slug": "jerome-ford"
+          },
+          {
+            "name": "Raheim Sanders",
+            "depth_order": 4,
+            "sleeper_id": "12472",
+            "sleeper_name": "Raheim Sanders",
+            "sleeper_slug": "raheim-sanders"
+          },
+          {
+            "name": "Trayveon Williams",
+            "depth_order": 5,
+            "sleeper_id": "6144",
+            "sleeper_name": "Trayveon Williams",
+            "sleeper_slug": "trayveon-williams"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Jerry Jeudy",
+            "depth_order": 1,
+            "sleeper_id": "6783",
+            "sleeper_name": "Jerry Jeudy",
+            "sleeper_slug": "jerry-jeudy"
+          },
+          {
+            "name": "Jamari Thrash",
+            "depth_order": 2,
+            "sleeper_id": "11633",
+            "sleeper_name": "Jamari Thrash",
+            "sleeper_slug": "jamari-thrash"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Cedric Tillman",
+            "depth_order": 1,
+            "sleeper_id": "10444",
+            "sleeper_name": "Cedric Tillman",
+            "sleeper_slug": "cedric-tillman"
+          },
+          {
+            "name": "Gage Larvadain",
+            "depth_order": 2,
+            "sleeper_id": "13101",
+            "sleeper_name": "Gage Larvadain",
+            "sleeper_slug": "gage-larvadain"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Isaiah Bond",
+            "depth_order": 1,
+            "sleeper_id": "12503",
+            "sleeper_name": "Isaiah Bond",
+            "sleeper_slug": "isaiah-bond"
+          },
+          {
+            "name": "Malachi Corley",
+            "depth_order": 2,
+            "sleeper_id": "11617",
+            "sleeper_name": "Malachi Corley",
+            "sleeper_slug": "malachi-corley"
+          },
+          {
+            "name": "Deandre Carter",
+            "depth_order": 3,
+            "sleeper_id": "2750",
+            "sleeper_name": "DeAndre Carter",
+            "sleeper_slug": "deandre-carter"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Harold Fannin JR.",
+            "depth_order": 1,
+            "sleeper_id": "12506",
+            "sleeper_name": "Harold Fannin",
+            "sleeper_slug": "harold-fannin"
+          },
+          {
+            "name": "David Njoku",
+            "depth_order": 2,
+            "sleeper_id": "4033",
+            "sleeper_name": "David Njoku",
+            "sleeper_slug": "david-njoku"
+          },
+          {
+            "name": "Blake Whiteheart",
+            "depth_order": 3,
+            "sleeper_id": "11201",
+            "sleeper_name": "Blake Whiteheart",
+            "sleeper_slug": "blake-whiteheart"
+          },
+          {
+            "name": "Brenden Bates",
+            "depth_order": 4,
+            "sleeper_id": "12374",
+            "sleeper_name": "Brenden Bates",
+            "sleeper_slug": "brenden-bates"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Andre Szmyt",
+            "depth_order": 1,
+            "sleeper_id": "11261",
+            "sleeper_name": "Andre Szmyt",
+            "sleeper_slug": "andre-szmyt"
+          }
+        ]
+      }
+    ],
+    "PIT": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Aaron Rodgers",
+            "depth_order": 1,
+            "sleeper_id": "96",
+            "sleeper_name": "Aaron Rodgers",
+            "sleeper_slug": "aaron-rodgers"
+          },
+          {
+            "name": "Mason Rudolph",
+            "depth_order": 2,
+            "sleeper_id": "4972",
+            "sleeper_name": "Mason Rudolph",
+            "sleeper_slug": "mason-rudolph"
+          },
+          {
+            "name": "Will Howard",
+            "depth_order": 3,
+            "sleeper_id": "12511",
+            "sleeper_name": "Will Howard",
+            "sleeper_slug": "will-howard"
+          },
+          {
+            "name": "Skylar Thompson",
+            "depth_order": 4,
+            "sleeper_id": "8206",
+            "sleeper_name": "Skylar Thompson",
+            "sleeper_slug": "skylar-thompson"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Kenneth Gainwell",
+            "depth_order": 1,
+            "sleeper_id": "7567",
+            "sleeper_name": "Kenneth Gainwell",
+            "sleeper_slug": "kenneth-gainwell"
+          },
+          {
+            "name": "Jaylen Warren",
+            "depth_order": 2,
+            "sleeper_id": "8228",
+            "sleeper_name": "Jaylen Warren",
+            "sleeper_slug": "jaylen-warren"
+          },
+          {
+            "name": "Kaleb Johnson",
+            "depth_order": 3,
+            "sleeper_id": "12504",
+            "sleeper_name": "Kaleb Johnson",
+            "sleeper_slug": "kaleb-johnson"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Dk Metcalf",
+            "depth_order": 1,
+            "sleeper_id": "5846",
+            "sleeper_name": "DK Metcalf",
+            "sleeper_slug": "dk-metcalf"
+          },
+          {
+            "name": "Roman Wilson",
+            "depth_order": 2,
+            "sleeper_id": "11630",
+            "sleeper_name": "Roman Wilson",
+            "sleeper_slug": "roman-wilson"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Marquez Valdes-Scantling",
+            "depth_order": 1,
+            "sleeper_id": "5086",
+            "sleeper_name": "Marquez Valdes-Scantling",
+            "sleeper_slug": "marquez-valdes-scantling"
+          },
+          {
+            "name": "Scotty Miller",
+            "depth_order": 2,
+            "sleeper_id": "6290",
+            "sleeper_name": "Scotty Miller",
+            "sleeper_slug": "scotty-miller"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Calvin Austin III",
+            "depth_order": 1,
+            "sleeper_id": "8125",
+            "sleeper_name": "Calvin Austin",
+            "sleeper_slug": "calvin-austin"
+          },
+          {
+            "name": "Ben Skowronek",
+            "depth_order": 2,
+            "sleeper_id": "7757",
+            "sleeper_name": "Ben Skowronek",
+            "sleeper_slug": "ben-skowronek"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Darnell Washington",
+            "depth_order": 1,
+            "sleeper_id": "9479",
+            "sleeper_name": "Darnell Washington",
+            "sleeper_slug": "darnell-washington"
+          },
+          {
+            "name": "Pat Freiermuth",
+            "depth_order": 2,
+            "sleeper_id": "7600",
+            "sleeper_name": "Pat Freiermuth",
+            "sleeper_slug": "pat-freiermuth"
+          },
+          {
+            "name": "Jonnu Smith",
+            "depth_order": 3,
+            "sleeper_id": "4144",
+            "sleeper_name": "Jonnu Smith",
+            "sleeper_slug": "jonnu-smith"
+          },
+          {
+            "name": "Donald Parham JR.",
+            "depth_order": 4,
+            "sleeper_id": "6074",
+            "sleeper_name": "Donald Parham",
+            "sleeper_slug": "donald-parham"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Chris Boswell",
+            "depth_order": 1,
+            "sleeper_id": "1945",
+            "sleeper_name": "Chris Boswell",
+            "sleeper_slug": "chris-boswell"
+          }
+        ]
+      }
+    ],
+    "HOU": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "C.J. Stroud",
+            "depth_order": 1,
+            "sleeper_id": "9758",
+            "sleeper_name": "C.J. Stroud",
+            "sleeper_slug": "cj-stroud"
+          },
+          {
+            "name": "Davis Mills",
+            "depth_order": 2,
+            "sleeper_id": "7585",
+            "sleeper_name": "Davis Mills",
+            "sleeper_slug": "davis-mills"
+          },
+          {
+            "name": "Graham Mertz",
+            "depth_order": 3,
+            "sleeper_id": "12705",
+            "sleeper_name": "Graham Mertz",
+            "sleeper_slug": "graham-mertz"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Woody Marks",
+            "depth_order": 1,
+            "sleeper_id": "12474",
+            "sleeper_name": "Woody Marks",
+            "sleeper_slug": "woody-marks"
+          },
+          {
+            "name": "Nick Chubb",
+            "depth_order": 2,
+            "sleeper_id": "4988",
+            "sleeper_name": "Nick Chubb",
+            "sleeper_slug": "nick-chubb"
+          },
+          {
+            "name": "Dare Ogunbowale",
+            "depth_order": 3,
+            "sleeper_id": "4718",
+            "sleeper_name": "Dare Ogunbowale",
+            "sleeper_slug": "dare-ogunbowale"
+          },
+          {
+            "name": "Jawhar Jordan",
+            "depth_order": 4,
+            "sleeper_id": "11588",
+            "sleeper_name": "Jawhar Jordan",
+            "sleeper_slug": "jawhar-jordan"
+          },
+          {
+            "name": "Joe Mixon",
+            "depth_order": 5,
+            "sleeper_id": "4018",
+            "sleeper_name": "Joe Mixon",
+            "sleeper_slug": "joe-mixon"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Nico Collins",
+            "depth_order": 1,
+            "sleeper_id": "7569",
+            "sleeper_name": "Nico Collins",
+            "sleeper_slug": "nico-collins"
+          },
+          {
+            "name": "Xavier Hutchinson",
+            "depth_order": 2,
+            "sleeper_id": "10218",
+            "sleeper_name": "Xavier Hutchinson",
+            "sleeper_slug": "xavier-hutchinson"
+          },
+          {
+            "name": "Juwann Winfree",
+            "depth_order": 3,
+            "sleeper_id": "6223",
+            "sleeper_name": "Juwann Winfree",
+            "sleeper_slug": "juwann-winfree"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Jayden Higgins",
+            "depth_order": 1,
+            "sleeper_id": "12484",
+            "sleeper_name": "Jayden Higgins",
+            "sleeper_slug": "jayden-higgins"
+          },
+          {
+            "name": "Tank Dell",
+            "depth_order": 2,
+            "sleeper_id": "9502",
+            "sleeper_name": "Tank Dell",
+            "sleeper_slug": "tank-dell"
+          },
+          {
+            "name": "Justin Watson",
+            "depth_order": 3,
+            "sleeper_id": "5374",
+            "sleeper_name": "Justin Watson",
+            "sleeper_slug": "justin-watson"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Christian Kirk",
+            "depth_order": 1,
+            "sleeper_id": "4950",
+            "sleeper_name": "Christian Kirk",
+            "sleeper_slug": "christian-kirk"
+          },
+          {
+            "name": "Jaylin Noel",
+            "depth_order": 2,
+            "sleeper_id": "12536",
+            "sleeper_name": "Jaylin Noel",
+            "sleeper_slug": "jaylin-noel"
+          },
+          {
+            "name": "Braxton Berrios",
+            "depth_order": 3,
+            "sleeper_id": "5121",
+            "sleeper_name": "Braxton Berrios",
+            "sleeper_slug": "braxton-berrios"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Dalton Schultz",
+            "depth_order": 1,
+            "sleeper_id": "5001",
+            "sleeper_name": "Dalton Schultz",
+            "sleeper_slug": "dalton-schultz"
+          },
+          {
+            "name": "Cade Stover",
+            "depth_order": 2,
+            "sleeper_id": "11599",
+            "sleeper_name": "Cade Stover",
+            "sleeper_slug": "cade-stover"
+          },
+          {
+            "name": "Harrison Bryant",
+            "depth_order": 3,
+            "sleeper_id": "6850",
+            "sleeper_name": "Harrison Bryant",
+            "sleeper_slug": "harrison-bryant"
+          },
+          {
+            "name": "Brevin Jordan",
+            "depth_order": 4,
+            "sleeper_id": "7568",
+            "sleeper_name": "Brevin Jordan",
+            "sleeper_slug": "brevin-jordan"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Ka'imi Fairbairn",
+            "depth_order": 1,
+            "sleeper_id": "3451",
+            "sleeper_name": "Ka'imi Fairbairn",
+            "sleeper_slug": "kaimi-fairbairn"
+          }
+        ]
+      }
+    ],
+    "IND": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Daniel Jones",
+            "depth_order": 1,
+            "sleeper_id": "5870",
+            "sleeper_name": "Daniel Jones",
+            "sleeper_slug": "daniel-jones"
+          },
+          {
+            "name": "Anthony Richardson SR.",
+            "depth_order": 2,
+            "sleeper_id": "9229",
+            "sleeper_name": "Anthony Richardson",
+            "sleeper_slug": "anthony-richardson"
+          },
+          {
+            "name": "Riley Leonard",
+            "depth_order": 3,
+            "sleeper_id": "12470",
+            "sleeper_name": "Riley Leonard",
+            "sleeper_slug": "riley-leonard"
+          },
+          {
+            "name": "Philip Rivers",
+            "depth_order": 4,
+            "sleeper_id": "331",
+            "sleeper_name": "Philip Rivers",
+            "sleeper_slug": "philip-rivers"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Jonathan Taylor",
+            "depth_order": 1,
+            "sleeper_id": "6813",
+            "sleeper_name": "Jonathan Taylor",
+            "sleeper_slug": "jonathan-taylor"
+          },
+          {
+            "name": "Ameer Abdullah",
+            "depth_order": 2,
+            "sleeper_id": "2359",
+            "sleeper_name": "Ameer Abdullah",
+            "sleeper_slug": "ameer-abdullah"
+          },
+          {
+            "name": "Tyler Goodson",
+            "depth_order": 3,
+            "sleeper_id": "8207",
+            "sleeper_name": "Tyler Goodson",
+            "sleeper_slug": "tyler-goodson"
+          },
+          {
+            "name": "Dj Giddens",
+            "depth_order": 4,
+            "sleeper_id": "12471",
+            "sleeper_name": "DJ Giddens",
+            "sleeper_slug": "dj-giddens"
+          },
+          {
+            "name": "Salvon Ahmed",
+            "depth_order": 5,
+            "sleeper_id": "6918",
+            "sleeper_name": "Salvon Ahmed",
+            "sleeper_slug": "salvon-ahmed"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Michael Pittman JR.",
+            "depth_order": 1,
+            "sleeper_id": "6819",
+            "sleeper_name": "Michael Pittman",
+            "sleeper_slug": "michael-pittman"
+          },
+          {
+            "name": "Ashton Dulin",
+            "depth_order": 2,
+            "sleeper_id": "6427",
+            "sleeper_name": "Ashton Dulin",
+            "sleeper_slug": "ashton-dulin"
+          },
+          {
+            "name": "D.J. Montgomery",
+            "depth_order": 3,
+            "sleeper_id": "6453",
+            "sleeper_name": "D.J. Montgomery",
+            "sleeper_slug": "dj-montgomery"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Alec Pierce",
+            "depth_order": 1,
+            "sleeper_id": "8142",
+            "sleeper_name": "Alec Pierce",
+            "sleeper_slug": "alec-pierce"
+          },
+          {
+            "name": "Laquon Treadwell",
+            "depth_order": 2,
+            "sleeper_id": "3155",
+            "sleeper_name": "Laquon Treadwell",
+            "sleeper_slug": "laquon-treadwell"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Josh Downs",
+            "depth_order": 1,
+            "sleeper_id": "9500",
+            "sleeper_name": "Josh Downs",
+            "sleeper_slug": "josh-downs"
+          },
+          {
+            "name": "Anthony Gould",
+            "depth_order": 2,
+            "sleeper_id": "11762",
+            "sleeper_name": "Anthony Gould",
+            "sleeper_slug": "anthony-gould"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Tyler Warren",
+            "depth_order": 1,
+            "sleeper_id": "12518",
+            "sleeper_name": "Tyler Warren",
+            "sleeper_slug": "tyler-warren"
+          },
+          {
+            "name": "Mo Alie-Cox",
+            "depth_order": 2,
+            "sleeper_id": "4054",
+            "sleeper_name": "Mo Alie-Cox",
+            "sleeper_slug": "mo-alie-cox"
+          },
+          {
+            "name": "Drew Ogletree",
+            "depth_order": 3,
+            "sleeper_id": "8489",
+            "sleeper_name": "Drew Ogletree",
+            "sleeper_slug": "drew-ogletree"
+          },
+          {
+            "name": "Will Mallory",
+            "depth_order": 4,
+            "sleeper_id": "10220",
+            "sleeper_name": "Will Mallory",
+            "sleeper_slug": "will-mallory"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Spencer Shrader",
+            "depth_order": 1,
+            "sleeper_id": "12185",
+            "sleeper_name": "Spencer Shrader",
+            "sleeper_slug": "spencer-shrader"
+          },
+          {
+            "name": "Blake Grupe",
+            "depth_order": 2,
+            "sleeper_id": "11058",
+            "sleeper_name": "Blake Grupe",
+            "sleeper_slug": "blake-grupe"
+          }
+        ]
+      }
+    ],
+    "JAX": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Trevor Lawrence",
+            "depth_order": 1,
+            "sleeper_id": "7523",
+            "sleeper_name": "Trevor Lawrence",
+            "sleeper_slug": "trevor-lawrence"
+          },
+          {
+            "name": "Nick Mullens",
+            "depth_order": 2,
+            "sleeper_id": "4464",
+            "sleeper_name": "Nick Mullens",
+            "sleeper_slug": "nick-mullens"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Travis Etienne JR.",
+            "depth_order": 1,
+            "sleeper_id": "7543",
+            "sleeper_name": "Travis Etienne",
+            "sleeper_slug": "travis-etienne"
+          },
+          {
+            "name": "Bhayshul Tuten",
+            "depth_order": 2,
+            "sleeper_id": "12490",
+            "sleeper_name": "Bhayshul Tuten",
+            "sleeper_slug": "bhayshul-tuten"
+          },
+          {
+            "name": "Lequint Allen JR.",
+            "depth_order": 3,
+            "sleeper_id": "12544",
+            "sleeper_name": "LeQuint Allen",
+            "sleeper_slug": "lequint-allen"
+          },
+          {
+            "name": "Deejay Dallas",
+            "depth_order": 4,
+            "sleeper_id": "6931",
+            "sleeper_name": "DeeJay Dallas",
+            "sleeper_slug": "deejay-dallas"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Brian Thomas JR.",
+            "depth_order": 1,
+            "sleeper_id": "11631",
+            "sleeper_name": "Brian Thomas",
+            "sleeper_slug": "brian-thomas"
+          },
+          {
+            "name": "Tim Patrick",
+            "depth_order": 2,
+            "sleeper_id": "4351",
+            "sleeper_name": "Tim Patrick",
+            "sleeper_slug": "tim-patrick"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Jakobi Meyers",
+            "depth_order": 1,
+            "sleeper_id": "5947",
+            "sleeper_name": "Jakobi Meyers",
+            "sleeper_slug": "jakobi-meyers"
+          },
+          {
+            "name": "Dyami Brown",
+            "depth_order": 2,
+            "sleeper_id": "7587",
+            "sleeper_name": "Dyami Brown",
+            "sleeper_slug": "dyami-brown"
+          },
+          {
+            "name": "Joshua Cephus",
+            "depth_order": 3,
+            "sleeper_id": "12114",
+            "sleeper_name": "Joshua Cephus",
+            "sleeper_slug": "joshua-cephus"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Parker Washington",
+            "depth_order": 1,
+            "sleeper_id": "9487",
+            "sleeper_name": "Parker Washington",
+            "sleeper_slug": "parker-washington"
+          },
+          {
+            "name": "Travis Hunter",
+            "depth_order": 2,
+            "sleeper_id": "12530",
+            "sleeper_name": "Travis Hunter",
+            "sleeper_slug": "travis-hunter"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Brenton Strange",
+            "depth_order": 1,
+            "sleeper_id": "9480",
+            "sleeper_name": "Brenton Strange",
+            "sleeper_slug": "brenton-strange"
+          },
+          {
+            "name": "Quintin Morris",
+            "depth_order": 2,
+            "sleeper_id": "7536",
+            "sleeper_name": "Quintin Morris",
+            "sleeper_slug": "quintin-morris"
+          },
+          {
+            "name": "Johnny Mundt",
+            "depth_order": 3,
+            "sleeper_id": "4314",
+            "sleeper_name": "Johnny Mundt",
+            "sleeper_slug": "johnny-mundt"
+          },
+          {
+            "name": "Hunter Long",
+            "depth_order": 4,
+            "sleeper_id": "7535",
+            "sleeper_name": "Hunter Long",
+            "sleeper_slug": "hunter-long"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Cam Little",
+            "depth_order": 1,
+            "sleeper_id": "11786",
+            "sleeper_name": "Cam Little",
+            "sleeper_slug": "cam-little"
+          }
+        ]
+      }
+    ],
+    "TEN": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Cam Ward",
+            "depth_order": 1,
+            "sleeper_id": "12522",
+            "sleeper_name": "Cam Ward",
+            "sleeper_slug": "cam-ward"
+          },
+          {
+            "name": "Will Levis",
+            "depth_order": 2,
+            "sleeper_id": "9999",
+            "sleeper_name": "Will Levis",
+            "sleeper_slug": "will-levis"
+          },
+          {
+            "name": "Brandon Allen",
+            "depth_order": 3,
+            "sleeper_id": "3357",
+            "sleeper_name": "Brandon Allen",
+            "sleeper_slug": "brandon-allen"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Tony Pollard",
+            "depth_order": 1,
+            "sleeper_id": "5967",
+            "sleeper_name": "Tony Pollard",
+            "sleeper_slug": "tony-pollard"
+          },
+          {
+            "name": "Tyjae Spears",
+            "depth_order": 2,
+            "sleeper_id": "9508",
+            "sleeper_name": "Tyjae Spears",
+            "sleeper_slug": "tyjae-spears"
+          },
+          {
+            "name": "Kalel Mullings",
+            "depth_order": 3,
+            "sleeper_id": "12516",
+            "sleeper_name": "Kalel Mullings",
+            "sleeper_slug": "kalel-mullings"
+          },
+          {
+            "name": "Julius Chestnut",
+            "depth_order": 4,
+            "sleeper_id": "8254",
+            "sleeper_name": "Julius Chestnut",
+            "sleeper_slug": "julius-chestnut"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Elic Ayomanor",
+            "depth_order": 1,
+            "sleeper_id": "12499",
+            "sleeper_name": "Elic Ayomanor",
+            "sleeper_slug": "elic-ayomanor"
+          },
+          {
+            "name": "Van Jefferson",
+            "depth_order": 2,
+            "sleeper_id": "6853",
+            "sleeper_name": "Van Jefferson",
+            "sleeper_slug": "van-jefferson"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Calvin Ridley",
+            "depth_order": 1,
+            "sleeper_id": "4981",
+            "sleeper_name": "Calvin Ridley",
+            "sleeper_slug": "calvin-ridley"
+          },
+          {
+            "name": "Bryce Oliver",
+            "depth_order": 2,
+            "sleeper_id": "11959",
+            "sleeper_name": "Bryce Oliver",
+            "sleeper_slug": "bryce-oliver"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Chimere Dike",
+            "depth_order": 1,
+            "sleeper_id": "12540",
+            "sleeper_name": "Chimere Dike",
+            "sleeper_slug": "chimere-dike"
+          },
+          {
+            "name": "James Proche II",
+            "depth_order": 2,
+            "sleeper_id": "6957",
+            "sleeper_name": "James Proche",
+            "sleeper_slug": "james-proche"
+          },
+          {
+            "name": "Mason Kinsey",
+            "depth_order": 3,
+            "sleeper_id": "7436",
+            "sleeper_name": "Mason Kinsey",
+            "sleeper_slug": "mason-kinsey"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Chig Okonkwo",
+            "depth_order": 1,
+            "sleeper_id": "8210",
+            "sleeper_name": "Chig Okonkwo",
+            "sleeper_slug": "chig-okonkwo"
+          },
+          {
+            "name": "Gunnar Helm",
+            "depth_order": 2,
+            "sleeper_id": "12502",
+            "sleeper_name": "Gunnar Helm",
+            "sleeper_slug": "gunnar-helm"
+          },
+          {
+            "name": "David Martin-Robinson",
+            "depth_order": 3,
+            "sleeper_id": "12357",
+            "sleeper_name": "David Martin-Robinson",
+            "sleeper_slug": "david-martin-robinson"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Joey Slye",
+            "depth_order": 1,
+            "sleeper_id": "6528",
+            "sleeper_name": "Joey Slye",
+            "sleeper_slug": "joey-slye"
+          }
+        ]
+      }
+    ],
+    "DEN": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Bo Nix",
+            "depth_order": 1,
+            "sleeper_id": "11563",
+            "sleeper_name": "Bo Nix",
+            "sleeper_slug": "bo-nix"
+          },
+          {
+            "name": "Jarrett Stidham",
+            "depth_order": 2,
+            "sleeper_id": "6136",
+            "sleeper_name": "Jarrett Stidham",
+            "sleeper_slug": "jarrett-stidham"
+          },
+          {
+            "name": "Sam Ehlinger",
+            "depth_order": 3,
+            "sleeper_id": "7583",
+            "sleeper_name": "Sam Ehlinger",
+            "sleeper_slug": "sam-ehlinger"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "J.K. Dobbins",
+            "depth_order": 1,
+            "sleeper_id": "6806",
+            "sleeper_name": "J.K. Dobbins",
+            "sleeper_slug": "jk-dobbins"
+          },
+          {
+            "name": "Rj Harvey",
+            "depth_order": 2,
+            "sleeper_id": "12489",
+            "sleeper_name": "RJ Harvey",
+            "sleeper_slug": "rj-harvey"
+          },
+          {
+            "name": "Jaleel McLaughlin",
+            "depth_order": 3,
+            "sleeper_id": "11439",
+            "sleeper_name": "Jaleel McLaughlin",
+            "sleeper_slug": "jaleel-mclaughlin"
+          },
+          {
+            "name": "Tyler Badie",
+            "depth_order": 4,
+            "sleeper_id": "8208",
+            "sleeper_name": "Tyler Badie",
+            "sleeper_slug": "tyler-badie"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Courtland Sutton",
+            "depth_order": 1,
+            "sleeper_id": "5045",
+            "sleeper_name": "Courtland Sutton",
+            "sleeper_slug": "courtland-sutton"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Troy Franklin",
+            "depth_order": 1,
+            "sleeper_id": "11627",
+            "sleeper_name": "Troy Franklin",
+            "sleeper_slug": "troy-franklin"
+          },
+          {
+            "name": "Marvin Mims JR.",
+            "depth_order": 2,
+            "sleeper_id": "9494",
+            "sleeper_name": "Marvin Mims",
+            "sleeper_slug": "marvin-mims"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Pat Bryant",
+            "depth_order": 1,
+            "sleeper_id": "12492",
+            "sleeper_name": "Pat Bryant",
+            "sleeper_slug": "pat-bryant"
+          },
+          {
+            "name": "Lil'jordan Humphrey",
+            "depth_order": 2,
+            "sleeper_id": "5938",
+            "sleeper_name": "Lil'Jordan Humphrey",
+            "sleeper_slug": "liljordan-humphrey"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Adam Trautman",
+            "depth_order": 1,
+            "sleeper_id": "6869",
+            "sleeper_name": "Adam Trautman",
+            "sleeper_slug": "adam-trautman"
+          },
+          {
+            "name": "Evan Engram",
+            "depth_order": 2,
+            "sleeper_id": "4066",
+            "sleeper_name": "Evan Engram",
+            "sleeper_slug": "evan-engram"
+          },
+          {
+            "name": "Nate Adkins",
+            "depth_order": 3,
+            "sleeper_id": "11433",
+            "sleeper_name": "Nate Adkins",
+            "sleeper_slug": "nate-adkins"
+          },
+          {
+            "name": "Lucas Krull",
+            "depth_order": 4,
+            "sleeper_id": "8249",
+            "sleeper_name": "Lucas Krull",
+            "sleeper_slug": "lucas-krull"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Wil Lutz",
+            "depth_order": 1,
+            "sleeper_id": "3678",
+            "sleeper_name": "Wil Lutz",
+            "sleeper_slug": "wil-lutz"
+          }
+        ]
+      }
+    ],
+    "KC": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Patrick Mahomes",
+            "depth_order": 1,
+            "sleeper_id": "4046",
+            "sleeper_name": "Patrick Mahomes",
+            "sleeper_slug": "patrick-mahomes"
+          },
+          {
+            "name": "Gardner Minshew",
+            "depth_order": 2,
+            "sleeper_id": "6011",
+            "sleeper_name": "Gardner Minshew",
+            "sleeper_slug": "gardner-minshew"
+          },
+          {
+            "name": "Chris Oladokun",
+            "depth_order": 3,
+            "sleeper_id": "8413",
+            "sleeper_name": "Chris Oladokun",
+            "sleeper_slug": "chris-oladokun"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Isiah Pacheco",
+            "depth_order": 1,
+            "sleeper_id": "8205",
+            "sleeper_name": "Isiah Pacheco",
+            "sleeper_slug": "isiah-pacheco"
+          },
+          {
+            "name": "Kareem Hunt",
+            "depth_order": 2,
+            "sleeper_id": "4098",
+            "sleeper_name": "Kareem Hunt",
+            "sleeper_slug": "kareem-hunt"
+          },
+          {
+            "name": "Brashard Smith",
+            "depth_order": 3,
+            "sleeper_id": "12455",
+            "sleeper_name": "Brashard Smith",
+            "sleeper_slug": "brashard-smith"
+          },
+          {
+            "name": "Dameon Pierce",
+            "depth_order": 4,
+            "sleeper_id": "8129",
+            "sleeper_name": "Dameon Pierce",
+            "sleeper_slug": "dameon-pierce"
+          },
+          {
+            "name": "Keaontay Ingram",
+            "depth_order": 5,
+            "sleeper_id": "8221",
+            "sleeper_name": "Keaontay Ingram",
+            "sleeper_slug": "keaontay-ingram"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Hollywood Brown",
+            "depth_order": 1,
+            "sleeper_id": null,
+            "sleeper_name": null,
+            "sleeper_slug": null
+          },
+          {
+            "name": "Tyquan Thornton",
+            "depth_order": 2,
+            "sleeper_id": "8188",
+            "sleeper_name": "Tyquan Thornton",
+            "sleeper_slug": "tyquan-thornton"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Xavier Worthy",
+            "depth_order": 1,
+            "sleeper_id": "11624",
+            "sleeper_name": "Xavier Worthy",
+            "sleeper_slug": "xavier-worthy"
+          },
+          {
+            "name": "Juju Smith-Schuster",
+            "depth_order": 2,
+            "sleeper_id": "4040",
+            "sleeper_name": "JuJu Smith-Schuster",
+            "sleeper_slug": "juju-smith-schuster"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Rashee Rice",
+            "depth_order": 1,
+            "sleeper_id": "10229",
+            "sleeper_name": "Rashee Rice",
+            "sleeper_slug": "rashee-rice"
+          },
+          {
+            "name": "Jalen Royals",
+            "depth_order": 2,
+            "sleeper_id": "12505",
+            "sleeper_name": "Jalen Royals",
+            "sleeper_slug": "jalen-royals"
+          },
+          {
+            "name": "Nikko Remigio",
+            "depth_order": 3,
+            "sleeper_id": "11320",
+            "sleeper_name": "Nikko Remigio",
+            "sleeper_slug": "nikko-remigio"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Travis Kelce",
+            "depth_order": 1,
+            "sleeper_id": "1466",
+            "sleeper_name": "Travis Kelce",
+            "sleeper_slug": "travis-kelce"
+          },
+          {
+            "name": "Noah Gray",
+            "depth_order": 2,
+            "sleeper_id": "7828",
+            "sleeper_name": "Noah Gray",
+            "sleeper_slug": "noah-gray"
+          },
+          {
+            "name": "Robert Tonyan",
+            "depth_order": 3,
+            "sleeper_id": "4602",
+            "sleeper_name": "Robert Tonyan",
+            "sleeper_slug": "robert-tonyan"
+          },
+          {
+            "name": "Jared Wiley",
+            "depth_order": 4,
+            "sleeper_id": "11595",
+            "sleeper_name": "Jared Wiley",
+            "sleeper_slug": "jared-wiley"
+          },
+          {
+            "name": "Jake Briningstool",
+            "depth_order": 5,
+            "sleeper_id": "12817",
+            "sleeper_name": "Jake Briningstool",
+            "sleeper_slug": "jake-briningstool"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Harrison Butker",
+            "depth_order": 1,
+            "sleeper_id": "4227",
+            "sleeper_name": "Harrison Butker",
+            "sleeper_slug": "harrison-butker"
+          }
+        ]
+      }
+    ],
+    "LV": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Geno Smith",
+            "depth_order": 1,
+            "sleeper_id": "1373",
+            "sleeper_name": "Geno Smith",
+            "sleeper_slug": "geno-smith"
+          },
+          {
+            "name": "Kenny Pickett",
+            "depth_order": 2,
+            "sleeper_id": "8160",
+            "sleeper_name": "Kenny Pickett",
+            "sleeper_slug": "kenny-pickett"
+          },
+          {
+            "name": "Aidan O'Connell",
+            "depth_order": 3,
+            "sleeper_id": "10866",
+            "sleeper_name": "Aidan O'Connell",
+            "sleeper_slug": "aidan-oconnell"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Ashton Jeanty",
+            "depth_order": 1,
+            "sleeper_id": "12527",
+            "sleeper_name": "Ashton Jeanty",
+            "sleeper_slug": "ashton-jeanty"
+          },
+          {
+            "name": "Raheem Mostert",
+            "depth_order": 2,
+            "sleeper_id": "2749",
+            "sleeper_name": "Raheem Mostert",
+            "sleeper_slug": "raheem-mostert"
+          },
+          {
+            "name": "Dylan Laube",
+            "depth_order": 3,
+            "sleeper_id": "11574",
+            "sleeper_name": "Dylan Laube",
+            "sleeper_slug": "dylan-laube"
+          },
+          {
+            "name": "Zamir White",
+            "depth_order": 4,
+            "sleeper_id": "8139",
+            "sleeper_name": "Zamir White",
+            "sleeper_slug": "zamir-white"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Jack Bech",
+            "depth_order": 1,
+            "sleeper_id": "12483",
+            "sleeper_name": "Jack Bech",
+            "sleeper_slug": "jack-bech"
+          },
+          {
+            "name": "Dont'e Thornton JR.",
+            "depth_order": 2,
+            "sleeper_id": "12541",
+            "sleeper_name": "Dont'e Thornton",
+            "sleeper_slug": "donte-thornton"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Tre Tucker",
+            "depth_order": 1,
+            "sleeper_id": "10213",
+            "sleeper_name": "Tre Tucker",
+            "sleeper_slug": "tre-tucker"
+          },
+          {
+            "name": "Shedrick Jackson",
+            "depth_order": 2,
+            "sleeper_id": "11257",
+            "sleeper_name": "Shedrick Jackson",
+            "sleeper_slug": "shedrick-jackson"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Tyler Lockett",
+            "depth_order": 1,
+            "sleeper_id": "2374",
+            "sleeper_name": "Tyler Lockett",
+            "sleeper_slug": "tyler-lockett"
+          },
+          {
+            "name": "Alex Bachman",
+            "depth_order": 2,
+            "sleeper_id": "6386",
+            "sleeper_name": "Alex Bachman",
+            "sleeper_slug": "alex-bachman"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Brock Bowers",
+            "depth_order": 1,
+            "sleeper_id": "11604",
+            "sleeper_name": "Brock Bowers",
+            "sleeper_slug": "brock-bowers"
+          },
+          {
+            "name": "Michael Mayer",
+            "depth_order": 2,
+            "sleeper_id": "9482",
+            "sleeper_name": "Michael Mayer",
+            "sleeper_slug": "michael-mayer"
+          },
+          {
+            "name": "Ian Thomas",
+            "depth_order": 3,
+            "sleeper_id": "4995",
+            "sleeper_name": "Ian Thomas",
+            "sleeper_slug": "ian-thomas"
+          },
+          {
+            "name": "Carter Runyon",
+            "depth_order": 4,
+            "sleeper_id": "13122",
+            "sleeper_name": "Carter Runyon",
+            "sleeper_slug": "carter-runyon"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Daniel Carlson",
+            "depth_order": 1,
+            "sleeper_id": "5095",
+            "sleeper_name": "Daniel Carlson",
+            "sleeper_slug": "daniel-carlson"
+          }
+        ]
+      }
+    ],
+    "LAC": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Justin Herbert",
+            "depth_order": 1,
+            "sleeper_id": "6797",
+            "sleeper_name": "Justin Herbert",
+            "sleeper_slug": "justin-herbert"
+          },
+          {
+            "name": "Trey Lance",
+            "depth_order": 2,
+            "sleeper_id": "7610",
+            "sleeper_name": "Trey Lance",
+            "sleeper_slug": "trey-lance"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Omarion Hampton",
+            "depth_order": 1,
+            "sleeper_id": "12507",
+            "sleeper_name": "Omarion Hampton",
+            "sleeper_slug": "omarion-hampton"
+          },
+          {
+            "name": "Najee Harris",
+            "depth_order": 2,
+            "sleeper_id": "7528",
+            "sleeper_name": "Najee Harris",
+            "sleeper_slug": "najee-harris"
+          },
+          {
+            "name": "Kimani Vidal",
+            "depth_order": 3,
+            "sleeper_id": "11647",
+            "sleeper_name": "Kimani Vidal",
+            "sleeper_slug": "kimani-vidal"
+          },
+          {
+            "name": "Jaret Patterson",
+            "depth_order": 4,
+            "sleeper_id": "7537",
+            "sleeper_name": "Jaret Patterson",
+            "sleeper_slug": "jaret-patterson"
+          },
+          {
+            "name": "Hassan Haskins",
+            "depth_order": 5,
+            "sleeper_id": "8123",
+            "sleeper_name": "Hassan Haskins",
+            "sleeper_slug": "hassan-haskins"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Quentin Johnston",
+            "depth_order": 1,
+            "sleeper_id": "9754",
+            "sleeper_name": "Quentin Johnston",
+            "sleeper_slug": "quentin-johnston"
+          },
+          {
+            "name": "Tre' Harris",
+            "depth_order": 2,
+            "sleeper_id": "12509",
+            "sleeper_name": "Tre' Harris",
+            "sleeper_slug": "tre-harris"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Keenan Allen",
+            "depth_order": 1,
+            "sleeper_id": "1479",
+            "sleeper_name": "Keenan Allen",
+            "sleeper_slug": "keenan-allen"
+          },
+          {
+            "name": "Keandre Lambert-Smith",
+            "depth_order": 2,
+            "sleeper_id": "12670",
+            "sleeper_name": "KeAndre Lambert-Smith",
+            "sleeper_slug": "keandre-lambert-smith"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Ladd McConkey",
+            "depth_order": 1,
+            "sleeper_id": "11635",
+            "sleeper_name": "Ladd McConkey",
+            "sleeper_slug": "ladd-mcconkey"
+          },
+          {
+            "name": "Derius Davis",
+            "depth_order": 2,
+            "sleeper_id": "10234",
+            "sleeper_name": "Derius Davis",
+            "sleeper_slug": "derius-davis"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Oronde Gadsden",
+            "depth_order": 1,
+            "sleeper_id": "12493",
+            "sleeper_name": "Oronde Gadsden",
+            "sleeper_slug": "oronde-gadsden"
+          },
+          {
+            "name": "Tucker Fisk",
+            "depth_order": 2,
+            "sleeper_id": "8885",
+            "sleeper_name": "Tucker Fisk",
+            "sleeper_slug": "tucker-fisk"
+          },
+          {
+            "name": "Will Dissly",
+            "depth_order": 3,
+            "sleeper_id": "5010",
+            "sleeper_name": "Will Dissly",
+            "sleeper_slug": "will-dissly"
+          },
+          {
+            "name": "Tyler Conklin",
+            "depth_order": 4,
+            "sleeper_id": "5133",
+            "sleeper_name": "Tyler Conklin",
+            "sleeper_slug": "tyler-conklin"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Cameron Dicker",
+            "depth_order": 1,
+            "sleeper_id": "8259",
+            "sleeper_name": "Cameron Dicker",
+            "sleeper_slug": "cameron-dicker"
+          }
+        ]
+      }
+    ],
+    "DAL": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Dak Prescott",
+            "depth_order": 1,
+            "sleeper_id": "3294",
+            "sleeper_name": "Dak Prescott",
+            "sleeper_slug": "dak-prescott"
+          },
+          {
+            "name": "Joe Milton III",
+            "depth_order": 2,
+            "sleeper_id": "11557",
+            "sleeper_name": "Joe Milton",
+            "sleeper_slug": "joe-milton"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Javonte Williams",
+            "depth_order": 1,
+            "sleeper_id": "7588",
+            "sleeper_name": "Javonte Williams",
+            "sleeper_slug": "javonte-williams"
+          },
+          {
+            "name": "Malik Davis",
+            "depth_order": 2,
+            "sleeper_id": "8800",
+            "sleeper_name": "Malik Davis",
+            "sleeper_slug": "malik-davis"
+          },
+          {
+            "name": "Miles Sanders",
+            "depth_order": 3,
+            "sleeper_id": "6151",
+            "sleeper_name": "Miles Sanders",
+            "sleeper_slug": "miles-sanders"
+          },
+          {
+            "name": "Jaydon Blue",
+            "depth_order": 4,
+            "sleeper_id": "12457",
+            "sleeper_name": "Jaydon Blue",
+            "sleeper_slug": "jaydon-blue"
+          },
+          {
+            "name": "Phil Mafah",
+            "depth_order": 5,
+            "sleeper_id": "12738",
+            "sleeper_name": "Phil Mafah",
+            "sleeper_slug": "phil-mafah"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "George Pickens",
+            "depth_order": 1,
+            "sleeper_id": "8137",
+            "sleeper_name": "George Pickens",
+            "sleeper_slug": "george-pickens"
+          },
+          {
+            "name": "Jonathan Mingo",
+            "depth_order": 2,
+            "sleeper_id": "10225",
+            "sleeper_name": "Jonathan Mingo",
+            "sleeper_slug": "jonathan-mingo"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Ceedee Lamb",
+            "depth_order": 1,
+            "sleeper_id": "6786",
+            "sleeper_name": "CeeDee Lamb",
+            "sleeper_slug": "ceedee-lamb"
+          },
+          {
+            "name": "Jalen Tolbert",
+            "depth_order": 2,
+            "sleeper_id": "8117",
+            "sleeper_name": "Jalen Tolbert",
+            "sleeper_slug": "jalen-tolbert"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Ryan Flournoy",
+            "depth_order": 1,
+            "sleeper_id": "11783",
+            "sleeper_name": "Ryan Flournoy",
+            "sleeper_slug": "ryan-flournoy"
+          },
+          {
+            "name": "Kavontae Turpin",
+            "depth_order": 2,
+            "sleeper_id": "8917",
+            "sleeper_name": "KaVontae Turpin",
+            "sleeper_slug": "kavontae-turpin"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Jake Ferguson",
+            "depth_order": 1,
+            "sleeper_id": "8110",
+            "sleeper_name": "Jake Ferguson",
+            "sleeper_slug": "jake-ferguson"
+          },
+          {
+            "name": "Luke Schoonmaker",
+            "depth_order": 2,
+            "sleeper_id": "10871",
+            "sleeper_name": "Luke Schoonmaker",
+            "sleeper_slug": "luke-schoonmaker"
+          },
+          {
+            "name": "Brevyn Spann-Ford",
+            "depth_order": 3,
+            "sleeper_id": "11593",
+            "sleeper_name": "Brevyn Spann-Ford",
+            "sleeper_slug": "brevyn-spann-ford"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Brandon Aubrey",
+            "depth_order": 1,
+            "sleeper_id": "11533",
+            "sleeper_name": "Brandon Aubrey",
+            "sleeper_slug": "brandon-aubrey"
+          }
+        ]
+      }
+    ],
+    "NYG": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Jaxson Dart",
+            "depth_order": 1,
+            "sleeper_id": "12508",
+            "sleeper_name": "Jaxson Dart",
+            "sleeper_slug": "jaxson-dart"
+          },
+          {
+            "name": "Jameis Winston",
+            "depth_order": 2,
+            "sleeper_id": "2306",
+            "sleeper_name": "Jameis Winston",
+            "sleeper_slug": "jameis-winston"
+          },
+          {
+            "name": "Russell Wilson",
+            "depth_order": 3,
+            "sleeper_id": "1234",
+            "sleeper_name": "Russell Wilson",
+            "sleeper_slug": "russell-wilson"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Cam Skattebo",
+            "depth_order": 1,
+            "sleeper_id": "12481",
+            "sleeper_name": "Cam Skattebo",
+            "sleeper_slug": "cam-skattebo"
+          },
+          {
+            "name": "Tyrone Tracy JR.",
+            "depth_order": 2,
+            "sleeper_id": "11655",
+            "sleeper_name": "Tyrone Tracy",
+            "sleeper_slug": "tyrone-tracy"
+          },
+          {
+            "name": "Devin Singletary",
+            "depth_order": 3,
+            "sleeper_id": "6130",
+            "sleeper_name": "Devin Singletary",
+            "sleeper_slug": "devin-singletary"
+          },
+          {
+            "name": "Eric Gray",
+            "depth_order": 4,
+            "sleeper_id": "10223",
+            "sleeper_name": "Eric Gray",
+            "sleeper_slug": "eric-gray"
+          },
+          {
+            "name": "Dante Miller",
+            "depth_order": 5,
+            "sleeper_id": "11654",
+            "sleeper_name": "Dante Miller",
+            "sleeper_slug": "dante-miller"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Malik Nabers",
+            "depth_order": 1,
+            "sleeper_id": "11632",
+            "sleeper_name": "Malik Nabers",
+            "sleeper_slug": "malik-nabers"
+          },
+          {
+            "name": "Isaiah Hodgins",
+            "depth_order": 2,
+            "sleeper_id": "6920",
+            "sleeper_name": "Isaiah Hodgins",
+            "sleeper_slug": "isaiah-hodgins"
+          },
+          {
+            "name": "Dalen Cambre",
+            "depth_order": 3,
+            "sleeper_id": "12888",
+            "sleeper_name": "Dalen Cambre",
+            "sleeper_slug": "dalen-cambre"
+          },
+          {
+            "name": "Bryce Ford-Wheaton",
+            "depth_order": 4,
+            "sleeper_id": "9499",
+            "sleeper_name": "Bryce Ford-Wheaton",
+            "sleeper_slug": "bryce-ford-wheaton"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Darius Slayton",
+            "depth_order": 1,
+            "sleeper_id": "6149",
+            "sleeper_name": "Darius Slayton",
+            "sleeper_slug": "darius-slayton"
+          },
+          {
+            "name": "Beaux Collins",
+            "depth_order": 2,
+            "sleeper_id": "12889",
+            "sleeper_name": "Beaux Collins",
+            "sleeper_slug": "beaux-collins"
+          },
+          {
+            "name": "Jalin Hyatt",
+            "depth_order": 3,
+            "sleeper_id": "9497",
+            "sleeper_name": "Jalin Hyatt",
+            "sleeper_slug": "jalin-hyatt"
+          },
+          {
+            "name": "Da'quan Felton",
+            "depth_order": 4,
+            "sleeper_id": "12892",
+            "sleeper_name": "Da'Quan Felton",
+            "sleeper_slug": "daquan-felton"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Wan'dale Robinson",
+            "depth_order": 1,
+            "sleeper_id": "8126",
+            "sleeper_name": "Wan'Dale Robinson",
+            "sleeper_slug": "wandale-robinson"
+          },
+          {
+            "name": "Gunner Olszewski",
+            "depth_order": 2,
+            "sleeper_id": "6699",
+            "sleeper_name": "Gunner Olszewski",
+            "sleeper_slug": "gunner-olszewski"
+          },
+          {
+            "name": "Xavier Gipson",
+            "depth_order": 3,
+            "sleeper_id": "11306",
+            "sleeper_name": "Xavier Gipson",
+            "sleeper_slug": "xavier-gipson"
+          },
+          {
+            "name": "Ryan Miller",
+            "depth_order": 4,
+            "sleeper_id": "11421",
+            "sleeper_name": "Ryan Miller",
+            "sleeper_slug": "ryan-miller"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Theo Johnson",
+            "depth_order": 1,
+            "sleeper_id": "11597",
+            "sleeper_name": "Theo Johnson",
+            "sleeper_slug": "theo-johnson"
+          },
+          {
+            "name": "Daniel Bellinger",
+            "depth_order": 2,
+            "sleeper_id": "8225",
+            "sleeper_name": "Daniel Bellinger",
+            "sleeper_slug": "daniel-bellinger"
+          },
+          {
+            "name": "Chris Manhertz",
+            "depth_order": 3,
+            "sleeper_id": "3048",
+            "sleeper_name": "Chris Manhertz",
+            "sleeper_slug": "chris-manhertz"
+          },
+          {
+            "name": "Thomas Fidone II",
+            "depth_order": 4,
+            "sleeper_id": "12715",
+            "sleeper_name": "Thomas Fidone",
+            "sleeper_slug": "thomas-fidone"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Graham Gano",
+            "depth_order": 1,
+            "sleeper_id": "503",
+            "sleeper_name": "Graham Gano",
+            "sleeper_slug": "graham-gano"
+          },
+          {
+            "name": "Ben Sauls",
+            "depth_order": 2,
+            "sleeper_id": "13066",
+            "sleeper_name": "Ben Sauls",
+            "sleeper_slug": "ben-sauls"
+          }
+        ]
+      }
+    ],
+    "PHI": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Jalen Hurts",
+            "depth_order": 1,
+            "sleeper_id": "6904",
+            "sleeper_name": "Jalen Hurts",
+            "sleeper_slug": "jalen-hurts"
+          },
+          {
+            "name": "Tanner McKee",
+            "depth_order": 2,
+            "sleeper_id": "9230",
+            "sleeper_name": "Tanner McKee",
+            "sleeper_slug": "tanner-mckee"
+          },
+          {
+            "name": "Sam Howell",
+            "depth_order": 3,
+            "sleeper_id": "8162",
+            "sleeper_name": "Sam Howell",
+            "sleeper_slug": "sam-howell"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Saquon Barkley",
+            "depth_order": 1,
+            "sleeper_id": "4866",
+            "sleeper_name": "Saquon Barkley",
+            "sleeper_slug": "saquon-barkley"
+          },
+          {
+            "name": "Tank Bigsby",
+            "depth_order": 2,
+            "sleeper_id": "9225",
+            "sleeper_name": "Tank Bigsby",
+            "sleeper_slug": "tank-bigsby"
+          },
+          {
+            "name": "Will Shipley",
+            "depth_order": 3,
+            "sleeper_id": "11577",
+            "sleeper_name": "Will Shipley",
+            "sleeper_slug": "will-shipley"
+          },
+          {
+            "name": "A.J. Dillon",
+            "depth_order": 4,
+            "sleeper_id": "6828",
+            "sleeper_name": "A.J. Dillon",
+            "sleeper_slug": "aj-dillon"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "A.J. Brown",
+            "depth_order": 1,
+            "sleeper_id": "5859",
+            "sleeper_name": "A.J. Brown",
+            "sleeper_slug": "aj-brown"
+          },
+          {
+            "name": "Darius Cooper",
+            "depth_order": 2,
+            "sleeper_id": "13150",
+            "sleeper_name": "Darius Cooper",
+            "sleeper_slug": "darius-cooper"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Jahan Dotson",
+            "depth_order": 1,
+            "sleeper_id": "8119",
+            "sleeper_name": "Jahan Dotson",
+            "sleeper_slug": "jahan-dotson"
+          },
+          {
+            "name": "Johnny Wilson",
+            "depth_order": 2,
+            "sleeper_id": "11636",
+            "sleeper_name": "Johnny Wilson",
+            "sleeper_slug": "johnny-wilson"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Devonta Smith",
+            "depth_order": 1,
+            "sleeper_id": "7525",
+            "sleeper_name": "DeVonta Smith",
+            "sleeper_slug": "devonta-smith"
+          },
+          {
+            "name": "Britain Covey",
+            "depth_order": 2,
+            "sleeper_id": "8414",
+            "sleeper_name": "Britain Covey",
+            "sleeper_slug": "britain-covey"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Dallas Goedert",
+            "depth_order": 1,
+            "sleeper_id": "5022",
+            "sleeper_name": "Dallas Goedert",
+            "sleeper_slug": "dallas-goedert"
+          },
+          {
+            "name": "Grant Calcaterra",
+            "depth_order": 2,
+            "sleeper_id": "8177",
+            "sleeper_name": "Grant Calcaterra",
+            "sleeper_slug": "grant-calcaterra"
+          },
+          {
+            "name": "Kylen Granson",
+            "depth_order": 3,
+            "sleeper_id": "7602",
+            "sleeper_name": "Kylen Granson",
+            "sleeper_slug": "kylen-granson"
+          },
+          {
+            "name": "Cameron Latu",
+            "depth_order": 4,
+            "sleeper_id": "10210",
+            "sleeper_name": "Cameron Latu",
+            "sleeper_slug": "cameron-latu"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Jake Elliott",
+            "depth_order": 1,
+            "sleeper_id": "4195",
+            "sleeper_name": "Jake Elliott",
+            "sleeper_slug": "jake-elliott"
+          }
+        ]
+      }
+    ],
+    "WAS": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Jayden Daniels",
+            "depth_order": 1,
+            "sleeper_id": "11566",
+            "sleeper_name": "Jayden Daniels",
+            "sleeper_slug": "jayden-daniels"
+          },
+          {
+            "name": "Marcus Mariota",
+            "depth_order": 2,
+            "sleeper_id": "2307",
+            "sleeper_name": "Marcus Mariota",
+            "sleeper_slug": "marcus-mariota"
+          },
+          {
+            "name": "Josh Johnson",
+            "depth_order": 3,
+            "sleeper_id": "260",
+            "sleeper_name": "Josh Johnson",
+            "sleeper_slug": "josh-johnson"
+          },
+          {
+            "name": "Jeff Driskel",
+            "depth_order": 4,
+            "sleeper_id": "3362",
+            "sleeper_name": "Jeff Driskel",
+            "sleeper_slug": "jeff-driskel"
+          },
+          {
+            "name": "Sam Hartman",
+            "depth_order": 5,
+            "sleeper_id": "11558",
+            "sleeper_name": "Sam Hartman",
+            "sleeper_slug": "sam-hartman"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Austin Ekeler",
+            "depth_order": 1,
+            "sleeper_id": "4663",
+            "sleeper_name": "Austin Ekeler",
+            "sleeper_slug": "austin-ekeler"
+          },
+          {
+            "name": "Chris Rodriguez JR.",
+            "depth_order": 2,
+            "sleeper_id": "10219",
+            "sleeper_name": "Chris Rodriguez",
+            "sleeper_slug": "chris-rodriguez"
+          },
+          {
+            "name": "Jacory Croskey-Merritt",
+            "depth_order": 3,
+            "sleeper_id": "12533",
+            "sleeper_name": "Jacory Croskey-Merritt",
+            "sleeper_slug": "jacory-croskey-merritt"
+          },
+          {
+            "name": "Jeremy McNichols",
+            "depth_order": 4,
+            "sleeper_id": "4219",
+            "sleeper_name": "Jeremy McNichols",
+            "sleeper_slug": "jeremy-mcnichols"
+          },
+          {
+            "name": "Chase Edmonds",
+            "depth_order": 5,
+            "sleeper_id": "5000",
+            "sleeper_name": "Chase Edmonds",
+            "sleeper_slug": "chase-edmonds"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Terry McLaurin",
+            "depth_order": 1,
+            "sleeper_id": "5927",
+            "sleeper_name": "Terry McLaurin",
+            "sleeper_slug": "terry-mclaurin"
+          },
+          {
+            "name": "Noah Brown",
+            "depth_order": 2,
+            "sleeper_id": "4234",
+            "sleeper_name": "Noah Brown",
+            "sleeper_slug": "noah-brown"
+          },
+          {
+            "name": "Chris Moore",
+            "depth_order": 3,
+            "sleeper_id": "3269",
+            "sleeper_name": "Chris Moore",
+            "sleeper_slug": "chris-moore"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Luke McCaffrey",
+            "depth_order": 1,
+            "sleeper_id": "11650",
+            "sleeper_name": "Luke McCaffrey",
+            "sleeper_slug": "luke-mccaffrey"
+          },
+          {
+            "name": "Treylon Burks",
+            "depth_order": 2,
+            "sleeper_id": "8135",
+            "sleeper_name": "Treylon Burks",
+            "sleeper_slug": "treylon-burks"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Deebo Samuel",
+            "depth_order": 1,
+            "sleeper_id": "5872",
+            "sleeper_name": "Deebo Samuel",
+            "sleeper_slug": "deebo-samuel"
+          },
+          {
+            "name": "Jaylin Lane",
+            "depth_order": 2,
+            "sleeper_id": "12641",
+            "sleeper_name": "Jaylin Lane",
+            "sleeper_slug": "jaylin-lane"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Zach Ertz",
+            "depth_order": 1,
+            "sleeper_id": "1339",
+            "sleeper_name": "Zach Ertz",
+            "sleeper_slug": "zach-ertz"
+          },
+          {
+            "name": "John Bates",
+            "depth_order": 2,
+            "sleeper_id": "7716",
+            "sleeper_name": "John Bates",
+            "sleeper_slug": "john-bates"
+          },
+          {
+            "name": "Ben Sinnott",
+            "depth_order": 3,
+            "sleeper_id": "11596",
+            "sleeper_name": "Ben Sinnott",
+            "sleeper_slug": "ben-sinnott"
+          },
+          {
+            "name": "Colson Yankoff",
+            "depth_order": 4,
+            "sleeper_id": "11942",
+            "sleeper_name": "Colson Yankoff",
+            "sleeper_slug": "colson-yankoff"
+          },
+          {
+            "name": "Tyree Jackson",
+            "depth_order": 5,
+            "sleeper_id": "6040",
+            "sleeper_name": "Tyree Jackson",
+            "sleeper_slug": "tyree-jackson"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Jake Moody",
+            "depth_order": 1,
+            "sleeper_id": "10937",
+            "sleeper_name": "Jake Moody",
+            "sleeper_slug": "jake-moody"
+          }
+        ]
+      }
+    ],
+    "CHI": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Caleb Williams",
+            "depth_order": 1,
+            "sleeper_id": "11560",
+            "sleeper_name": "Caleb Williams",
+            "sleeper_slug": "caleb-williams"
+          },
+          {
+            "name": "Tyson Bagent",
+            "depth_order": 2,
+            "sleeper_id": "11256",
+            "sleeper_name": "Tyson Bagent",
+            "sleeper_slug": "tyson-bagent"
+          },
+          {
+            "name": "Case Keenum",
+            "depth_order": 3,
+            "sleeper_id": "1737",
+            "sleeper_name": "Case Keenum",
+            "sleeper_slug": "case-keenum"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "D'andre Swift",
+            "depth_order": 1,
+            "sleeper_id": "6790",
+            "sleeper_name": "D'Andre Swift",
+            "sleeper_slug": "dandre-swift"
+          },
+          {
+            "name": "Kyle Monangai",
+            "depth_order": 2,
+            "sleeper_id": "12534",
+            "sleeper_name": "Kyle Monangai",
+            "sleeper_slug": "kyle-monangai"
+          },
+          {
+            "name": "Roschon Johnson",
+            "depth_order": 3,
+            "sleeper_id": "10235",
+            "sleeper_name": "Roschon Johnson",
+            "sleeper_slug": "roschon-johnson"
+          },
+          {
+            "name": "Travis Homer",
+            "depth_order": 4,
+            "sleeper_id": "6012",
+            "sleeper_name": "Travis Homer",
+            "sleeper_slug": "travis-homer"
+          },
+          {
+            "name": "Deion Hankins",
+            "depth_order": 5,
+            "sleeper_id": "13080",
+            "sleeper_name": "Deion Hankins",
+            "sleeper_slug": "deion-hankins"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Rome Odunze",
+            "depth_order": 1,
+            "sleeper_id": "11620",
+            "sleeper_name": "Rome Odunze",
+            "sleeper_slug": "rome-odunze"
+          },
+          {
+            "name": "Jahdae Walker",
+            "depth_order": 2,
+            "sleeper_id": "13079",
+            "sleeper_name": "Jahdae Walker",
+            "sleeper_slug": "jahdae-walker"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Dj Moore",
+            "depth_order": 1,
+            "sleeper_id": "4983",
+            "sleeper_name": "DJ Moore",
+            "sleeper_slug": "dj-moore"
+          },
+          {
+            "name": "Olamide Zaccheaus",
+            "depth_order": 2,
+            "sleeper_id": "6271",
+            "sleeper_name": "Olamide Zaccheaus",
+            "sleeper_slug": "olamide-zaccheaus"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Luther Burden III",
+            "depth_order": 1,
+            "sleeper_id": "12519",
+            "sleeper_name": "Luther Burden",
+            "sleeper_slug": "luther-burden"
+          },
+          {
+            "name": "Devin Duvernay",
+            "depth_order": 2,
+            "sleeper_id": "6847",
+            "sleeper_name": "Devin Duvernay",
+            "sleeper_slug": "devin-duvernay"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Colston Loveland",
+            "depth_order": 1,
+            "sleeper_id": "12517",
+            "sleeper_name": "Colston Loveland",
+            "sleeper_slug": "colston-loveland"
+          },
+          {
+            "name": "Cole Kmet",
+            "depth_order": 2,
+            "sleeper_id": "6826",
+            "sleeper_name": "Cole Kmet",
+            "sleeper_slug": "cole-kmet"
+          },
+          {
+            "name": "Durham Smythe",
+            "depth_order": 3,
+            "sleeper_id": "5008",
+            "sleeper_name": "Durham Smythe",
+            "sleeper_slug": "durham-smythe"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Cairo Santos",
+            "depth_order": 1,
+            "sleeper_id": "2020",
+            "sleeper_name": "Cairo Santos",
+            "sleeper_slug": "cairo-santos"
+          }
+        ]
+      }
+    ],
+    "DET": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Jared Goff",
+            "depth_order": 1,
+            "sleeper_id": "3163",
+            "sleeper_name": "Jared Goff",
+            "sleeper_slug": "jared-goff"
+          },
+          {
+            "name": "Kyle Allen",
+            "depth_order": 2,
+            "sleeper_id": "5127",
+            "sleeper_name": "Kyle Allen",
+            "sleeper_slug": "kyle-allen"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Jahmyr Gibbs",
+            "depth_order": 1,
+            "sleeper_id": "9221",
+            "sleeper_name": "Jahmyr Gibbs",
+            "sleeper_slug": "jahmyr-gibbs"
+          },
+          {
+            "name": "David Montgomery",
+            "depth_order": 2,
+            "sleeper_id": "5892",
+            "sleeper_name": "David Montgomery",
+            "sleeper_slug": "david-montgomery"
+          },
+          {
+            "name": "Jacob Saylors",
+            "depth_order": 3,
+            "sleeper_id": "11237",
+            "sleeper_name": "Jacob Saylors",
+            "sleeper_slug": "jacob-saylors"
+          },
+          {
+            "name": "Sione Vaki",
+            "depth_order": 4,
+            "sleeper_id": "11729",
+            "sleeper_name": "Sione Vaki",
+            "sleeper_slug": "sione-vaki"
+          },
+          {
+            "name": "Kye Robichaux",
+            "depth_order": 5,
+            "sleeper_id": "12954",
+            "sleeper_name": "Kye Robichaux",
+            "sleeper_slug": "kye-robichaux"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Isaac Teslaa",
+            "depth_order": 1,
+            "sleeper_id": "12535",
+            "sleeper_name": "Isaac TeSlaa",
+            "sleeper_slug": "isaac-teslaa"
+          },
+          {
+            "name": "Kalif Raymond",
+            "depth_order": 2,
+            "sleeper_id": "3634",
+            "sleeper_name": "Kalif Raymond",
+            "sleeper_slug": "kalif-raymond"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Jameson Williams",
+            "depth_order": 1,
+            "sleeper_id": "8148",
+            "sleeper_name": "Jameson Williams",
+            "sleeper_slug": "jameson-williams"
+          },
+          {
+            "name": "Dominic Lovett",
+            "depth_order": 2,
+            "sleeper_id": "12732",
+            "sleeper_name": "Dominic Lovett",
+            "sleeper_slug": "dominic-lovett"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Amon-Ra St. Brown",
+            "depth_order": 1,
+            "sleeper_id": "7547",
+            "sleeper_name": "Amon-Ra St. Brown",
+            "sleeper_slug": "amon-ra-st-brown"
+          },
+          {
+            "name": "Tom Kennedy",
+            "depth_order": 2,
+            "sleeper_id": "6588",
+            "sleeper_name": "Tom Kennedy",
+            "sleeper_slug": "tom-kennedy"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Sam Laporta",
+            "depth_order": 1,
+            "sleeper_id": "10859",
+            "sleeper_name": "Sam LaPorta",
+            "sleeper_slug": "sam-laporta"
+          },
+          {
+            "name": "Brock Wright",
+            "depth_order": 2,
+            "sleeper_id": "7891",
+            "sleeper_name": "Brock Wright",
+            "sleeper_slug": "brock-wright"
+          },
+          {
+            "name": "Shane Zylstra",
+            "depth_order": 3,
+            "sleeper_id": "8041",
+            "sleeper_name": "Shane Zylstra",
+            "sleeper_slug": "shane-zylstra"
+          },
+          {
+            "name": "Anthony Firkser",
+            "depth_order": 4,
+            "sleeper_id": "4435",
+            "sleeper_name": "Anthony Firkser",
+            "sleeper_slug": "anthony-firkser"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Jake Bates",
+            "depth_order": 1,
+            "sleeper_id": "11539",
+            "sleeper_name": "Jake Bates",
+            "sleeper_slug": "jake-bates"
+          }
+        ]
+      }
+    ],
+    "GB": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Jordan Love",
+            "depth_order": 1,
+            "sleeper_id": "6804",
+            "sleeper_name": "Jordan Love",
+            "sleeper_slug": "jordan-love"
+          },
+          {
+            "name": "Malik Willis",
+            "depth_order": 2,
+            "sleeper_id": "8161",
+            "sleeper_name": "Malik Willis",
+            "sleeper_slug": "malik-willis"
+          },
+          {
+            "name": "Desmond Ridder",
+            "depth_order": 3,
+            "sleeper_id": "8159",
+            "sleeper_name": "Desmond Ridder",
+            "sleeper_slug": "desmond-ridder"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Josh Jacobs",
+            "depth_order": 1,
+            "sleeper_id": "5850",
+            "sleeper_name": "Josh Jacobs",
+            "sleeper_slug": "josh-jacobs"
+          },
+          {
+            "name": "Emanuel Wilson",
+            "depth_order": 2,
+            "sleeper_id": "11435",
+            "sleeper_name": "Emanuel Wilson",
+            "sleeper_slug": "emanuel-wilson"
+          },
+          {
+            "name": "Chris Brooks",
+            "depth_order": 3,
+            "sleeper_id": "11370",
+            "sleeper_name": "Chris Brooks",
+            "sleeper_slug": "chris-brooks"
+          },
+          {
+            "name": "Marshawn Lloyd",
+            "depth_order": 4,
+            "sleeper_id": "11581",
+            "sleeper_name": "MarShawn Lloyd",
+            "sleeper_slug": "marshawn-lloyd"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Christian Watson",
+            "depth_order": 1,
+            "sleeper_id": "8167",
+            "sleeper_name": "Christian Watson",
+            "sleeper_slug": "christian-watson"
+          },
+          {
+            "name": "Matthew Golden",
+            "depth_order": 2,
+            "sleeper_id": "12501",
+            "sleeper_name": "Matthew Golden",
+            "sleeper_slug": "matthew-golden"
+          },
+          {
+            "name": "Jakobie Keeney-James",
+            "depth_order": 3,
+            "sleeper_id": "12935",
+            "sleeper_name": "Jakobie Keeney-James",
+            "sleeper_slug": "jakobie-keeney-james"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Romeo Doubs",
+            "depth_order": 1,
+            "sleeper_id": "8121",
+            "sleeper_name": "Romeo Doubs",
+            "sleeper_slug": "romeo-doubs"
+          },
+          {
+            "name": "Bo Melton",
+            "depth_order": 2,
+            "sleeper_id": "8204",
+            "sleeper_name": "Bo Melton",
+            "sleeper_slug": "bo-melton"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Jayden Reed",
+            "depth_order": 1,
+            "sleeper_id": "10222",
+            "sleeper_name": "Jayden Reed",
+            "sleeper_slug": "jayden-reed"
+          },
+          {
+            "name": "Dontayvion Wicks",
+            "depth_order": 2,
+            "sleeper_id": "9486",
+            "sleeper_name": "Dontayvion Wicks",
+            "sleeper_slug": "dontayvion-wicks"
+          },
+          {
+            "name": "Savion Williams",
+            "depth_order": 3,
+            "sleeper_id": "12482",
+            "sleeper_name": "Savion Williams",
+            "sleeper_slug": "savion-williams"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Tucker Kraft",
+            "depth_order": 1,
+            "sleeper_id": "9484",
+            "sleeper_name": "Tucker Kraft",
+            "sleeper_slug": "tucker-kraft"
+          },
+          {
+            "name": "John Fitzpatrick",
+            "depth_order": 2,
+            "sleeper_id": "8500",
+            "sleeper_name": "John FitzPatrick",
+            "sleeper_slug": "john-fitzpatrick"
+          },
+          {
+            "name": "Luke Musgrave",
+            "depth_order": 3,
+            "sleeper_id": "9481",
+            "sleeper_name": "Luke Musgrave",
+            "sleeper_slug": "luke-musgrave"
+          },
+          {
+            "name": "Josh Whyle",
+            "depth_order": 4,
+            "sleeper_id": "10212",
+            "sleeper_name": "Josh Whyle",
+            "sleeper_slug": "josh-whyle"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Brandon McManus",
+            "depth_order": 1,
+            "sleeper_id": "1433",
+            "sleeper_name": "Brandon McManus",
+            "sleeper_slug": "brandon-mcmanus"
+          }
+        ]
+      }
+    ],
+    "MIN": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "J.J. McCarthy",
+            "depth_order": 1,
+            "sleeper_id": "11565",
+            "sleeper_name": "J.J. McCarthy",
+            "sleeper_slug": "jj-mccarthy"
+          },
+          {
+            "name": "Carson Wentz",
+            "depth_order": 2,
+            "sleeper_id": "3161",
+            "sleeper_name": "Carson Wentz",
+            "sleeper_slug": "carson-wentz"
+          },
+          {
+            "name": "Max Brosmer",
+            "depth_order": 3,
+            "sleeper_id": "12775",
+            "sleeper_name": "Max Brosmer",
+            "sleeper_slug": "max-brosmer"
+          },
+          {
+            "name": "John Wolford",
+            "depth_order": 4,
+            "sleeper_id": "5806",
+            "sleeper_name": "John Wolford",
+            "sleeper_slug": "john-wolford"
+          },
+          {
+            "name": "Brett Rypien",
+            "depth_order": 5,
+            "sleeper_id": "6037",
+            "sleeper_name": "Brett Rypien",
+            "sleeper_slug": "brett-rypien"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Aaron Jones SR.",
+            "depth_order": 1,
+            "sleeper_id": "4199",
+            "sleeper_name": "Aaron Jones",
+            "sleeper_slug": "aaron-jones"
+          },
+          {
+            "name": "Jordan Mason",
+            "depth_order": 2,
+            "sleeper_id": "8408",
+            "sleeper_name": "Jordan Mason",
+            "sleeper_slug": "jordan-mason"
+          },
+          {
+            "name": "Ty Chandler",
+            "depth_order": 3,
+            "sleeper_id": "8230",
+            "sleeper_name": "Ty Chandler",
+            "sleeper_slug": "ty-chandler"
+          },
+          {
+            "name": "Zavier Scott",
+            "depth_order": 4,
+            "sleeper_id": "11299",
+            "sleeper_name": "Zavier Scott",
+            "sleeper_slug": "zavier-scott"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Justin Jefferson",
+            "depth_order": 1,
+            "sleeper_id": "6794",
+            "sleeper_name": "Justin Jefferson",
+            "sleeper_slug": "justin-jefferson"
+          },
+          {
+            "name": "Tai Felton",
+            "depth_order": 2,
+            "sleeper_id": "12496",
+            "sleeper_name": "Tai Felton",
+            "sleeper_slug": "tai-felton"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Jordan Addison",
+            "depth_order": 1,
+            "sleeper_id": "9756",
+            "sleeper_name": "Jordan Addison",
+            "sleeper_slug": "jordan-addison"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Jalen Nailor",
+            "depth_order": 1,
+            "sleeper_id": "8180",
+            "sleeper_name": "Jalen Nailor",
+            "sleeper_slug": "jalen-nailor"
+          },
+          {
+            "name": "Myles Price",
+            "depth_order": 2,
+            "sleeper_id": "13075",
+            "sleeper_name": "Myles Price",
+            "sleeper_slug": "myles-price"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "T.J. Hockenson",
+            "depth_order": 1,
+            "sleeper_id": "5844",
+            "sleeper_name": "T.J. Hockenson",
+            "sleeper_slug": "tj-hockenson"
+          },
+          {
+            "name": "Josh Oliver",
+            "depth_order": 2,
+            "sleeper_id": "5973",
+            "sleeper_name": "Josh Oliver",
+            "sleeper_slug": "josh-oliver"
+          },
+          {
+            "name": "Ben Sims",
+            "depth_order": 3,
+            "sleeper_id": "11082",
+            "sleeper_name": "Ben Sims",
+            "sleeper_slug": "ben-sims"
+          },
+          {
+            "name": "Ben Yurosek",
+            "depth_order": 4,
+            "sleeper_id": "13121",
+            "sleeper_name": "Ben Yurosek",
+            "sleeper_slug": "ben-yurosek"
+          },
+          {
+            "name": "Gavin Bartholomew",
+            "depth_order": 5,
+            "sleeper_id": "12700",
+            "sleeper_name": "Gavin Bartholomew",
+            "sleeper_slug": "gavin-bartholomew"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Will Reichard",
+            "depth_order": 1,
+            "sleeper_id": "11792",
+            "sleeper_name": "Will Reichard",
+            "sleeper_slug": "will-reichard"
+          }
+        ]
+      }
+    ],
+    "ATL": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Michael Penix JR.",
+            "depth_order": 1,
+            "sleeper_id": "11559",
+            "sleeper_name": "Michael Penix",
+            "sleeper_slug": "michael-penix"
+          },
+          {
+            "name": "Kirk Cousins",
+            "depth_order": 2,
+            "sleeper_id": "1166",
+            "sleeper_name": "Kirk Cousins",
+            "sleeper_slug": "kirk-cousins"
+          },
+          {
+            "name": "Easton Stick",
+            "depth_order": 3,
+            "sleeper_id": "6185",
+            "sleeper_name": "Easton Stick",
+            "sleeper_slug": "easton-stick"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Bijan Robinson",
+            "depth_order": 1,
+            "sleeper_id": "9509",
+            "sleeper_name": "Bijan Robinson",
+            "sleeper_slug": "bijan-robinson"
+          },
+          {
+            "name": "Tyler Allgeier",
+            "depth_order": 2,
+            "sleeper_id": "8132",
+            "sleeper_name": "Tyler Allgeier",
+            "sleeper_slug": "tyler-allgeier"
+          },
+          {
+            "name": "Nathan Carter",
+            "depth_order": 3,
+            "sleeper_id": "12897",
+            "sleeper_name": "Nathan Carter",
+            "sleeper_slug": "nathan-carter"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Darnell Mooney",
+            "depth_order": 1,
+            "sleeper_id": "7090",
+            "sleeper_name": "Darnell Mooney",
+            "sleeper_slug": "darnell-mooney"
+          },
+          {
+            "name": "Deven Thompkins",
+            "depth_order": 2,
+            "sleeper_id": "8253",
+            "sleeper_name": "Deven Thompkins",
+            "sleeper_slug": "deven-thompkins"
+          },
+          {
+            "name": "Casey Washington",
+            "depth_order": 3,
+            "sleeper_id": "11806",
+            "sleeper_name": "Casey Washington",
+            "sleeper_slug": "casey-washington"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "David Sills V",
+            "depth_order": 1,
+            "sleeper_id": "6154",
+            "sleeper_name": "David Sills",
+            "sleeper_slug": "david-sills"
+          },
+          {
+            "name": "Khadarel Hodge",
+            "depth_order": 2,
+            "sleeper_id": "5773",
+            "sleeper_name": "KhaDarel Hodge",
+            "sleeper_slug": "khadarel-hodge"
+          },
+          {
+            "name": "Malik Heath",
+            "depth_order": 3,
+            "sleeper_id": "11210",
+            "sleeper_name": "Malik Heath",
+            "sleeper_slug": "malik-heath"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Drake London",
+            "depth_order": 1,
+            "sleeper_id": "8112",
+            "sleeper_name": "Drake London",
+            "sleeper_slug": "drake-london"
+          },
+          {
+            "name": "Dylan Drummond",
+            "depth_order": 2,
+            "sleeper_id": "11474",
+            "sleeper_name": "Dylan Drummond",
+            "sleeper_slug": "dylan-drummond"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Kyle Pitts SR.",
+            "depth_order": 1,
+            "sleeper_id": "7553",
+            "sleeper_name": "Kyle Pitts",
+            "sleeper_slug": "kyle-pitts"
+          },
+          {
+            "name": "Charlie Woerner",
+            "depth_order": 2,
+            "sleeper_id": "7075",
+            "sleeper_name": "Charlie Woerner",
+            "sleeper_slug": "charlie-woerner"
+          },
+          {
+            "name": "Teagan Quitoriano",
+            "depth_order": 3,
+            "sleeper_id": "8227",
+            "sleeper_name": "Teagan Quitoriano",
+            "sleeper_slug": "teagan-quitoriano"
+          },
+          {
+            "name": "Feleipe Franks",
+            "depth_order": 4,
+            "sleeper_id": "7531",
+            "sleeper_name": "Feleipe Franks",
+            "sleeper_slug": "feleipe-franks"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Zane Gonzalez",
+            "depth_order": 1,
+            "sleeper_id": "4233",
+            "sleeper_name": "Zane Gonzalez",
+            "sleeper_slug": "zane-gonzalez"
+          }
+        ]
+      }
+    ],
+    "CAR": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Bryce Young",
+            "depth_order": 1,
+            "sleeper_id": "9228",
+            "sleeper_name": "Bryce Young",
+            "sleeper_slug": "bryce-young"
+          },
+          {
+            "name": "Andy Dalton",
+            "depth_order": 2,
+            "sleeper_id": "829",
+            "sleeper_name": "Andy Dalton",
+            "sleeper_slug": "andy-dalton"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Chuba Hubbard",
+            "depth_order": 1,
+            "sleeper_id": "7594",
+            "sleeper_name": "Chuba Hubbard",
+            "sleeper_slug": "chuba-hubbard"
+          },
+          {
+            "name": "Rico Dowdle",
+            "depth_order": 2,
+            "sleeper_id": "7021",
+            "sleeper_name": "Rico Dowdle",
+            "sleeper_slug": "rico-dowdle"
+          },
+          {
+            "name": "Jonathon Brooks",
+            "depth_order": 3,
+            "sleeper_id": "11583",
+            "sleeper_name": "Jonathon Brooks",
+            "sleeper_slug": "jonathon-brooks"
+          },
+          {
+            "name": "Trevor Etienne",
+            "depth_order": 4,
+            "sleeper_id": "12531",
+            "sleeper_name": "Trevor Etienne",
+            "sleeper_slug": "trevor-etienne"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Tetairoa McMillan",
+            "depth_order": 1,
+            "sleeper_id": "12526",
+            "sleeper_name": "Tetairoa McMillan",
+            "sleeper_slug": "tetairoa-mcmillan"
+          },
+          {
+            "name": "David Moore",
+            "depth_order": 2,
+            "sleeper_id": "4274",
+            "sleeper_name": "David Moore",
+            "sleeper_slug": "david-moore"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Xavier Legette",
+            "depth_order": 1,
+            "sleeper_id": "11626",
+            "sleeper_name": "Xavier Legette",
+            "sleeper_slug": "xavier-legette"
+          },
+          {
+            "name": "Brycen Tremayne",
+            "depth_order": 2,
+            "sleeper_id": "11157",
+            "sleeper_name": "Brycen Tremayne",
+            "sleeper_slug": "brycen-tremayne"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Jalen Coker",
+            "depth_order": 1,
+            "sleeper_id": "11646",
+            "sleeper_name": "Jalen Coker",
+            "sleeper_slug": "jalen-coker"
+          },
+          {
+            "name": "Jimmy Horn JR.",
+            "depth_order": 2,
+            "sleeper_id": "12523",
+            "sleeper_name": "Jimmy Horn",
+            "sleeper_slug": "jimmy-horn"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Tommy Tremble",
+            "depth_order": 1,
+            "sleeper_id": "7694",
+            "sleeper_name": "Tommy Tremble",
+            "sleeper_slug": "tommy-tremble"
+          },
+          {
+            "name": "Ja'tavion Sanders",
+            "depth_order": 2,
+            "sleeper_id": "11600",
+            "sleeper_name": "Ja'Tavion Sanders",
+            "sleeper_slug": "jatavion-sanders"
+          },
+          {
+            "name": "Mitchell Evans",
+            "depth_order": 3,
+            "sleeper_id": "12473",
+            "sleeper_name": "Mitchell Evans",
+            "sleeper_slug": "mitchell-evans"
+          },
+          {
+            "name": "James Mitchell",
+            "depth_order": 4,
+            "sleeper_id": "8170",
+            "sleeper_name": "James Mitchell",
+            "sleeper_slug": "james-mitchell"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Ryan Fitzgerald",
+            "depth_order": 1,
+            "sleeper_id": "12961",
+            "sleeper_name": "Ryan Fitzgerald",
+            "sleeper_slug": "ryan-fitzgerald"
+          }
+        ]
+      }
+    ],
+    "NO": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Tyler Shough",
+            "depth_order": 1,
+            "sleeper_id": "12545",
+            "sleeper_name": "Tyler Shough",
+            "sleeper_slug": "tyler-shough"
+          },
+          {
+            "name": "Spencer Rattler",
+            "depth_order": 2,
+            "sleeper_id": "11562",
+            "sleeper_name": "Spencer Rattler",
+            "sleeper_slug": "spencer-rattler"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Alvin Kamara",
+            "depth_order": 1,
+            "sleeper_id": "4035",
+            "sleeper_name": "Alvin Kamara",
+            "sleeper_slug": "alvin-kamara"
+          },
+          {
+            "name": "Kendre Miller",
+            "depth_order": 2,
+            "sleeper_id": "9757",
+            "sleeper_name": "Kendre Miller",
+            "sleeper_slug": "kendre-miller"
+          },
+          {
+            "name": "Devin Neal",
+            "depth_order": 3,
+            "sleeper_id": "12476",
+            "sleeper_name": "Devin Neal",
+            "sleeper_slug": "devin-neal"
+          },
+          {
+            "name": "Audric Estimé",
+            "depth_order": 4,
+            "sleeper_id": null,
+            "sleeper_name": null,
+            "sleeper_slug": null
+          },
+          {
+            "name": "Evan Hull",
+            "depth_order": 5,
+            "sleeper_id": "9220",
+            "sleeper_name": "Evan Hull",
+            "sleeper_slug": "evan-hull"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Mason Tipton",
+            "depth_order": 1,
+            "sleeper_id": "11895",
+            "sleeper_name": "Mason Tipton",
+            "sleeper_slug": "mason-tipton"
+          },
+          {
+            "name": "Kevin Austin JR.",
+            "depth_order": 2,
+            "sleeper_id": "8200",
+            "sleeper_name": "Kevin Austin",
+            "sleeper_slug": "kevin-austin"
+          },
+          {
+            "name": "Ronnie Bell",
+            "depth_order": 3,
+            "sleeper_id": "10221",
+            "sleeper_name": "Ronnie Bell",
+            "sleeper_slug": "ronnie-bell"
+          },
+          {
+            "name": "Samori Toure",
+            "depth_order": 4,
+            "sleeper_id": "8235",
+            "sleeper_name": "Samori Toure",
+            "sleeper_slug": "samori-toure"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Chris Olave",
+            "depth_order": 1,
+            "sleeper_id": "8144",
+            "sleeper_name": "Chris Olave",
+            "sleeper_slug": "chris-olave"
+          },
+          {
+            "name": "Bub Means",
+            "depth_order": 2,
+            "sleeper_id": "11748",
+            "sleeper_name": "Bub Means",
+            "sleeper_slug": "bub-means"
+          },
+          {
+            "name": "Ja'lynn Polk",
+            "depth_order": 3,
+            "sleeper_id": "11619",
+            "sleeper_name": "Ja'Lynn Polk",
+            "sleeper_slug": "jalynn-polk"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Devaughn Vele",
+            "depth_order": 1,
+            "sleeper_id": "11834",
+            "sleeper_name": "Devaughn Vele",
+            "sleeper_slug": "devaughn-vele"
+          },
+          {
+            "name": "Dante Pettis",
+            "depth_order": 2,
+            "sleeper_id": "4992",
+            "sleeper_name": "Dante Pettis",
+            "sleeper_slug": "dante-pettis"
+          },
+          {
+            "name": "Trey Palmer",
+            "depth_order": 3,
+            "sleeper_id": "9492",
+            "sleeper_name": "Trey Palmer",
+            "sleeper_slug": "trey-palmer"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Juwan Johnson",
+            "depth_order": 1,
+            "sleeper_id": "7002",
+            "sleeper_name": "Juwan Johnson",
+            "sleeper_slug": "juwan-johnson"
+          },
+          {
+            "name": "Foster Moreau",
+            "depth_order": 2,
+            "sleeper_id": "5985",
+            "sleeper_name": "Foster Moreau",
+            "sleeper_slug": "foster-moreau"
+          },
+          {
+            "name": "Taysom Hill",
+            "depth_order": 3,
+            "sleeper_id": "4381",
+            "sleeper_name": "Taysom Hill",
+            "sleeper_slug": "taysom-hill"
+          },
+          {
+            "name": "Moliki Matavao",
+            "depth_order": 4,
+            "sleeper_id": "12480",
+            "sleeper_name": "Moliki Matavao",
+            "sleeper_slug": "moliki-matavao"
+          },
+          {
+            "name": "Treyton Welch",
+            "depth_order": 5,
+            "sleeper_id": "12079",
+            "sleeper_name": "Treyton Welch",
+            "sleeper_slug": "treyton-welch"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Jack Stoll",
+            "depth_order": 1,
+            "sleeper_id": "7946",
+            "sleeper_name": "Jack Stoll",
+            "sleeper_slug": "jack-stoll"
+          },
+          {
+            "name": "Zaire Mitchell-Paden",
+            "depth_order": 2,
+            "sleeper_id": "8799",
+            "sleeper_name": "Zaire Mitchell-Paden",
+            "sleeper_slug": "zaire-mitchell-paden"
+          },
+          {
+            "name": "Mason Pline",
+            "depth_order": 3,
+            "sleeper_id": "12068",
+            "sleeper_name": "Mason Pline",
+            "sleeper_slug": "mason-pline"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Charlie Smyth",
+            "depth_order": 1,
+            "sleeper_id": "11653",
+            "sleeper_name": "Charlie Smyth",
+            "sleeper_slug": "charlie-smyth"
+          }
+        ]
+      }
+    ],
+    "TB": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Baker Mayfield",
+            "depth_order": 1,
+            "sleeper_id": "4892",
+            "sleeper_name": "Baker Mayfield",
+            "sleeper_slug": "baker-mayfield"
+          },
+          {
+            "name": "Teddy Bridgewater",
+            "depth_order": 2,
+            "sleeper_id": "2152",
+            "sleeper_name": "Teddy Bridgewater",
+            "sleeper_slug": "teddy-bridgewater"
+          },
+          {
+            "name": "Connor Bazelak",
+            "depth_order": 3,
+            "sleeper_id": "12776",
+            "sleeper_name": "Connor Bazelak",
+            "sleeper_slug": "connor-bazelak"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Bucky Irving",
+            "depth_order": 1,
+            "sleeper_id": "11584",
+            "sleeper_name": "Bucky Irving",
+            "sleeper_slug": "bucky-irving"
+          },
+          {
+            "name": "Rachaad White",
+            "depth_order": 2,
+            "sleeper_id": "8136",
+            "sleeper_name": "Rachaad White",
+            "sleeper_slug": "rachaad-white"
+          },
+          {
+            "name": "Sean Tucker",
+            "depth_order": 3,
+            "sleeper_id": "9506",
+            "sleeper_name": "Sean Tucker",
+            "sleeper_slug": "sean-tucker"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Mike Evans",
+            "depth_order": 1,
+            "sleeper_id": "2216",
+            "sleeper_name": "Mike Evans",
+            "sleeper_slug": "mike-evans"
+          },
+          {
+            "name": "Jalen McMillan",
+            "depth_order": 2,
+            "sleeper_id": "11618",
+            "sleeper_name": "Jalen McMillan",
+            "sleeper_slug": "jalen-mcmillan"
+          },
+          {
+            "name": "Jaden Smith",
+            "depth_order": 3,
+            "sleeper_id": "13246",
+            "sleeper_name": "Jaden Smith",
+            "sleeper_slug": "jaden-smith"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Emeka Egbuka",
+            "depth_order": 1,
+            "sleeper_id": "12514",
+            "sleeper_name": "Emeka Egbuka",
+            "sleeper_slug": "emeka-egbuka"
+          },
+          {
+            "name": "Tez Johnson",
+            "depth_order": 2,
+            "sleeper_id": "12485",
+            "sleeper_name": "Tez Johnson",
+            "sleeper_slug": "tez-johnson"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Chris Godwin JR.",
+            "depth_order": 1,
+            "sleeper_id": "4037",
+            "sleeper_name": "Chris Godwin",
+            "sleeper_slug": "chris-godwin"
+          },
+          {
+            "name": "Kameron Johnson",
+            "depth_order": 2,
+            "sleeper_id": "11994",
+            "sleeper_name": "Kameron Johnson",
+            "sleeper_slug": "kameron-johnson"
+          },
+          {
+            "name": "Sterling Shepard",
+            "depth_order": 3,
+            "sleeper_id": "3200",
+            "sleeper_name": "Sterling Shepard",
+            "sleeper_slug": "sterling-shepard"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Cade Otton",
+            "depth_order": 1,
+            "sleeper_id": "8111",
+            "sleeper_name": "Cade Otton",
+            "sleeper_slug": "cade-otton"
+          },
+          {
+            "name": "Payne Durham",
+            "depth_order": 2,
+            "sleeper_id": "10227",
+            "sleeper_name": "Payne Durham",
+            "sleeper_slug": "payne-durham"
+          },
+          {
+            "name": "Ko Kieft",
+            "depth_order": 3,
+            "sleeper_id": "8484",
+            "sleeper_name": "Ko Kieft",
+            "sleeper_slug": "ko-kieft"
+          },
+          {
+            "name": "Devin Culp",
+            "depth_order": 4,
+            "sleeper_id": "11820",
+            "sleeper_name": "Devin Culp",
+            "sleeper_slug": "devin-culp"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Chase McLaughlin",
+            "depth_order": 1,
+            "sleeper_id": "6650",
+            "sleeper_name": "Chase McLaughlin",
+            "sleeper_slug": "chase-mclaughlin"
+          }
+        ]
+      }
+    ],
+    "ARI": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Jacoby Brissett",
+            "depth_order": 1,
+            "sleeper_id": "3257",
+            "sleeper_name": "Jacoby Brissett",
+            "sleeper_slug": "jacoby-brissett"
+          },
+          {
+            "name": "Kyler Murray",
+            "depth_order": 2,
+            "sleeper_id": "5849",
+            "sleeper_name": "Kyler Murray",
+            "sleeper_slug": "kyler-murray"
+          },
+          {
+            "name": "Kedon Slovis",
+            "depth_order": 3,
+            "sleeper_id": "11648",
+            "sleeper_name": "Kedon Slovis",
+            "sleeper_slug": "kedon-slovis"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "James Conner",
+            "depth_order": 1,
+            "sleeper_id": "4137",
+            "sleeper_name": "James Conner",
+            "sleeper_slug": "james-conner"
+          },
+          {
+            "name": "Trey Benson",
+            "depth_order": 2,
+            "sleeper_id": "11589",
+            "sleeper_name": "Trey Benson",
+            "sleeper_slug": "trey-benson"
+          },
+          {
+            "name": "Bam Knight",
+            "depth_order": 3,
+            "sleeper_id": null,
+            "sleeper_name": null,
+            "sleeper_slug": null
+          },
+          {
+            "name": "Michael Carter",
+            "depth_order": 4,
+            "sleeper_id": "7607",
+            "sleeper_name": "Michael Carter",
+            "sleeper_slug": "michael-carter"
+          },
+          {
+            "name": "Emari Demercado",
+            "depth_order": 5,
+            "sleeper_id": "11199",
+            "sleeper_name": "Emari Demercado",
+            "sleeper_slug": "emari-demercado"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Corey Kiner",
+            "depth_order": 1,
+            "sleeper_id": "12491",
+            "sleeper_name": "Corey Kiner",
+            "sleeper_slug": "corey-kiner"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Marvin Harrison JR.",
+            "depth_order": 1,
+            "sleeper_id": "11628",
+            "sleeper_name": "Marvin Harrison",
+            "sleeper_slug": "marvin-harrison"
+          },
+          {
+            "name": "Simi Fehoko",
+            "depth_order": 2,
+            "sleeper_id": "7812",
+            "sleeper_name": "Simi Fehoko",
+            "sleeper_slug": "simi-fehoko"
+          },
+          {
+            "name": "Jalen Brooks",
+            "depth_order": 3,
+            "sleeper_id": "11034",
+            "sleeper_name": "Jalen Brooks",
+            "sleeper_slug": "jalen-brooks"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Zay Jones",
+            "depth_order": 1,
+            "sleeper_id": "4080",
+            "sleeper_name": "Zay Jones",
+            "sleeper_slug": "zay-jones"
+          },
+          {
+            "name": "Xavier Weaver",
+            "depth_order": 2,
+            "sleeper_id": "11921",
+            "sleeper_name": "Xavier Weaver",
+            "sleeper_slug": "xavier-weaver"
+          },
+          {
+            "name": "Tejhaun Palmer",
+            "depth_order": 3,
+            "sleeper_id": "11802",
+            "sleeper_name": "Tejhaun Palmer",
+            "sleeper_slug": "tejhaun-palmer"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Michael Wilson",
+            "depth_order": 1,
+            "sleeper_id": "10232",
+            "sleeper_name": "Michael Wilson",
+            "sleeper_slug": "michael-wilson"
+          },
+          {
+            "name": "Greg Dortch",
+            "depth_order": 2,
+            "sleeper_id": "5970",
+            "sleeper_name": "Greg Dortch",
+            "sleeper_slug": "greg-dortch"
+          },
+          {
+            "name": "Andre Baccellia",
+            "depth_order": 3,
+            "sleeper_id": "7233",
+            "sleeper_name": "Andre Baccellia",
+            "sleeper_slug": "andre-baccellia"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Trey McBride",
+            "depth_order": 1,
+            "sleeper_id": "8130",
+            "sleeper_name": "Trey McBride",
+            "sleeper_slug": "trey-mcbride"
+          },
+          {
+            "name": "Tip Reiman",
+            "depth_order": 2,
+            "sleeper_id": "11716",
+            "sleeper_name": "Tip Reiman",
+            "sleeper_slug": "tip-reiman"
+          },
+          {
+            "name": "Elijah Higgins",
+            "depth_order": 3,
+            "sleeper_id": "10231",
+            "sleeper_name": "Elijah Higgins",
+            "sleeper_slug": "elijah-higgins"
+          },
+          {
+            "name": "Travis Vokolek",
+            "depth_order": 4,
+            "sleeper_id": "11381",
+            "sleeper_name": "Travis Vokolek",
+            "sleeper_slug": "travis-vokolek"
+          },
+          {
+            "name": "Pharaoh Brown",
+            "depth_order": 5,
+            "sleeper_id": "4443",
+            "sleeper_name": "Pharaoh Brown",
+            "sleeper_slug": "pharaoh-brown"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Josiah Deguara",
+            "depth_order": 1,
+            "sleeper_id": "7050",
+            "sleeper_name": "Josiah Deguara",
+            "sleeper_slug": "josiah-deguara"
+          },
+          {
+            "name": "Rivaldo Fairweather",
+            "depth_order": 2,
+            "sleeper_id": "12851",
+            "sleeper_name": "Rivaldo Fairweather",
+            "sleeper_slug": "rivaldo-fairweather"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Chad Ryland",
+            "depth_order": 1,
+            "sleeper_id": "10955",
+            "sleeper_name": "Chad Ryland",
+            "sleeper_slug": "chad-ryland"
+          },
+          {
+            "name": "Joshua Karty",
+            "depth_order": 2,
+            "sleeper_id": "11789",
+            "sleeper_name": "Joshua Karty",
+            "sleeper_slug": "joshua-karty"
+          }
+        ]
+      }
+    ],
+    "LAR": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Matthew Stafford",
+            "depth_order": 1,
+            "sleeper_id": "421",
+            "sleeper_name": "Matthew Stafford",
+            "sleeper_slug": "matthew-stafford"
+          },
+          {
+            "name": "Jimmy Garoppolo",
+            "depth_order": 2,
+            "sleeper_id": "1837",
+            "sleeper_name": "Jimmy Garoppolo",
+            "sleeper_slug": "jimmy-garoppolo"
+          },
+          {
+            "name": "Stetson Bennett IV",
+            "depth_order": 3,
+            "sleeper_id": "10857",
+            "sleeper_name": "Stetson Bennett",
+            "sleeper_slug": "stetson-bennett"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Kyren Williams",
+            "depth_order": 1,
+            "sleeper_id": "8150",
+            "sleeper_name": "Kyren Williams",
+            "sleeper_slug": "kyren-williams"
+          },
+          {
+            "name": "Blake Corum",
+            "depth_order": 2,
+            "sleeper_id": "11586",
+            "sleeper_name": "Blake Corum",
+            "sleeper_slug": "blake-corum"
+          },
+          {
+            "name": "Ronnie Rivers",
+            "depth_order": 3,
+            "sleeper_id": "8195",
+            "sleeper_name": "Ronnie Rivers",
+            "sleeper_slug": "ronnie-rivers"
+          },
+          {
+            "name": "Jarquez Hunter",
+            "depth_order": 4,
+            "sleeper_id": "11569",
+            "sleeper_name": "Jarquez Hunter",
+            "sleeper_slug": "jarquez-hunter"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Davante Adams",
+            "depth_order": 1,
+            "sleeper_id": "2133",
+            "sleeper_name": "Davante Adams",
+            "sleeper_slug": "davante-adams"
+          },
+          {
+            "name": "Konata Mumpfield",
+            "depth_order": 2,
+            "sleeper_id": "12718",
+            "sleeper_name": "Konata Mumpfield",
+            "sleeper_slug": "konata-mumpfield"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Puka Nacua",
+            "depth_order": 1,
+            "sleeper_id": "9493",
+            "sleeper_name": "Puka Nacua",
+            "sleeper_slug": "puka-nacua"
+          },
+          {
+            "name": "Tutu Atwell",
+            "depth_order": 2,
+            "sleeper_id": "7562",
+            "sleeper_name": "Tutu Atwell",
+            "sleeper_slug": "tutu-atwell"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Jordan Whittington",
+            "depth_order": 1,
+            "sleeper_id": "11623",
+            "sleeper_name": "Jordan Whittington",
+            "sleeper_slug": "jordan-whittington"
+          },
+          {
+            "name": "Xavier Smith",
+            "depth_order": 2,
+            "sleeper_id": "11168",
+            "sleeper_name": "Xavier Smith",
+            "sleeper_slug": "xavier-smith"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Colby Parkinson",
+            "depth_order": 1,
+            "sleeper_id": "6865",
+            "sleeper_name": "Colby Parkinson",
+            "sleeper_slug": "colby-parkinson"
+          },
+          {
+            "name": "Terrance Ferguson",
+            "depth_order": 2,
+            "sleeper_id": "12487",
+            "sleeper_name": "Terrance Ferguson",
+            "sleeper_slug": "terrance-ferguson"
+          },
+          {
+            "name": "Davis Allen",
+            "depth_order": 3,
+            "sleeper_id": "10214",
+            "sleeper_name": "Davis Allen",
+            "sleeper_slug": "davis-allen"
+          },
+          {
+            "name": "Tyler Higbee",
+            "depth_order": 4,
+            "sleeper_id": "3271",
+            "sleeper_name": "Tyler Higbee",
+            "sleeper_slug": "tyler-higbee"
+          },
+          {
+            "name": "Nick Vannett",
+            "depth_order": 5,
+            "sleeper_id": "3258",
+            "sleeper_name": "Nick Vannett",
+            "sleeper_slug": "nick-vannett"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Harrison Mevis",
+            "depth_order": 1,
+            "sleeper_id": "12015",
+            "sleeper_name": "Harrison Mevis",
+            "sleeper_slug": "harrison-mevis"
+          }
+        ]
+      }
+    ],
+    "SF": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Brock Purdy",
+            "depth_order": 1,
+            "sleeper_id": "8183",
+            "sleeper_name": "Brock Purdy",
+            "sleeper_slug": "brock-purdy"
+          },
+          {
+            "name": "Mac Jones",
+            "depth_order": 2,
+            "sleeper_id": "7527",
+            "sleeper_name": "Mac Jones",
+            "sleeper_slug": "mac-jones"
+          },
+          {
+            "name": "Kurtis Rourke",
+            "depth_order": 3,
+            "sleeper_id": "12477",
+            "sleeper_name": "Kurtis Rourke",
+            "sleeper_slug": "kurtis-rourke"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Christian McCaffrey",
+            "depth_order": 1,
+            "sleeper_id": "4034",
+            "sleeper_name": "Christian McCaffrey",
+            "sleeper_slug": "christian-mccaffrey"
+          },
+          {
+            "name": "Brian Robinson JR.",
+            "depth_order": 2,
+            "sleeper_id": "8154",
+            "sleeper_name": "Brian Robinson",
+            "sleeper_slug": "brian-robinson"
+          },
+          {
+            "name": "Jordan James",
+            "depth_order": 3,
+            "sleeper_id": "12467",
+            "sleeper_name": "Jordan James",
+            "sleeper_slug": "jordan-james"
+          },
+          {
+            "name": "Isaac Guerendo",
+            "depth_order": 4,
+            "sleeper_id": "11651",
+            "sleeper_name": "Isaac Guerendo",
+            "sleeper_slug": "isaac-guerendo"
+          },
+          {
+            "name": "Patrick Taylor JR.",
+            "depth_order": 5,
+            "sleeper_id": "6963",
+            "sleeper_name": "Patrick Taylor",
+            "sleeper_slug": "patrick-taylor"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Ricky Pearsall",
+            "depth_order": 1,
+            "sleeper_id": "11638",
+            "sleeper_name": "Ricky Pearsall",
+            "sleeper_slug": "ricky-pearsall"
+          },
+          {
+            "name": "Kendrick Bourne",
+            "depth_order": 2,
+            "sleeper_id": "4454",
+            "sleeper_name": "Kendrick Bourne",
+            "sleeper_slug": "kendrick-bourne"
+          },
+          {
+            "name": "Brandon Aiyuk",
+            "depth_order": 3,
+            "sleeper_id": "6803",
+            "sleeper_name": "Brandon Aiyuk",
+            "sleeper_slug": "brandon-aiyuk"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Jauan Jennings",
+            "depth_order": 1,
+            "sleeper_id": "7049",
+            "sleeper_name": "Jauan Jennings",
+            "sleeper_slug": "jauan-jennings"
+          },
+          {
+            "name": "Jordan Watkins",
+            "depth_order": 2,
+            "sleeper_id": "12634",
+            "sleeper_name": "Jordan Watkins",
+            "sleeper_slug": "jordan-watkins"
+          },
+          {
+            "name": "Jacob Cowing",
+            "depth_order": 3,
+            "sleeper_id": "11616",
+            "sleeper_name": "Jacob Cowing",
+            "sleeper_slug": "jacob-cowing"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Demarcus Robinson",
+            "depth_order": 1,
+            "sleeper_id": "3286",
+            "sleeper_name": "Demarcus Robinson",
+            "sleeper_slug": "demarcus-robinson"
+          },
+          {
+            "name": "Skyy Moore",
+            "depth_order": 2,
+            "sleeper_id": "8168",
+            "sleeper_name": "Skyy Moore",
+            "sleeper_slug": "skyy-moore"
+          },
+          {
+            "name": "Trent Taylor",
+            "depth_order": 3,
+            "sleeper_id": "4218",
+            "sleeper_name": "Trent Taylor",
+            "sleeper_slug": "trent-taylor"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "George Kittle",
+            "depth_order": 1,
+            "sleeper_id": "4217",
+            "sleeper_name": "George Kittle",
+            "sleeper_slug": "george-kittle"
+          },
+          {
+            "name": "Luke Farrell",
+            "depth_order": 2,
+            "sleeper_id": "7842",
+            "sleeper_name": "Luke Farrell",
+            "sleeper_slug": "luke-farrell"
+          },
+          {
+            "name": "Jake Tonges",
+            "depth_order": 3,
+            "sleeper_id": "8698",
+            "sleeper_name": "Jake Tonges",
+            "sleeper_slug": "jake-tonges"
+          },
+          {
+            "name": "Brayden Willis",
+            "depth_order": 4,
+            "sleeper_id": "10224",
+            "sleeper_name": "Brayden Willis",
+            "sleeper_slug": "brayden-willis"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Eddy Piñeiro",
+            "depth_order": 1,
+            "sleeper_id": null,
+            "sleeper_name": null,
+            "sleeper_slug": null
+          }
+        ]
+      }
+    ],
+    "SEA": [
+      {
+        "role": "QB",
+        "fantasy_position": "QB",
+        "players": [
+          {
+            "name": "Sam Darnold",
+            "depth_order": 1,
+            "sleeper_id": "4943",
+            "sleeper_name": "Sam Darnold",
+            "sleeper_slug": "sam-darnold"
+          },
+          {
+            "name": "Drew Lock",
+            "depth_order": 2,
+            "sleeper_id": "5854",
+            "sleeper_name": "Drew Lock",
+            "sleeper_slug": "drew-lock"
+          },
+          {
+            "name": "Jalen Milroe",
+            "depth_order": 3,
+            "sleeper_id": "12510",
+            "sleeper_name": "Jalen Milroe",
+            "sleeper_slug": "jalen-milroe"
+          }
+        ]
+      },
+      {
+        "role": "RB",
+        "fantasy_position": "RB",
+        "players": [
+          {
+            "name": "Kenneth Walker III",
+            "depth_order": 1,
+            "sleeper_id": "8151",
+            "sleeper_name": "Kenneth Walker",
+            "sleeper_slug": "kenneth-walker-8151"
+          },
+          {
+            "name": "Zach Charbonnet",
+            "depth_order": 2,
+            "sleeper_id": "9753",
+            "sleeper_name": "Zach Charbonnet",
+            "sleeper_slug": "zach-charbonnet"
+          },
+          {
+            "name": "George Holani",
+            "depth_order": 3,
+            "sleeper_id": "12048",
+            "sleeper_name": "George Holani",
+            "sleeper_slug": "george-holani"
+          },
+          {
+            "name": "Kenny McIntosh",
+            "depth_order": 4,
+            "sleeper_id": "10216",
+            "sleeper_name": "Kenny McIntosh",
+            "sleeper_slug": "kenny-mcintosh"
+          }
+        ]
+      },
+      {
+        "role": "LWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Jaxon Smith-Njigba",
+            "depth_order": 1,
+            "sleeper_id": "9488",
+            "sleeper_name": "Jaxon Smith-Njigba",
+            "sleeper_slug": "jaxon-smith-njigba"
+          },
+          {
+            "name": "Jake Bobo",
+            "depth_order": 2,
+            "sleeper_id": "10867",
+            "sleeper_name": "Jake Bobo",
+            "sleeper_slug": "jake-bobo"
+          },
+          {
+            "name": "Dareke Young",
+            "depth_order": 3,
+            "sleeper_id": "8527",
+            "sleeper_name": "Dareke Young",
+            "sleeper_slug": "dareke-young"
+          }
+        ]
+      },
+      {
+        "role": "RWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Rashid Shaheed",
+            "depth_order": 1,
+            "sleeper_id": "8676",
+            "sleeper_name": "Rashid Shaheed",
+            "sleeper_slug": "rashid-shaheed"
+          },
+          {
+            "name": "Tory Horton",
+            "depth_order": 2,
+            "sleeper_id": "12497",
+            "sleeper_name": "Tory Horton",
+            "sleeper_slug": "tory-horton"
+          }
+        ]
+      },
+      {
+        "role": "SWR",
+        "fantasy_position": "WR",
+        "players": [
+          {
+            "name": "Cooper Kupp",
+            "depth_order": 1,
+            "sleeper_id": "4039",
+            "sleeper_name": "Cooper Kupp",
+            "sleeper_slug": "cooper-kupp"
+          },
+          {
+            "name": "Cody White",
+            "depth_order": 2,
+            "sleeper_id": "7039",
+            "sleeper_name": "Cody White",
+            "sleeper_slug": "cody-white"
+          }
+        ]
+      },
+      {
+        "role": "TE",
+        "fantasy_position": "TE",
+        "players": [
+          {
+            "name": "Aj Barner",
+            "depth_order": 1,
+            "sleeper_id": "11603",
+            "sleeper_name": "AJ Barner",
+            "sleeper_slug": "aj-barner"
+          },
+          {
+            "name": "Eric Saubert",
+            "depth_order": 2,
+            "sleeper_id": "4189",
+            "sleeper_name": "Eric Saubert",
+            "sleeper_slug": "eric-saubert"
+          },
+          {
+            "name": "Elijah Arroyo",
+            "depth_order": 3,
+            "sleeper_id": "12521",
+            "sleeper_name": "Elijah Arroyo",
+            "sleeper_slug": "elijah-arroyo"
+          },
+          {
+            "name": "Nick Kallerup",
+            "depth_order": 4,
+            "sleeper_id": "13151",
+            "sleeper_name": "Nick Kallerup",
+            "sleeper_slug": "nick-kallerup"
+          }
+        ]
+      },
+      {
+        "role": "K",
+        "fantasy_position": "K",
+        "players": [
+          {
+            "name": "Jason Myers",
+            "depth_order": 1,
+            "sleeper_id": "2747",
+            "sleeper_name": "Jason Myers",
+            "sleeper_slug": "jason-myers"
+          }
+        ]
+      }
+    ]
+  }
+}

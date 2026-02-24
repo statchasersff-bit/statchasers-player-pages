@@ -95,7 +95,7 @@ const POSITION_ORDER = ["QB", "RB", "WR", "TE", "K", "DEF"];
 
 
 const POS_DISPLAY_LIMITS: Record<string, number> = {
-  QB: 2, RB: 4, WR: 5, TE: 3, K: 1, DEF: 1,
+  QB: 2, RB: 4, WR: 6, TE: 3, K: 1, DEF: 1,
 };
 
 function getTeamLogoUrl(team: string) {
@@ -145,18 +145,15 @@ function PlayerCard({
   player,
   pos,
   depthLabel,
-  teamColor,
   onClick,
 }: {
   player: IndexedPlayer;
   pos: string;
   depthLabel: string;
-  teamColor: string;
   onClick: () => void;
 }) {
-  const nameParts = player.name.split(' ');
-  const firstName = nameParts[0] || '';
-  const lastName = nameParts.slice(1).join(' ') || firstName;
+  const labelNum = parseInt(depthLabel.replace(/[^0-9]/g, '') || '1', 10);
+  const tier = labelNum <= 1 ? 'Starter' : (labelNum === 2 ? 'Backup' : 'Depth');
 
   return (
     <div
@@ -164,7 +161,7 @@ function PlayerCard({
       onClick={onClick}
       data-testid={`card-player-${player.slug}`}
     >
-      <div className="sc-card__img" style={{ '--card-team-color': teamColor } as React.CSSProperties}>
+      <div className="sc-card__img">
         <img
           src={getHeadshotUrl(player.id)}
           alt={player.name}
@@ -182,12 +179,15 @@ function PlayerCard({
           {player.name.split(' ').map(n => n[0]).join('')}
         </div>
       </div>
-      <div className="sc-card__info">
-        <div className="sc-card__name">
-          <span className="sc-card__first" data-testid={`card-first-${player.slug}`}>{firstName.toUpperCase()}</span>
-          <span className="sc-card__last" data-testid={`card-last-${player.slug}`}>{lastName.toUpperCase()}</span>
+      <div className="sc-card__gold" />
+      <div className="sc-card__body">
+        <div className="sc-card__name" data-testid={`card-name-${player.slug}`}>
+          {player.name}
         </div>
-        <span className="sc-card__depth" data-testid={`card-depth-${player.slug}`}>{depthLabel}</span>
+        <div className="sc-card__meta">
+          <span className={POSITION_COLORS[pos] || ""} data-testid={`card-depth-${player.slug}`}>{depthLabel}</span>
+          <span className="sc-card__tier" data-testid={`card-tier-${player.slug}`}>{tier}</span>
+        </div>
       </div>
     </div>
   );
@@ -239,9 +239,15 @@ function TeamBoard({
                 {team} {teamName}
               </h2>
             </div>
+            <div className="sc-board__label" data-testid="text-board-subtitle">
+              <Zap className="w-3.5 h-3.5" />
+              Fantasy Roster Board
+            </div>
           </div>
         </div>
       </div>
+
+      <div className="sc-board__divider" />
 
       <div className="sc-board__wall" data-testid="board-grid">
         {sections.map(({ pos, starters }) => (
@@ -249,13 +255,12 @@ function TeamBoard({
             <div key={pos} className="sc-board__section" data-testid={`board-section-${pos}`}>
               <h3 className="sc-board__section-title">{pos}</h3>
               <div className="sc-board__cards">
-                {starters.map((player, i) => (
+                {starters.map((player) => (
                   <PlayerCard
                     key={player.slug}
                     player={player}
                     pos={pos}
-                    depthLabel={`${pos}${i + 1}`}
-                    teamColor={teamColor}
+                    depthLabel={player.rank_label}
                     onClick={() => navigate(`/nfl/players/${player.slug}/`)}
                   />
                 ))}
@@ -279,14 +284,13 @@ function TeamBoard({
 
             {showBench && (
               <div className="sc-bench__cards" data-testid="bench-list">
-                {sections.map(({ pos, starters, bench }) =>
-                  bench.map((player, i) => (
+                {sections.map(({ pos, bench }) =>
+                  bench.map((player) => (
                     <PlayerCard
                       key={player.slug}
                       player={player}
                       pos={pos}
-                      depthLabel={`${pos}${starters.length + i + 1}`}
-                      teamColor={teamColor}
+                      depthLabel={player.rank_label}
                       onClick={() => navigate(`/nfl/players/${player.slug}/`)}
                     />
                   ))
