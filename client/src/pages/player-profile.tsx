@@ -3435,6 +3435,10 @@ const SUPPORTED_TEAM_SITES: Record<string, string> = {
   BUF: "Bills",
   MIA: "Dolphins",
   NYJ: "Jets",
+  BAL: "Ravens",
+  CIN: "Bengals",
+  CLE: "Browns",
+  PIT: "Steelers",
 };
 
 function NewsTab({ player }: { player: Player }) {

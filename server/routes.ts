@@ -1128,6 +1128,38 @@ export async function registerRoutes(
       injuryUrl: "https://www.newyorkjets.com/team/injury-report/",
       newsUrl: "https://www.newyorkjets.com/news/",
     },
+    BAL: {
+      abbr: "BAL",
+      label: "Ravens",
+      domain: "https://www.baltimoreravens.com",
+      rosterUrl: "https://www.baltimoreravens.com/team/players-roster/",
+      injuryUrl: "https://www.baltimoreravens.com/team/injury-report/",
+      newsUrl: "https://www.baltimoreravens.com/news/news-and-notes",
+    },
+    CIN: {
+      abbr: "CIN",
+      label: "Bengals",
+      domain: "https://www.bengals.com",
+      rosterUrl: "https://www.bengals.com/team/players-roster/",
+      injuryUrl: "https://www.bengals.com/team/injury-report/",
+      newsUrl: "https://www.bengals.com/news/",
+    },
+    CLE: {
+      abbr: "CLE",
+      label: "Browns",
+      domain: "https://www.clevelandbrowns.com",
+      rosterUrl: "https://www.clevelandbrowns.com/team/players-roster/",
+      injuryUrl: "https://www.clevelandbrowns.com/team/injury-report/",
+      newsUrl: "https://www.clevelandbrowns.com/news/all",
+    },
+    PIT: {
+      abbr: "PIT",
+      label: "Steelers",
+      domain: "https://www.steelers.com",
+      rosterUrl: "https://www.steelers.com/team/players-roster/",
+      injuryUrl: "https://www.steelers.com/team/injury-report/",
+      newsUrl: "https://www.steelers.com/news/",
+    },
   };
 
   const teamRosterCaches: Record<string, { ts: number; map: Map<string, string> }> = {};
