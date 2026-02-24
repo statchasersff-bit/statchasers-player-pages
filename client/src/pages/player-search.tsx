@@ -706,37 +706,46 @@ export default function PlayerSearch() {
                   </CardContent>
                 </Card>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filtered.map((player) => (
-                    <Link key={player.id} href={`/nfl/players/${player.slug}/`}>
-                      <Card
-                        className="sc-team-card cursor-pointer h-full"
-                        data-testid={`card-player-${player.slug}`}
-                      >
-                        <CardContent className="p-5">
-                          <div className="flex items-center gap-3">
-                            <div className="flex-shrink-0 w-10 h-10 rounded-md bg-muted flex items-center justify-center">
-                              <span className="text-xs font-bold text-muted-foreground">
-                                {player.position || "?"}
-                              </span>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                  {filtered.map((player) => {
+                    const pos = player.position || "";
+                    const rankLabel = 'rank_label' in player ? (player as IndexedPlayer).rank_label : pos;
+                    return (
+                      <Link key={player.id} href={`/nfl/players/${player.slug}/`}>
+                        <div
+                          className={`sc-result-card sc-result-card--${pos.toLowerCase()}`}
+                          data-testid={`card-player-${player.slug}`}
+                        >
+                          <div className="sc-result-card__img">
+                            <img
+                              src={getHeadshotUrl(player.id)}
+                              alt={player.name}
+                              loading="lazy"
+                              onError={(e) => {
+                                const img = e.currentTarget;
+                                img.onerror = null;
+                                img.style.display = 'none';
+                                img.parentElement?.classList.add('sc-result-card__img--fallback');
+                              }}
+                            />
+                            <div className="sc-result-card__initials">
+                              {player.name.split(' ').map(n => n[0]).join('')}
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                <span className="font-semibold text-foreground truncate" data-testid={`text-player-name-${player.slug}`}>
-                                  {player.name}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-2 mt-1">
-                                <span className={POSITION_COLORS[player.position || ""] || ""}>{player.position}</span>
-                                <span className="text-xs text-muted-foreground">{player.team}</span>
-                              </div>
-                            </div>
-                            <TrendingUp className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                           </div>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  ))}
+                          <div className="sc-result-card__gold" />
+                          <div className="sc-result-card__body">
+                            <div className="sc-result-card__name" data-testid={`text-player-name-${player.slug}`}>
+                              {player.name}
+                            </div>
+                            <div className="sc-result-card__meta">
+                              <span className={POSITION_COLORS[pos] || ""}>{rankLabel}</span>
+                              <span className="sc-result-card__team">{player.team}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
                 </div>
               )}
             </>
