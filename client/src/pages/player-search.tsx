@@ -160,6 +160,45 @@ function TeamTile({
   );
 }
 
+function getStarterSlugSet(positions: Record<string, IndexedPlayer[]>): Set<string> {
+  const slugs = new Set<string>();
+  for (const row of FORMATION_ROWS) {
+    for (const slot of row) {
+      const player = positions[slot.pos]?.[slot.idx];
+      if (player) slugs.add(player.slug);
+    }
+  }
+  return slugs;
+}
+
+function getBenchPlayers(positions: Record<string, IndexedPlayer[]>) {
+  const starterSlugs = getStarterSlugSet(positions);
+  const grouped: Record<string, { pos: string; player: IndexedPlayer; depthLabel: string }[]> = {};
+
+  for (const pos of POSITION_ORDER) {
+    const players = positions[pos];
+    if (!players) continue;
+    let benchIdx = 0;
+    for (const player of players) {
+      if (starterSlugs.has(player.slug)) continue;
+      benchIdx++;
+      const posCount = FORMATION_ROWS.flat().filter(s => s.pos === pos).length;
+      const label = `${pos}${posCount + benchIdx}`;
+      if (!grouped[pos]) grouped[pos] = [];
+      grouped[pos].push({ pos, player, depthLabel: label });
+    }
+  }
+
+  const result: { pos: string; player: IndexedPlayer; depthLabel: string }[] = [];
+  for (const pos of POSITION_ORDER) {
+    if (grouped[pos]) {
+      grouped[pos].sort((a, b) => (a.player.depth_chart_order ?? 99) - (b.player.depth_chart_order ?? 99));
+      result.push(...grouped[pos]);
+    }
+  }
+  return result;
+}
+
 function TeamBoard({
   team,
   positions,
@@ -170,8 +209,11 @@ function TeamBoard({
   onBack: () => void;
 }) {
   const [, navigate] = useLocation();
+  const [showBench, setShowBench] = useState(false);
   const teamColor = TEAM_COLORS[team] || "#666";
   const teamName = TEAM_FULL_NAMES[team] || team;
+
+  const benchPlayers = useMemo(() => getBenchPlayers(positions), [positions]);
 
   return (
     <div className="sc-board" data-testid="team-board-view">
@@ -255,6 +297,48 @@ function TeamBoard({
             </div>
           ))}
         </div>
+
+        {benchPlayers.length > 0 && (
+          <div className="sc-bench" data-testid="bench-section">
+            <button
+              type="button"
+              className="sc-bench__toggle"
+              onClick={() => setShowBench(!showBench)}
+              data-testid="button-toggle-bench"
+            >
+              <ChevronRight className={`sc-bench__toggle-icon ${showBench ? 'sc-bench__toggle-icon--open' : ''}`} />
+              <span>{showBench ? 'Hide Full Roster' : 'Show Full Roster'}</span>
+              <span className="sc-bench__count">{benchPlayers.length}</span>
+            </button>
+
+            {showBench && (
+              <div className="sc-bench__list" data-testid="bench-list">
+                {benchPlayers.map(({ pos, player, depthLabel }) => {
+                  const tier = getSlotTier(player.depth_chart_order);
+                  return (
+                    <div
+                      key={player.slug}
+                      className="sc-bench__row"
+                      onClick={() => navigate(`/nfl/players/${player.slug}/`)}
+                      data-testid={`bench-player-${player.slug}`}
+                    >
+                      <span className={POSITION_COLORS[pos] || ""}>{depthLabel}</span>
+                      <span className="sc-bench__row-name">{player.name}</span>
+                      <span className="sc-bench__row-rank">{player.rank_label}</span>
+                      {player.years_exp !== null && player.years_exp > 0 && (
+                        <span className="sc-bench__row-exp">Yr {player.years_exp}</span>
+                      )}
+                      <span className={`sc-bench__row-tier sc-bench__row-tier--${tier}`}>
+                        {tier === 1 ? 'Starter' : tier === 2 ? 'Backup' : 'Depth'}
+                      </span>
+                      <ChevronRight className="sc-bench__row-arrow" />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
