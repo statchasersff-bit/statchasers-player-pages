@@ -371,6 +371,7 @@ export default function PlayerSearch() {
           p.team.toLowerCase().includes(q)
       );
     }
+    result = [...result].sort((a, b) => a.name.localeCompare(b.name));
     return result.slice(0, 100);
   }, [indexedFlat, search, posFilter]);
 
