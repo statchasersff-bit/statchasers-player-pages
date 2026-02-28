@@ -2154,6 +2154,37 @@
 .sc-section-header {
   margin-bottom: 20px;
 }
+.sc-news-tabs {
+  display: inline-flex;
+  gap: 6px;
+}
+.sc-news-tab {
+  padding: 5px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #0b3a7a;
+  background: #fff;
+  border: 1px solid rgba(11,58,122,0.15);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.sc-news-tab:hover {
+  background: rgba(11,58,122,0.04);
+  border-color: rgba(11,58,122,0.25);
+}
+.sc-news-tab--active {
+  background: #d4af37;
+  color: #fff;
+  border-color: #d4af37;
+  box-shadow: 0 2px 6px rgba(212,175,55,0.3);
+}
+.sc-news-tab--active:hover {
+  background: #d4af37;
+  border-color: #d4af37;
+}
 .sc-section-header__title {
   font-size: 14px;
   font-weight: 700;

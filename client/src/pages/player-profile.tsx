@@ -3800,27 +3800,31 @@ function NewsTab({ player }: { player: Player }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }} data-testid="news-tab">
-      <SectionHeader title="News & Analysis" subtitle="Latest team reports, injury updates, and player intel" />
-      {hasTeamSite && (
-        <div className="sc-gamelog__segmented-control" data-testid="news-filter-toggle">
-          <button
-            type="button"
-            className={`sc-gamelog__segment ${newsFilter === 'articles' ? 'sc-gamelog__segment--active' : ''}`}
-            onClick={() => setNewsFilter('articles')}
-            data-testid="button-filter-articles"
-          >
-            Articles
-          </button>
-          <button
-            type="button"
-            className={`sc-gamelog__segment ${newsFilter === 'injuries' ? 'sc-gamelog__segment--active' : ''}`}
-            onClick={() => setNewsFilter('injuries')}
-            data-testid="button-filter-injuries"
-          >
-            Injuries
-          </button>
-        </div>
-      )}
+      <div>
+        <SectionHeader title="News & Analysis" subtitle="Latest team reports, injury updates, and player intel" />
+        {hasTeamSite && (
+          <div style={{ marginTop: '16px' }}>
+            <div className="sc-news-tabs" data-testid="news-filter-toggle">
+              <button
+                type="button"
+                className={`sc-news-tab ${newsFilter === 'articles' ? 'sc-news-tab--active' : ''}`}
+                onClick={() => setNewsFilter('articles')}
+                data-testid="button-filter-articles"
+              >
+                Articles
+              </button>
+              <button
+                type="button"
+                className={`sc-news-tab ${newsFilter === 'injuries' ? 'sc-news-tab--active' : ''}`}
+                onClick={() => setNewsFilter('injuries')}
+                data-testid="button-filter-injuries"
+              >
+                Injuries
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
 
       {hasTeamSite && newsFilter === 'injuries' && (
         <>
