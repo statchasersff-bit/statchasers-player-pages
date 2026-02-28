@@ -217,7 +217,7 @@ function TeamBoard({
   const totalBench = sections.reduce((s, sec) => s + sec.bench.length, 0);
 
   return (
-    <div className="sc-board" data-testid="team-board-view">
+    <div className="sc-board sc-directory" data-testid="team-board-view">
       <div className="sc-board__header">
         <div className="sc-board__header-inner">
           <div className="flex items-center gap-3">

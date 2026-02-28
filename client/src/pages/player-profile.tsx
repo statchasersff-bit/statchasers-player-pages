@@ -1,6 +1,5 @@
 import { Link, useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -168,6 +167,16 @@ function NeighborHeadshot({ playerId, name, teamAbbr }: { playerId: string; name
       onError={() => setImgError(true)}
       data-testid={`img-neighbor-${playerId}`}
     />
+  );
+}
+
+function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }) {
+  return (
+    <div className="sc-section-header">
+      <p className="sc-section-header__title">{title}</p>
+      <div className="sc-section-header__bar" />
+      {subtitle && <p className="sc-section-header__subtitle">{subtitle}</p>}
+    </div>
   );
 }
 
@@ -532,7 +541,7 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
                       <td className="sc-gamelog__td" style={{ fontWeight: 600 }}>{entry.week}</td>
                       <td className="sc-gamelog__td" style={{ whiteSpace: 'nowrap' }}>
                         <div className="flex flex-col leading-tight">
-                          <span style={{ fontWeight: 600, color: '#0f172a' }}>{entry.opp}</span>
+                          <span style={{ fontWeight: 600, color: '#0b3a7a' }}>{entry.opp}</span>
                           {oppRankLabel && <span className={`text-[9px] leading-none opacity-70 ${getOppRankColor(oppRank)}`}>{oppRankLabel} vs {posLabel}</span>}
                         </div>
                       </td>
@@ -549,7 +558,7 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
                         </td>
                       ))}
                       <td className="sc-gamelog__td sc-gamelog__td--primary text-right" title={fptsTooltip(entry)}>
-                        <span style={{ fontSize: '14px', fontWeight: 800, color: '#0f172a', fontFamily: 'ui-monospace, monospace' }}>{pts.toFixed(1)}</span>
+                        <span style={{ fontSize: '14px', fontWeight: 800, color: '#0b3a7a', fontFamily: 'ui-monospace, monospace' }}>{pts.toFixed(1)}</span>
                       </td>
                       <td className="sc-gamelog__td sc-gamelog__td--primary text-right" data-testid={`text-finish-week-${entry.week}`}>
                         {tierBadge ? (
@@ -574,7 +583,7 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
                             {detail.map((col) => (
                               <div key={col.key} className="flex items-center gap-1.5">
                                 <span style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.06em', color: '#94a3b8', fontWeight: 600 }}>{col.label}</span>
-                                <span style={{ fontSize: '12px', fontWeight: 700, color: '#0f172a', fontFamily: 'ui-monospace, monospace' }}>{getStat(entry, col.key)}</span>
+                                <span style={{ fontSize: '12px', fontWeight: 700, color: '#0b3a7a', fontFamily: 'ui-monospace, monospace' }}>{getStat(entry, col.key)}</span>
                               </div>
                             ))}
                           </div>
@@ -607,7 +616,7 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
                   <span style={{ fontSize: '9px', color: '#94a3b8', fontWeight: 500 }}>Season {footerMode === 'avg' ? 'Avg' : 'Totals'}</span>
                   <button
                     className="text-left flex items-center gap-1"
-                    style={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#0f172a', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                    style={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#0b3a7a', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
                     onClick={() => setFooterMode(footerMode === 'avg' ? 'total' : 'avg')}
                     data-testid="toggle-footer-mode"
                   >
@@ -628,7 +637,7 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
                 );
               })}
               <td className="sc-gamelog__td sc-gamelog__td--primary" style={{ textAlign: 'right', padding: '10px 8px' }}>
-                <span style={{ fontSize: '14px', fontWeight: 800, color: '#0f172a', fontFamily: 'ui-monospace, monospace' }}>
+                <span style={{ fontSize: '14px', fontWeight: 800, color: '#0b3a7a', fontFamily: 'ui-monospace, monospace' }}>
                   {gamesPlayed > 0
                     ? footerMode === 'avg'
                       ? (activeInDisplay.reduce((sum, e) => sum + fpts(e, format), 0) / gamesPlayed).toFixed(1)
@@ -713,7 +722,7 @@ function MomentumBadge({ data, unit = 'PPG' }: { data: number[]; unit?: string }
   );
 }
 
-function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentColor = "hsl(var(--primary))", showAvgLine = false, highlightLast = 0, showRecentFormLabel = false, thickLine = false, showGridLines = false }: {
+function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentColor = "#0b3a7a", showAvgLine = false, highlightLast = 0, showRecentFormLabel = false, thickLine = false, showGridLines = false }: {
   data: number[];
   rollingAvg?: number[];
   bestIdx?: number;
@@ -806,7 +815,7 @@ function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentCo
         <path d={areaPath} fill={`url(#fill-${uid})`} />
         <path d={linePath} fill="none" stroke={accentColor} strokeWidth={thickLine ? "2.5" : "2"} strokeLinejoin="round" strokeLinecap="round" opacity="0.5" />
         {rollingPath && (
-          <path d={rollingPath} fill="none" stroke={accentColor} strokeWidth={thickLine ? "3.5" : "2.5"} strokeLinejoin="round" strokeLinecap="round" />
+          <path d={rollingPath} fill="none" stroke="#d4af37" strokeWidth={thickLine ? "3.5" : "2.5"} strokeLinejoin="round" strokeLinecap="round" />
         )}
         {bestPoint && (
           <>
@@ -1013,7 +1022,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
   const ppgDelta = seasonPpg - posAvgPpg;
 
   return (
-    <div className="sc-overview" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div className="sc-overview" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       {hasData ? (() => {
         const volLabel = stats.volatility < 6 ? 'Stable' : stats.volatility < 9 ? 'Moderate' : 'Volatile';
         const volColor = stats.volatility < 6
@@ -1052,7 +1061,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
               </Badge>
             </div>
 
-            <p className="sc-overview__section-title" style={{ marginBottom: '10px' }}>Performance</p>
+            <SectionHeader title="Performance" subtitle="Season scoring output and positional finish rates" />
 
             <div className={`grid gap-3 ${thresholds.hasTier3 ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2 md:grid-cols-3'}`}>
               <div className="sc-overview__ppg-hero md:row-span-1">
@@ -1117,7 +1126,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
           </div>
 
           <div className="sc-overview__section" style={{ padding: '20px' }}>
-            <p className="sc-overview__section-title" style={{ marginBottom: '10px' }}>Risk Assessment</p>
+            <SectionHeader title="Risk Assessment" subtitle="Downside exposure and weekly floor indicators" />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div className="sc-overview__risk-cell sc-overview__risk-cell--bust" data-tooltip="Percentage of games finishing outside startable range" data-testid="risk-cell-bust">
                 <p className="sc-overview__stat-label">Bust %</p>
@@ -1211,7 +1220,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
             return (
               <div className="sc-overview__trend-card" data-testid="section-trend-diagnostics">
                 <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
-                  <p className="sc-overview__section-title" data-testid="text-trend-diagnostics-label">Trend Diagnostics</p>
+                  <SectionHeader title="Trend Diagnostics" subtitle="Weekly production arc and rolling efficiency signals" />
                   <MomentumBadge data={weeklyPts} unit="PPG" />
                 </div>
 
@@ -1236,7 +1245,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
                     bestIdx={bestIdx}
                     height={170}
                     label="fpts"
-                    accentColor="hsl(var(--primary))"
+                    accentColor="#0b3a7a"
                     showAvgLine
                     highlightLast={3}
                     showRecentFormLabel
@@ -1408,7 +1417,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
               return (
                 <div key={c.label} className={`sc-overview__role-card-cell ${c.primary ? 'sc-overview__role-card-cell--primary' : ''}`}>
                   <p style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#94a3b8', marginBottom: '4px' }}>{c.label}</p>
-                  <p style={{ fontSize: c.primary ? '16px' : '14px', fontWeight: 800, color: '#0f172a', fontFamily: 'ui-monospace, monospace', lineHeight: 1 }}>{c.fmt(c.recent)}</p>
+                  <p style={{ fontSize: c.primary ? '16px' : '14px', fontWeight: 800, color: '#0b3a7a', fontFamily: 'ui-monospace, monospace', lineHeight: 1 }}>{c.fmt(c.recent)}</p>
                   <div className="flex items-center justify-center gap-1" style={{ marginTop: '4px' }}>
                     <span style={{ fontSize: '9px', color: '#94a3b8', fontFamily: 'ui-monospace, monospace' }}>Szn: {c.fmt(c.season)}</span>
                     <span className="inline-flex items-center gap-px" style={{ fontSize: '9px', fontWeight: 700, color: trendCol, fontFamily: 'ui-monospace, monospace' }}>
@@ -1422,7 +1431,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
 
             return (
               <div className="sc-overview__section" data-testid="section-role-snapshot">
-                <p className="sc-overview__section-title" style={{ marginBottom: '12px' }} data-testid="text-role-snapshot-label">Role Snapshot <span style={{ textTransform: 'none', letterSpacing: 'normal', fontWeight: 500 }}>(Season vs Recent)</span></p>
+                <SectionHeader title="Role Snapshot" subtitle="Season baseline vs recent usage comparison" />
                   {usageCards.length > 0 && (
                     <>
                       <p style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#94a3b8', marginBottom: '8px' }}>Usage</p>
@@ -1464,7 +1473,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
                 {keyStats.map(s => (
                   <div key={s.label} className="sc-overview__stat-cell">
                     <p className="sc-overview__stat-label">{s.label}</p>
-                    <p className="sc-overview__stat-number" style={{ color: '#0f172a' }}>{Number.isInteger(s.total) ? s.total : s.total.toFixed(1)}</p>
+                    <p className="sc-overview__stat-number" style={{ color: '#0b3a7a' }}>{Number.isInteger(s.total) ? s.total : s.total.toFixed(1)}</p>
                     <p className="sc-overview__stat-meta">{s.perGame.toFixed(1)}/g</p>
                   </div>
                 ))}
@@ -1484,16 +1493,12 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
               {cp.smallSample && (
                 <Badge variant="secondary" className="text-[9px] px-1.5 py-0 mb-2 bg-amber-500/15 text-amber-700 dark:text-amber-400" data-testid="badge-small-sample">Small Sample</Badge>
               )}
-              <div className="flex items-center gap-2 mb-4 flex-wrap">
-                <p className="sc-overview__section-title" data-testid="text-career-profile-label">
-                  3-Year Performance <span style={{ textTransform: 'none', letterSpacing: 'normal', fontWeight: 500 }}>({cp.gamesPlayed} Games)</span>
-                </p>
-              </div>
+              <SectionHeader title="Career Profile" subtitle={`3-year performance overview across ${cp.gamesPlayed} games`} />
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4" data-testid="career-profile-stats">
                 <div className="sc-overview__stat-cell">
                   <p className="sc-overview__stat-label">Career PPG</p>
-                  <p className="sc-overview__stat-number" style={{ color: '#0f172a' }}>{cp.ppg.toFixed(1)}</p>
+                  <p className="sc-overview__stat-number" style={{ color: '#0b3a7a' }}>{cp.ppg.toFixed(1)}</p>
                 </div>
                 <div className="sc-overview__stat-cell">
                   <p className="sc-overview__stat-label">Durability</p>
@@ -1585,8 +1590,8 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
 
       <div className="sc-overview__outlook" data-testid="section-quick-outlook">
         <div className="flex items-center gap-2 mb-3 flex-wrap">
-          <FileText className="w-4 h-4" style={{ color: '#caa14a' }} />
-          <p className="sc-overview__section-title">Quick Outlook</p>
+          <FileText className="w-4 h-4" style={{ color: '#d4af37' }} />
+          <SectionHeader title="Quick Outlook" subtitle="Projected role trajectory and risk summary" />
         </div>
         {outlook.hasData ? (
           <>
@@ -1643,7 +1648,7 @@ function GameDistributionBar({ entries, position, activeTier, onTierClick, forma
   const total = played.length;
   return (
     <div className="sc-gamelog__dist" data-testid="gamelog-distribution">
-      <p className="sc-overview__section-title" style={{ marginBottom: '10px' }}>Game Distribution</p>
+      <SectionHeader title="Game Distribution" subtitle="Fantasy output bucketed by scoring tiers" />
       <div className="sc-gamelog__dist-bar" style={{ display: 'flex', borderRadius: '10px', overflow: 'hidden', height: '36px', marginBottom: '8px' }}>
         {bins.map(bin => {
           const pct = total > 0 ? (bin.count / total) * 100 : 0;
@@ -1761,11 +1766,9 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
   const filterForTable: 'full' | 'last5' = gameFilter === 'full' ? 'full' : 'last5';
 
   return (
-    <div className="sc-gamelog" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div className="sc-gamelog" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.01em' }} data-testid="text-gamelog-heading">
-          Game Log
-        </h2>
+        <SectionHeader title="Game Log" subtitle="Performance distribution and finish outcomes" />
         <div className="flex items-center gap-2 flex-wrap">
           <div className="sc-gamelog__segmented-control" data-testid="filter-game-range">
             {(['full', 'last8', 'last5'] as GameFilterType[]).map((f) => (
@@ -1954,12 +1957,7 @@ function CareerStatsTable({ stats, position, format, onSeasonClick }: {
 
   return (
     <div className="sc-gamelog__career-section" data-testid="career-stats-table">
-      <div className="flex items-center justify-between gap-3 flex-wrap" style={{ marginBottom: '16px' }}>
-        <div>
-          <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.01em' }} data-testid="text-career-stats-heading">Career Stats</h3>
-          <p style={{ fontSize: '10px', color: '#94a3b8', marginTop: '2px' }}>Season totals &middot; {formatLabel} fantasy output</p>
-        </div>
-      </div>
+      <SectionHeader title="Career Stats" subtitle={`Season totals \u00B7 ${formatLabel} fantasy output`} />
 
       <div className="grid grid-cols-3 gap-3" style={{ marginBottom: '16px' }} data-testid="career-summary-tiles">
         <div className="sc-gamelog__stat-box sc-gamelog__stat-box--blue">
@@ -2013,7 +2011,7 @@ function CareerStatsTable({ stats, position, format, onSeasonClick }: {
                             >
                               {row.season}
                             </button>
-                            {isBest && <Trophy className="w-3 h-3" style={{ color: '#caa14a' }} />}
+                            {isBest && <Trophy className="w-3 h-3" style={{ color: '#d4af37' }} />}
                           </div>
                         </td>
                       );
@@ -2022,7 +2020,7 @@ function CareerStatsTable({ stats, position, format, onSeasonClick }: {
                       return (
                         <td key={col.key} className="sc-gamelog__td sc-gamelog__td--primary" style={{ textAlign: 'right' }}>
                           <div className="flex items-center justify-end gap-1.5">
-                            <span style={{ fontWeight: 800, color: '#0f172a', fontFamily: 'ui-monospace, monospace', fontSize: '13px' }}>{row.ppg.toFixed(1)}</span>
+                            <span style={{ fontWeight: 800, color: '#0b3a7a', fontFamily: 'ui-monospace, monospace', fontSize: '13px' }}>{row.ppg.toFixed(1)}</span>
                             {row.posRank && (
                               <span className={`text-[9px] tabular-nums font-semibold ${getRankColor(row.posRank)}`}>{pos}{row.posRank}</span>
                             )}
@@ -2373,21 +2371,15 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   const contextRows = deltaRows.filter(d => (d as any).context);
 
   return (
-    <div className="space-y-6" data-testid="usage-trends-tab">
-      <div className="space-y-1" data-testid="role-health-section">
-        <div className="flex items-center gap-2">
-          <Activity className="w-4 h-4 text-muted-foreground" />
-          <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Role Health</p>
-        </div>
-      </div>
+    <div className="sc-usage" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }} data-testid="usage-trends-tab">
+      <SectionHeader title="Usage & Trends" subtitle="Weekly role evolution and efficiency signals" />
 
-      <Card className="overflow-hidden" data-testid="opportunity-momentum-card">
-        <CardContent className="p-0">
-          <div className="p-4 pb-0 space-y-4" style={{ background: 'linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--card) / 0.85) 100%)' }}>
+      <div className="sc-card" style={{ padding: 0, overflow: 'hidden' }} data-testid="opportunity-momentum-card">
+          <div className="space-y-4" style={{ padding: '24px 28px 0', background: 'linear-gradient(135deg, #fff 0%, rgba(11,58,122,0.02) 100%)' }}>
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-amber-400" />
-                <p className="text-xs uppercase tracking-wider text-foreground font-bold">Role Direction</p>
+                <Sparkles className="w-4 h-4" style={{ color: '#d4af37' }} />
+                <p style={{ fontSize: '13px', fontWeight: 700, color: '#0b3a7a', letterSpacing: '-0.01em' }}>Role Direction</p>
                 <TooltipProvider delayDuration={200}>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -2538,19 +2530,11 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
               </div>
             )}
           </div>
-        </CardContent>
-      </Card>
-
-      <div className="space-y-1" data-testid="opportunity-trends-section">
-        <div className="flex items-center gap-2">
-          <TrendingUp className="w-4 h-4 text-muted-foreground" />
-          <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Opportunity Trends</p>
-          <span className="text-[10px] text-muted-foreground/50">Rolling Analysis</span>
-        </div>
       </div>
 
-      <Card data-testid="chart-target-share-trend" className="border-primary/10">
-        <CardContent className="p-4 space-y-3">
+      <SectionHeader title="Opportunity Trends" subtitle="Rolling analysis of volume and usage metrics" />
+
+      <div className="sc-card" style={{ padding: '24px 28px' }} data-testid="chart-target-share-trend">
           <div className="flex items-center justify-between gap-2 flex-wrap">
             <div>
               <p className="text-sm text-foreground font-semibold">{chart1Cfg.label} per Week</p>
@@ -2590,18 +2574,16 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
               rollingAvg={chart1Cfg.rolling}
               height={170}
               label={`trend-${trendView}`}
-              accentColor="hsl(var(--primary))"
+              accentColor="#0b3a7a"
               showAvgLine={true}
               highlightLast={Math.min(4, chart1Cfg.data.length)}
               showRecentFormLabel={true}
               thickLine={true}
             />
           )}
-        </CardContent>
-      </Card>
+      </div>
 
-      <Card data-testid="chart-volume-context">
-        <CardContent className="p-4 space-y-3">
+      <div className="sc-card" style={{ padding: '24px 28px' }} data-testid="chart-volume-context">
           {(() => {
             const teamAvg = teamPassAtt.length > 0 ? teamPassAtt.reduce((a, b) => a + b, 0) / teamPassAtt.length : 0;
             const teamL4 = teamPassAtt.length >= 4 ? teamPassAtt.slice(-4).reduce((a, b) => a + b, 0) / 4 : teamAvg;
@@ -2671,19 +2653,19 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                           <stop offset="100%" stopColor="hsl(var(--muted-foreground))" stopOpacity="0" />
                         </linearGradient>
                         <linearGradient id="vol-player-fill" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.12" />
-                          <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+                          <stop offset="0%" stopColor="#0b3a7a" stopOpacity="0.12" />
+                          <stop offset="100%" stopColor="#0b3a7a" stopOpacity="0" />
                         </linearGradient>
                       </defs>
                       <path d={makeArea(teamPassAtt)} fill="url(#vol-team-fill)" />
                       <path d={makePath(teamPassAtt)} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" strokeDasharray="4 3" opacity="0.4" />
                       <path d={makePath(teamPassAttRolling)} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="2" opacity="0.5" strokeLinejoin="round" />
                       <path d={makeArea(playerVolume)} fill="url(#vol-player-fill)" />
-                      <path d={makePath(playerVolume)} fill="none" stroke="hsl(var(--primary))" strokeWidth="1.5" opacity="0.4" />
-                      <path d={makePath(playerVolumeRolling)} fill="none" stroke="hsl(var(--primary))" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+                      <path d={makePath(playerVolume)} fill="none" stroke="#0b3a7a" strokeWidth="1.5" opacity="0.4" />
+                      <path d={makePath(playerVolumeRolling)} fill="none" stroke="#0b3a7a" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
                       {playerVolume.map((v, i) => {
                         const p = toP(v, i, playerVolume.length);
-                        return <circle key={i} cx={p.x} cy={p.y} r="2" fill="hsl(var(--primary))" opacity="0.4" />;
+                        return <circle key={i} cx={p.x} cy={p.y} r="2" fill="#0b3a7a" opacity="0.4" />;
                       })}
                       <text x={toP(0, 0, teamPassAtt.length).x} y={h - 4} textAnchor="start" className="fill-muted-foreground" fontSize="10">Wk 1</text>
                       <text x={toP(0, teamPassAtt.length - 1, teamPassAtt.length).x} y={h - 4} textAnchor="end" className="fill-muted-foreground" fontSize="10">Wk {teamPassAtt.length}</text>
@@ -2692,17 +2674,15 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                 })()}
                 <div className="flex items-center gap-4 text-[10px] text-muted-foreground">
                   <span className="flex items-center gap-1"><span className="inline-block w-3 h-0.5 rounded" style={{ background: 'hsl(var(--muted-foreground))' }} /> {position === 'RB' ? 'Team Targets' : 'Team Pass Att'}</span>
-                  <span className="flex items-center gap-1"><span className="inline-block w-3 h-0.5 rounded" style={{ background: 'hsl(var(--primary))' }} /> {position === 'QB' ? 'Pass Att' : position === 'RB' ? 'Carries + Targets' : 'Player Targets'}</span>
+                  <span className="flex items-center gap-1"><span className="inline-block w-3 h-0.5 rounded" style={{ background: '#0b3a7a' }} /> {position === 'QB' ? 'Pass Att' : position === 'RB' ? 'Carries + Targets' : 'Player Targets'}</span>
                 </div>
               </>
             );
           })()}
-        </CardContent>
-      </Card>
+      </div>
 
       {position !== 'K' && (
-        <Card data-testid="chart-td-dependency-overlay">
-          <CardContent className="p-4 space-y-3">
+        <div className="sc-card" style={{ padding: '24px 28px' }} data-testid="chart-td-dependency-overlay">
             {(() => {
               const weeklyTdPct = weeklyPts.map((pts, i) => pts > 0 ? (weeklyTdPts[i] / pts) * 100 : 0);
               const tdPctRolling = computeRollingAvg(weeklyTdPct, 3);
@@ -2775,8 +2755,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                 </>
               );
             })()}
-          </CardContent>
-        </Card>
+        </div>
       )}
 
       {(() => {
@@ -2856,17 +2835,15 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
         if (!shiftSummary) return null;
 
         return (
-          <Card data-testid="usage-shift-summary">
-            <CardContent className="p-4">
+          <div className="sc-card" style={{ padding: '20px 28px' }} data-testid="usage-shift-summary">
               <div className="flex items-start gap-2">
-                <FileText className="w-3.5 h-3.5 text-muted-foreground mt-0.5 shrink-0" />
+                <FileText className="w-3.5 h-3.5 shrink-0" style={{ color: '#d4af37', marginTop: '2px' }} />
                 <div>
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-1">Usage Shift Summary</p>
-                  <p className="text-[11px] text-foreground/80 leading-relaxed" data-testid="text-shift-summary">{shiftSummary}</p>
+                  <p style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#0b3a7a', marginBottom: '4px' }}>Usage Shift Summary</p>
+                  <p style={{ fontSize: '11px', color: '#475569', lineHeight: 1.6 }} data-testid="text-shift-summary">{shiftSummary}</p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+          </div>
         );
       })()}
 
@@ -3040,15 +3017,9 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
 
         return (
           <>
-            <div className="space-y-1 pt-2" data-testid="sustainability-section-header">
-              <div className="flex items-center gap-2">
-                <Gauge className="w-4 h-4 text-muted-foreground" />
-                <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Production Risk</p>
-              </div>
-            </div>
+            <SectionHeader title="Production Risk" subtitle="Volume vs efficiency drivers and sustainability signals" />
 
-            <Card data-testid="volume-vs-efficiency">
-              <CardContent className="p-4 space-y-3">
+            <div className="sc-card" style={{ padding: '24px 28px' }} data-testid="volume-vs-efficiency">
                 <div className="flex items-center gap-1.5">
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Volume vs Efficiency Driver</p>
                   <TooltipProvider>
@@ -3161,11 +3132,9 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                     </TooltipProvider>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+            </div>
 
-            <Card data-testid="td-dependency-breakdown">
-              <CardContent className="p-4 space-y-3">
+            <div className="sc-card" style={{ padding: '24px 28px' }} data-testid="td-dependency-breakdown">
                 <div className="flex items-center gap-1.5">
                   <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">TD Dependency Breakdown</p>
                   <TooltipProvider>
@@ -3220,11 +3189,9 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                     {tdIsHigh ? 'High TD Reliance' : 'Sustainable Volume Base'}
                   </Badge>
                 </div>
-              </CardContent>
-            </Card>
+            </div>
 
-            <Card data-testid="sustainability-score" className="border-border/60">
-              <CardContent className="p-4 space-y-3">
+            <div className="sc-card" style={{ padding: '24px 28px' }} data-testid="sustainability-score">
                 <div className="flex items-center justify-between gap-3 flex-wrap">
                   <TooltipProvider delayDuration={200}>
                     <Tooltip>
@@ -3278,8 +3245,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
                 <p className="text-[11px] text-foreground/80 leading-relaxed italic" data-testid="text-sustainability-insight">
                   {insightSentence}
                 </p>
-              </CardContent>
-            </Card>
+            </div>
           </>
         );
       })()}
@@ -3330,27 +3296,28 @@ function RankingsTab({ player }: { player: Player }) {
     : { label: 'Fragile', color: 'text-amber-700 dark:text-amber-600', bg: 'bg-amber-500/10' };
 
   return (
-    <div className="space-y-6" data-testid="rankings-tab">
-      <Card data-testid="dynasty-market-snapshot">
-        <CardContent className="p-5 space-y-5">
-          <div className="flex items-center justify-between gap-3 flex-wrap">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }} data-testid="rankings-tab">
+      <SectionHeader title="Rankings & Value" subtitle="Dynasty consensus data and market positioning" />
+
+      <div className="sc-card" style={{ padding: '28px' }} data-testid="dynasty-market-snapshot">
+          <div className="flex items-center justify-between gap-3 flex-wrap" style={{ marginBottom: '20px' }}>
             <div className="flex items-center gap-2">
-              <Trophy className="w-4 h-4 text-amber-500" />
-              <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Dynasty Market Snapshot</p>
+              <Trophy className="w-4 h-4" style={{ color: '#d4af37' }} />
+              <p style={{ fontSize: '13px', fontWeight: 700, color: '#0b3a7a', letterSpacing: '-0.01em' }}>Dynasty Market Snapshot</p>
             </div>
             <div className="flex items-center gap-3">
               {dynasty.sf && (
-                <div className="flex items-center rounded-md border border-border overflow-hidden text-[10px] font-semibold" data-testid="toggle-dynasty-format">
+                <div className="sc-gamelog__segmented-control" data-testid="toggle-dynasty-format">
                   <button
                     onClick={() => setDynastyFormat('1qb')}
-                    className={`px-2.5 py-1 transition-colors ${dynastyFormat === '1qb' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                    className={`sc-gamelog__segment ${dynastyFormat === '1qb' ? 'sc-gamelog__segment--active' : ''}`}
                     data-testid="button-dynasty-1qb"
                   >
                     1QB
                   </button>
                   <button
                     onClick={() => setDynastyFormat('sf')}
-                    className={`px-2.5 py-1 transition-colors ${dynastyFormat === 'sf' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                    className={`sc-gamelog__segment ${dynastyFormat === 'sf' ? 'sc-gamelog__segment--active' : ''}`}
                     data-testid="button-dynasty-sf"
                   >
                     SF
@@ -3421,28 +3388,27 @@ function RankingsTab({ player }: { player: Player }) {
             </div>
           </div>
 
-        </CardContent>
-      </Card>
+      </div>
 
       <a
         href={`https://keeptradecut.com/dynasty-rankings/players/${dynasty.ktcSlug}`}
         target="_blank"
         rel="noopener noreferrer"
       >
-        <Card className="hover-elevate cursor-pointer">
-          <CardContent className="p-4 flex items-center justify-between gap-3 flex-wrap">
-            <div className="flex items-center gap-3 flex-wrap">
-              <div className="p-2 rounded-md bg-amber-500/10">
-                <BarChart3 className="w-4 h-4 text-amber-500" />
+        <div className="sc-card hover-elevate" style={{ padding: '20px 28px', cursor: 'pointer' }}>
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="p-2 rounded-md" style={{ background: 'rgba(212,175,55,0.1)' }}>
+                  <BarChart3 className="w-4 h-4" style={{ color: '#d4af37' }} />
+                </div>
+                <div>
+                  <p style={{ fontWeight: 600, color: '#0b3a7a', fontSize: '14px' }}>View Full Dynasty Profile</p>
+                  <p style={{ fontSize: '12px', color: '#94a3b8' }}>Trade calculator, keep/trade/cut data, and more on KeepTradeCut</p>
+                </div>
               </div>
-              <div>
-                <p className="font-medium text-foreground text-sm">View Full Dynasty Profile</p>
-                <p className="text-xs text-muted-foreground">Trade calculator, keep/trade/cut data, and more on KeepTradeCut</p>
-              </div>
+              <ExternalLink className="w-4 h-4 flex-shrink-0" style={{ color: '#94a3b8' }} />
             </div>
-            <ExternalLink className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-          </CardContent>
-        </Card>
+        </div>
       </a>
 
       <div className="px-1 pt-2" data-testid="dynasty-disclaimer">
@@ -3476,7 +3442,7 @@ type PatriotsNewsItem = {
 function FeaturedNewsCard({ item, player, teamColor, sourceName }: { item: PatriotsNewsItem; player: Player; teamColor: string; sourceName: string }) {
   const [imgError, setImgError] = useState(false);
   const headshotUrl = getHeadshotUrl(player.id);
-  const accentColor = teamColor || '#caa14a';
+  const accentColor = teamColor || '#d4af37';
   const gradientStyle = `linear-gradient(90deg, ${accentColor}, ${accentColor}88)`;
 
   return (
@@ -3797,7 +3763,7 @@ function NewsTab({ player }: { player: Player }) {
   const teamAbbr = player.team || '';
   const teamSiteLabel = SUPPORTED_TEAM_SITES[teamAbbr] || null;
   const hasTeamSite = !!teamSiteLabel;
-  const teamColor = TEAM_PRIMARY_COLORS[teamAbbr] || '#caa14a';
+  const teamColor = TEAM_PRIMARY_COLORS[teamAbbr] || '#d4af37';
   const [newsFilter, setNewsFilter] = useState<'articles' | 'injuries'>('articles');
 
   const { data: teamNews, isLoading: teamNewsLoading, refetch, isFetching } = useQuery({
@@ -3830,12 +3796,13 @@ function NewsTab({ player }: { player: Player }) {
   const sourceName = teamNews?.source || (teamSiteLabel ? `${teamSiteLabel}.com` : '');
 
   return (
-    <div className="space-y-6" data-testid="news-tab">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }} data-testid="news-tab">
+      <SectionHeader title="News & Analysis" subtitle="Latest team reports, injury updates, and player intel" />
       {hasTeamSite && (
-        <div className="sc-news-filter" data-testid="news-filter-toggle">
+        <div className="sc-gamelog__segmented-control" data-testid="news-filter-toggle">
           <button
             type="button"
-            className={`sc-news-filter__btn ${newsFilter === 'articles' ? 'sc-news-filter__btn--active' : ''}`}
+            className={`sc-gamelog__segment ${newsFilter === 'articles' ? 'sc-gamelog__segment--active' : ''}`}
             onClick={() => setNewsFilter('articles')}
             data-testid="button-filter-articles"
           >
@@ -3843,7 +3810,7 @@ function NewsTab({ player }: { player: Player }) {
           </button>
           <button
             type="button"
-            className={`sc-news-filter__btn ${newsFilter === 'injuries' ? 'sc-news-filter__btn--active' : ''}`}
+            className={`sc-gamelog__segment ${newsFilter === 'injuries' ? 'sc-gamelog__segment--active' : ''}`}
             onClick={() => setNewsFilter('injuries')}
             data-testid="button-filter-injuries"
           >
@@ -4207,30 +4174,30 @@ function NewsTab({ player }: { player: Player }) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Link href="/articles/">
-          <Card className="hover-elevate cursor-pointer h-full">
-            <CardContent className="p-4 flex items-center gap-3 flex-wrap">
-              <div className="p-2 rounded-md bg-primary/10">
-                <FileText className="w-4 h-4 text-primary" />
+          <div className="sc-card hover-elevate" style={{ padding: '20px 24px', cursor: 'pointer', height: '100%' }}>
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="p-2 rounded-md" style={{ background: 'rgba(11,58,122,0.08)' }}>
+                  <FileText className="w-4 h-4" style={{ color: '#0b3a7a' }} />
+                </div>
+                <div>
+                  <p style={{ fontWeight: 600, color: '#0b3a7a', fontSize: '14px' }}>Browse Articles</p>
+                  <p style={{ fontSize: '12px', color: '#94a3b8' }}>Expert analysis and insights</p>
+                </div>
               </div>
-              <div>
-                <p className="font-medium text-foreground text-sm">Browse Articles</p>
-                <p className="text-xs text-muted-foreground">Expert analysis and insights</p>
-              </div>
-            </CardContent>
-          </Card>
+          </div>
         </Link>
         <Link href="/nfl/players">
-          <Card className="hover-elevate cursor-pointer h-full">
-            <CardContent className="p-4 flex items-center gap-3 flex-wrap">
-              <div className="p-2 rounded-md bg-primary/10">
-                <Search className="w-4 h-4 text-primary" />
+          <div className="sc-card hover-elevate" style={{ padding: '20px 24px', cursor: 'pointer', height: '100%' }}>
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="p-2 rounded-md" style={{ background: 'rgba(11,58,122,0.08)' }}>
+                  <Search className="w-4 h-4" style={{ color: '#0b3a7a' }} />
+                </div>
+                <div>
+                  <p style={{ fontWeight: 600, color: '#0b3a7a', fontSize: '14px' }}>Search Players</p>
+                  <p style={{ fontSize: '12px', color: '#94a3b8' }}>Find and compare players</p>
+                </div>
               </div>
-              <div>
-                <p className="font-medium text-foreground text-sm">Search Players</p>
-                <p className="text-xs text-muted-foreground">Find and compare players</p>
-              </div>
-            </CardContent>
-          </Card>
+          </div>
         </Link>
       </div>
     </div>
@@ -4273,18 +4240,14 @@ function PlayerProfileSkeleton() {
 function ScoringFormatToggle({ format, onChange }: { format: ScoringFormat; onChange: (f: ScoringFormat) => void }) {
   const formats: ScoringFormat[] = ['standard', 'half', 'ppr'];
   return (
-    <div className="flex items-center gap-1" data-testid="scoring-format-toggle">
-      <span className="text-xs text-muted-foreground mr-1.5 hidden sm:inline">Scoring:</span>
-      <div className="flex rounded-md border border-border overflow-visible">
+    <div className="flex items-center gap-2" data-testid="scoring-format-toggle">
+      <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 500 }} className="hidden sm:inline">Scoring:</span>
+      <div className="sc-gamelog__segmented-control">
         {formats.map((f) => (
           <button
             key={f}
             onClick={() => onChange(f)}
-            className={`px-2.5 py-1 text-xs font-medium transition-colors whitespace-nowrap ${
-              format === f
-                ? 'bg-[#D4A843] text-white dark:text-slate-900'
-                : 'text-muted-foreground'
-            } ${f === 'standard' ? 'rounded-l-md' : ''} ${f === 'ppr' ? 'rounded-r-md' : ''}`}
+            className={`sc-gamelog__segment ${format === f ? 'sc-gamelog__segment--active' : ''}`}
             data-testid={`button-format-${f}`}
           >
             {SCORING_LABELS[f]}
@@ -4426,12 +4389,18 @@ export default function PlayerProfile() {
         />
 
         <div className="relative max-w-4xl mx-auto px-4 pt-8 pb-8 md:pt-10 md:pb-10">
-          <Link href="/nfl/players">
-            <Button variant="ghost" size="sm" className="mb-4 -ml-1 text-slate-600 dark:text-slate-300" data-testid="button-back">
-              <ArrowLeft className="w-4 h-4 mr-1" />
-              All Players
-            </Button>
-          </Link>
+          <div className="flex items-center justify-between mb-4">
+            <Link href="/nfl/players">
+              <Button variant="ghost" size="sm" className="-ml-1 text-slate-600 dark:text-slate-300" data-testid="button-back">
+                <ArrowLeft className="w-4 h-4 mr-1" />
+                All Players
+              </Button>
+            </Link>
+            <div className="hidden sm:block text-right" data-testid="text-engine-marker">
+              <p style={{ fontSize: '9px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#94a3b8' }}>Player Analytics Engine v2.1</p>
+              <p style={{ fontSize: '8px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.10em', color: '#cbd5e1' }}>Powered by StatChasers Models</p>
+            </div>
+          </div>
           <div className="flex items-center gap-6 md:gap-8 flex-wrap">
             <PlayerHeadshot playerId={player.id} name={player.name} teamColor={teamColor} />
             <div className="flex-1 min-w-0">
@@ -4495,10 +4464,10 @@ export default function PlayerProfile() {
         </div>
       </section>
 
-      <div className="sticky top-[53px] z-40 bg-background/95 backdrop-blur-sm border-b">
+      <div className="sticky top-[53px] z-40 border-b" style={{ background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(8px)', borderColor: 'rgba(11,58,122,0.08)' }}>
         <div className="max-w-4xl mx-auto px-4">
           <nav
-            className="flex gap-1 overflow-x-auto -mb-px scrollbar-hide"
+            className="flex gap-0.5 overflow-x-auto -mb-px scrollbar-hide"
             style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             data-testid="profile-tabs"
           >
@@ -4509,24 +4478,30 @@ export default function PlayerProfile() {
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`relative flex items-center gap-1.5 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors duration-200 ${
-                    isActive
-                      ? 'text-foreground'
-                      : 'text-muted-foreground'
-                  }`}
+                  className="relative flex items-center gap-1.5 px-4 py-3.5 text-sm whitespace-nowrap"
+                  style={{
+                    fontWeight: isActive ? 700 : 500,
+                    color: isActive ? '#0b3a7a' : '#94a3b8',
+                    transition: 'color 0.2s ease, transform 0.15s ease',
+                    cursor: 'pointer',
+                    background: 'none',
+                    border: 'none',
+                  }}
+                  onMouseEnter={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.color = '#0b3a7a'; }}
+                  onMouseLeave={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.color = '#94a3b8'; }}
                   data-testid={`tab-${tab.key}`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-[#D4A843]' : ''}`} />
+                  <Icon className="w-4 h-4" style={{ color: isActive ? '#d4af37' : 'inherit' }} />
                   <span className="hidden sm:inline">{tab.label}</span>
                   <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
                   <span
-                    className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full transition-all duration-300"
+                    className="absolute bottom-0 left-2 right-2 rounded-full"
                     style={{
-                      background: isActive
-                        ? 'linear-gradient(90deg, #D4A843, #F5D36E, #D4A843)'
-                        : 'transparent',
+                      height: isActive ? '3px' : '0px',
+                      background: 'linear-gradient(90deg, #d4af37, #e5c95c, #d4af37)',
                       opacity: isActive ? 1 : 0,
-                      transform: isActive ? 'scaleX(1)' : 'scaleX(0)',
+                      transform: isActive ? 'scaleX(1)' : 'scaleX(0.3)',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     }}
                   />
                 </button>
@@ -4538,8 +4513,7 @@ export default function PlayerProfile() {
 
       <main className="max-w-4xl mx-auto px-4 py-6">
         {player.injury_status && (
-          <Card className="mb-6 border-destructive/30 bg-destructive/5">
-            <CardContent className="p-4">
+          <div className="sc-card" style={{ padding: '16px 24px', marginBottom: '24px', borderColor: 'rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.05)' }}>
               <div className="flex items-center gap-3 flex-wrap">
                 <AlertTriangle className="w-5 h-5 text-destructive flex-shrink-0" />
                 <div>
@@ -4549,8 +4523,7 @@ export default function PlayerProfile() {
                   </p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+          </div>
         )}
 
         <div
@@ -4592,19 +4565,19 @@ export default function PlayerProfile() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {relatedData.neighbors.map((rp) => (
                 <Link key={rp.id} href={`/nfl/players/${rp.slug}/`}>
-                  <Card className="hover-elevate cursor-pointer h-full" data-testid={`card-related-${rp.slug}`}>
-                    <CardContent className="p-3 flex items-center gap-3 flex-wrap">
-                      <NeighborHeadshot playerId={rp.id} name={rp.name} teamAbbr={rp.team} />
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm text-foreground truncate">{rp.name}</p>
-                        <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                          <span className="text-[10px] font-bold text-primary/80">{rp.position}{rp.posRank}</span>
-                          <span className="text-xs text-muted-foreground">&middot;</span>
-                          <span className="text-xs text-muted-foreground">{rp.team}</span>
+                  <div className="sc-card hover-elevate" style={{ padding: '12px 16px', cursor: 'pointer', height: '100%' }} data-testid={`card-related-${rp.slug}`}>
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <NeighborHeadshot playerId={rp.id} name={rp.name} teamAbbr={rp.team} />
+                        <div className="flex-1 min-w-0">
+                          <p style={{ fontWeight: 600, fontSize: '14px', color: '#0b3a7a' }} className="truncate">{rp.name}</p>
+                          <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                            <span style={{ fontSize: '10px', fontWeight: 700, color: '#1a4fa0' }}>{rp.position}{rp.posRank}</span>
+                            <span style={{ fontSize: '12px', color: '#94a3b8' }}>&middot;</span>
+                            <span style={{ fontSize: '12px', color: '#94a3b8' }}>{rp.team}</span>
+                          </div>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                  </div>
                 </Link>
               ))}
             </div>
