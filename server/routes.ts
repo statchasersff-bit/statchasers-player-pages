@@ -125,7 +125,10 @@ function fillMissingWeeks(entries: GameLogEntry[], season: number, team: string 
   filled.sort((a, b) => a.week - b.week);
   for (const entry of filled) {
     if (!entry.game_status) {
-      entry.game_status = 'active';
+      const s = entry.stats as unknown as Record<string, number | null | undefined>;
+      const hasStats = (s.off_snp ?? 0) > 0 || (s.pass_att ?? 0) > 0 || (s.rush_att ?? 0) > 0 ||
+        (s.rec_tgt ?? 0) > 0 || (s.rec ?? 0) > 0;
+      entry.game_status = hasStats ? 'active' : 'out';
     }
     if (entry.game_status === 'active') {
       entry.score = getGameScore(season, team, entry.week) ?? null;
@@ -232,6 +235,7 @@ function enrichWithTeamMetrics(entries: GameLogEntry[], playerTeam: string | nul
 
 function hasParticipation(stats: GameLogEntry['stats'], position: string | null): boolean {
   const s = stats as unknown as Record<string, number | null | undefined>;
+  if ((s.off_snp ?? 0) > 0) return true;
   if (position === 'QB') {
     return (s.pass_att ?? 0) > 0 || (s.rush_att ?? 0) > 0;
   }

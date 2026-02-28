@@ -85,7 +85,7 @@ function buildSeasonStats(playerId, position, season) {
   const played = pLogs.filter(e => hasParticipation(e.stats, position));
   if (played.length === 0) return null;
 
-  const totalPts = played.reduce((sum, e) => sum + getEntryPoints(e.stats, 'half'), 0);
+  const totalPts = played.reduce((sum, e) => sum + getEntryPoints(e.stats, 'ppr'), 0);
   const ppg = totalPts / played.length;
 
   let pass_yd = 0, pass_td = 0, pass_att = 0, pass_cmp = 0, pass_int = 0;
@@ -103,7 +103,7 @@ function buildSeasonStats(playerId, position, season) {
     rush_att += s.rush_att ?? 0;
     rec_yd += s.rec_yd ?? 0; rec_td += s.rec_td ?? 0;
     rec += s.rec ?? 0; rec_tgt += s.rec_tgt ?? 0;
-    weeklyPts.push(getEntryPoints(s, 'half'));
+    weeklyPts.push(getEntryPoints(s, 'ppr'));
   }
 
   const mean = ppg;
