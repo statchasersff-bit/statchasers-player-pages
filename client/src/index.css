@@ -2236,22 +2236,11 @@
   padding: 20px 16px 16px;
   background: linear-gradient(135deg, rgba(15,23,42,0.02), rgba(15,23,42,0.04));
   border-radius: 12px;
-  border: 1px solid rgba(15,23,42,0.08);
-  position: relative;
-  overflow: hidden;
-}
-.sc-overview__ppg-hero::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--sc-blue), var(--sc-blue-light));
-  opacity: 0.8;
+  border: 1px solid rgba(11,58,122,0.08);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
 }
 .sc-overview__ppg-number {
-  font-size: 44px;
+  font-size: 28px;
   font-weight: 800;
   color: var(--sc-blue);
   letter-spacing: -0.03em;
