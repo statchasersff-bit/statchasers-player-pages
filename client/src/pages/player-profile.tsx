@@ -4370,13 +4370,12 @@ export default function PlayerProfile() {
   return (
     <div className="min-h-screen bg-background">
       <section
-        className="relative overflow-hidden border-b-2"
-        style={{ borderBottomColor: `${teamColor}60` }}
+        className="relative overflow-hidden"
         data-testid="section-player-header"
       >
         <div
           className="absolute inset-0"
-          style={{ background: `linear-gradient(135deg, rgba(11,58,122,0.04) 0%, rgba(11,58,122,0.02) 40%, rgba(255,255,255,1) 100%)` }}
+          style={{ background: `linear-gradient(135deg, rgba(11,58,122,0.06), rgba(11,58,122,0.02), white 70%)` }}
         />
         <div
           className="absolute inset-0 hidden dark:block"
@@ -4390,12 +4389,8 @@ export default function PlayerProfile() {
           }}
         />
         <div
-          className="absolute inset-0 opacity-[0.05] dark:opacity-[0.10]"
-          style={{ background: `radial-gradient(ellipse at 30% 50%, ${teamColor} 0%, transparent 70%)` }}
-        />
-        <div
-          className="absolute bottom-0 left-0 right-0 h-[2px]"
-          style={{ background: `linear-gradient(90deg, transparent 0%, #D4A843 30%, #F5D36E 50%, #D4A843 70%, transparent 100%)` }}
+          className="absolute bottom-0 left-0 right-0 h-[3px]"
+          style={{ background: `linear-gradient(90deg, transparent 0%, #0b3a7a 20%, #1a4fa0 50%, #0b3a7a 80%, transparent 100%)` }}
         />
 
         <div className="relative max-w-4xl mx-auto px-4 pt-8 pb-8 md:pt-10 md:pb-10">
