@@ -171,12 +171,13 @@ function NeighborHeadshot({ playerId, name, teamAbbr }: { playerId: string; name
   );
 }
 
-function StatBox({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
+function StatBox({ label, value, sub, tintClass, children }: { label: string; value: string | number; sub?: string; tintClass?: string; children?: React.ReactNode }) {
   return (
-    <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60">
-      <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{label}</p>
-      <p className="text-xl font-bold text-foreground tabular-nums mt-0.5">{value}</p>
-      {sub && <p className="text-[10px] text-muted-foreground mt-0.5">{sub}</p>}
+    <div className={`sc-gamelog__stat-box ${tintClass || ''}`}>
+      <p className="sc-gamelog__stat-label">{label}</p>
+      <p className="sc-gamelog__stat-value" data-testid={`text-statbox-${label.toLowerCase().replace(/\s+/g, '-')}`}>{value}</p>
+      {sub && <p className="sc-gamelog__stat-sub">{sub}</p>}
+      {children}
     </div>
   );
 }
@@ -352,7 +353,7 @@ function getOppRankColor(rank: number | null | undefined): string {
 type SortKey = 'week' | 'fpts' | 'finish' | string;
 type SortDir = 'asc' | 'desc';
 
-function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive, format = 'ppr' }: { entries?: GameLogEntry[]; position: string | null; filter: 'full' | 'last5'; tierFilter: DistTier | null; hideInactive: boolean; format?: ScoringFormat }) {
+function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive, format = 'ppr', lastN }: { entries?: GameLogEntry[]; position: string | null; filter: 'full' | 'last5'; tierFilter: DistTier | null; hideInactive: boolean; format?: ScoringFormat; lastN?: number }) {
   const { primary, detail, conditionalRush } = getPositionColumns(position);
   const posLabel = position || '';
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
@@ -389,7 +390,8 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
     }
   }, [sortKey, sortDir]);
 
-  let baseEntries = filter === 'last5' ? allActiveEntries.slice(-5) : entries;
+  const sliceCount = lastN || (filter === 'last5' ? 5 : undefined);
+  let baseEntries = sliceCount ? allActiveEntries.slice(-sliceCount) : entries;
 
   if (hideInactive && filter !== 'last5') {
     baseEntries = baseEntries.filter(e => e.game_status === 'active');
@@ -445,8 +447,9 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
     return n + (s[(v - 20) % 10] || s[v] || s[0]);
   };
 
-  const thClass = "py-2 px-2 text-[11px] uppercase tracking-[0.04em] text-slate-500 dark:text-slate-400 font-semibold whitespace-nowrap cursor-pointer select-none transition-colors hover:text-foreground sticky top-0 bg-card z-10";
-  const thStatic = "py-2 px-2 text-[11px] uppercase tracking-[0.04em] text-slate-500 dark:text-slate-400 font-semibold whitespace-nowrap select-none sticky top-0 bg-card z-10";
+  const thClass = "sc-gamelog__th sc-gamelog__th--sortable";
+  const thStatic = "sc-gamelog__th";
+  const thPrimary = "sc-gamelog__th sc-gamelog__th--sortable sc-gamelog__th--primary";
 
   const fptsTooltip = (entry: GameLogEntry) => {
     const parts: string[] = [];
@@ -466,21 +469,21 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
   };
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-xs" data-testid="table-game-log">
+    <div className="sc-gamelog__table-wrap">
+      <table className="sc-gamelog__table" data-testid="table-game-log">
         <thead>
-          <tr className="border-b border-border text-left">
+          <tr className="sc-gamelog__thead-row">
             <th className={thClass} onClick={() => handleSort('week')} data-testid="sort-week">WK<SortIcon colKey="week" /></th>
             <th className={thStatic}>OPP</th>
-            <th className={`${thStatic} text-center`}>SCORE</th>
+            <th className={`${thStatic} text-center`} style={{ position: 'sticky', left: 0, zIndex: 12 }}>SCORE</th>
             {allCols.map((col) => (
-              <th key={col.key} className={`${thClass} text-right`} onClick={() => handleSort(col.key)} data-testid={`sort-${col.key}`}>
+              <th key={col.key} className={`${thClass} text-right sc-gamelog__th--secondary`} onClick={() => handleSort(col.key)} data-testid={`sort-${col.key}`}>
                 {col.label}<SortIcon colKey={col.key} />
               </th>
             ))}
-            <th className={`${thClass} text-right`} onClick={() => handleSort('fpts')} data-testid="sort-fpts">FPTS<SortIcon colKey="fpts" /></th>
-            <th className={`${thClass} text-right`} onClick={() => handleSort('finish')} data-testid="sort-finish">FINISH<SortIcon colKey="finish" /></th>
-            {hasDetail && <th className="py-2 pl-2 w-6 sticky top-0 bg-card z-10"></th>}
+            <th className={`${thPrimary} text-right`} onClick={() => handleSort('fpts')} data-testid="sort-fpts">FPTS<SortIcon colKey="fpts" /></th>
+            <th className={`${thPrimary} text-right`} onClick={() => handleSort('finish')} data-testid="sort-finish">FINISH<SortIcon colKey="finish" /></th>
+            {hasDetail && <th className="sc-gamelog__th" style={{ width: '24px' }}></th>}
           </tr>
         </thead>
         <tbody>
@@ -499,20 +502,20 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
 
                 if (isInactive) {
                   return (
-                    <tr key={entry.week} className="border-b border-border/40 last:border-0 opacity-40 border-l-[3px] border-l-transparent" data-testid={`row-gamelog-week-${entry.week}`}>
-                      <td className="py-1 px-2 text-foreground font-medium">{entry.week}</td>
-                      <td className="py-1 px-2 text-muted-foreground">{isBye ? 'BYE' : '\u2014'}</td>
-                      <td className="py-1 px-2 text-center text-muted-foreground">
+                    <tr key={entry.week} className="sc-gamelog__row" style={{ opacity: 0.4 }} data-testid={`row-gamelog-week-${entry.week}`}>
+                      <td className="sc-gamelog__td" style={{ fontWeight: 600 }}>{entry.week}</td>
+                      <td className="sc-gamelog__td" style={{ color: '#94a3b8' }}>{isBye ? 'BYE' : '\u2014'}</td>
+                      <td className="sc-gamelog__td text-center">
                         <Badge variant="secondary" className={`text-[8px] px-1.5 py-0 ${isBye ? 'bg-sky-500/10 text-sky-700 dark:text-sky-400' : 'bg-muted text-muted-foreground'}`} data-testid={`badge-status-${entry.week}`}>
                           {isBye ? 'BYE' : 'OUT'}
                         </Badge>
                       </td>
                       {allCols.map((col) => (
-                        <td key={col.key} className="py-1 px-2 text-right text-muted-foreground">{'\u2014'}</td>
+                        <td key={col.key} className="sc-gamelog__td sc-gamelog__td--secondary text-right">{'\u2014'}</td>
                       ))}
-                      <td className="py-1 px-2 text-right text-muted-foreground">{'\u2014'}</td>
-                      <td className="py-1 px-2 text-right text-muted-foreground">{'\u2014'}</td>
-                      {hasDetail && <td className="py-1 pl-2"></td>}
+                      <td className="sc-gamelog__td sc-gamelog__td--primary text-right" style={{ color: '#94a3b8' }}>{'\u2014'}</td>
+                      <td className="sc-gamelog__td sc-gamelog__td--primary text-right" style={{ color: '#94a3b8' }}>{'\u2014'}</td>
+                      {hasDetail && <td className="sc-gamelog__td"></td>}
                     </tr>
                   );
                 }
@@ -522,18 +525,18 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
                 return (
                   <Fragment key={entry.week}>
                     <tr
-                      className={`border-b border-border/40 last:border-0 transition-colors hover:bg-blue-50/40 dark:hover:bg-blue-950/20 ${hasDetail ? 'cursor-pointer' : ''} ${isExpanded ? 'bg-muted/30 dark:bg-slate-800/30' : ''} ${getRowAccent(entry)}`}
+                      className={`sc-gamelog__row ${hasDetail ? 'cursor-pointer' : ''} ${isExpanded ? 'sc-gamelog__row--expanded' : ''} ${getRowAccent(entry)}`}
                       onClick={hasDetail ? () => toggleRow(entry.week) : undefined}
                       data-testid={`row-gamelog-week-${entry.week}`}
                     >
-                      <td className="py-[5px] px-2 text-foreground font-medium">{entry.week}</td>
-                      <td className="py-[5px] px-2 text-foreground whitespace-nowrap">
+                      <td className="sc-gamelog__td" style={{ fontWeight: 600 }}>{entry.week}</td>
+                      <td className="sc-gamelog__td" style={{ whiteSpace: 'nowrap' }}>
                         <div className="flex flex-col leading-tight">
-                          <span className="font-medium">{entry.opp}</span>
+                          <span style={{ fontWeight: 600, color: '#0f172a' }}>{entry.opp}</span>
                           {oppRankLabel && <span className={`text-[9px] leading-none opacity-70 ${getOppRankColor(oppRank)}`}>{oppRankLabel} vs {posLabel}</span>}
                         </div>
                       </td>
-                      <td className="py-[5px] px-2 text-center whitespace-nowrap" data-testid={`score-week-${entry.week}`}>
+                      <td className="sc-gamelog__td text-center" style={{ whiteSpace: 'nowrap', position: 'sticky', left: 0, zIndex: 2, background: 'inherit' }} data-testid={`score-week-${entry.week}`}>
                         {sc ? (
                           <span className={`text-[10px] tabular-nums font-medium ${scoreColor(sc.r)}`}>
                             {sc.r}, {sc.tm}&ndash;{sc.opp}
@@ -541,14 +544,14 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
                         ) : '\u2014'}
                       </td>
                       {allCols.map((col) => (
-                        <td key={col.key} className="py-[5px] px-2 text-foreground text-right tabular-nums">
+                        <td key={col.key} className="sc-gamelog__td sc-gamelog__td--secondary text-right">
                           {getStat(entry, col.key)}
                         </td>
                       ))}
-                      <td className="py-[5px] px-2 text-right tabular-nums" title={fptsTooltip(entry)}>
-                        <span className="text-[13px] font-bold text-foreground">{pts.toFixed(1)}</span>
+                      <td className="sc-gamelog__td sc-gamelog__td--primary text-right" title={fptsTooltip(entry)}>
+                        <span style={{ fontSize: '14px', fontWeight: 800, color: '#0f172a', fontFamily: 'ui-monospace, monospace' }}>{pts.toFixed(1)}</span>
                       </td>
-                      <td className="py-[5px] px-2 text-right" data-testid={`text-finish-week-${entry.week}`}>
+                      <td className="sc-gamelog__td sc-gamelog__td--primary text-right" data-testid={`text-finish-week-${entry.week}`}>
                         {tierBadge ? (
                           <Badge variant="secondary" className={`text-[9px] px-1.5 py-0 font-semibold tabular-nums ${tierBadge.className}`}>{tierBadge.label}</Badge>
                         ) : rank ? (
@@ -556,21 +559,22 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
                         ) : '\u2014'}
                       </td>
                       {hasDetail && (
-                        <td className="py-[5px] pl-2 text-center">
+                        <td className="sc-gamelog__td" style={{ textAlign: 'center', paddingLeft: '8px' }}>
                           <ChevronRight
-                            className={`w-3 h-3 text-muted-foreground/50 transition-transform duration-200 inline-block ${isExpanded ? 'rotate-90' : ''}`}
+                            className={`w-3 h-3 transition-transform duration-200 inline-block ${isExpanded ? 'rotate-90' : ''}`}
+                            style={{ color: '#94a3b8' }}
                           />
                         </td>
                       )}
                     </tr>
                     {hasDetail && isExpanded && (
-                      <tr className="bg-muted/20 dark:bg-slate-800/20" data-testid={`row-gamelog-detail-${entry.week}`}>
+                      <tr style={{ background: 'rgba(15,23,42,0.02)' }} data-testid={`row-gamelog-detail-${entry.week}`}>
                         <td colSpan={colCount} className="py-1.5 px-3">
                           <div className="flex items-center gap-4 flex-wrap pl-2">
                             {detail.map((col) => (
                               <div key={col.key} className="flex items-center gap-1.5">
-                                <span className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">{col.label}</span>
-                                <span className="text-xs font-semibold text-foreground tabular-nums">{getStat(entry, col.key)}</span>
+                                <span style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.06em', color: '#94a3b8', fontWeight: 600 }}>{col.label}</span>
+                                <span style={{ fontSize: '12px', fontWeight: 700, color: '#0f172a', fontFamily: 'ui-monospace, monospace' }}>{getStat(entry, col.key)}</span>
                               </div>
                             ))}
                           </div>
@@ -597,33 +601,34 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
         </tbody>
         {activeInDisplay.length > 0 && !tierFilter && (
           <tfoot>
-            <tr className="border-t-2 border-foreground/15 bg-muted/30 dark:bg-slate-800/20">
-              <td className="py-2 px-2 text-foreground font-bold text-[10px] uppercase tracking-wider" colSpan={2} data-testid="text-totals-label">
+            <tr style={{ borderTop: '2px solid rgba(15,23,42,0.10)', background: 'rgba(15,23,42,0.02)' }}>
+              <td className="sc-gamelog__td" colSpan={2} data-testid="text-totals-label" style={{ padding: '10px 8px' }}>
                 <div className="flex flex-col">
-                  <span className="text-[9px] text-muted-foreground/60 font-normal normal-case tracking-normal">Season {footerMode === 'avg' ? 'Avg' : 'Totals'}</span>
+                  <span style={{ fontSize: '9px', color: '#94a3b8', fontWeight: 500 }}>Season {footerMode === 'avg' ? 'Avg' : 'Totals'}</span>
                   <button
-                    className="text-left flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider"
+                    className="text-left flex items-center gap-1"
+                    style={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#0f172a', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
                     onClick={() => setFooterMode(footerMode === 'avg' ? 'total' : 'avg')}
                     data-testid="toggle-footer-mode"
                   >
                     {footerMode === 'avg' ? 'AVG/G' : 'TOTALS'}
-                    <ArrowUpDown className="w-2.5 h-2.5 opacity-40" />
+                    <ArrowUpDown className="w-2.5 h-2.5" style={{ opacity: 0.4 }} />
                   </button>
-                  <span className="text-[9px] text-muted-foreground font-normal normal-case tracking-normal">{gamesPlayed} games</span>
+                  <span style={{ fontSize: '9px', color: '#94a3b8', fontWeight: 500 }}>{gamesPlayed} games</span>
                 </div>
               </td>
-              <td className="py-2 px-2"></td>
+              <td className="sc-gamelog__td" style={{ padding: '10px 8px' }}></td>
               {allCols.map((col) => {
                 const total = activeInDisplay.reduce((sum, e) => sum + getStat(e, col.key), 0);
                 const val = footerMode === 'avg' ? (gamesPlayed > 0 ? total / gamesPlayed : 0) : total;
                 return (
-                  <td key={col.key} className="py-2 px-2 text-foreground text-right tabular-nums font-semibold">
+                  <td key={col.key} className="sc-gamelog__td sc-gamelog__td--secondary" style={{ textAlign: 'right', fontWeight: 700, padding: '10px 8px' }}>
                     {footerMode === 'total' ? val : (val % 1 === 0 ? val.toFixed(0) : val.toFixed(1))}
                   </td>
                 );
               })}
-              <td className="py-2 px-2 text-right tabular-nums">
-                <span className="text-[13px] font-bold text-foreground">
+              <td className="sc-gamelog__td sc-gamelog__td--primary" style={{ textAlign: 'right', padding: '10px 8px' }}>
+                <span style={{ fontSize: '14px', fontWeight: 800, color: '#0f172a', fontFamily: 'ui-monospace, monospace' }}>
                   {gamesPlayed > 0
                     ? footerMode === 'avg'
                       ? (activeInDisplay.reduce((sum, e) => sum + fpts(e, format), 0) / gamesPlayed).toFixed(1)
@@ -631,14 +636,14 @@ function GameLogTable({ entries = [], position, filter, tierFilter, hideInactive
                     : '0.0'}
                 </span>
               </td>
-              <td className="py-2 px-2 text-right" data-testid="text-avg-finish">
+              <td className="sc-gamelog__td sc-gamelog__td--primary" style={{ textAlign: 'right', padding: '10px 8px' }} data-testid="text-avg-finish">
                 {avgFinish ? (
                   <Badge variant="secondary" className={`text-[9px] px-1.5 py-0 font-semibold tabular-nums ${(getTierBadge(Math.round(avgFinish), position) || { className: 'bg-red-500/15 text-red-500 dark:text-red-400' }).className}`}>
                     {posLabel}{Math.round(avgFinish)}
                   </Badge>
                 ) : '\u2014'}
               </td>
-              {hasDetail && <td className="py-2 pl-2"></td>}
+              {hasDetail && <td className="sc-gamelog__td" style={{ padding: '10px 8px' }}></td>}
             </tr>
           </tfoot>
         )}
@@ -1619,54 +1624,94 @@ type DistTier = '15+' | '10\u201314.9' | '5\u20139.9' | '<5';
 function GameDistributionBar({ entries, position, activeTier, onTierClick, format = 'ppr' }: { entries: GameLogEntry[]; position: string | null; activeTier: DistTier | null; onTierClick: (tier: DistTier | null) => void; format?: ScoringFormat }) {
   const played = entries.filter(e => e.game_status === 'active');
   if (played.length === 0) return null;
-  const bins: { label: DistTier; count: number; color: string; textColor: string }[] = [
-    { label: '15+', count: played.filter(e => fpts(e, format) >= 15).length, color: 'bg-green-500 dark:bg-green-400', textColor: 'text-green-700 dark:text-green-400' },
-    { label: '10\u201314.9', count: played.filter(e => fpts(e, format) >= 10 && fpts(e, format) < 15).length, color: 'bg-teal-500 dark:bg-teal-400', textColor: 'text-teal-700 dark:text-teal-400' },
-    { label: '5\u20139.9', count: played.filter(e => fpts(e, format) >= 5 && fpts(e, format) < 10).length, color: 'bg-amber-500 dark:bg-amber-400', textColor: 'text-amber-700 dark:text-amber-400' },
-    { label: '<5', count: played.filter(e => fpts(e, format) < 5).length, color: 'bg-red-500 dark:bg-red-400', textColor: 'text-red-700 dark:text-red-400' },
+  const tierNames: Record<string, string> = { '15+': 'Elite', '10\u201314.9': 'Starter', '5\u20139.9': 'Flex', '<5': 'Bust' };
+  const tierTooltips: Record<string, string> = {
+    '15+': 'Top-12 positional finish threshold. Elite weekly production.',
+    '10\u201314.9': 'Startable weekly output. Solid lineup contributor.',
+    '5\u20139.9': 'Flex-tier production. Borderline start depending on matchup.',
+    '<5': 'Below replacement level. Not a viable fantasy starter.',
+  };
+  const tierColors: Record<string, string> = { '15+': '#22c55e', '10\u201314.9': '#2dd4bf', '5\u20139.9': '#f59e0b', '<5': '#ef4444' };
+  const tierTextColors: Record<string, string> = { '15+': '#15803d', '10\u201314.9': '#0d9488', '5\u20139.9': '#b45309', '<5': '#dc2626' };
+
+  const bins = [
+    { label: '15+' as DistTier, count: played.filter(e => fpts(e, format) >= 15).length },
+    { label: '10\u201314.9' as DistTier, count: played.filter(e => fpts(e, format) >= 10 && fpts(e, format) < 15).length },
+    { label: '5\u20139.9' as DistTier, count: played.filter(e => fpts(e, format) >= 5 && fpts(e, format) < 10).length },
+    { label: '<5' as DistTier, count: played.filter(e => fpts(e, format) < 5).length },
   ];
   const total = played.length;
   return (
-    <div data-testid="gamelog-distribution">
-      <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-1.5">Game Distribution</p>
-      <div className="flex mb-0.5">
-        {bins.map(bin => bin.count > 0 ? (
-          <div
-            key={bin.label}
-            className="flex flex-col items-center"
-            style={{ width: `${(bin.count / total) * 100}%` }}
-          >
-            <span className={`text-[9px] font-semibold tabular-nums ${activeTier === bin.label ? bin.textColor : 'text-muted-foreground'} ${activeTier && activeTier !== bin.label ? 'opacity-30' : ''}`}>{bin.count}</span>
-          </div>
-        ) : null)}
+    <div className="sc-gamelog__dist" data-testid="gamelog-distribution">
+      <p className="sc-overview__section-title" style={{ marginBottom: '10px' }}>Game Distribution</p>
+      <div className="sc-gamelog__dist-bar" style={{ display: 'flex', borderRadius: '10px', overflow: 'hidden', height: '36px', marginBottom: '8px' }}>
+        {bins.map(bin => {
+          const pct = total > 0 ? (bin.count / total) * 100 : 0;
+          if (bin.count === 0) return null;
+          return (
+            <div
+              key={bin.label}
+              className={`sc-gamelog__dist-segment ${activeTier === bin.label ? 'sc-gamelog__dist-segment--active' : ''} ${activeTier && activeTier !== bin.label ? 'sc-gamelog__dist-segment--faded' : ''}`}
+              style={{
+                width: `${pct}%`,
+                background: tierColors[bin.label],
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                position: 'relative',
+                transition: 'opacity 0.2s ease, transform 0.2s ease',
+              }}
+              title={tierTooltips[bin.label]}
+              onClick={() => onTierClick(activeTier === bin.label ? null : bin.label)}
+              data-testid={`dist-segment-${bin.label}`}
+            >
+              {pct >= 12 && (
+                <>
+                  <span style={{ fontSize: '10px', fontWeight: 800, color: '#fff', lineHeight: 1, textShadow: '0 1px 2px rgba(0,0,0,0.2)' }}>{tierNames[bin.label]}</span>
+                  <span style={{ fontSize: '9px', fontWeight: 700, color: 'rgba(255,255,255,0.85)', lineHeight: 1, marginTop: '1px' }}>{bin.count}</span>
+                </>
+              )}
+            </div>
+          );
+        })}
       </div>
-      <div className="flex rounded-md overflow-hidden h-3 mb-1">
-        {bins.map(bin => bin.count > 0 ? (
-          <div
-            key={bin.label}
-            className={`${bin.color} transition-all cursor-pointer ${activeTier === bin.label ? 'ring-2 ring-foreground/30' : ''} ${activeTier && activeTier !== bin.label ? 'opacity-30' : ''}`}
-            style={{ width: `${(bin.count / total) * 100}%` }}
-            title={`${bin.label}: ${bin.count} games`}
-            onClick={() => onTierClick(activeTier === bin.label ? null : bin.label)}
-            data-testid={`dist-segment-${bin.label}`}
-          />
-        ) : null)}
-      </div>
-      <div className="flex items-center gap-3 flex-wrap">
-        {bins.map(bin => (
-          <button
-            key={bin.label}
-            className={`flex items-center gap-1 rounded-md px-1.5 py-0.5 transition-colors cursor-pointer ${activeTier === bin.label ? 'bg-muted ring-1 ring-border' : ''} ${activeTier && activeTier !== bin.label ? 'opacity-40' : ''}`}
-            onClick={() => onTierClick(activeTier === bin.label ? null : bin.label)}
-            data-testid={`dist-legend-${bin.label}`}
-          >
-            <div className={`w-2 h-2 rounded-full ${bin.color}`} />
-            <span className={`text-[10px] tabular-nums font-medium ${activeTier === bin.label ? bin.textColor : 'text-muted-foreground'}`}>{bin.label}: {bin.count}</span>
-          </button>
-        ))}
+      <div className="flex items-center gap-2 flex-wrap" style={{ marginBottom: '6px' }}>
+        {bins.map(bin => {
+          const pct = total > 0 ? ((bin.count / total) * 100).toFixed(0) : '0';
+          const isActive = activeTier === bin.label;
+          const isFaded = activeTier && activeTier !== bin.label;
+          return (
+            <button
+              key={bin.label}
+              className="sc-gamelog__dist-legend"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '4px 10px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                border: isActive ? `1px solid ${tierColors[bin.label]}` : '1px solid rgba(15,23,42,0.08)',
+                background: isActive ? `${tierColors[bin.label]}10` : 'transparent',
+                opacity: isFaded ? 0.35 : 1,
+                transition: 'all 0.15s ease',
+              }}
+              onClick={() => onTierClick(isActive ? null : bin.label)}
+              data-testid={`dist-legend-${bin.label}`}
+            >
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: tierColors[bin.label], flexShrink: 0 }} />
+              <span style={{ fontSize: '10px', fontWeight: 700, color: isActive ? tierTextColors[bin.label] : '#64748b', fontFamily: 'ui-monospace, monospace' }}>
+                {pct}% {tierNames[bin.label]}
+              </span>
+              <span style={{ fontSize: '9px', color: '#94a3b8', fontFamily: 'ui-monospace, monospace' }}>({bin.count})</span>
+            </button>
+          );
+        })}
         {activeTier && (
           <button
-            className="text-[10px] text-muted-foreground/70 underline underline-offset-2"
+            style={{ fontSize: '10px', color: '#94a3b8', textDecoration: 'underline', cursor: 'pointer', background: 'none', border: 'none', padding: '4px' }}
             onClick={() => onTierClick(null)}
             data-testid="dist-clear-filter"
           >
@@ -1678,10 +1723,12 @@ function GameDistributionBar({ entries, position, activeTier, onTierClick, forma
   );
 }
 
+type GameFilterType = 'full' | 'last8' | 'last5';
+
 function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; format?: ScoringFormat }) {
   const availableSeasons = player.availableSeasons || (player.season ? [player.season] : []);
   const [selectedSeason, setSelectedSeason] = useState<number>(availableSeasons[0] || new Date().getFullYear());
-  const [gameFilter, setGameFilter] = useState<'full' | 'last5'>('full');
+  const [gameFilter, setGameFilter] = useState<GameFilterType>('full');
   const [tierFilter, setTierFilter] = useState<DistTier | null>(null);
   const [hideInactive, setHideInactive] = useState(false);
   const isDefaultSeason = selectedSeason === availableSeasons[0];
@@ -1701,33 +1748,36 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
   const posLabel = player.position || '';
   const played = entries.filter(e => hasParticipation(e.stats, player.position));
 
+  const posAvgPpg = (() => {
+    const benchmarks: Record<string, number> = { QB: 16.5, RB: 11.5, WR: 10.5, TE: 8.0 };
+    return benchmarks[player.position || ''] ?? 10;
+  })();
+
   const bestWeek = played.length > 0 ? played.reduce((best, e) => fpts(e, format) > fpts(best, format) ? e : best, played[0]) : null;
   const worstWeek = played.length > 0 ? played.reduce((worst, e) => fpts(e, format) < fpts(worst, format) ? e : worst, played[0]) : null;
   const bestTier = bestWeek ? getTierBadge(bestWeek.pos_rank, player.position) : null;
   const worstTier = worstWeek ? getTierBadge(worstWeek.pos_rank, player.position) : null;
 
+  const filterForTable: 'full' | 'last5' = gameFilter === 'full' ? 'full' : 'last5';
+
   return (
-    <div className="space-y-4">
+    <div className="sc-gamelog" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <h2 className="text-lg font-semibold text-foreground" data-testid="text-gamelog-heading">
+        <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.01em' }} data-testid="text-gamelog-heading">
           Game Log
         </h2>
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex rounded-md border border-border overflow-visible" data-testid="filter-game-range">
-            <button
-              className={`px-3 py-1 text-xs font-medium transition-colors ${gameFilter === 'full' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
-              onClick={() => setGameFilter('full')}
-              data-testid="button-filter-full"
-            >
-              Full Season
-            </button>
-            <button
-              className={`px-3 py-1 text-xs font-medium transition-colors ${gameFilter === 'last5' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
-              onClick={() => setGameFilter('last5')}
-              data-testid="button-filter-last5"
-            >
-              Last 5
-            </button>
+          <div className="sc-gamelog__segmented-control" data-testid="filter-game-range">
+            {(['full', 'last8', 'last5'] as GameFilterType[]).map((f) => (
+              <button
+                key={f}
+                className={`sc-gamelog__segment ${gameFilter === f ? 'sc-gamelog__segment--active' : ''}`}
+                onClick={() => setGameFilter(f)}
+                data-testid={`button-filter-${f}`}
+              >
+                {f === 'full' ? 'Full Season' : f === 'last8' ? 'Last 8' : 'Last 5'}
+              </button>
+            ))}
           </div>
           {availableSeasons.length > 1 && (
             <Select value={String(selectedSeason)} onValueChange={(v) => setSelectedSeason(Number(v))}>
@@ -1744,45 +1794,51 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
             </Select>
           )}
           {availableSeasons.length === 1 && (
-            <span className="text-sm text-muted-foreground">{selectedSeason}</span>
+            <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: 600 }}>{selectedSeason}</span>
           )}
         </div>
       </div>
 
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2" data-testid="gamelog-summary-bar">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3" data-testid="gamelog-summary-bar">
           <StatBox label="Games Played" value={stats.gamesPlayed} />
-          <StatBox label="Season PPG" value={stats.ppg.toFixed(1)} />
-          <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Best Week</p>
-            <p className="text-xl font-bold text-foreground tabular-nums mt-0.5" data-testid="text-best-week-pts">
-              {bestWeek ? fpts(bestWeek, format).toFixed(1) : '\u2014'}
-            </p>
+          <StatBox label="Season PPG" value={stats.ppg.toFixed(1)} tintClass="sc-gamelog__stat-box--blue">
+            {player.seasonRank && (
+              <p className="sc-gamelog__stat-sub" style={{ fontWeight: 700, color: '#475569' }}>
+                {posLabel}{player.seasonRank} Equivalent
+              </p>
+            )}
+            {(() => {
+              const delta = stats.ppg - posAvgPpg;
+              return (
+                <p className="sc-gamelog__stat-sub" style={{ fontWeight: 700, color: delta >= 0 ? '#16a34a' : '#dc2626' }} data-testid="text-ppg-vs-avg">
+                  {delta >= 0 ? '+' : ''}{delta.toFixed(1)} vs Pos Avg
+                </p>
+              );
+            })()}
+          </StatBox>
+          <StatBox label="Best Week" value={bestWeek ? fpts(bestWeek, format).toFixed(1) : '\u2014'} tintClass="sc-gamelog__stat-box--green">
             {bestWeek && bestTier && (
-              <div className="flex items-center gap-1 mt-0.5 flex-wrap">
-                <span className="text-[10px] text-muted-foreground">Wk {bestWeek.week}</span>
+              <div className="flex items-center gap-1 flex-wrap" style={{ marginTop: '2px' }}>
+                <span style={{ fontSize: '10px', color: '#94a3b8' }}>Wk {bestWeek.week}</span>
                 <Badge variant="secondary" className={`text-[8px] px-1 py-0 ${bestTier.className}`}>{bestTier.label}</Badge>
               </div>
             )}
             {bestWeek && !bestTier && bestWeek.pos_rank && (
-              <span className="text-[10px] text-muted-foreground mt-0.5 block">Wk {bestWeek.week} ({posLabel}{bestWeek.pos_rank})</span>
+              <span style={{ fontSize: '10px', color: '#94a3b8', display: 'block', marginTop: '2px' }}>Wk {bestWeek.week} ({posLabel}{bestWeek.pos_rank})</span>
             )}
-          </div>
-          <div className="p-3 rounded-md bg-muted/50 dark:bg-slate-800/60">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Worst Week</p>
-            <p className="text-xl font-bold text-foreground tabular-nums mt-0.5" data-testid="text-worst-week-pts">
-              {worstWeek ? fpts(worstWeek, format).toFixed(1) : '\u2014'}
-            </p>
+          </StatBox>
+          <StatBox label="Worst Week" value={worstWeek ? fpts(worstWeek, format).toFixed(1) : '\u2014'} tintClass="sc-gamelog__stat-box--red">
             {worstWeek && worstTier && (
-              <div className="flex items-center gap-1 mt-0.5 flex-wrap">
-                <span className="text-[10px] text-muted-foreground">Wk {worstWeek.week}</span>
+              <div className="flex items-center gap-1 flex-wrap" style={{ marginTop: '2px' }}>
+                <span style={{ fontSize: '10px', color: '#94a3b8' }}>Wk {worstWeek.week}</span>
                 <Badge variant="secondary" className={`text-[8px] px-1 py-0 ${worstTier.className}`}>{worstTier.label}</Badge>
               </div>
             )}
             {worstWeek && !worstTier && worstWeek.pos_rank && (
-              <span className="text-[10px] text-muted-foreground mt-0.5 block">Wk {worstWeek.week} ({posLabel}{worstWeek.pos_rank})</span>
+              <span style={{ fontSize: '10px', color: '#94a3b8', display: 'block', marginTop: '2px' }}>Wk {worstWeek.week} ({posLabel}{worstWeek.pos_rank})</span>
             )}
-          </div>
+          </StatBox>
         </div>
       )}
 
@@ -1790,21 +1846,21 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
         <GameDistributionBar entries={entries} position={player.position} activeTier={tierFilter} onTierClick={setTierFilter} format={format} />
       )}
 
-      <Card className="bg-white dark:bg-card border border-border rounded-2xl shadow-[0_4px_18px_rgba(15,23,42,0.05)] dark:shadow-none overflow-hidden">
-        <CardContent className="p-4">
+      <div className="sc-gamelog__table-card">
+        <div style={{ padding: '16px 20px' }}>
           {gameFilter === 'full' && (
             <div className="flex items-center justify-end mb-2 gap-1.5">
-              <div className="flex items-center rounded-lg border border-border overflow-hidden text-[10px] font-semibold" data-testid="toggle-hide-inactive">
+              <div className="sc-gamelog__segmented-control sc-gamelog__segmented-control--sm" data-testid="toggle-hide-inactive">
                 <button
                   onClick={() => setHideInactive(false)}
-                  className={`px-2.5 py-1 transition-colors ${!hideInactive ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                  className={`sc-gamelog__segment ${!hideInactive ? 'sc-gamelog__segment--active' : ''}`}
                   data-testid="button-show-all"
                 >
                   Show All
                 </button>
                 <button
                   onClick={() => setHideInactive(true)}
-                  className={`px-2.5 py-1 transition-colors ${hideInactive ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                  className={`sc-gamelog__segment ${hideInactive ? 'sc-gamelog__segment--active' : ''}`}
                   data-testid="button-active-only"
                 >
                   Active Only
@@ -1818,10 +1874,10 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
               <Skeleton className="h-4 w-32 mx-auto" />
             </div>
           ) : (
-            <GameLogTable entries={entries} position={player.position} filter={gameFilter} tierFilter={tierFilter} hideInactive={hideInactive} format={format} />
+            <GameLogTable entries={entries} position={player.position} filter={gameFilter === 'last8' ? 'last5' : filterForTable} tierFilter={tierFilter} hideInactive={hideInactive} format={format} lastN={gameFilter === 'last8' ? 8 : gameFilter === 'last5' ? 5 : undefined} />
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {player.careerSeasonStats && player.careerSeasonStats.length > 0 && (
         <CareerStatsTable stats={player.careerSeasonStats} position={player.position} format={format} onSeasonClick={(s) => { setSelectedSeason(s); setGameFilter('full'); }} />
@@ -1890,60 +1946,83 @@ function CareerStatsTable({ stats, position, format, onSeasonClick }: {
 
   const formatLabel = format === 'ppr' ? 'PPR' : format === 'half' ? 'Half-PPR' : 'Standard';
 
-  return (
-    <Card data-testid="career-stats-table">
-      <CardContent className="p-4 space-y-3">
-        <div className="flex items-center justify-between gap-3 flex-wrap">
-          <div>
-            <h3 className="text-sm font-semibold text-foreground" data-testid="text-career-stats-heading">Career Stats</h3>
-            <p className="text-[10px] text-muted-foreground mt-0.5">Season totals &middot; {formatLabel} fantasy output</p>
-          </div>
-        </div>
+  const durabilityPct = (() => {
+    const maxGamesPerSeason = 17;
+    const totalPossible = sorted.length * maxGamesPerSeason;
+    return totalPossible > 0 ? (totalGp / totalPossible) * 100 : 0;
+  })();
 
-        {bestSeason && sorted.length > 1 && (
-          <div className="text-[11px] text-muted-foreground leading-relaxed" data-testid="text-career-trend-line">
-            <span>Best season: <span className="font-semibold text-foreground">{bestSeason.season}</span> ({bestSeason.ppg.toFixed(1)} PPG{bestSeason.posRank ? `, ${pos}${bestSeason.posRank}` : ''})</span>
-            <span className="mx-2">&middot;</span>
-            <span>Career avg: <span className="font-semibold text-foreground">{careerPpg.toFixed(1)} PPG</span> across {totalGp} games</span>
+  return (
+    <div className="sc-gamelog__career-section" data-testid="career-stats-table">
+      <div className="flex items-center justify-between gap-3 flex-wrap" style={{ marginBottom: '16px' }}>
+        <div>
+          <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.01em' }} data-testid="text-career-stats-heading">Career Stats</h3>
+          <p style={{ fontSize: '10px', color: '#94a3b8', marginTop: '2px' }}>Season totals &middot; {formatLabel} fantasy output</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-3" style={{ marginBottom: '16px' }} data-testid="career-summary-tiles">
+        <div className="sc-gamelog__stat-box sc-gamelog__stat-box--blue">
+          <p className="sc-gamelog__stat-label">Career Avg</p>
+          <p className="sc-gamelog__stat-value">{careerPpg.toFixed(1)}</p>
+          <p className="sc-gamelog__stat-sub">PPG across {totalGp} games</p>
+        </div>
+        {bestSeason && (
+          <div className="sc-gamelog__stat-box sc-gamelog__stat-box--green">
+            <p className="sc-gamelog__stat-label">Peak Season</p>
+            <p className="sc-gamelog__stat-value">{bestSeason.season}</p>
+            <p className="sc-gamelog__stat-sub">{bestSeason.ppg.toFixed(1)} PPG{bestSeason.posRank ? ` \u00B7 ${pos}${bestSeason.posRank}` : ''}</p>
           </div>
         )}
+        <div className="sc-gamelog__stat-box">
+          <p className="sc-gamelog__stat-label">Durability</p>
+          <p className="sc-gamelog__stat-value" style={{ color: durabilityPct >= 85 ? '#16a34a' : durabilityPct >= 65 ? '#d97706' : '#ef4444' }}>{durabilityPct.toFixed(0)}%</p>
+          <p className="sc-gamelog__stat-sub">{totalGp} of {sorted.length * 17} possible</p>
+        </div>
+      </div>
 
-        <div className="overflow-x-auto -mx-1">
-          <table className="w-full text-xs" data-testid="table-career-stats">
-            <thead>
-              <tr className="border-b border-border">
-                {columns.map(col => (
-                  <th
-                    key={col.key}
-                    className={`py-2 px-2 font-semibold text-[10px] uppercase tracking-wider text-muted-foreground whitespace-nowrap ${col.align === 'left' ? 'text-left' : 'text-right'} sticky top-0 bg-card`}
-                  >
-                    {col.label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {sorted.map((row) => (
-                <tr key={row.season} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+      <div className="sc-gamelog__table-wrap" style={{ margin: '0 -4px' }}>
+        <table className="sc-gamelog__table" data-testid="table-career-stats">
+          <thead>
+            <tr className="sc-gamelog__thead-row">
+              {columns.map(col => (
+                <th
+                  key={col.key}
+                  className={`sc-gamelog__th ${col.bold ? 'sc-gamelog__th--primary' : ''}`}
+                  style={{ textAlign: col.align === 'left' ? 'left' : 'right' }}
+                >
+                  {col.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {sorted.map((row) => {
+              const isBest = bestSeason && row.season === bestSeason.season && sorted.length > 1;
+              return (
+                <tr key={row.season} className={`sc-gamelog__row ${isBest ? 'sc-gamelog__row--best' : ''}`}>
                   {columns.map(col => {
                     if (col.key === 'season') {
                       return (
-                        <td key={col.key} className="py-1.5 px-2 text-left">
-                          <button
-                            onClick={() => onSeasonClick(row.season)}
-                            className="text-xs font-semibold text-primary hover:underline tabular-nums"
-                            data-testid={`link-season-${row.season}`}
-                          >
-                            {row.season}
-                          </button>
+                        <td key={col.key} className="sc-gamelog__td" style={{ textAlign: 'left' }}>
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              onClick={() => onSeasonClick(row.season)}
+                              style={{ fontSize: '12px', fontWeight: 700, color: '#1a3f8a', cursor: 'pointer', background: 'none', border: 'none', padding: 0, fontFamily: 'ui-monospace, monospace' }}
+                              data-testid={`link-season-${row.season}`}
+                            >
+                              {row.season}
+                            </button>
+                            {isBest && <Trophy className="w-3 h-3" style={{ color: '#caa14a' }} />}
+                          </div>
                         </td>
                       );
                     }
                     if (col.key === 'ppg') {
                       return (
-                        <td key={col.key} className="py-1.5 px-2 text-right">
+                        <td key={col.key} className="sc-gamelog__td sc-gamelog__td--primary" style={{ textAlign: 'right' }}>
                           <div className="flex items-center justify-end gap-1.5">
-                            <span className="font-bold text-foreground tabular-nums">{row.ppg.toFixed(1)}</span>
+                            <span style={{ fontWeight: 800, color: '#0f172a', fontFamily: 'ui-monospace, monospace', fontSize: '13px' }}>{row.ppg.toFixed(1)}</span>
                             {row.posRank && (
                               <span className={`text-[9px] tabular-nums font-semibold ${getRankColor(row.posRank)}`}>{pos}{row.posRank}</span>
                             )}
@@ -1953,18 +2032,18 @@ function CareerStatsTable({ stats, position, format, onSeasonClick }: {
                     }
                     const val = getValue(row, col.key);
                     return (
-                      <td key={col.key} className={`py-1.5 px-2 text-right tabular-nums text-muted-foreground ${col.bold ? 'font-bold text-foreground' : ''}`}>
+                      <td key={col.key} className="sc-gamelog__td sc-gamelog__td--secondary" style={{ textAlign: 'right' }}>
                         {typeof val === 'number' ? val.toLocaleString() : val}
                       </td>
                     );
                   })}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </CardContent>
-    </Card>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }
 
