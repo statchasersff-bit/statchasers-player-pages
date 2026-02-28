@@ -2277,25 +2277,14 @@
   text-align: center;
   padding: 14px 10px 12px;
   border-radius: 10px;
-  border: 1px solid rgba(15,23,42,0.06);
+  border: 1px solid rgba(11,58,122,0.08);
   background: #fff;
-  position: relative;
-  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .sc-overview__stat-cell:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0,0,0,0.06);
-}
-.sc-overview__stat-cell::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--sc-blue), var(--sc-blue-light));
-  opacity: 0.6;
 }
 .sc-overview__stat-number {
   font-size: 22px;
