@@ -107,33 +107,36 @@ function getHeadshotUrl(playerId: string): string {
   return `https://sleepercdn.com/content/nfl/players/thumb/${playerId}.jpg`;
 }
 
-function PlayerHeadshot({ playerId, name, teamColor }: { playerId: string; name: string; teamColor?: string }) {
+function PlayerHeadshot({ playerId, name }: { playerId: string; name: string; teamColor?: string }) {
   const [imgError, setImgError] = useState(false);
   const headshotUrl = getHeadshotUrl(playerId);
-  const ringColor = teamColor || '#6B7280';
 
   return (
     <div className="relative flex-shrink-0" data-testid="img-headshot">
       <div
-        className="w-24 h-24 md:w-28 md:h-28 rounded-full"
+        className="w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden"
         style={{
-          boxShadow: `0 0 20px ${ringColor}30, 0 4px 12px rgba(0,0,0,0.15)`,
-          border: `3px solid ${ringColor}`,
+          border: '3px solid #0b3a7a',
+          outline: '0px solid transparent',
+          boxShadow: '0 0 0 2px #d4af37 inset, 0 4px 16px rgba(11,58,122,0.18), 0 2px 6px rgba(0,0,0,0.10)',
+          background: '#fff',
         }}
       >
         {!imgError ? (
           <img
             src={headshotUrl}
             alt={`${name} headshot`}
-            className="w-full h-full rounded-full object-cover bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800"
+            className="w-full h-full object-cover"
+            style={{ background: '#f1f5f9' }}
             onError={() => setImgError(true)}
           />
         ) : (
           <div
-            className="w-full h-full rounded-full flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800"
+            className="w-full h-full flex items-center justify-center"
+            style={{ background: '#f1f5f9' }}
             data-testid="img-headshot-fallback"
           >
-            <User className="w-10 h-10 md:w-12 md:h-12 text-slate-400 dark:text-slate-500" />
+            <User className="w-10 h-10 md:w-12 md:h-12 text-slate-400" />
           </div>
         )}
       </div>
@@ -4373,14 +4376,21 @@ export default function PlayerProfile() {
       >
         <div
           className="absolute inset-0"
-          style={{ background: `linear-gradient(135deg, #F8FAFC 0%, #EEF2F7 50%, #E2E8F0 100%)` }}
+          style={{ background: `linear-gradient(135deg, rgba(11,58,122,0.04) 0%, rgba(11,58,122,0.02) 40%, rgba(255,255,255,1) 100%)` }}
         />
         <div
           className="absolute inset-0 hidden dark:block"
           style={{ background: `linear-gradient(135deg, #0B1634 0%, #111D42 40%, #0F172A 100%)` }}
         />
         <div
-          className="absolute inset-0 opacity-[0.07] dark:opacity-[0.12]"
+          className="absolute inset-0 opacity-[0.025]"
+          style={{
+            backgroundImage: `linear-gradient(rgba(11,58,122,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(11,58,122,0.3) 1px, transparent 1px)`,
+            backgroundSize: '24px 24px',
+          }}
+        />
+        <div
+          className="absolute inset-0 opacity-[0.05] dark:opacity-[0.10]"
           style={{ background: `radial-gradient(ellipse at 30% 50%, ${teamColor} 0%, transparent 70%)` }}
         />
         <div
@@ -4396,9 +4406,21 @@ export default function PlayerProfile() {
                 All Players
               </Button>
             </Link>
-            <div className="hidden sm:block text-right" data-testid="text-engine-marker">
-              <p style={{ fontSize: '9px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#94a3b8' }}>Player Analytics Engine v2.1</p>
-              <p style={{ fontSize: '8px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.10em', color: '#cbd5e1' }}>Powered by StatChasers Models</p>
+            <div className="hidden sm:flex items-center gap-2" data-testid="text-engine-marker">
+              <div style={{
+                border: '1px solid rgba(11,58,122,0.25)',
+                borderRadius: '6px',
+                padding: '4px 10px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '1px',
+                background: 'rgba(255,255,255,0.6)',
+                backdropFilter: 'blur(4px)',
+              }}>
+                <p style={{ fontSize: '8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: '#0b3a7a' }}>Player Analytics Engine v2.1</p>
+                <p style={{ fontSize: '7px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.10em', color: '#94a3b8' }}>Powered by StatChasers Models</p>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-6 md:gap-8 flex-wrap">
