@@ -1064,10 +1064,10 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
             <SectionHeader title="Performance" subtitle="Season scoring output and positional finish rates" />
 
             <div className={`grid gap-3 ${thresholds.hasTier3 ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2 md:grid-cols-3'}`}>
-              <div className="sc-overview__ppg-hero md:row-span-1">
-                <p className="sc-overview__ppg-label">PPG</p>
-                <p className="sc-overview__ppg-number" data-testid="text-ppg-hero">{seasonPpg.toFixed(1)}</p>
-                <p className="sc-overview__stat-meta" style={{ marginTop: '4px' }}>
+              <div className="sc-overview__stat-cell">
+                <p className="sc-overview__stat-label">PPG</p>
+                <p className="sc-overview__stat-number" data-testid="text-ppg-hero">{seasonPpg.toFixed(1)}</p>
+                <p className="sc-overview__stat-meta">
                   {player.seasonRank ? `${stats.gamesPlayed} GP \u00B7 ${posLabel}${player.seasonRank}` : `${stats.gamesPlayed} GP`}
                 </p>
                 <div className={`sc-overview__ppg-delta ${ppgDelta >= 0 ? 'sc-overview__ppg-delta--up' : 'sc-overview__ppg-delta--down'}`} data-testid="text-ppg-delta">
