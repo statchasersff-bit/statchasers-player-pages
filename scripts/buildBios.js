@@ -4,13 +4,13 @@ import path from 'path';
 const DATA_DIR = path.resolve(process.cwd(), 'data');
 const PLAYERS_FILE = path.resolve(DATA_DIR, 'players.json');
 const INDEXED_FILE = path.resolve(DATA_DIR, 'indexed_players.json');
+const DRAFT_FILE = path.resolve(DATA_DIR, 'draft.json');
 const GAME_LOGS_DIR = path.resolve(DATA_DIR, 'game_logs');
 const OUTPUT_FILE = path.resolve(DATA_DIR, 'bios.json');
 
 const TEAM_ALIAS_MAP = {
   JAC: 'JAX', WSH: 'WAS', OAK: 'LV', STL: 'LAR', SD: 'LAC', LA: 'LAR',
 };
-
 function normalizeTeam(t) { return t ? (TEAM_ALIAS_MAP[t] || t) : t; }
 
 const TEAM_FULL = {
@@ -23,6 +23,16 @@ const TEAM_FULL = {
   NYJ:'New York Jets',PHI:'Philadelphia Eagles',PIT:'Pittsburgh Steelers',SEA:'Seattle Seahawks',
   SF:'San Francisco 49ers',TB:'Tampa Bay Buccaneers',TEN:'Tennessee Titans',WAS:'Washington Commanders',
 };
+
+const CURRENT_YEAR = 2025;
+
+const BREAKOUT_THRESHOLDS = { QB: 19, RB: 14, WR: 13, TE: 10.5 };
+
+function ordinal(n) {
+  const s = ['th','st','nd','rd'];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
 
 function getFantasyPoints(stats, format) {
   let pts = 0;
@@ -66,7 +76,7 @@ function getAvailableSeasons() {
   return fs.readdirSync(GAME_LOGS_DIR)
     .filter(f => f.endsWith('.json'))
     .map(f => parseInt(f.replace('.json', '')))
-    .sort((a, b) => b - a);
+    .sort((a, b) => a - b);
 }
 
 function buildSeasonStats(playerId, position, season) {
@@ -78,122 +88,117 @@ function buildSeasonStats(playerId, position, season) {
   const totalPts = played.reduce((sum, e) => sum + getEntryPoints(e.stats, 'half'), 0);
   const ppg = totalPts / played.length;
 
-  let totalPassYd = 0, totalPassTd = 0, totalPassAtt = 0, totalPassCmp = 0, totalPassInt = 0;
-  let totalRushYd = 0, totalRushTd = 0, totalRushAtt = 0;
-  let totalRecYd = 0, totalRecTd = 0, totalRec = 0, totalTgt = 0;
+  let pass_yd = 0, pass_td = 0, pass_att = 0, pass_cmp = 0, pass_int = 0;
+  let rush_yd = 0, rush_td = 0, rush_att = 0;
+  let rec_yd = 0, rec_td = 0, rec = 0, rec_tgt = 0;
+
+  const weeklyPts = [];
 
   for (const e of played) {
     const s = e.stats;
-    totalPassYd += s.pass_yd ?? 0; totalPassTd += s.pass_td ?? 0;
-    totalPassAtt += s.pass_att ?? 0; totalPassCmp += s.pass_cmp ?? 0;
-    totalPassInt += s.pass_int ?? 0;
-    totalRushYd += s.rush_yd ?? 0; totalRushTd += s.rush_td ?? 0;
-    totalRushAtt += s.rush_att ?? 0;
-    totalRecYd += s.rec_yd ?? 0; totalRecTd += s.rec_td ?? 0;
-    totalRec += s.rec ?? 0; totalTgt += s.rec_tgt ?? 0;
+    pass_yd += s.pass_yd ?? 0; pass_td += s.pass_td ?? 0;
+    pass_att += s.pass_att ?? 0; pass_cmp += s.pass_cmp ?? 0;
+    pass_int += s.pass_int ?? 0;
+    rush_yd += s.rush_yd ?? 0; rush_td += s.rush_td ?? 0;
+    rush_att += s.rush_att ?? 0;
+    rec_yd += s.rec_yd ?? 0; rec_td += s.rec_td ?? 0;
+    rec += s.rec ?? 0; rec_tgt += s.rec_tgt ?? 0;
+    weeklyPts.push(getEntryPoints(s, 'half'));
   }
 
+  const mean = ppg;
+  const variance = weeklyPts.length > 1
+    ? weeklyPts.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / (weeklyPts.length - 1)
+    : 0;
+  const weeklyStdDev = Math.sqrt(variance);
+
   return {
-    season, gamesPlayed: played.length, ppg,
-    totalPts,
-    passing: { yards: totalPassYd, tds: totalPassTd, atts: totalPassAtt, cmps: totalPassCmp, ints: totalPassInt },
-    rushing: { yards: totalRushYd, tds: totalRushTd, atts: totalRushAtt },
-    receiving: { yards: totalRecYd, tds: totalRecTd, recs: totalRec, tgts: totalTgt },
+    year: season, games: played.length, ppg, totalPts, weeklyStdDev,
+    passing: { yards: pass_yd, tds: pass_td, atts: pass_att, cmps: pass_cmp, ints: pass_int },
+    rushing: { yards: rush_yd, tds: rush_td, atts: rush_att },
+    receiving: { yards: rec_yd, tds: rec_td, recs: rec, tgts: rec_tgt },
   };
 }
 
-function detectTeamBySeason(playerId, position, seasons) {
-  const teamsBySeason = {};
-  for (const s of seasons) {
-    const logs = loadGameLogs(s);
-    const pLogs = logs[playerId] || [];
-    const played = pLogs.filter(e => hasParticipation(e.stats, position));
-    if (played.length > 0 && played[0].stats) {
-      teamsBySeason[s] = null;
-    }
+function computeDerived(pos, seasons, draft) {
+  const rookieYear = draft?.year || draft?.rookie_year || (seasons.length > 0 ? seasons[0].year : null);
+
+  const bestSeason = seasons.length > 0
+    ? seasons.reduce((best, s) => s.ppg > best.ppg ? s : best, seasons[0])
+    : null;
+
+  const threshold = BREAKOUT_THRESHOLDS[pos] || 14;
+  const breakoutSeason = seasons.find(s => s.ppg >= threshold && s.games >= 8) || null;
+
+  let trend = null;
+  if (seasons.length >= 2) {
+    const last = seasons[seasons.length - 1];
+    const prev = seasons[seasons.length - 2];
+    trend = last.ppg - prev.ppg;
   }
-  return teamsBySeason;
+
+  const last3 = seasons.slice(-3);
+  const avgGamesLast3 = last3.length > 0
+    ? last3.reduce((sum, s) => sum + s.games, 0) / last3.length
+    : null;
+
+  const lastSeason = seasons.length > 0 ? seasons[seasons.length - 1] : null;
+
+  return { rookieYear, bestSeason, breakoutSeason, trend, avgGamesLast3, lastSeason };
 }
 
-function generateSnapshotBullets(player, seasonStats, allSeasons) {
+function roleDescriptor(pos, lastSeason) {
+  if (!lastSeason) return 'depth option';
+  const threshold = BREAKOUT_THRESHOLDS[pos] || 14;
+  if (lastSeason.games >= 10 && lastSeason.ppg >= threshold) return 'high-end fantasy starter';
+  if (lastSeason.games >= 10) return 'weekly fantasy option';
+  return 'depth option';
+}
+
+function buildSnapshotBullets({ name, pos, team, draft, seasons, derived }) {
   const bullets = [];
-  const pos = player.position;
-  const yearsExp = player.years_exp ?? 0;
-  const rookieYear = yearsExp > 0 ? (new Date().getFullYear() - yearsExp) : null;
+  const teamFull = TEAM_FULL[team] || team;
 
-  if (rookieYear) {
-    bullets.push(`Entered the NFL in ${rookieYear} as a ${pos}`);
+  if (draft && draft.year && draft.round && draft.pick) {
+    bullets.push(`Drafted ${draft.year}: Round ${draft.round}, Pick ${draft.pick} (${draft.draft_team || team})`);
   }
 
-  if (seasonStats.length >= 2) {
-    const bestSeason = [...seasonStats].sort((a, b) => b.ppg - a.ppg)[0];
-    if (bestSeason) {
-      bullets.push(`Best fantasy season: ${bestSeason.season} with ${bestSeason.ppg.toFixed(1)} PPG (Half-PPR) over ${bestSeason.gamesPlayed} games`);
+  if (derived.rookieYear) {
+    const role = roleDescriptor(pos, derived.lastSeason);
+    bullets.push(`Entered the league in ${derived.rookieYear} and developed into a ${role}.`);
+  }
+
+  if (derived.breakoutSeason) {
+    const label = pos === 'QB' ? 'QB1-level' : 'starter-level';
+    bullets.push(`Broke out in ${derived.breakoutSeason.year}, establishing ${label} fantasy production.`);
+  }
+
+  if (derived.bestSeason && (!derived.breakoutSeason || derived.bestSeason.year !== derived.breakoutSeason.year)) {
+    bullets.push(`Career peak: ${derived.bestSeason.year} (${derived.bestSeason.ppg.toFixed(1)} PPG).`);
+  }
+
+  if (derived.avgGamesLast3 !== null && seasons.length >= 2) {
+    if (derived.avgGamesLast3 >= 14) {
+      bullets.push(`Generally available year-to-year, averaging ${derived.avgGamesLast3.toFixed(1)} games over the last ${Math.min(seasons.length, 3)} seasons.`);
+    } else if (derived.avgGamesLast3 <= 11) {
+      bullets.push(`Availability has been a factor recently, averaging ${derived.avgGamesLast3.toFixed(1)} games over the last ${Math.min(seasons.length, 3)} seasons.`);
     }
   }
 
-  const currentSeason = seasonStats.find(s => s.season === allSeasons[0]);
-  if (currentSeason && currentSeason.gamesPlayed >= 4) {
-    bullets.push(`${currentSeason.season} production: ${currentSeason.ppg.toFixed(1)} PPG across ${currentSeason.gamesPlayed} games`);
-  }
-
-  if (pos === 'QB') {
-    const recent = currentSeason || seasonStats[0];
-    if (recent) {
-      if (recent.rushing.atts > 0) {
-        const rushYdPerGame = Math.round(recent.rushing.yards / recent.gamesPlayed);
-        if (rushYdPerGame >= 20) {
-          bullets.push(`Dual-threat profile with ${rushYdPerGame} rushing yards per game in ${recent.season}`);
-        }
-      }
-      if (recent.passing.atts > 0) {
-        const tdRate = ((recent.passing.tds / recent.passing.atts) * 100).toFixed(1);
-        bullets.push(`${recent.season} passing: ${recent.passing.yards.toLocaleString()} yards, ${recent.passing.tds} TDs (${tdRate}% TD rate)`);
-      }
-    }
-  }
-
-  if (pos === 'RB') {
-    const recent = currentSeason || seasonStats[0];
-    if (recent) {
-      const totalTouches = recent.rushing.atts + recent.receiving.recs;
-      if (totalTouches > 0) {
-        bullets.push(`${recent.season} workload: ${recent.rushing.atts} carries, ${recent.receiving.recs} receptions (${totalTouches} touches)`);
-      }
-      if (recent.receiving.tgts > 20) {
-        bullets.push(`Pass-catching involvement with ${recent.receiving.tgts} targets in ${recent.season}`);
-      }
-    }
-  }
-
-  if (pos === 'WR' || pos === 'TE') {
-    const recent = currentSeason || seasonStats[0];
-    if (recent && recent.receiving.tgts > 0) {
-      const tgtPerGame = (recent.receiving.tgts / recent.gamesPlayed).toFixed(1);
-      bullets.push(`${recent.season} target volume: ${recent.receiving.tgts} targets (${tgtPerGame}/game)`);
-      if (recent.rushing.atts > 10) {
-        bullets.push(`Added rushing usage with ${recent.rushing.atts} carries in ${recent.season}`);
-      }
-    }
-  }
-
-  const totalGames = seasonStats.reduce((sum, s) => sum + s.gamesPlayed, 0);
-  const maxPossible = seasonStats.length * 17;
-  const durability = maxPossible > 0 ? (totalGames / maxPossible) * 100 : 0;
-  if (seasonStats.length >= 2) {
-    if (durability >= 90) {
-      bullets.push(`Strong durability: played ${totalGames} of ${maxPossible} possible games (${Math.round(durability)}%)`);
-    } else if (durability < 65) {
-      bullets.push(`Durability concern: played ${totalGames} of ${maxPossible} possible games (${Math.round(durability)}%)`);
+  if (derived.lastSeason) {
+    const lastGames = derived.lastSeason.games;
+    if (lastGames >= 10) {
+      bullets.push(`Enters ${CURRENT_YEAR + 1} as the ${teamFull} ${pos} with a clear role in the offense.`);
+    } else {
+      bullets.push(`Enters ${CURRENT_YEAR + 1} with role volatility that can swing weekly fantasy outcomes.`);
     }
   }
 
   return bullets.slice(0, 6);
 }
 
-function generatePlayStyle(player, seasonStats) {
-  const pos = player.position;
-  const recent = seasonStats[0];
+function buildStyle({ pos, seasons, derived }) {
+  const recent = derived.lastSeason;
   if (!recent) return null;
 
   let howHeWins = '';
@@ -202,26 +207,30 @@ function generatePlayStyle(player, seasonStats) {
   let fantasyTranslationTags = [];
 
   if (pos === 'QB') {
-    const rushYPG = recent.gamesPlayed > 0 ? recent.rushing.yards / recent.gamesPlayed : 0;
-    const isDualThreat = rushYPG >= 25 || recent.rushing.tds >= 3;
-    const passYPG = recent.gamesPlayed > 0 ? recent.passing.yards / recent.gamesPlayed : 0;
+    const rushYPG = recent.games > 0 ? recent.rushing.yards / recent.games : 0;
+    const passYPG = recent.games > 0 ? recent.passing.yards / recent.games : 0;
+    const isDual = rushYPG >= 25 || recent.rushing.tds >= 3;
 
-    if (isDualThreat) {
-      howHeWins = `Combines passing production with meaningful rushing volume, creating a dual-threat profile that generates fantasy value through multiple channels.`;
+    if (isDual) {
+      howHeWins = 'Creates production with both arm and legs, extending plays and adding rushing value when passing efficiency dips.';
       howHeWinsTags.push('Dual-threat');
+      if (rushYPG >= 35) howHeWinsTags.push('Rushing floor');
     } else {
-      howHeWins = `Operates primarily as a pocket passer, generating value through passing volume and efficiency.`;
+      howHeWins = 'Wins with pocket passing and volume-driven production when the offense is operating efficiently.';
       howHeWinsTags.push('Pocket passer');
     }
     if (passYPG >= 260) howHeWinsTags.push('Volume passer');
     if (recent.passing.tds >= 20) howHeWinsTags.push('Red-zone threat');
-    if (rushYPG >= 15) howHeWinsTags.push('Scrambler');
+    if (rushYPG >= 15 && !isDual) howHeWinsTags.push('Scrambler');
 
-    if (isDualThreat) {
-      fantasyTranslation = `Rushing output provides a stable weekly floor even in lower passing games, while TD volume drives the ceiling.`;
+    const ppgStable = derived.trend !== null ? Math.abs(derived.trend) < 3 : false;
+    if (ppgStable && seasons.length >= 2) howHeWinsTags.push('Stable weekly role');
+
+    if (isDual) {
+      fantasyTranslation = 'Weekly ceiling is driven by multi-touchdown games, while rushing attempts stabilize floor even in quieter passing weeks.';
       fantasyTranslationTags.push('Rushing floor', 'High ceiling');
     } else {
-      fantasyTranslation = `Value is tied closely to passing efficiency and TD production. Volume games create the ceiling.`;
+      fantasyTranslation = 'Value is tied closely to passing efficiency and TD production. Volume games create the ceiling.';
       fantasyTranslationTags.push('TD-driven', 'Volume-dependent');
     }
     if (recent.ppg >= 20) fantasyTranslationTags.push('Elite weekly output');
@@ -229,88 +238,96 @@ function generatePlayStyle(player, seasonStats) {
   }
 
   if (pos === 'RB') {
-    const catchingBack = recent.receiving.tgts > 30 || (recent.gamesPlayed > 0 && recent.receiving.recs / recent.gamesPlayed >= 3);
+    const tgtPerGame = recent.games > 0 ? recent.receiving.tgts / recent.games : 0;
+    const recPerGame = recent.games > 0 ? recent.receiving.recs / recent.games : 0;
+    const passGameRole = tgtPerGame >= 3 || recent.receiving.tgts > 30;
     const rushDominant = recent.rushing.atts > 150;
     const goalLine = recent.rushing.tds >= 6;
+    const carriesPerGame = recent.games > 0 ? recent.rushing.atts / recent.games : 0;
 
-    if (catchingBack) {
-      howHeWins = `Active receiving back who earns targets in the passing game, providing value beyond traditional rushing.`;
-      howHeWinsTags.push('Target earner', 'PPR asset');
-    } else if (rushDominant) {
-      howHeWins = `Volume-based runner who accumulates value through high carry counts and consistent ground work.`;
-      howHeWinsTags.push('Workhorse', 'Volume runner');
+    if (passGameRole) {
+      howHeWins = 'Produces through a blend of rushing volume and receiving usage, keeping weekly output stable across game scripts.';
+      howHeWinsTags.push('Pass-game role');
     } else {
-      howHeWins = `Contributes through a mix of rushing and receiving, fitting a complementary role in the offense.`;
-      howHeWinsTags.push('Complementary back');
+      howHeWins = 'Primarily a rushing-based producer whose weekly output is tied to carries and touchdown opportunities.';
+      howHeWinsTags.push('Volume runner');
     }
-    if (goalLine) howHeWinsTags.push('Goal-line role');
-    if (recent.receiving.recs > 30) howHeWinsTags.push('Pass-catching back');
+    if (carriesPerGame >= 15) howHeWinsTags.push('Workhorse');
+    if (goalLine) howHeWinsTags.push('Goal-line equity');
+    if (tgtPerGame >= 4) howHeWinsTags.push('Target earner');
 
-    if (catchingBack) {
-      fantasyTranslation = `PPR value is boosted by target volume. Floor is protected by reception totals even in low-rushing games.`;
+    if (passGameRole) {
+      fantasyTranslation = 'Floor comes from consistent target volume; ceiling spikes when rushing TDs and receiving work converge.';
       fantasyTranslationTags.push('Volume-driven', 'PPR boost');
-    } else if (rushDominant) {
-      fantasyTranslation = `Fantasy production tracks directly with carry volume and TD opportunities. Standard/half formats benefit most.`;
-      fantasyTranslationTags.push('Rushing floor', 'TD equity');
     } else {
-      fantasyTranslation = `Flex-range asset whose value fluctuates with game script and role clarity.`;
-      fantasyTranslationTags.push('Flex option', 'Role-dependent');
+      fantasyTranslation = 'Fantasy production tracks directly with carry volume and TD opportunities. Standard/half formats benefit most.';
+      fantasyTranslationTags.push('Rushing floor', 'TD equity');
     }
     if (recent.ppg >= 14) fantasyTranslationTags.push('High weekly ceiling');
   }
 
   if (pos === 'WR') {
-    const highVolume = recent.receiving.tgts > 100;
-    const yacCreator = recent.receiving.recs > 0 && (recent.receiving.yards / recent.receiving.recs) <= 11;
-    const deepThreat = recent.receiving.recs > 0 && (recent.receiving.yards / recent.receiving.recs) >= 15;
+    const tgtPerGame = recent.games > 0 ? recent.receiving.tgts / recent.games : 0;
+    const highVolume = tgtPerGame >= 7 || recent.receiving.tgts > 100;
+    const ypc = recent.receiving.recs > 0 ? recent.receiving.yards / recent.receiving.recs : 0;
+    const deepThreat = ypc >= 15;
     const redZone = recent.receiving.tds >= 7;
+    const weeklyVariance = recent.weeklyStdDev;
 
     if (highVolume) {
-      howHeWins = `High-volume target earner who wins through route running and consistent separation.`;
-      howHeWinsTags.push('Target earner', 'Route runner');
+      howHeWins = 'Functions as a primary read in the passing game, stacking targets and converting volume into consistent weekly production.';
+      howHeWinsTags.push('Target earner');
     } else if (deepThreat) {
-      howHeWins = `Downfield threat who stretches the defense and creates explosive plays.`;
-      howHeWinsTags.push('Deep threat', 'Explosive playmaker');
+      howHeWins = 'Operates as an explosive, downfield option—lower target volume but high leverage looks that can spike weeks.';
+      howHeWinsTags.push('Deep threat');
     } else {
-      howHeWins = `Contributes through efficiency and situational production within the offense.`;
-      howHeWinsTags.push('Efficient');
+      howHeWins = 'Profiles as a complementary receiver whose fantasy output swings with weekly usage and efficiency.';
+      howHeWinsTags.push('Complementary');
     }
-    if (yacCreator) howHeWinsTags.push('YAC creator');
+    if (ypc <= 11 && recent.receiving.recs > 40) howHeWinsTags.push('YAC-driven');
     if (redZone) howHeWinsTags.push('Red-zone threat');
     if (recent.rushing.atts > 15) howHeWinsTags.push('Rushing usage');
+    if (weeklyVariance >= 10) howHeWinsTags.push('Spike-week profile');
 
     if (highVolume) {
-      fantasyTranslation = `Volume provides a reliable floor, and TD equity drives weekly ceiling. Consistent starter in all formats.`;
+      fantasyTranslation = 'Floor comes from consistent target volume; ceiling spikes when deep targets and red-zone looks converge.';
       fantasyTranslationTags.push('Volume-driven', 'High floor');
     } else if (deepThreat) {
-      fantasyTranslation = `Boom/bust profile where value comes in spikes. Weekly output can be volatile.`;
+      fantasyTranslation = 'Boom/bust profile where weekly output can be volatile. Spike weeks drive season-long value.';
       fantasyTranslationTags.push('Boom/Bust', 'High weekly ceiling');
     } else {
-      fantasyTranslation = `Depth piece whose value is situational and format-dependent.`;
+      fantasyTranslation = 'Depth piece whose value is situational and format-dependent.';
       fantasyTranslationTags.push('Role-dependent');
     }
     if (redZone) fantasyTranslationTags.push('TD upside');
   }
 
   if (pos === 'TE') {
-    const eliteVolume = recent.receiving.tgts > 80;
+    const tgtPerGame = recent.games > 0 ? recent.receiving.tgts / recent.games : 0;
+    const highVolume = tgtPerGame >= 5 || recent.receiving.tgts > 80;
     const redZone = recent.receiving.tds >= 5;
 
-    if (eliteVolume) {
-      howHeWins = `High-volume receiving tight end who operates as a primary pass-catching option.`;
-      howHeWinsTags.push('Target earner', 'Primary option');
+    if (highVolume) {
+      howHeWins = 'Wins through steady involvement underneath, relying on target volume more than splash plays.';
+      howHeWinsTags.push('Volume TE', 'Target earner');
+    } else if (redZone) {
+      howHeWins = 'Provides fantasy value through high-leverage red-zone usage, with weekly output often tied to touchdowns.';
+      howHeWinsTags.push('Red-zone role');
     } else {
-      howHeWins = `Functions as a secondary receiving option with blocking duties, generating situational fantasy value.`;
+      howHeWins = 'Functions as a secondary receiving option with blocking duties, generating situational fantasy value.';
       howHeWinsTags.push('Complementary role');
     }
-    if (redZone) howHeWinsTags.push('Red-zone target');
     if (recent.receiving.recs > 50) howHeWinsTags.push('PPR asset');
+    if (redZone && !highVolume) howHeWinsTags.push('TD-dependent');
 
-    if (eliteVolume) {
-      fantasyTranslation = `One of the rare TEs who provides consistent weekly production. Position advantage is significant in PPR.`;
+    if (highVolume) {
+      fantasyTranslation = 'One of the rare TEs who provides consistent weekly production. Position advantage is significant in PPR.';
       fantasyTranslationTags.push('Positional edge', 'PPR star');
+    } else if (redZone) {
+      fantasyTranslation = 'Floor can be thin without a touchdown, but red-zone usage creates spike-week potential.';
+      fantasyTranslationTags.push('TD-dependent', 'Spike potential');
     } else {
-      fantasyTranslation = `Streaming candidate whose value comes from TD-dependent weeks and favorable matchups.`;
+      fantasyTranslation = 'Streaming candidate whose value comes from TD-dependent weeks and favorable matchups.';
       fantasyTranslationTags.push('TD-dependent', 'Streaming option');
     }
   }
@@ -324,58 +341,70 @@ function generatePlayStyle(player, seasonStats) {
   };
 }
 
-function generateTimeline(player, seasonStats, allSeasons) {
+function buildTimeline({ pos, draft, seasons, derived }) {
   const timeline = [];
-  const yearsExp = player.years_exp ?? 0;
-  const rookieYear = yearsExp > 0 ? (new Date().getFullYear() - yearsExp) : null;
 
-  if (rookieYear) {
+  if (draft && draft.year && draft.round && draft.pick) {
+    const college = draft.college ? ` out of ${draft.college}` : '';
     timeline.push({
-      label: String(rookieYear),
+      label: String(draft.year),
       badge: 'Drafted',
-      text: `Entered the league as a ${player.position} and began his NFL career.`,
+      text: `Selected Round ${draft.round}, Pick ${draft.pick} by ${TEAM_FULL[draft.draft_team] || draft.draft_team || ''}${college}.`,
     });
-  }
-
-  const sorted = [...seasonStats].sort((a, b) => a.season - b.season);
-  let prevPpg = 0;
-
-  for (const ss of sorted) {
-    if (ss.ppg >= prevPpg * 1.35 && prevPpg > 0 && ss.ppg >= 12) {
-      timeline.push({
-        label: String(ss.season),
-        badge: 'Breakout',
-        text: `Production jumped to ${ss.ppg.toFixed(1)} PPG, a significant increase from prior output.`,
-      });
-    }
-
-    if (ss.gamesPlayed <= 8 && ss.season !== allSeasons[0]) {
-      timeline.push({
-        label: String(ss.season),
-        badge: 'Injury',
-        text: `Limited to just ${ss.gamesPlayed} games, impacting overall fantasy value.`,
-      });
-    }
-
-    const bestSeason = [...seasonStats].sort((a, b) => b.ppg - a.ppg)[0];
-    if (ss === bestSeason && seasonStats.length >= 2 && ss.ppg >= 14) {
-      timeline.push({
-        label: String(ss.season),
-        badge: 'Peak',
-        text: `Career-best fantasy production with ${ss.ppg.toFixed(1)} PPG across ${ss.gamesPlayed} games.`,
-      });
-    }
-
-    prevPpg = ss.ppg;
-  }
-
-  const current = sorted[sorted.length - 1];
-  if (current && current.season === allSeasons[0]) {
+  } else if (derived.rookieYear) {
     timeline.push({
-      label: String(current.season),
-      badge: 'Current',
-      text: `Producing at ${current.ppg.toFixed(1)} PPG through ${current.gamesPlayed} games this season.`,
+      label: String(derived.rookieYear),
+      badge: 'Early career',
+      text: `Entered the league and began carving out a role.`,
     });
+  }
+
+  if (derived.breakoutSeason) {
+    timeline.push({
+      label: String(derived.breakoutSeason.year),
+      badge: 'Breakout',
+      text: `Production climbed into ${pos}-starter territory (${derived.breakoutSeason.ppg.toFixed(1)} PPG across ${derived.breakoutSeason.games} games).`,
+    });
+  }
+
+  if (derived.bestSeason && (!derived.breakoutSeason || derived.bestSeason.year !== derived.breakoutSeason.year)) {
+    timeline.push({
+      label: String(derived.bestSeason.year),
+      badge: 'Peak',
+      text: `Career-high fantasy production with ${derived.bestSeason.ppg.toFixed(1)} PPG across ${derived.bestSeason.games} games.`,
+    });
+  }
+
+  for (const s of seasons) {
+    if (s.games <= 8 && s !== derived.lastSeason && seasons.length >= 3) {
+      const exists = timeline.some(t => t.label === String(s.year));
+      if (!exists) {
+        timeline.push({
+          label: String(s.year),
+          badge: 'Injury',
+          text: `Limited to ${s.games} games, impacting overall fantasy value.`,
+        });
+      }
+    }
+  }
+
+  if (derived.trend !== null && seasons.length >= 2) {
+    const last = seasons[seasons.length - 1];
+    let badge, text;
+    if (derived.trend >= 2.0) {
+      badge = 'Uptrend';
+      text = `Recent production has been trending upward, with ${last.ppg.toFixed(1)} PPG in ${last.year}.`;
+    } else if (derived.trend <= -2.0) {
+      badge = 'Downtrend';
+      text = `Recent production has dipped, posting ${last.ppg.toFixed(1)} PPG in ${last.year}.`;
+    } else {
+      badge = 'Stable';
+      text = `Production has remained steady, averaging ${last.ppg.toFixed(1)} PPG in ${last.year}.`;
+    }
+    const exists = timeline.some(t => t.label === String(last.year));
+    if (!exists) {
+      timeline.push({ label: String(last.year), badge, text });
+    }
   }
 
   const seen = new Set();
@@ -389,160 +418,146 @@ function generateTimeline(player, seasonStats, allSeasons) {
   return deduped.slice(0, 8);
 }
 
-function generateCareerContext(player, seasonStats) {
-  const pos = player.position;
-  const recent = seasonStats[0];
-  if (!recent) return [];
-
+function buildCareerContextTiles({ pos, seasons, derived }) {
   const tiles = [];
+  const recent = derived.lastSeason;
+  if (!recent) return tiles;
 
   if (pos === 'QB') {
-    const rushYPG = recent.gamesPlayed > 0 ? recent.rushing.yards / recent.gamesPlayed : 0;
+    const rushYPG = recent.games > 0 ? recent.rushing.yards / recent.games : 0;
     tiles.push({
       title: 'Floor driver',
-      text: rushYPG >= 20 ? 'Rushing volume + passing baseline' : 'Passing volume is the primary floor setter',
+      text: rushYPG >= 25 ? 'Rushing usage' : 'Passing volume/efficiency',
     });
     tiles.push({
       title: 'Ceiling driver',
-      text: `TD production in pass-heavy game scripts`,
+      text: 'Multi-TD games + rushing TDs',
     });
   } else if (pos === 'RB') {
+    const tgtPerGame = recent.games > 0 ? recent.receiving.tgts / recent.games : 0;
     tiles.push({
       title: 'Floor driver',
-      text: recent.receiving.recs > 25 ? 'Rushing + receiving touches' : 'Carry volume + goal-line work',
+      text: tgtPerGame >= 3 ? 'Receiving work' : 'Carry volume',
     });
     tiles.push({
       title: 'Ceiling driver',
-      text: recent.rushing.tds >= 6 ? 'TD equity + multi-TD game potential' : 'High-volume rushing games',
+      text: 'Goal-line equity + big plays',
     });
   } else if (pos === 'WR') {
+    const tgtPerGame = recent.games > 0 ? recent.receiving.tgts / recent.games : 0;
     tiles.push({
       title: 'Floor driver',
-      text: recent.receiving.tgts > 80 ? 'High target share + catch volume' : 'Route running efficiency',
+      text: tgtPerGame >= 7 ? 'Target volume' : 'High-leverage targets',
     });
     tiles.push({
       title: 'Ceiling driver',
-      text: recent.receiving.tds >= 6 ? 'Red-zone targets + explosive plays' : 'Deep targets + spike weeks',
+      text: 'Deep targets + TDs',
     });
   } else if (pos === 'TE') {
+    const tgtPerGame = recent.games > 0 ? recent.receiving.tgts / recent.games : 0;
     tiles.push({
       title: 'Floor driver',
-      text: recent.receiving.tgts > 60 ? 'Consistent target volume' : 'Blocking role limits floor',
+      text: tgtPerGame >= 5 ? 'Targets' : 'Red-zone usage',
     });
     tiles.push({
       title: 'Ceiling driver',
-      text: 'Red-zone usage + TD-dependent scoring',
+      text: 'Red-zone TDs',
     });
   }
 
-  const totalGames = seasonStats.reduce((sum, s) => sum + s.gamesPlayed, 0);
-  const maxPossible = seasonStats.length * 17;
-  const durability = maxPossible > 0 ? (totalGames / maxPossible) * 100 : 0;
+  if (recent.weeklyStdDev < 5) {
+    tiles.push({ title: 'Stability', text: 'Stable role in offense' });
+  } else if (recent.weeklyStdDev < 9) {
+    tiles.push({ title: 'Stability', text: 'Moderate role in offense' });
+  } else {
+    tiles.push({ title: 'Stability', text: 'Volatile role in offense' });
+  }
 
-  const ppgs = seasonStats.map(s => s.ppg);
-  const avgPpg = ppgs.length > 0 ? ppgs.reduce((a, b) => a + b, 0) / ppgs.length : 0;
-  const ppgVariance = ppgs.length > 1 ? ppgs.reduce((sum, v) => sum + Math.pow(v - avgPpg, 2), 0) / (ppgs.length - 1) : 0;
-  const ppgStdDev = Math.sqrt(ppgVariance);
-
-  let stabilityLabel;
-  if (ppgStdDev < 2) stabilityLabel = 'Stable';
-  else if (ppgStdDev < 5) stabilityLabel = 'Moderate';
-  else stabilityLabel = 'Volatile';
-
-  tiles.push({
-    title: 'Stability',
-    text: `${stabilityLabel} role in offense`,
-  });
-
-  const risks = [];
-  if (durability < 70) risks.push('Injury history');
-  if (ppgStdDev >= 5) risks.push('Production swings');
-  if (player.years_exp <= 2) risks.push('Limited track record');
-  if (player.depth_chart_order > 1) risks.push('Depth chart competition');
-
-  tiles.push({
-    title: 'Risk note',
-    text: risks.length > 0 ? risks.join(' + ') : 'No major red flags identified',
-  });
+  let riskText = 'Scheme/usage swings';
+  if (derived.avgGamesLast3 !== null && derived.avgGamesLast3 <= 11) {
+    riskText = 'Availability';
+  } else if (derived.trend !== null && derived.trend <= -3) {
+    riskText = 'Role decline risk';
+  } else if (pos === 'TE' && recent.receiving.tgts < 60 && recent.receiving.tds >= 4) {
+    riskText = 'TD dependency';
+  } else if (pos === 'WR' && recent.receiving.tgts < 70 && recent.receiving.tds >= 5) {
+    riskText = 'TD dependency';
+  }
+  tiles.push({ title: 'Risk note', text: riskText });
 
   return tiles;
 }
 
-function generateNarrative(player, seasonStats) {
-  const pos = player.position;
-  const yearsExp = player.years_exp ?? 0;
-  const rookieYear = yearsExp > 0 ? (new Date().getFullYear() - yearsExp) : null;
-  const team = TEAM_FULL[player.team] || player.team;
+function buildNarrative({ name, pos, team, draft, seasons, derived, style, tiles }) {
+  const teamFull = TEAM_FULL[team] || team;
   const paragraphs = [];
 
-  let p1 = `${player.name} is a ${pos} currently with the ${team}.`;
-  if (rookieYear) {
-    p1 += ` He entered the NFL in ${rookieYear}`;
-    if (yearsExp >= 5) p1 += ` and has developed into an established presence at the position over ${yearsExp} seasons.`;
-    else if (yearsExp >= 2) p1 += ` and has ${yearsExp} years of NFL experience.`;
-    else p1 += ` as a young player still early in his career.`;
+  let p1 = '';
+  if (draft && draft.year && draft.round && draft.pick) {
+    const college = draft.college || 'college';
+    p1 = `${name} entered the NFL as a ${ordinal(draft.round)}-round pick (${draft.pick} overall) in ${draft.year} out of ${college}.`;
+  } else {
+    p1 = `${name} entered the NFL and began establishing a role at ${pos} for the ${teamFull}.`;
+  }
+  if (derived.rookieYear && seasons.length > 0) {
+    const secondYear = derived.rookieYear + 1;
+    if (seasons.some(s => s.year <= secondYear && s.games >= 4)) {
+      p1 += ` By ${secondYear}, he was seeing meaningful snaps, setting the foundation for his fantasy profile.`;
+    }
   }
   paragraphs.push(p1);
 
-  if (seasonStats.length >= 2) {
-    const sorted = [...seasonStats].sort((a, b) => a.season - b.season);
-    const first = sorted[0];
-    const best = [...seasonStats].sort((a, b) => b.ppg - a.ppg)[0];
+  if (seasons.length >= 2) {
     let p2 = '';
-
-    if (best && best.ppg >= 14) {
-      p2 = `His peak fantasy production came in ${best.season}, when he averaged ${best.ppg.toFixed(1)} half-PPR points per game across ${best.gamesPlayed} games.`;
-    } else if (best) {
-      p2 = `His strongest season was ${best.season} with ${best.ppg.toFixed(1)} half-PPR PPG over ${best.gamesPlayed} games.`;
+    if (derived.breakoutSeason) {
+      p2 = `The turning point came in ${derived.breakoutSeason.year}, when his production climbed into ${pos}-starter territory (${derived.breakoutSeason.ppg.toFixed(1)} PPG).`;
     }
-
-    const ppgTrend = sorted.length >= 2 ? sorted[sorted.length - 1].ppg - sorted[sorted.length - 2].ppg : 0;
-    if (ppgTrend > 3) {
-      p2 += ` His production has been trending upward recently, suggesting an expanding role.`;
-    } else if (ppgTrend < -3) {
-      p2 += ` Production has dipped recently, warranting close monitoring.`;
+    if (derived.bestSeason && (!derived.breakoutSeason || derived.bestSeason.year !== derived.breakoutSeason.year)) {
+      const peak = ` His peak arrived in ${derived.bestSeason.year}, delivering his best combination of volume and fantasy output (${derived.bestSeason.ppg.toFixed(1)} PPG across ${derived.bestSeason.games} games).`;
+      p2 += peak;
     }
-
     if (p2) paragraphs.push(p2);
   }
 
-  const current = seasonStats[0];
-  if (current) {
-    let p3 = `Heading into fantasy drafts, ${player.name}`;
-    if (current.ppg >= 18) {
-      p3 += ` is a high-value asset averaging ${current.ppg.toFixed(1)} PPG in ${current.season}. He warrants top-tier consideration in all formats.`;
-    } else if (current.ppg >= 12) {
-      p3 += ` offers solid starter value at ${current.ppg.toFixed(1)} PPG. He profiles as a reliable weekly option with some upside.`;
-    } else if (current.ppg >= 7) {
-      p3 += ` is a depth/flex consideration at ${current.ppg.toFixed(1)} PPG. Matchup-dependent usage may limit his weekly reliability.`;
-    } else {
-      p3 += ` is a roster-depth option at ${current.ppg.toFixed(1)} PPG. His value is primarily as a handcuff or bye-week fill-in.`;
-    }
-    paragraphs.push(p3);
+  const floorTile = tiles.find(t => t.title === 'Floor driver');
+  const ceilingTile = tiles.find(t => t.title === 'Ceiling driver');
+  if (floorTile && ceilingTile) {
+    paragraphs.push(
+      `For fantasy managers, his floor is driven by ${floorTile.text.toLowerCase()}, while his ceiling spikes when ${ceilingTile.text.toLowerCase()} hit in the same week.`
+    );
+  }
+
+  const riskTile = tiles.find(t => t.title === 'Risk note');
+  if (riskTile && riskTile.text !== 'Scheme/usage swings') {
+    paragraphs.push(
+      `The main variable going forward is ${riskTile.text.toLowerCase()}, which can create week-to-week variance even when the overall role remains intact.`
+    );
   }
 
   return paragraphs;
 }
 
-function generateSources(player) {
-  const teamSlug = (TEAM_FULL[player.team] || '').toLowerCase().replace(/\s+/g, '-');
-  const sources = [];
-  sources.push({ label: 'Pro-Football-Reference', url: `https://www.pro-football-reference.com/players/${player.name.charAt(0)}/${player.slug}.htm` });
-  sources.push({ label: 'NFL Profile', url: `https://www.nfl.com/players/${player.slug}/` });
-  if (player.team) {
-    sources.push({ label: 'Sleeper', url: `https://sleeper.com/players/nfl/${player.id}` });
-  }
-  return sources;
+function defaultSources() {
+  return [
+    { label: 'Sleeper', url: 'https://sleeper.com' },
+    { label: 'NFL', url: 'https://www.nfl.com/players/' },
+    { label: 'Pro-Football-Reference', url: 'https://www.pro-football-reference.com' },
+  ];
 }
 
 async function main() {
-  console.log('Building bios...');
+  console.log('Building bios (deterministic, fact-based)...');
 
   const players = JSON.parse(fs.readFileSync(PLAYERS_FILE, 'utf8'));
   const indexed = JSON.parse(fs.readFileSync(INDEXED_FILE, 'utf8'));
   const allSlugs = indexed.slugs || [];
-  const seasons = getAvailableSeasons();
 
+  let draftMap = {};
+  if (fs.existsSync(DRAFT_FILE)) {
+    draftMap = JSON.parse(fs.readFileSync(DRAFT_FILE, 'utf8'));
+  }
+
+  const seasons = getAvailableSeasons();
   console.log(`Processing ${allSlugs.length} indexed players across seasons: ${seasons.join(', ')}`);
 
   const playersBySlug = {};
@@ -556,50 +571,57 @@ async function main() {
   for (const slug of allSlugs) {
     const player = playersBySlug[slug];
     if (!player) continue;
-    if (!['QB', 'RB', 'WR', 'TE'].includes(player.position)) continue;
+    const pos = player.position;
+    if (!['QB', 'RB', 'WR', 'TE'].includes(pos)) continue;
+
+    const team = normalizeTeam(player.team);
+    const name = player.name;
+    const draft = draftMap[slug] || null;
 
     const seasonStats = [];
     for (const s of seasons) {
-      const ss = buildSeasonStats(player.id, player.position, s);
+      const ss = buildSeasonStats(player.id, pos, s);
       if (ss) seasonStats.push(ss);
     }
 
     if (seasonStats.length === 0) {
       bios[slug] = {
-        snapshot_bullets: [`${player.name} is a ${player.position} for the ${TEAM_FULL[player.team] || player.team}`],
+        snapshot_bullets: [`${name} is a ${pos} for the ${TEAM_FULL[team] || team}.`],
         style: null,
         timeline: [],
         career_context_tiles: [],
-        narrative_paragraphs: [`${player.name} is a ${player.position} currently with the ${TEAM_FULL[player.team] || player.team}. Limited game data is available for this player.`],
-        last_updated: new Date().toISOString().split('T')[0],
-        sources: generateSources(player),
+        narrative_paragraphs: [`${name} is a ${pos} currently with the ${TEAM_FULL[team] || team}. Limited game data is available for this player.`],
+        last_updated: new Date().toISOString().slice(0, 10),
+        sources: defaultSources(),
       };
       count++;
       continue;
     }
 
-    const snapshot = generateSnapshotBullets(player, seasonStats, seasons);
-    const style = generatePlayStyle(player, seasonStats);
-    const timeline = generateTimeline(player, seasonStats, seasons);
-    const context = generateCareerContext(player, seasonStats);
-    const narrative = generateNarrative(player, seasonStats);
-    const sources = generateSources(player);
+    const derived = computeDerived(pos, seasonStats, draft);
+    const snapshot_bullets = buildSnapshotBullets({ name, pos, team, draft, seasons: seasonStats, derived });
+    const style = buildStyle({ pos, seasons: seasonStats, derived });
+    const timeline = buildTimeline({ pos, draft, seasons: seasonStats, derived });
+    const career_context_tiles = buildCareerContextTiles({ pos, seasons: seasonStats, derived });
+    const narrative_paragraphs = buildNarrative({ name, pos, team, draft, seasons: seasonStats, derived, style, tiles: career_context_tiles });
 
     bios[slug] = {
-      snapshot_bullets: snapshot,
+      snapshot_bullets,
       style,
       timeline,
-      career_context_tiles: context,
-      narrative_paragraphs: narrative,
-      last_updated: new Date().toISOString().split('T')[0],
-      sources,
+      career_context_tiles,
+      narrative_paragraphs,
+      last_updated: new Date().toISOString().slice(0, 10),
+      sources: defaultSources(),
     };
 
     count++;
+    if (count % 100 === 0) process.stdout.write(`  ${count}/${allSlugs.length}\n`);
   }
 
+  console.log(`\nGenerated bios for ${count} players`);
   fs.writeFileSync(OUTPUT_FILE, JSON.stringify(bios, null, 2));
-  console.log(`Generated bios for ${count} players → ${OUTPUT_FILE}`);
+  console.log(`Saved to ${OUTPUT_FILE}`);
 }
 
-main().catch(err => { console.error(err); process.exit(1); });
+main().catch(err => { console.error('Fatal:', err); process.exit(1); });
