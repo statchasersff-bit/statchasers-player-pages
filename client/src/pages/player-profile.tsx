@@ -37,6 +37,12 @@ import {
   Info,
   Sparkles,
   RefreshCcw,
+  BookOpen,
+  Clock,
+  ShieldCheck,
+  AlertCircle,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import type { Player, GameLogEntry, NewsEntry, GameLogStats, GameScore } from "@shared/playerTypes";
@@ -86,11 +92,12 @@ const POSITION_COLORS: Record<string, string> = {
   DEF: "sc-pos-pill sc-pos-def",
 };
 
-const TAB_KEYS = ["overview", "gamelog", "usage", "rankings", "news"] as const;
+const TAB_KEYS = ["overview", "bio", "gamelog", "usage", "rankings", "news"] as const;
 type TabKey = typeof TAB_KEYS[number];
 
 const TAB_CONFIG: { key: TabKey; label: string; icon: typeof Activity }[] = [
   { key: "overview", label: "Overview", icon: Activity },
+  { key: "bio", label: "Bio", icon: BookOpen },
   { key: "gamelog", label: "Game Log", icon: Table },
   { key: "usage", label: "Usage & Trends", icon: TrendingUp },
   { key: "rankings", label: "Rankings & Value", icon: Trophy },
@@ -3441,6 +3448,219 @@ const SUPPORTED_TEAM_SITES: Record<string, string> = {
   PIT: "Steelers",
 };
 
+type BioData = {
+  snapshot_bullets: string[];
+  style: {
+    how_he_wins: string;
+    how_he_wins_tags: string[];
+    fantasy_translation: string;
+    fantasy_translation_tags: string[];
+  } | null;
+  timeline: { label: string; badge: string; text: string }[];
+  career_context_tiles: { title: string; text: string }[];
+  narrative_paragraphs: string[];
+  last_updated: string;
+  sources: { label: string; url: string }[];
+};
+
+const BADGE_STYLES: Record<string, { bg: string; text: string }> = {
+  Drafted: { bg: 'rgba(30,136,229,0.12)', text: '#1565C0' },
+  Breakout: { bg: 'rgba(76,175,80,0.12)', text: '#2E7D32' },
+  Peak: { bg: 'rgba(202,161,74,0.14)', text: '#92400E' },
+  Injury: { bg: 'rgba(229,57,53,0.12)', text: '#C62828' },
+  'Role change': { bg: 'rgba(156,39,176,0.12)', text: '#7B1FA2' },
+  'New team': { bg: 'rgba(255,152,0,0.12)', text: '#E65100' },
+  'Sustained peak': { bg: 'rgba(202,161,74,0.14)', text: '#92400E' },
+  Current: { bg: 'rgba(15,23,42,0.08)', text: '#334155' },
+};
+
+const CONTEXT_ICONS: Record<string, typeof Activity> = {
+  'Floor driver': ShieldCheck,
+  'Ceiling driver': Zap,
+  'Stability': Gauge,
+  'Risk note': AlertCircle,
+};
+
+function BioTab({ player }: { player: Player }) {
+  const bio: BioData | null = (player as any).bio ?? null;
+  const [narrativeExpanded, setNarrativeExpanded] = useState(false);
+
+  if (!bio) {
+    return (
+      <div className="sc-bio-empty" data-testid="bio-empty">
+        <BookOpen className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
+        <p className="text-muted-foreground text-sm font-medium">Bio data not available for this player.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="sc-bio" data-testid="bio-tab">
+      {bio.snapshot_bullets && bio.snapshot_bullets.length > 0 && (
+        <section className="sc-bio__section" data-testid="bio-snapshot">
+          <div className="sc-bio__section-header">
+            <FileText className="w-4 h-4" />
+            <h3>Career Snapshot</h3>
+          </div>
+          <div className="sc-bio__snapshot-card">
+            <ul className="sc-bio__bullets">
+              {bio.snapshot_bullets.map((bullet, i) => (
+                <li key={i} data-testid={`bio-bullet-${i}`}>
+                  <span className="sc-bio__bullet-dot" />
+                  {bullet}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {bio.style && (
+        <section className="sc-bio__section" data-testid="bio-style">
+          <div className="sc-bio__section-header">
+            <Zap className="w-4 h-4" />
+            <h3>Play Style</h3>
+          </div>
+          <div className="sc-bio__style-grid">
+            <div className="sc-bio__style-card" data-testid="bio-how-he-wins">
+              <div className="sc-bio__style-card-label">How he wins</div>
+              <p className="sc-bio__style-card-text">{bio.style.how_he_wins}</p>
+              <div className="sc-bio__tags">
+                {bio.style.how_he_wins_tags.map((tag, i) => (
+                  <span key={i} className="sc-bio__tag" data-testid={`bio-tag-wins-${i}`}>{tag}</span>
+                ))}
+              </div>
+            </div>
+            <div className="sc-bio__style-card" data-testid="bio-fantasy-impact">
+              <div className="sc-bio__style-card-label">Fantasy impact</div>
+              <p className="sc-bio__style-card-text">{bio.style.fantasy_translation}</p>
+              <div className="sc-bio__tags">
+                {bio.style.fantasy_translation_tags.map((tag, i) => (
+                  <span key={i} className="sc-bio__tag sc-bio__tag--gold" data-testid={`bio-tag-fantasy-${i}`}>{tag}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {bio.timeline && bio.timeline.length > 0 && (
+        <section className="sc-bio__section" data-testid="bio-timeline">
+          <div className="sc-bio__section-header">
+            <Clock className="w-4 h-4" />
+            <h3>Career Timeline</h3>
+          </div>
+          <div className="sc-bio__timeline">
+            {bio.timeline.map((entry, i) => {
+              const badgeStyle = BADGE_STYLES[entry.badge] || BADGE_STYLES['Current'];
+              return (
+                <div key={i} className="sc-bio__timeline-entry" data-testid={`bio-timeline-${i}`}>
+                  <div className="sc-bio__timeline-line">
+                    <div className="sc-bio__timeline-dot" />
+                    {i < bio.timeline.length - 1 && <div className="sc-bio__timeline-connector" />}
+                  </div>
+                  <div className="sc-bio__timeline-content">
+                    <div className="sc-bio__timeline-top">
+                      <span className="sc-bio__timeline-label">{entry.label}</span>
+                      <span
+                        className="sc-bio__timeline-badge"
+                        style={{ background: badgeStyle.bg, color: badgeStyle.text }}
+                      >
+                        {entry.badge}
+                      </span>
+                    </div>
+                    <p className="sc-bio__timeline-text">{entry.text}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {bio.career_context_tiles && bio.career_context_tiles.length > 0 && (
+        <section className="sc-bio__section" data-testid="bio-context">
+          <div className="sc-bio__section-header">
+            <Activity className="w-4 h-4" />
+            <h3>Fantasy Career Context</h3>
+          </div>
+          <div className="sc-bio__context-grid">
+            {bio.career_context_tiles.map((tile, i) => {
+              const Icon = CONTEXT_ICONS[tile.title] || Info;
+              return (
+                <div key={i} className="sc-bio__context-tile" data-testid={`bio-context-${i}`}>
+                  <div className="sc-bio__context-icon">
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="sc-bio__context-title">{tile.title}</div>
+                    <div className="sc-bio__context-text">{tile.text}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {bio.narrative_paragraphs && bio.narrative_paragraphs.length > 0 && (
+        <section className="sc-bio__section" data-testid="bio-narrative">
+          <div className="sc-bio__section-header">
+            <BookOpen className="w-4 h-4" />
+            <h3>Player Bio</h3>
+          </div>
+          <div className="sc-bio__narrative-card">
+            <div className={`sc-bio__narrative-text ${!narrativeExpanded ? 'sc-bio__narrative-text--collapsed' : ''}`}>
+              {bio.narrative_paragraphs.map((p, i) => (
+                <p key={i} data-testid={`bio-narrative-${i}`}>{p}</p>
+              ))}
+            </div>
+            {bio.narrative_paragraphs.length > 1 && (
+              <button
+                type="button"
+                className="sc-bio__narrative-toggle"
+                onClick={() => setNarrativeExpanded(!narrativeExpanded)}
+                data-testid="bio-narrative-toggle"
+              >
+                {narrativeExpanded ? (
+                  <><ChevronUp className="w-3.5 h-3.5" /> Show less</>
+                ) : (
+                  <><ChevronDown className="w-3.5 h-3.5" /> Read more</>
+                )}
+              </button>
+            )}
+          </div>
+        </section>
+      )}
+
+      {(bio.last_updated || (bio.sources && bio.sources.length > 0)) && (
+        <section className="sc-bio__footer" data-testid="bio-footer">
+          {bio.last_updated && (
+            <span className="sc-bio__footer-date">Last updated: {bio.last_updated}</span>
+          )}
+          {bio.sources && bio.sources.length > 0 && (
+            <div className="sc-bio__footer-sources">
+              {bio.sources.map((src, i) => (
+                <a
+                  key={i}
+                  href={src.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="sc-bio__footer-link"
+                  data-testid={`bio-source-${i}`}
+                >
+                  {src.label}
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
+    </div>
+  );
+}
+
 function NewsTab({ player }: { player: Player }) {
   const teamAbbr = player.team || '';
   const teamSiteLabel = SUPPORTED_TEAM_SITES[teamAbbr] || null;
@@ -4208,6 +4428,9 @@ export default function PlayerProfile() {
         >
           {activeTab === "overview" && (
             <OverviewTab player={playerWithSeasons} entries={defaultEntries} format={scoringFormat} />
+          )}
+          {activeTab === "bio" && (
+            <BioTab player={player} />
           )}
           {activeTab === "gamelog" && (
             <GameLogTab player={playerWithSeasons} format={scoringFormat} />

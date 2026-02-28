@@ -9,6 +9,7 @@ const GAME_LOGS_DIR = path.resolve(DATA_DIR, 'game_logs');
 const BYE_WEEKS_FILE = path.resolve(DATA_DIR, 'bye_weeks.json');
 const GAME_SCORES_FILE = path.resolve(DATA_DIR, 'game_scores.json');
 const DYNASTY_FILE = path.resolve(DATA_DIR, 'dynasty_rankings.json');
+const BIOS_FILE = path.resolve(DATA_DIR, 'bios.json');
 const OUTPUT_DIR = path.resolve(process.cwd(), 'dist', 'wp', 'data');
 
 const TEAM_ALIAS_MAP = {
@@ -586,6 +587,9 @@ function main() {
   const indexedSlugs = indexedRaw.slugs || [];
   const indexedByTeam = fs.existsSync(INDEXED_BY_TEAM_FILE) ? JSON.parse(fs.readFileSync(INDEXED_BY_TEAM_FILE, 'utf-8')) : {};
 
+  const biosData = fs.existsSync(BIOS_FILE) ? JSON.parse(fs.readFileSync(BIOS_FILE, 'utf-8')) : {};
+  console.log(`  Bios loaded: ${Object.keys(biosData).length} entries`);
+
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
   const lightweight = allPlayers
@@ -613,6 +617,7 @@ function main() {
 
     for (const format of formats) {
       const profile = buildPlayerProfile(player, allPlayers, seasons, format);
+      profile.bio = biosData[slug] || null;
       writeJSON(path.join(playerDir, `profile-${format}.json`), profile);
 
       for (const season of seasons) {

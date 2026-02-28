@@ -3,71 +3,90 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
 <!-- StatChasers Player Pages Template -->
 <div class="scpp-root" data-scpp-template="index" data-scpp-version="<?php echo esc_attr( SC_VERSION ); ?>">
-<div class="sc-players">
+  <div class="sc-players">
 
-  <header class="sc-header">
-    <h1 class="sc-page-title">NFL Player Database</h1>
-    <p class="sc-page-subtitle">
-      Search over 4,000 NFL players. Click any player for their full fantasy profile.
-    </p>
-  </header>
+    <!-- HERO -->
+    <header class="sc-header">
+      <div class="sc-header__kicker">StatChasers • Player Pages</div>
 
-  <div class="sc-search-wrap">
-    <input
-      type="search"
-      id="sc-search-input"
-      placeholder="Search players (e.g., Tyreek Hill)"
-      autocomplete="off"
-      class="sc-search-input"
-    />
+      <h1 class="sc-page-title">NFL Player Database</h1>
+      <div class="sc-gold-underline" aria-hidden="true"></div>
+
+      <p class="sc-page-subtitle">
+        Search over <strong>4,000+</strong> NFL players. Click any player for their full fantasy profile.
+      </p>
+    </header>
+
+    <!-- SEARCH -->
+    <div class="sc-search">
+      <label for="sc-search-input" class="sr-only">Search players</label>
+
+      <div class="sc-search__bar">
+        <span class="sc-search__icon" aria-hidden="true">
+          <!-- magnifying glass -->
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="M21 21l-4.35-4.35"></path>
+          </svg>
+        </span>
+
+        <input
+          type="search"
+          id="sc-search-input"
+          placeholder="Search players (e.g., Tyreek Hill)"
+          autocomplete="off"
+          class="sc-search-input"
+        />
+
+        <button type="button" class="sc-search__clear" id="sc-clear-btn" aria-label="Clear search">
+          <!-- X -->
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18"></path>
+            <path d="M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="sc-search__meta">
+        <p id="sc-results-count" class="sc-results-count">Type a name or team to search</p>
+        <p class="sc-search__hint">Tip: Use ↑ / ↓ then Enter</p>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <section class="sc-resultsCard" aria-label="Player search results">
+      <div id="sc-results" class="sc-results"></div>
+
+      <!-- Optional empty state (JS can toggle if you want later) -->
+      <div id="sc-empty" class="sc-empty" style="display:none;">
+        <div class="sc-empty__icon" aria-hidden="true">🏈</div>
+        <div class="sc-empty__title">No matches</div>
+        <div class="sc-empty__sub">Try a different name, team, or position.</div>
+      </div>
+    </section>
+
   </div>
-
-  <p id="sc-results-count" class="sc-results-count">Type a name or team to search</p>
-
-  <div id="sc-results"></div>
-
 </div>
-</div>
-
-<style>
-    .scpp-root .sc-players { max-width: 1100px; margin: 0 auto; padding: 24px 16px; box-sizing: border-box; }
-    @media (min-width: 1200px) { .scpp-root .sc-players { max-width: 1200px; } }
-    .scpp-root .sc-players .sc-header { margin-bottom: 32px; }
-    .scpp-root .sc-players .sc-page-title { font-size: 2em; margin: 0 0 8px 0; padding: 0; line-height: 1.3; }
-    .scpp-root .sc-players .sc-page-subtitle { color: #6b7280; margin: 0; font-size: 1em; }
-    .scpp-root .sc-players .sc-search-wrap { margin-bottom: 24px; }
-    .scpp-root .sc-players .sc-search-input {
-        width: 100%; padding: 12px 16px; border: 1px solid #d1d5db;
-        border-radius: 8px; font-size: 16px; outline: none; box-sizing: border-box;
-    }
-    .scpp-root .sc-players .sc-results-count { font-size: 0.9em; color: #9ca3af; margin-bottom: 16px; }
-    .scpp-root .sc-players .sc-result-row {
-        display: flex; align-items: center; gap: 14px;
-        padding: 12px 16px; border-bottom: 1px solid #f3f4f6;
-        text-decoration: none; color: inherit; transition: background-color 0.1s;
-    }
-    .scpp-root .sc-players .sc-result-row:hover,
-    .scpp-root .sc-players .sc-result-row.sc-active { background-color: #f9fafb; }
-    .scpp-root .sc-players .sc-result-row:first-child { border-top: 1px solid #e5e7eb; border-radius: 8px 8px 0 0; }
-    .scpp-root .sc-players .sc-result-row:last-child { border-bottom: 1px solid #e5e7eb; border-radius: 0 0 8px 8px; }
-    .scpp-root .sc-players .sc-result-row:only-child { border-radius: 8px; }
-    .scpp-root .sc-players .sc-result-icon {
-        width: 40px; height: 40px; border-radius: 6px; background: #e5e7eb;
-        display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .scpp-root .sc-players .sc-result-icon span { font-size: 11px; font-weight: 700; color: #6b7280; }
-    .scpp-root .sc-players .sc-result-info { display: flex; flex-direction: column; gap: 3px; }
-    .scpp-root .sc-players .sc-result-info strong { font-size: 15px; }
-    .scpp-root .sc-players .sc-result-meta { display: flex; align-items: center; gap: 6px; }
-    .scpp-root .sc-players .sc-result-team { font-size: 12px; color: #9ca3af; }
-    .scpp-root .sc-players .sc-pos-badge {
-        display: inline-block; font-size: 10px; font-weight: 700;
-        padding: 1px 6px; border-radius: 4px; text-transform: uppercase;
-    }
-    .scpp-root .sc-players .sc-pos-QB { background: rgba(239,68,68,0.12); color: #dc2626; }
-    .scpp-root .sc-players .sc-pos-RB { background: rgba(59,130,246,0.12); color: #2563eb; }
-    .scpp-root .sc-players .sc-pos-WR { background: rgba(34,197,94,0.12); color: #16a34a; }
-    .scpp-root .sc-players .sc-pos-TE { background: rgba(249,115,22,0.12); color: #ea580c; }
-</style>
 
 <?php /* Config passed via wp_localize_script; players.js enqueued with filemtime cache-busting */ ?>
+
+<script>
+/* Small UX helper: show/hide clear button without touching your main JS */
+(function(){
+  var input = document.getElementById('sc-search-input');
+  var btn = document.getElementById('sc-clear-btn');
+  if (!input || !btn) return;
+
+  function sync(){
+    btn.style.display = input.value && input.value.length ? 'inline-flex' : 'none';
+  }
+  btn.addEventListener('click', function(){
+    input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles:true }));
+    input.focus();
+    sync();
+  });
+  input.addEventListener('input', sync);
+  sync();
+})();
+</script>

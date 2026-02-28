@@ -19,6 +19,7 @@ const GAME_LOGS_DIR = path.resolve(process.cwd(), "data", "game_logs");
 const BYE_WEEKS_FILE = path.resolve(process.cwd(), "data", "bye_weeks.json");
 const GAME_SCORES_FILE = path.resolve(process.cwd(), "data", "game_scores.json");
 const DYNASTY_FILE = path.resolve(process.cwd(), "data", "dynasty_rankings.json");
+const BIOS_FILE = path.resolve(process.cwd(), "data", "bios.json");
 
 const gameLogsCache: Map<number, Record<string, GameLogEntry[]>> = new Map();
 const weeklyRanksCache: Map<string, Map<string, Map<number, number>>> = new Map();
@@ -32,6 +33,17 @@ function loadDynastyRankings(): Record<string, DynastyData> {
     dynastyCache = {};
   }
   return dynastyCache!;
+}
+
+let biosCache: Record<string, any> | null = null;
+function loadBios(): Record<string, any> {
+  if (biosCache) return biosCache;
+  try {
+    biosCache = JSON.parse(fs.readFileSync(BIOS_FILE, "utf-8"));
+  } catch {
+    biosCache = {};
+  }
+  return biosCache!;
 }
 
 let gameScoresData: Record<string, Record<string, { tm: number; opp: number; r: string }>> | null = null;
@@ -962,6 +974,9 @@ export async function registerRoutes(
       productionRiskBenchmarks = getPlayerBenchmarks(activeSeason, pos, allPlayers, { yardsPerCatch: ypc, catchPct: cp, tdPerTarget: tdR, fpPerUsage: fpuVal }, pTgt);
     }
 
+    const biosData = loadBios();
+    const bio = biosData[player.slug] || null;
+
     const enriched = {
       ...player,
       headshotUrl: player.headshotUrl ?? null,
@@ -977,6 +992,7 @@ export async function registerRoutes(
       careerProfile,
       dynasty,
       productionRiskBenchmarks,
+      bio,
     };
     res.set("Cache-Control", "public, max-age=3600");
     res.json(enriched);

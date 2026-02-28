@@ -1,0 +1,209 @@
+🔹 Where Bio Data Should Come From
+
+You need 3 categories of sources:
+
+Authoritative identity + draft + physicals
+
+Career performance context
+
+Narrative generation layer
+
+Let’s break them down properly.
+
+1️⃣ Core Player Identity (Safe + Authoritative)
+
+This should NOT be scraped ad hoc.
+
+✅ Primary Source: Sleeper API (already using it)
+
+Full name
+
+Team
+
+Position
+
+Age
+
+Experience
+
+Height / Weight (if available)
+
+Status
+
+You already use this. Good.
+
+✅ Draft + College Data (add this cleanly)
+
+You need a reliable dataset for:
+
+Draft year
+
+Round
+
+Pick
+
+Drafting team
+
+College
+
+Best scalable options:
+
+Public draft dataset (one-time import → store locally as JSON)
+
+Pro-Football-Reference draft tables (one-time structured scrape → store locally)
+
+SportsDataIO (paid but clean)
+
+Recommendation for you (lean + scalable):
+Create:
+
+server/data/draft.json
+server/data/college.json
+
+Do NOT fetch live every time.
+Do a one-time structured import → version it → rebuild when needed.
+
+2️⃣ Career Context (This Should Come From Your Own Data)
+
+This is where your advantage is.
+
+You already have:
+
+Game logs
+
+Season stats
+
+PPG calculations
+
+Injury history (player-specific)
+
+Role signals (OppIndex, TD rate, etc.)
+
+Replit should derive:
+
+First season with > X PPG (breakout)
+
+Career-high PPG season
+
+Seasons with missed games
+
+Team changes
+
+Top positional finish
+
+Stability/volatility metrics
+
+This makes Bio uniquely StatChasers.
+
+Do NOT source this from elsewhere.
+This should be computed from your data model.
+
+3️⃣ Narrative Layer (How To Generate It Properly)
+
+Replit should NOT:
+
+Scrape PlayerProfiler
+
+Copy Wikipedia
+
+Invent storylines
+
+Fabricate context
+
+Instead, generate bios deterministically using templates.
+
+Example logic:
+
+If QB:
+
+Paragraph 1 = Draft context + early role
+Paragraph 2 = Breakout + statistical inflection
+Paragraph 3 = Current fantasy profile + floor/ceiling explanation
+
+All filled using real data fields.
+
+This keeps you:
+
+Legally clean
+
+Consistent
+
+Scalable to 4,000+ players
+
+🔹 What NOT To Source Automatically
+
+Avoid:
+
+“Best comparable player” unless you compute similarity yourself
+
+Wonderlic (unreliable + inconsistent availability)
+
+Throw velocity (spotty data)
+
+Combine metrics unless you have a verified dataset
+
+Remember: you already identified fabricated athletic data.
+Don’t reintroduce credibility risk.
+
+🔹 What About Narrative Details Like:
+
+“Developed under X coach”
+“Improved mechanics”
+“Elite arm talent”
+
+These should NOT be auto-generated unless you:
+
+Have a verified source
+
+Or manually editorialize top players
+
+For scale, stick to:
+
+Objective career milestones
+
+Statistical transitions
+
+Role changes
+
+Team changes
+
+Usage patterns
+
+🔹 Clean Architecture For Replit
+At build time:
+
+Load:
+
+sleeper_players.json
+
+draft.json
+
+your computed season_stats.json
+
+Run:
+generateBio(player)
+
+Save:
+/server/data/bios/{player_id}.json
+
+No runtime scraping.
+
+🔹 Long-Term Upgrade Path
+
+Once traffic grows:
+
+Add manual editorial overrides for top 50–100 players
+
+Keep generated bios for the other 3,900+
+
+Hybrid system = scalable + premium.
+
+🔹 Simple Decision Framework
+
+If the data:
+
+Comes from your DB → use it.
+
+Comes from verified draft dataset → store it locally.
+
+Requires scraping narrative content → don’t automate it.
