@@ -3803,25 +3803,23 @@ function NewsTab({ player }: { player: Player }) {
       <div>
         <SectionHeader title="News & Analysis" subtitle="Latest team reports, injury updates, and player intel" />
         {hasTeamSite && (
-          <div style={{ marginTop: '16px' }}>
-            <div className="sc-news-tabs" data-testid="news-filter-toggle">
-              <button
-                type="button"
-                className={`sc-news-tab ${newsFilter === 'articles' ? 'sc-news-tab--active' : ''}`}
-                onClick={() => setNewsFilter('articles')}
-                data-testid="button-filter-articles"
-              >
-                Articles
-              </button>
-              <button
-                type="button"
-                className={`sc-news-tab ${newsFilter === 'injuries' ? 'sc-news-tab--active' : ''}`}
-                onClick={() => setNewsFilter('injuries')}
-                data-testid="button-filter-injuries"
-              >
-                Injuries
-              </button>
-            </div>
+          <div style={{ display: 'flex', gap: '0', marginTop: '16px' }} data-testid="news-filter-toggle">
+            <button
+              type="button"
+              className={`sc-news-tab ${newsFilter === 'articles' ? 'sc-news-tab--active' : ''}`}
+              onClick={() => setNewsFilter('articles')}
+              data-testid="button-filter-articles"
+            >
+              Articles
+            </button>
+            <button
+              type="button"
+              className={`sc-news-tab ${newsFilter === 'injuries' ? 'sc-news-tab--active' : ''}`}
+              onClick={() => setNewsFilter('injuries')}
+              data-testid="button-filter-injuries"
+            >
+              Injuries
+            </button>
           </div>
         )}
       </div>
