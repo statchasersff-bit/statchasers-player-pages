@@ -1,0 +1,304 @@
+OVERVIEW TAB — PREMIUM REDESIGN PLAN
+
+We’ll improve:
+
+Visual hierarchy
+
+Data emphasis
+
+Card design depth
+
+Trend graph polish
+
+Signal storytelling
+
+Layout breathing room
+
+Perceived intelligence
+
+1️⃣ PERFORMANCE HEADER — Make It Command Center Style
+Current:
+
+Flat stat cards with small text.
+
+Upgrade:
+
+Turn this into a hero stat ribbon.
+
+Changes:
+A. Make PPG Dominant
+
+2.2x larger font
+
+Bold weight 800
+
+Slight negative letter-spacing
+
+Gold accent underline
+
+Example:
+
+17.8
+PPG
++3.2 vs Pos Avg
+
+Add:
+
+Small green arrow if above positional average
+
+Small red arrow if below
+
+This makes the number feel alive.
+
+B. Add Positional Rank Context
+
+Instead of:
+
+59%
+High Week %
+
+Use:
+
+HIGH WEEK RATE
+59%
+WR12 Equivalent
+
+This makes it actionable.
+
+C. Add Gradient Bar Under All 4 Top Stats
+
+Not flat green.
+
+Use subtle left-to-right gradient:
+
+linear-gradient(90deg, #1a3f8a, #2d7df6)
+
+Make it glow faintly.
+
+Premium touch.
+
+2️⃣ RISK SECTION — Too Muted
+
+Currently feels secondary.
+
+Instead:
+
+A. Color Code With Intent
+
+Risk % → soft red background tint
+
+Volatility → amber tint
+
+Reliability → blue tint
+
+Goose Egg → grey neutral
+
+Very subtle (3–5% opacity).
+
+This helps scannability instantly.
+
+B. Add Micro Definitions (Hover Tooltips)
+
+When user hovers “Volatility 9.2”:
+
+Tooltip:
+
+Weekly scoring deviation relative to positional mean.
+
+This increases perceived sophistication.
+
+3️⃣ TREND DIAGNOSTICS — This Is Your Edge
+
+This section should feel like a financial chart.
+
+Right now it feels like a basic graph.
+
+Upgrade it.
+
+A. Make Trend Card Taller
+
+Graphs need space to feel premium.
+
+Increase height by ~30%.
+
+B. Add Soft Background Gridlines
+
+Very faint.
+Almost invisible.
+But makes it look institutional.
+
+C. Add Data Badges On Graph
+
+Example:
+
+At peak week:
+
+WK 9
++12.3 vs Avg
+
+Subtle floating tooltip.
+
+Feels advanced.
+
+D. Add Section Header Summary Line
+
+Above graph:
+
+Trend Signal: Production Stable | Efficiency Declining | Usage Rising
+
+Color-coded words.
+
+This is MASSIVE for perceived intelligence.
+
+4️⃣ ROLE SNAPSHOT — Make It More Analytical
+
+Currently it looks like a data dump.
+
+Instead:
+
+A. Add Category Separators
+
+Usage
+Efficiency
+Scoring Profile
+
+Add small uppercase labels.
+
+B. Add Positional Percentile Badges
+
+Instead of:
+
+Targets/Game 6.7
+
+Use:
+
+Targets/Game
+6.7
+82nd Percentile
+
+Instant premium feel.
+
+C. Add Mini Radar Chart (Optional but Elite)
+
+Small spider chart showing:
+
+Usage
+
+Efficiency
+
+Red Zone
+
+Explosiveness
+
+Consistency
+
+That alone elevates page 2 levels.
+
+5️⃣ 2-Year Performance — Upgrade This Visually
+
+This should feel like a “career baseline.”
+
+A. Add Career Stability Tag
+
+Example:
+
+Durability: 98%
+Top 10% Among WRs
+
+Add shield icon.
+
+B. Make Volume Breakdown Horizontal Pills
+
+Instead of flat % boxes:
+
+Turn into segmented bar:
+
+ELITE | HIGH | MID | BUST
+50%    14%    12%   24%
+
+Color-coded, single bar.
+
+Much more professional.
+
+6️⃣ QUICK OUTLOOK — This Is Where You Win
+
+Currently feels like an afterthought.
+
+Make it feel like an AI verdict.
+
+A. Rename Section
+
+Instead of:
+Quick Outlook
+
+Use:
+📊 StatChasers Projection Signal
+
+B. Add Large Role Label
+Projected Role: High-End WR2
+Confidence: 74%
+Risk Tier: Moderate
+C. Add One-Sentence Machine Insight
+
+Example:
+
+Production supported by stable route share but declining YPRR suggests capped ceiling without TD spike.
+
+That makes you look 10x smarter than FantasyPros.
+
+7️⃣ Increase Whitespace (This Alone Adds Premium Feel)
+
+You need:
+
+24–32px vertical padding between major cards
+
+Slightly rounder corners (12px)
+
+Softer shadows (not harsh)
+
+Shadow suggestion:
+
+box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+
+Premium, not heavy.
+
+8️⃣ Add Micro Animations (Subtle)
+
+On hover:
+
+Cards slightly lift (translateY -3px)
+
+Shadow deepens slightly
+
+Graph line glow intensifies
+
+Feels interactive.
+Not static.
+
+9️⃣ Typography Upgrade
+
+Right now text weight feels flat.
+
+Upgrade:
+
+Section Titles:
+
+font-weight: 700
+
+letter-spacing: -0.02em
+
+Stat Numbers:
+
+font-weight: 800
+
+slightly tighter tracking
+
+Meta Labels:
+
+uppercase
+
+11px
+
+letter-spacing: 0.08em
+
+Instant premium.

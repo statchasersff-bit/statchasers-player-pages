@@ -1820,3 +1820,330 @@
 .sc-bio__footer-link:hover {
   color: #caa14a;
 }
+
+.sc-overview {
+  --sc-gold: #caa14a;
+  --sc-navy: #0f172a;
+  --sc-navy-80: rgba(15,23,42,0.8);
+}
+
+.sc-overview__section {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid rgba(15,23,42,0.08);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  padding: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.sc-overview__section:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+}
+
+.sc-overview__section-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+}
+
+.sc-overview__ppg-hero {
+  text-align: center;
+  padding: 20px 16px 16px;
+  background: linear-gradient(135deg, rgba(15,23,42,0.02), rgba(15,23,42,0.04));
+  border-radius: 12px;
+  border: 1px solid rgba(15,23,42,0.08);
+  position: relative;
+  overflow: hidden;
+}
+.sc-overview__ppg-hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #1a3f8a, #2d7df6);
+  opacity: 0.8;
+}
+
+.sc-overview__ppg-number {
+  font-size: 44px;
+  font-weight: 800;
+  color: var(--sc-navy);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
+}
+
+.sc-overview__ppg-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+.sc-overview__ppg-delta {
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.sc-overview__ppg-delta--up {
+  color: #16a34a;
+  background: rgba(22,163,74,0.08);
+}
+.sc-overview__ppg-delta--down {
+  color: #dc2626;
+  background: rgba(220,38,38,0.08);
+}
+
+.sc-overview__stat-cell {
+  text-align: center;
+  padding: 14px 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(15,23,42,0.06);
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.sc-overview__stat-cell:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+}
+.sc-overview__stat-cell::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #1a3f8a, #2d7df6);
+  opacity: 0.6;
+}
+
+.sc-overview__stat-number {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
+}
+
+.sc-overview__stat-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+.sc-overview__stat-meta {
+  font-size: 9px;
+  color: #94a3b8;
+  margin-top: 3px;
+}
+
+.sc-overview__risk-cell {
+  text-align: center;
+  padding: 14px 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(15,23,42,0.06);
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
+}
+.sc-overview__risk-cell:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+}
+.sc-overview__risk-cell--bust {
+  background: rgba(239,68,68,0.04);
+}
+.sc-overview__risk-cell--volatility {
+  background: rgba(245,158,11,0.04);
+}
+.sc-overview__risk-cell--reliability {
+  background: rgba(59,130,246,0.04);
+}
+.sc-overview__risk-cell--goose {
+  background: rgba(100,116,139,0.04);
+}
+
+.sc-overview__risk-cell[data-tooltip]::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--sc-navy);
+  color: #e2e8f0;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 10;
+  max-width: 220px;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.4;
+}
+.sc-overview__risk-cell[data-tooltip]:hover::before {
+  opacity: 1;
+}
+
+.sc-overview__tier-bar {
+  display: flex;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+.sc-overview__tier-bar-seg {
+  transition: flex 0.3s ease;
+}
+
+.sc-overview__trend-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid rgba(15,23,42,0.08);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  padding: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.sc-overview__trend-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+}
+
+.sc-overview__trend-signal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(15,23,42,0.04);
+  margin-bottom: 16px;
+}
+.sc-overview__trend-signal-word--green {
+  color: #16a34a;
+}
+.sc-overview__trend-signal-word--red {
+  color: #dc2626;
+}
+.sc-overview__trend-signal-word--amber {
+  color: #d97706;
+}
+
+.sc-overview__role-card-cell {
+  text-align: center;
+  padding: 12px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(15,23,42,0.06);
+  background: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.sc-overview__role-card-cell:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+}
+.sc-overview__role-card-cell--primary {
+  background: rgba(15,23,42,0.03);
+  border: 1px solid rgba(15,23,42,0.10);
+}
+
+.sc-overview__outlook {
+  background: linear-gradient(135deg, rgba(15,23,42,0.03), rgba(15,23,42,0.06));
+  border-radius: 12px;
+  border: 1px solid rgba(15,23,42,0.10);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.sc-overview__outlook::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #caa14a, #f4d27a);
+}
+
+.sc-overview__outlook-role-badge {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--sc-navy);
+  background: rgba(202,161,74,0.1);
+  border: 1px solid rgba(202,161,74,0.25);
+  padding: 6px 14px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.sc-overview__outlook-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.sc-overview__outlook-meta-item {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.sc-overview__outlook-meta-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+}
+
+.sc-overview__outlook-meta-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sc-navy);
+}
+
+.sc-overview__outlook-sentence {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #475569;
+  font-style: italic;
+  border-left: 3px solid var(--sc-gold);
+  padding-left: 12px;
+  margin-top: 10px;
+}
+
+.sc-overview__career-stability-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(22,163,74,0.08);
+  color: #16a34a;
+  border: 1px solid rgba(22,163,74,0.15);
+}

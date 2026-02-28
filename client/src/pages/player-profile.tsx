@@ -708,7 +708,7 @@ function MomentumBadge({ data, unit = 'PPG' }: { data: number[]; unit?: string }
   );
 }
 
-function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentColor = "hsl(var(--primary))", showAvgLine = false, highlightLast = 0, showRecentFormLabel = false, thickLine = false }: {
+function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentColor = "hsl(var(--primary))", showAvgLine = false, highlightLast = 0, showRecentFormLabel = false, thickLine = false, showGridLines = false }: {
   data: number[];
   rollingAvg?: number[];
   bestIdx?: number;
@@ -719,6 +719,7 @@ function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentCo
   highlightLast?: number;
   showRecentFormLabel?: boolean;
   thickLine?: boolean;
+  showGridLines?: boolean;
 }) {
   if (data.length < 2) return null;
   const max = Math.max(...data, 1);
@@ -769,6 +770,16 @@ function LineChartSVG({ data, rollingAvg, bestIdx, height = 120, label, accentCo
             </linearGradient>
           )}
         </defs>
+
+        {showGridLines && (() => {
+          const gridCount = 4;
+          const lines = [];
+          for (let i = 1; i < gridCount; i++) {
+            const gy = padding.top + (chartH * i) / gridCount;
+            lines.push(<line key={i} x1={0} y1={gy} x2={viewW} y2={gy} stroke="#e2e8f0" strokeWidth="0.5" strokeDasharray="3 3" />);
+          }
+          return <>{lines}</>;
+        })()}
 
         {hlStart != null && (
           <>
@@ -990,8 +1001,14 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
   const thresholds = getTierThresholds(player.position);
   const posLabel = player.position || '';
 
+  const posAvgPpg = (() => {
+    const benchmarks: Record<string, number> = { QB: 16.5, RB: 11.5, WR: 10.5, TE: 8.0 };
+    return benchmarks[player.position || ''] ?? 10;
+  })();
+  const ppgDelta = seasonPpg - posAvgPpg;
+
   return (
-    <div className="space-y-4">
+    <div className="sc-overview" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {hasData ? (() => {
         const volLabel = stats.volatility < 6 ? 'Stable' : stats.volatility < 9 ? 'Moderate' : 'Volatile';
         const volColor = stats.volatility < 6
@@ -1018,101 +1035,104 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
 
         return (
         <>
-          <div data-testid="overview-stat-boxes" className="space-y-1.5">
-            {player.seasonLabel && (
-              <div className="flex items-center gap-2 flex-wrap">
-                <p className="text-[10px] font-semibold text-muted-foreground/60 uppercase tracking-wider" data-testid="text-season-label">
+          <div data-testid="overview-stat-boxes" className="sc-overview__section" style={{ padding: '20px' }}>
+            <div className="flex items-center gap-2 flex-wrap mb-4">
+              {player.seasonLabel && (
+                <p className="sc-overview__section-title" data-testid="text-season-label">
                   {player.seasonLabel}
                 </p>
-                <Badge variant="secondary" className={`text-[9px] px-1.5 py-0 ${roleGrade.color}`} data-testid="badge-role-grade">
-                  Role: {roleGrade.label} {posLabel}
-                </Badge>
-              </div>
-            )}
-            {!player.seasonLabel && (
-              <div className="flex items-center gap-2 flex-wrap">
-                <Badge variant="secondary" className={`text-[9px] px-1.5 py-0 ${roleGrade.color}`} data-testid="badge-role-grade">
-                  Role: {roleGrade.label} {posLabel}
-                </Badge>
-              </div>
-            )}
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Performance</p>
-            <div className="rounded-md bg-muted/30 dark:bg-slate-800/30 p-2">
-              <div className={`grid gap-1.5 ${thresholds.hasTier3 ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-3'}`}>
-                <div className="p-2.5 rounded-md bg-card dark:bg-slate-800/80 text-center ring-1 ring-border/50">
-                  <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">PPG</p>
-                  <p className="text-xl font-extrabold text-foreground tabular-nums mt-0.5">{seasonPpg.toFixed(1)}</p>
-                  <p className="text-[9px] text-muted-foreground/70">
-                    {player.seasonRank ? `${stats.gamesPlayed} GP \u00B7 ${posLabel}${player.seasonRank}` : `${stats.gamesPlayed} GP`}
-                  </p>
-                </div>
-                <div className="p-2.5 rounded-md bg-green-500/8 dark:bg-green-900/15 text-center ring-1 ring-green-500/15 dark:ring-green-400/10">
-                  <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 1)} %</p>
-                  <p className="text-xl font-extrabold text-green-600 dark:text-green-400 tabular-nums mt-0.5" data-testid="text-pos1-pct">{stats.pos1Pct.toFixed(0)}%</p>
-                  <p className="text-[9px] text-muted-foreground/70">{getTierLabel(player.position, 1)} Weeks ({posLabel}1{'\u2013'}{posLabel}12)</p>
-                </div>
-                <div className="p-2.5 rounded-md bg-teal-500/6 dark:bg-teal-900/10 text-center">
-                  <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 2)} %</p>
-                  <p className="text-base font-bold text-teal-600 dark:text-teal-400 tabular-nums mt-0.5" data-testid="text-pos2-pct">{stats.pos2Pct.toFixed(0)}%</p>
-                  <p className="text-[9px] text-muted-foreground/70">{getTierLabel(player.position, 2)} Weeks ({posLabel}13{'\u2013'}{posLabel}{thresholds.hasTier3 ? 24 : thresholds.bust})</p>
-                </div>
-                {thresholds.hasTier3 && (
-                  <div className="p-2.5 rounded-md bg-slate-500/5 dark:bg-slate-700/15 text-center">
-                    <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-medium">{getTierLabel(player.position, 3)} %</p>
-                    <p className="text-base font-bold text-slate-500 dark:text-slate-400 tabular-nums mt-0.5" data-testid="text-pos3-pct">{stats.pos3Pct.toFixed(0)}%</p>
-                    <p className="text-[9px] text-muted-foreground/70">{getTierLabel(player.position, 3)} Weeks ({posLabel}25{'\u2013'}{posLabel}{thresholds.bust})</p>
-                  </div>
-                )}
-              </div>
-              <div className="mt-2 px-0.5" data-testid="tier-distribution-bar">
-                {(() => {
-                  const total = stats.pos1Pct + stats.pos2Pct + (thresholds.hasTier3 ? stats.pos3Pct : 0) + stats.bustPct;
-                  const norm = total > 0 ? 100 / total : 1;
-                  const p1w = stats.pos1Pct * norm;
-                  const p2w = stats.pos2Pct * norm;
-                  const p3w = thresholds.hasTier3 ? stats.pos3Pct * norm : 0;
-                  const bw = stats.bustPct * norm;
-                  return (
-                    <div className="flex h-2.5 rounded-full overflow-hidden">
-                      {p1w > 0 && <div className="bg-green-500 dark:bg-green-400" style={{ width: `${p1w}%` }} title={`${getTierLabel(player.position, 1)}: ${stats.pos1Pct.toFixed(0)}%`} />}
-                      {p2w > 0 && <div className="bg-teal-400 dark:bg-teal-500" style={{ width: `${p2w}%` }} title={`${getTierLabel(player.position, 2)}: ${stats.pos2Pct.toFixed(0)}%`} />}
-                      {p3w > 0 && <div className="bg-slate-300 dark:bg-slate-500" style={{ width: `${p3w}%` }} title={`${getTierLabel(player.position, 3)}: ${stats.pos3Pct.toFixed(0)}%`} />}
-                      {bw > 0 && <div className="bg-red-400 dark:bg-red-500" style={{ width: `${bw}%` }} title={`Bust: ${stats.bustPct.toFixed(0)}%`} />}
-                    </div>
-                  );
-                })()}
-                <div className="flex items-center justify-between mt-1 gap-1 flex-wrap">
-                  <div className="flex items-center gap-2.5 flex-wrap">
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500 dark:bg-green-400 inline-block" /><span className="text-[9px] text-muted-foreground">{getTierLabel(player.position, 1)}</span></span>
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-teal-400 dark:bg-teal-500 inline-block" /><span className="text-[9px] text-muted-foreground">{getTierLabel(player.position, 2)}</span></span>
-                    {thresholds.hasTier3 && <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-500 inline-block" /><span className="text-[9px] text-muted-foreground">{getTierLabel(player.position, 3)}</span></span>}
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-400 dark:bg-red-500 inline-block" /><span className="text-[9px] text-muted-foreground">Bust</span></span>
-                  </div>
-                </div>
-              </div>
+              )}
+              <Badge variant="secondary" className={`text-[9px] px-1.5 py-0 ${roleGrade.color}`} data-testid="badge-role-grade">
+                Role: {roleGrade.label} {posLabel}
+              </Badge>
             </div>
 
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40 font-medium pt-0.5">Risk</p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5">
-              <div className="p-2 rounded-md bg-red-500/5 dark:bg-red-900/10 text-center">
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground/70 font-medium">Bust %</p>
-                <p className="text-base font-bold text-red-500 dark:text-red-400 tabular-nums mt-0.5" data-testid="text-bust-pct-risk">{stats.bustPct.toFixed(0)}%</p>
-                <p className="text-[9px] text-muted-foreground/60">Bust Weeks ({posLabel}{thresholds.bust + 1}+)</p>
+            <p className="sc-overview__section-title" style={{ marginBottom: '10px' }}>Performance</p>
+
+            <div className={`grid gap-3 ${thresholds.hasTier3 ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2 md:grid-cols-3'}`}>
+              <div className="sc-overview__ppg-hero md:row-span-1">
+                <p className="sc-overview__ppg-label">PPG</p>
+                <p className="sc-overview__ppg-number" data-testid="text-ppg-hero">{seasonPpg.toFixed(1)}</p>
+                <p className="sc-overview__stat-meta" style={{ marginTop: '4px' }}>
+                  {player.seasonRank ? `${stats.gamesPlayed} GP \u00B7 ${posLabel}${player.seasonRank}` : `${stats.gamesPlayed} GP`}
+                </p>
+                <div className={`sc-overview__ppg-delta ${ppgDelta >= 0 ? 'sc-overview__ppg-delta--up' : 'sc-overview__ppg-delta--down'}`} data-testid="text-ppg-delta">
+                  {ppgDelta >= 0 ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+                  {ppgDelta >= 0 ? '+' : ''}{ppgDelta.toFixed(1)} vs Pos Avg
+                </div>
               </div>
-              <div className="p-2 rounded-md bg-muted/30 dark:bg-slate-800/40 text-center">
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground/70 font-medium">Volatility</p>
-                <p className={`text-base font-bold tabular-nums mt-0.5 ${volColor}`}>{stats.volatility.toFixed(1)}</p>
-                <p className="text-[9px] text-muted-foreground/60">{volLabel}</p>
+
+              <div className="sc-overview__stat-cell">
+                <p className="sc-overview__stat-label">{getTierLabel(player.position, 1)} Rate</p>
+                <p className="sc-overview__stat-number" style={{ color: '#16a34a' }} data-testid="text-pos1-pct">{stats.pos1Pct.toFixed(0)}%</p>
+                <p className="sc-overview__stat-meta">{getTierLabel(player.position, 1)} Weeks ({posLabel}1{'\u2013'}{posLabel}12)</p>
               </div>
-              <div className="p-2 rounded-md bg-muted/30 dark:bg-slate-800/40 text-center">
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground/70 font-medium">Reliability</p>
-                <p className={`text-base font-bold tabular-nums mt-0.5 ${conColor}`}>{consistencyScore}</p>
-                <p className="text-[9px] text-muted-foreground/60">{conLabel}</p>
+
+              <div className="sc-overview__stat-cell">
+                <p className="sc-overview__stat-label">{getTierLabel(player.position, 2)} Rate</p>
+                <p className="sc-overview__stat-number" style={{ color: '#0d9488', fontSize: '18px' }} data-testid="text-pos2-pct">{stats.pos2Pct.toFixed(0)}%</p>
+                <p className="sc-overview__stat-meta">{getTierLabel(player.position, 2)} Weeks ({posLabel}13{'\u2013'}{posLabel}{thresholds.hasTier3 ? 24 : thresholds.bust})</p>
               </div>
-              <div className="p-2 rounded-md bg-red-500/5 dark:bg-red-900/10 text-center">
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground/70 font-medium">Goose Egg</p>
-                <p className={`text-base font-bold tabular-nums mt-0.5 ${stats.gooseEggPct > 0 ? 'text-red-500 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`} data-testid="text-goose-egg">{stats.gooseEggPct.toFixed(0)}%</p>
-                <p className="text-[9px] text-muted-foreground/60">0-Point Games</p>
+
+              {thresholds.hasTier3 && (
+                <div className="sc-overview__stat-cell">
+                  <p className="sc-overview__stat-label">{getTierLabel(player.position, 3)} Rate</p>
+                  <p className="sc-overview__stat-number" style={{ color: '#64748b', fontSize: '18px' }} data-testid="text-pos3-pct">{stats.pos3Pct.toFixed(0)}%</p>
+                  <p className="sc-overview__stat-meta">{getTierLabel(player.position, 3)} Weeks ({posLabel}25{'\u2013'}{posLabel}{thresholds.bust})</p>
+                </div>
+              )}
+            </div>
+
+            <div data-testid="tier-distribution-bar" style={{ marginTop: '14px' }}>
+              {(() => {
+                const total = stats.pos1Pct + stats.pos2Pct + (thresholds.hasTier3 ? stats.pos3Pct : 0) + stats.bustPct;
+                const norm = total > 0 ? 100 / total : 1;
+                const p1w = stats.pos1Pct * norm;
+                const p2w = stats.pos2Pct * norm;
+                const p3w = thresholds.hasTier3 ? stats.pos3Pct * norm : 0;
+                const bw = stats.bustPct * norm;
+                return (
+                  <>
+                    <div className="sc-overview__tier-bar">
+                      {p1w > 0 && <div className="sc-overview__tier-bar-seg" style={{ flex: p1w, background: '#22c55e' }} title={`${getTierLabel(player.position, 1)}: ${stats.pos1Pct.toFixed(0)}%`} />}
+                      {p2w > 0 && <div className="sc-overview__tier-bar-seg" style={{ flex: p2w, background: '#2dd4bf' }} title={`${getTierLabel(player.position, 2)}: ${stats.pos2Pct.toFixed(0)}%`} />}
+                      {p3w > 0 && <div className="sc-overview__tier-bar-seg" style={{ flex: p3w, background: '#94a3b8' }} title={`${getTierLabel(player.position, 3)}: ${stats.pos3Pct.toFixed(0)}%`} />}
+                      {bw > 0 && <div className="sc-overview__tier-bar-seg" style={{ flex: bw, background: '#f87171' }} title={`Bust: ${stats.bustPct.toFixed(0)}%`} />}
+                    </div>
+                    <div className="flex items-center gap-3 mt-1.5 flex-wrap">
+                      <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block" style={{ background: '#22c55e' }} /><span style={{ fontSize: '9px', color: '#94a3b8', fontWeight: 600 }}>{getTierLabel(player.position, 1)} {stats.pos1Pct.toFixed(0)}%</span></span>
+                      <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block" style={{ background: '#2dd4bf' }} /><span style={{ fontSize: '9px', color: '#94a3b8', fontWeight: 600 }}>{getTierLabel(player.position, 2)} {stats.pos2Pct.toFixed(0)}%</span></span>
+                      {thresholds.hasTier3 && <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block" style={{ background: '#94a3b8' }} /><span style={{ fontSize: '9px', color: '#94a3b8', fontWeight: 600 }}>{getTierLabel(player.position, 3)} {stats.pos3Pct.toFixed(0)}%</span></span>}
+                      <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full inline-block" style={{ background: '#f87171' }} /><span style={{ fontSize: '9px', color: '#94a3b8', fontWeight: 600 }}>Bust {stats.bustPct.toFixed(0)}%</span></span>
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+          </div>
+
+          <div className="sc-overview__section" style={{ padding: '20px' }}>
+            <p className="sc-overview__section-title" style={{ marginBottom: '10px' }}>Risk Assessment</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="sc-overview__risk-cell sc-overview__risk-cell--bust" data-tooltip="Percentage of games finishing outside startable range" data-testid="risk-cell-bust">
+                <p className="sc-overview__stat-label">Bust %</p>
+                <p className="sc-overview__stat-number" style={{ color: '#ef4444' }} data-testid="text-bust-pct-risk">{stats.bustPct.toFixed(0)}%</p>
+                <p className="sc-overview__stat-meta">Bust Weeks ({posLabel}{thresholds.bust + 1}+)</p>
+              </div>
+              <div className="sc-overview__risk-cell sc-overview__risk-cell--volatility" data-tooltip="Weekly scoring deviation relative to positional mean" data-testid="risk-cell-volatility">
+                <p className="sc-overview__stat-label">Volatility</p>
+                <p className={`sc-overview__stat-number ${volColor}`}>{stats.volatility.toFixed(1)}</p>
+                <p className="sc-overview__stat-meta">{volLabel}</p>
+              </div>
+              <div className="sc-overview__risk-cell sc-overview__risk-cell--reliability" data-tooltip="Consistency score based on coefficient of variation (0-100)" data-testid="risk-cell-reliability">
+                <p className="sc-overview__stat-label">Reliability</p>
+                <p className={`sc-overview__stat-number ${conColor}`}>{consistencyScore}</p>
+                <p className="sc-overview__stat-meta">{conLabel}</p>
+              </div>
+              <div className="sc-overview__risk-cell sc-overview__risk-cell--goose" data-tooltip="Percentage of games with zero fantasy points scored" data-testid="risk-cell-goose">
+                <p className="sc-overview__stat-label">Goose Egg</p>
+                <p className="sc-overview__stat-number" style={{ color: stats.gooseEggPct > 0 ? '#ef4444' : '#16a34a' }} data-testid="text-goose-egg">{stats.gooseEggPct.toFixed(0)}%</p>
+                <p className="sc-overview__stat-meta">0-Point Games</p>
               </div>
             </div>
           </div>
@@ -1169,69 +1189,93 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
               return `Production and usage trending ${last3Pct > 0 ? 'up' : 'down'} together \u2014 ${Math.abs(last3Pct).toFixed(0)}% shift across both.`;
             };
 
+            const trendSignalWords = (() => {
+              const words: { text: string; color: string }[] = [];
+              if (Math.abs(last3Pct) < 5) words.push({ text: 'Production Stable', color: '' });
+              else if (last3Pct > 0) words.push({ text: 'Production Rising', color: 'sc-overview__trend-signal-word--green' });
+              else words.push({ text: 'Production Declining', color: 'sc-overview__trend-signal-word--red' });
+
+              if (sec3Pct != null) {
+                if (Math.abs(sec3Pct) < 5) words.push({ text: 'Usage Stable', color: '' });
+                else if (sec3Pct > 0) words.push({ text: 'Usage Rising', color: 'sc-overview__trend-signal-word--green' });
+                else words.push({ text: 'Usage Declining', color: 'sc-overview__trend-signal-word--red' });
+              }
+              return words;
+            })();
+
             return (
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
-                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium" data-testid="text-trend-diagnostics-label">Trend Diagnostics</p>
-                    <MomentumBadge data={weeklyPts} unit="PPG" />
-                  </div>
+              <div className="sc-overview__trend-card" data-testid="section-trend-diagnostics">
+                <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
+                  <p className="sc-overview__section-title" data-testid="text-trend-diagnostics-label">Trend Diagnostics</p>
+                  <MomentumBadge data={weeklyPts} unit="PPG" />
+                </div>
 
-                  <div>
-                    <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                      <p className="text-xs text-muted-foreground font-medium">Points Trend</p>
-                      <span className="text-[10px] text-muted-foreground/40">(3-Week Rolling Average vs Weekly)</span>
-                    </div>
-                    <LineChartSVG
-                      data={weeklyPts}
-                      rollingAvg={rollingPts}
-                      bestIdx={bestIdx}
-                      height={130}
-                      label="fpts"
-                      accentColor="hsl(var(--primary))"
-                      showAvgLine
-                      highlightLast={3}
-                      showRecentFormLabel
-                    />
-                    <p className="text-[10px] text-muted-foreground/60 mt-1.5" data-testid="text-points-insight">
-                      {buildPointsInsight()}
-                    </p>
-                  </div>
+                <div className="sc-overview__trend-signal" data-testid="trend-signal-summary">
+                  <span style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#94a3b8' }}>Trend Signal:</span>
+                  {trendSignalWords.map((w, i) => (
+                    <span key={i}>
+                      <span className={w.color} style={{ fontWeight: 700 }}>{w.text}</span>
+                      {i < trendSignalWords.length - 1 && <span style={{ color: '#cbd5e1', margin: '0 2px' }}>|</span>}
+                    </span>
+                  ))}
+                </div>
 
-                  {secondaryData && secondaryData.length > 1 && secondaryMetric && (
-                    <>
-                      <div className="my-4 border-t border-border/40" />
-                      <div>
-                        <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                          <p className="text-xs text-muted-foreground font-medium">Usage Trend</p>
-                          <span className="text-[10px] text-muted-foreground/40">{secondaryMetric.label} (3-Week Avg vs Weekly)</span>
-                        </div>
-                        <LineChartSVG
-                          data={secondaryData}
-                          rollingAvg={secondaryRolling || undefined}
-                          height={90}
-                          label="secondary"
-                          accentColor="hsl(var(--chart-2))"
-                          showAvgLine
-                          highlightLast={3}
-                          showRecentFormLabel
-                        />
-                        <p className="text-[10px] text-muted-foreground/60 mt-1.5" data-testid="text-usage-insight">
-                          {buildUsageInsight()}
-                        </p>
-                        {(() => {
-                          const diag = buildDiagnosticInsight();
-                          return diag ? (
-                            <p className="text-[10px] text-foreground/60 font-medium mt-1" data-testid="text-diagnostic-insight">
-                              {diag}
-                            </p>
-                          ) : null;
-                        })()}
+                <div>
+                  <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                    <p style={{ fontSize: '12px', fontWeight: 700, color: '#475569', letterSpacing: '-0.01em' }}>Points Trend</p>
+                    <span style={{ fontSize: '10px', color: '#94a3b8' }}>(3-Week Rolling Average vs Weekly)</span>
+                  </div>
+                  <LineChartSVG
+                    data={weeklyPts}
+                    rollingAvg={rollingPts}
+                    bestIdx={bestIdx}
+                    height={170}
+                    label="fpts"
+                    accentColor="hsl(var(--primary))"
+                    showAvgLine
+                    highlightLast={3}
+                    showRecentFormLabel
+                    showGridLines
+                  />
+                  <p style={{ fontSize: '10px', color: '#94a3b8', marginTop: '8px' }} data-testid="text-points-insight">
+                    {buildPointsInsight()}
+                  </p>
+                </div>
+
+                {secondaryData && secondaryData.length > 1 && secondaryMetric && (
+                  <>
+                    <div style={{ margin: '16px 0', borderTop: '1px solid rgba(15,23,42,0.06)' }} />
+                    <div>
+                      <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                        <p style={{ fontSize: '12px', fontWeight: 700, color: '#475569', letterSpacing: '-0.01em' }}>Usage Trend</p>
+                        <span style={{ fontSize: '10px', color: '#94a3b8' }}>{secondaryMetric.label} (3-Week Avg vs Weekly)</span>
                       </div>
-                    </>
-                  )}
-                </CardContent>
-              </Card>
+                      <LineChartSVG
+                        data={secondaryData}
+                        rollingAvg={secondaryRolling || undefined}
+                        height={110}
+                        label="secondary"
+                        accentColor="hsl(var(--chart-2))"
+                        showAvgLine
+                        highlightLast={3}
+                        showRecentFormLabel
+                        showGridLines
+                      />
+                      <p style={{ fontSize: '10px', color: '#94a3b8', marginTop: '8px' }} data-testid="text-usage-insight">
+                        {buildUsageInsight()}
+                      </p>
+                      {(() => {
+                        const diag = buildDiagnosticInsight();
+                        return diag ? (
+                          <p style={{ fontSize: '10px', color: '#475569', fontWeight: 600, marginTop: '4px' }} data-testid="text-diagnostic-insight">
+                            {diag}
+                          </p>
+                        ) : null;
+                      })()}
+                    </div>
+                  </>
+                )}
+              </div>
             );
           })()}
 
@@ -1355,13 +1399,14 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
 
             const renderCard = (c: RoleCard) => {
               const Icon = Math.abs(c.pct) < 1 ? null : c.pct > 0 ? ArrowUpRight : ArrowDownRight;
+              const trendCol = Math.abs(c.pct) < 1 ? '#94a3b8' : c.pct > 0 ? '#16a34a' : '#ef4444';
               return (
-                <div key={c.label} className={`p-2 rounded-md text-center ${c.primary ? 'bg-muted/40 dark:bg-slate-800/50 ring-1 ring-border/30' : 'bg-muted/30 dark:bg-slate-800/40'}`}>
-                  <p className="text-[9px] text-muted-foreground font-medium mb-0.5">{c.label}</p>
-                  <p className={`${c.primary ? 'text-sm font-extrabold' : 'text-[13px] font-bold'} text-foreground tabular-nums`}>{c.fmt(c.recent)}</p>
-                  <div className="flex items-center justify-center gap-1 mt-0.5">
-                    <span className="text-[9px] text-muted-foreground/50 tabular-nums">Season: {c.fmt(c.season)}</span>
-                    <span className={`text-[9px] font-medium tabular-nums inline-flex items-center gap-px ${Math.abs(c.pct) < 1 ? 'text-muted-foreground/40' : getTrendColor(c.pct)}`}>
+                <div key={c.label} className={`sc-overview__role-card-cell ${c.primary ? 'sc-overview__role-card-cell--primary' : ''}`}>
+                  <p style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#94a3b8', marginBottom: '4px' }}>{c.label}</p>
+                  <p style={{ fontSize: c.primary ? '16px' : '14px', fontWeight: 800, color: '#0f172a', fontFamily: 'ui-monospace, monospace', lineHeight: 1 }}>{c.fmt(c.recent)}</p>
+                  <div className="flex items-center justify-center gap-1" style={{ marginTop: '4px' }}>
+                    <span style={{ fontSize: '9px', color: '#94a3b8', fontFamily: 'ui-monospace, monospace' }}>Szn: {c.fmt(c.season)}</span>
+                    <span className="inline-flex items-center gap-px" style={{ fontSize: '9px', fontWeight: 700, color: trendCol, fontFamily: 'ui-monospace, monospace' }}>
                       {Icon && <Icon className="w-2.5 h-2.5" />}
                       {Math.abs(c.pct) < 1 ? '0%' : `${c.pct > 0 ? '+' : ''}${c.pct.toFixed(0)}%`}
                     </span>
@@ -1371,192 +1416,200 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
             };
 
             return (
-              <Card>
-                <CardContent className="p-3.5">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium mb-2.5" data-testid="text-role-snapshot-label">Role Snapshot <span className="normal-case tracking-normal">(Season vs Recent)</span></p>
+              <div className="sc-overview__section" data-testid="section-role-snapshot">
+                <p className="sc-overview__section-title" style={{ marginBottom: '12px' }} data-testid="text-role-snapshot-label">Role Snapshot <span style={{ textTransform: 'none', letterSpacing: 'normal', fontWeight: 500 }}>(Season vs Recent)</span></p>
                   {usageCards.length > 0 && (
                     <>
-                      <p className="text-[9px] uppercase tracking-wider text-muted-foreground/40 font-medium mb-1.5">Usage</p>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5 mb-2" data-testid="role-snapshot-usage">
+                      <p style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#94a3b8', marginBottom: '8px' }}>Usage</p>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-3" data-testid="role-snapshot-usage">
                         {usageCards.map(renderCard)}
                       </div>
                     </>
                   )}
                   {effCards.length > 0 && (
                     <>
-                      <p className="text-[9px] uppercase tracking-wider text-muted-foreground/40 font-medium mb-1.5">Efficiency</p>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5 mb-2" data-testid="role-snapshot-efficiency">
+                      <p style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#94a3b8', marginBottom: '8px' }}>Efficiency</p>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-3" data-testid="role-snapshot-efficiency">
                         {effCards.map(renderCard)}
                       </div>
                     </>
                   )}
                   {ctxCards.length > 0 && (
                     <>
-                      <p className="text-[9px] uppercase tracking-wider text-muted-foreground/40 font-medium mb-1.5">Context</p>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5" data-testid="role-snapshot-context">
+                      <p style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#94a3b8', marginBottom: '8px' }}>Context</p>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2" data-testid="role-snapshot-context">
                         {ctxCards.map(renderCard)}
                       </div>
                     </>
                   )}
                   {signalTitle && (
-                    <div className="mt-2.5 pt-2 border-t border-border/30" data-testid="text-role-signal">
-                      <p className="text-[10px] font-semibold text-foreground/70">Signal: {signalTitle}</p>
-                      <p className="text-[10px] text-muted-foreground/60">{signalDetail}</p>
+                    <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid rgba(15,23,42,0.06)' }} data-testid="text-role-signal">
+                      <p style={{ fontSize: '11px', fontWeight: 700, color: '#334155' }}>Signal: {signalTitle}</p>
+                      <p style={{ fontSize: '10px', color: '#94a3b8', marginTop: '2px' }}>{signalDetail}</p>
                     </div>
                   )}
-                </CardContent>
-              </Card>
+              </div>
             );
           })()}
 
           {keyStats.length > 0 && (
-            <Card>
-              <CardContent className="p-4">
-                <p className="text-xs text-muted-foreground font-medium mb-3">Season Stat Summary</p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {keyStats.map(s => (
-                    <div key={s.label} className="text-center p-2 rounded-md bg-muted/30 dark:bg-slate-800/40">
-                      <p className="text-lg font-bold text-foreground tabular-nums">{Number.isInteger(s.total) ? s.total : s.total.toFixed(1)}</p>
-                      <p className="text-[10px] text-muted-foreground">{s.label}</p>
-                      <p className="text-[10px] text-muted-foreground/70">{s.perGame.toFixed(1)}/g</p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <div className="sc-overview__section">
+              <p className="sc-overview__section-title" style={{ marginBottom: '12px' }}>Season Stat Summary</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {keyStats.map(s => (
+                  <div key={s.label} className="sc-overview__stat-cell">
+                    <p className="sc-overview__stat-label">{s.label}</p>
+                    <p className="sc-overview__stat-number" style={{ color: '#0f172a' }}>{Number.isInteger(s.total) ? s.total : s.total.toFixed(1)}</p>
+                    <p className="sc-overview__stat-meta">{s.perGame.toFixed(1)}/g</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
 
           {cp && (() => {
-            const durColor = cp.durabilityPct >= 90 ? 'text-green-600 dark:text-green-400' : cp.durabilityPct >= 70 ? 'text-foreground' : 'text-red-500 dark:text-red-400';
-            const volColor = cp.volatilityLabel === 'Low' ? 'text-green-600 dark:text-green-400' : cp.volatilityLabel === 'Moderate' ? 'text-foreground' : 'text-red-500 dark:text-red-400';
+            const durColor = cp.durabilityPct >= 90 ? '#16a34a' : cp.durabilityPct >= 70 ? '#0f172a' : '#ef4444';
+            const volColor = cp.volatilityLabel === 'Low' ? '#16a34a' : cp.volatilityLabel === 'Moderate' ? '#0f172a' : '#ef4444';
             const ppgs = cp.seasonPpgs;
             const maxPpg = Math.max(...ppgs.map(p => p.ppg), 1);
-            const chartH = 40;
+            const chartH = 48;
 
             return (
-            <Card>
-              <CardContent className="p-3.5" data-testid="section-career-profile">
-                {cp.smallSample && (
-                  <Badge variant="secondary" className="text-[9px] px-1.5 py-0 mb-2 bg-amber-500/15 text-amber-700 dark:text-amber-400" data-testid="badge-small-sample">Small Sample</Badge>
-                )}
-                <div className="flex items-center gap-2 mb-3 flex-wrap">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium" data-testid="text-career-profile-label">
-                    3-Year Performance <span className="normal-case tracking-normal">({cp.gamesPlayed} Games)</span>
-                  </p>
-                </div>
+            <div className="sc-overview__section" data-testid="section-career-profile">
+              {cp.smallSample && (
+                <Badge variant="secondary" className="text-[9px] px-1.5 py-0 mb-2 bg-amber-500/15 text-amber-700 dark:text-amber-400" data-testid="badge-small-sample">Small Sample</Badge>
+              )}
+              <div className="flex items-center gap-2 mb-4 flex-wrap">
+                <p className="sc-overview__section-title" data-testid="text-career-profile-label">
+                  3-Year Performance <span style={{ textTransform: 'none', letterSpacing: 'normal', fontWeight: 500 }}>({cp.gamesPlayed} Games)</span>
+                </p>
+              </div>
 
-                <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-3" data-testid="career-profile-stats">
-                  <div>
-                    <span className="text-[9px] uppercase tracking-wider text-muted-foreground/40 font-medium">PPG</span>
-                    <p className="text-lg font-bold text-foreground tabular-nums">{cp.ppg.toFixed(1)}</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4" data-testid="career-profile-stats">
+                <div className="sc-overview__stat-cell">
+                  <p className="sc-overview__stat-label">Career PPG</p>
+                  <p className="sc-overview__stat-number" style={{ color: '#0f172a' }}>{cp.ppg.toFixed(1)}</p>
+                </div>
+                <div className="sc-overview__stat-cell">
+                  <p className="sc-overview__stat-label">Durability</p>
+                  <p className="sc-overview__stat-number" style={{ color: durColor }}>{cp.durabilityPct.toFixed(0)}%</p>
+                  <p className="sc-overview__stat-meta">{cp.gamesPlayed} of {cp.maxGames} games</p>
+                </div>
+                <div className="sc-overview__stat-cell">
+                  <p className="sc-overview__stat-label">Volatility</p>
+                  <p className="sc-overview__stat-number" style={{ color: volColor }}>{cp.volatility.toFixed(1)}</p>
+                  <p className="sc-overview__stat-meta">{cp.volatilityLabel}</p>
+                </div>
+                <div className="sc-overview__stat-cell">
+                  <p className="sc-overview__stat-label">Stability</p>
+                  {(() => {
+                    const pctChange = ppgs.length >= 2 ? ((ppgs[ppgs.length-1].ppg - ppgs[0].ppg) / Math.max(ppgs[0].ppg, 1)) * 100 : 0;
+                    const stLabel = Math.abs(pctChange) < 10 ? 'Steady' : pctChange > 0 ? 'Ascending' : 'Declining';
+                    const stColor = Math.abs(pctChange) < 10 ? '#16a34a' : pctChange > 0 ? '#16a34a' : '#ef4444';
+                    return (
+                      <>
+                        <p className="sc-overview__stat-number" style={{ color: stColor, fontSize: '14px' }}>{stLabel}</p>
+                        <p className="sc-overview__stat-meta">{pctChange >= 0 ? '+' : ''}{pctChange.toFixed(0)}% trend</p>
+                      </>
+                    );
+                  })()}
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '14px' }}>
+                <p className="sc-overview__stat-label" style={{ marginBottom: '6px' }}>Tier Breakdown</p>
+                <div className={`grid gap-2 ${thresholds.hasTier3 ? 'grid-cols-4' : 'grid-cols-3'}`} data-testid="career-tier-breakdown">
+                  <div className="sc-overview__role-card-cell">
+                    <p style={{ fontSize: '14px', fontWeight: 800, color: '#16a34a', fontFamily: "ui-monospace, monospace" }}>{cp.pos1Pct.toFixed(0)}%</p>
+                    <p style={{ fontSize: '9px', color: '#94a3b8', fontWeight: 600 }}>{getTierLabel(player.position, 1)}</p>
                   </div>
-                  <div>
-                    <span className="text-[9px] uppercase tracking-wider text-muted-foreground/40 font-medium">Durability</span>
-                    <p className={`text-lg font-bold tabular-nums ${durColor}`}>{cp.durabilityPct.toFixed(0)}%</p>
-                    <span className="text-[9px] text-muted-foreground/40">{cp.gamesPlayed} of {cp.maxGames} games</span>
+                  <div className="sc-overview__role-card-cell">
+                    <p style={{ fontSize: '14px', fontWeight: 800, color: '#0d9488', fontFamily: "ui-monospace, monospace" }}>{cp.pos2Pct.toFixed(0)}%</p>
+                    <p style={{ fontSize: '9px', color: '#94a3b8', fontWeight: 600 }}>{getTierLabel(player.position, 2)}</p>
+                  </div>
+                  {thresholds.hasTier3 && (
+                    <div className="sc-overview__role-card-cell">
+                      <p style={{ fontSize: '14px', fontWeight: 800, color: '#64748b', fontFamily: "ui-monospace, monospace" }}>{cp.pos3Pct.toFixed(0)}%</p>
+                      <p style={{ fontSize: '9px', color: '#94a3b8', fontWeight: 600 }}>{getTierLabel(player.position, 3)}</p>
+                    </div>
+                  )}
+                  <div className="sc-overview__role-card-cell">
+                    <p style={{ fontSize: '14px', fontWeight: 800, color: '#ef4444', fontFamily: "ui-monospace, monospace" }}>{cp.bustPct.toFixed(0)}%</p>
+                    <p style={{ fontSize: '9px', color: '#94a3b8', fontWeight: 600 }}>Bust</p>
                   </div>
                 </div>
+              </div>
 
-                <div className="mb-3">
-                  <span className="text-[9px] uppercase tracking-wider text-muted-foreground/40 font-medium">Tier Breakdown</span>
-                  <div className={`grid gap-1.5 mt-1.5 ${thresholds.hasTier3 ? 'grid-cols-4' : 'grid-cols-3'}`} data-testid="career-tier-breakdown">
-                    <div className="text-center p-1.5 rounded-md bg-green-500/10 dark:bg-green-900/20">
-                      <p className="text-sm font-bold text-green-600 dark:text-green-400 tabular-nums">{cp.pos1Pct.toFixed(0)}%</p>
-                      <p className="text-[9px] text-muted-foreground">{getTierLabel(player.position, 1)}</p>
-                    </div>
-                    <div className="text-center p-1.5 rounded-md bg-teal-500/10 dark:bg-teal-900/20">
-                      <p className="text-sm font-bold text-teal-600 dark:text-teal-400 tabular-nums">{cp.pos2Pct.toFixed(0)}%</p>
-                      <p className="text-[9px] text-muted-foreground">{getTierLabel(player.position, 2)}</p>
-                    </div>
-                    {thresholds.hasTier3 && (
-                      <div className="text-center p-1.5 rounded-md bg-slate-500/10 dark:bg-slate-700/20">
-                        <p className="text-sm font-bold text-slate-500 dark:text-slate-400 tabular-nums">{cp.pos3Pct.toFixed(0)}%</p>
-                        <p className="text-[9px] text-muted-foreground">{getTierLabel(player.position, 3)}</p>
-                      </div>
-                    )}
-                    <div className="text-center p-1.5 rounded-md bg-red-500/10 dark:bg-red-900/20">
-                      <p className="text-sm font-bold text-red-500 dark:text-red-400 tabular-nums">{cp.bustPct.toFixed(0)}%</p>
-                      <p className="text-[9px] text-muted-foreground">Bust</p>
-                    </div>
+              {ppgs.length > 1 && (
+                <div>
+                  <p className="sc-overview__stat-label" style={{ marginBottom: '6px' }}>Career Arc</p>
+                  <div className="flex items-end gap-2" data-testid="career-arc-chart" style={{ height: chartH + 20 }}>
+                    {ppgs.map((sp, i) => {
+                      const barH = Math.max(6, (sp.ppg / maxPpg) * chartH);
+                      const isLast = i === ppgs.length - 1;
+                      return (
+                        <div key={sp.season} className="flex-1 flex flex-col items-center gap-1">
+                          <span style={{ fontSize: '9px', fontWeight: 700, fontFamily: 'ui-monospace, monospace', color: isLast ? '#0f172a' : '#94a3b8' }}>{sp.ppg.toFixed(1)}</span>
+                          <div
+                            style={{
+                              width: '100%',
+                              height: barH,
+                              borderRadius: '4px',
+                              background: isLast ? 'linear-gradient(180deg, #1a3f8a, #2d7df6)' : 'rgba(15,23,42,0.10)',
+                              transition: 'height 0.3s ease',
+                            }}
+                          />
+                          <span style={{ fontSize: '9px', fontWeight: 600, fontFamily: 'ui-monospace, monospace', color: '#94a3b8' }}>{String(sp.season).slice(2)}</span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-
-                <div className="flex items-baseline gap-1.5 mb-3 flex-wrap">
-                  <span className="text-[9px] text-muted-foreground/40 font-medium">Volatility:</span>
-                  <span className={`text-xs font-semibold ${volColor}`}>{cp.volatility.toFixed(1)} ({cp.volatilityLabel})</span>
-                </div>
-
-                {ppgs.length > 1 && (
-                  <div>
-                    <span className="text-[9px] uppercase tracking-wider text-muted-foreground/40 font-medium">Career Arc</span>
-                    <div className="mt-1.5 flex items-end gap-1" data-testid="career-arc-chart" style={{ height: chartH + 16 }}>
-                      {ppgs.map((sp, i) => {
-                        const barH = Math.max(4, (sp.ppg / maxPpg) * chartH);
-                        return (
-                          <div key={sp.season} className="flex-1 flex flex-col items-center gap-0.5">
-                            <span className="text-[8px] tabular-nums text-muted-foreground/60 font-medium">{sp.ppg.toFixed(1)}</span>
-                            <div
-                              className={`w-full rounded-sm ${i === ppgs.length - 1 ? 'bg-primary/60' : 'bg-muted-foreground/20'}`}
-                              style={{ height: barH }}
-                            />
-                            <span className="text-[8px] tabular-nums text-muted-foreground/40">{String(sp.season).slice(2)}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+              )}
+            </div>
             );
           })()}
         </>
         );
       })() : (
-        <Card>
-          <CardContent className="p-6 text-center">
-            <p className="text-muted-foreground text-sm">No season data available yet.</p>
-            <p className="text-muted-foreground/60 text-xs mt-1">Stats will appear once the season begins.</p>
-          </CardContent>
-        </Card>
+        <div className="sc-overview__section" style={{ padding: '32px', textAlign: 'center' }}>
+          <p style={{ color: '#94a3b8', fontSize: '14px', fontWeight: 500 }}>No season data available yet.</p>
+          <p style={{ color: '#cbd5e1', fontSize: '12px', marginTop: '4px' }}>Stats will appear once the season begins.</p>
+        </div>
       )}
 
-      <Card>
-        <CardContent className="p-3.5" data-testid="section-quick-outlook">
-          <div className="flex items-center gap-2 mb-2.5 flex-wrap">
-            <FileText className="w-4 h-4 text-muted-foreground" />
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Quick Outlook</p>
-          </div>
-          {outlook.hasData ? (
-            <>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 mb-2.5" data-testid="outlook-stat-lines">
-                <div className="flex items-baseline gap-1.5 flex-wrap">
-                  <span className="text-[10px] text-muted-foreground/60 font-medium">Current Form:</span>
-                  <span className={`text-xs font-semibold ${outlook.formColor}`} data-testid="text-outlook-form">{outlook.formLabel}</span>
-                  <span className="text-[9px] text-muted-foreground/40 tabular-nums">({outlook.formDetail})</span>
-                </div>
-                <div className="flex items-baseline gap-1.5 flex-wrap">
-                  <span className="text-[10px] text-muted-foreground/60 font-medium">Role:</span>
-                  <span className="text-xs font-semibold text-foreground" data-testid="text-outlook-role">{outlook.roleLabel}</span>
-                </div>
-                <div className="flex items-baseline gap-1.5 flex-wrap">
-                  <span className="text-[10px] text-muted-foreground/60 font-medium">Volatility:</span>
-                  <span className={`text-xs font-semibold ${outlook.volatilityColor}`} data-testid="text-outlook-volatility">{outlook.volatilityLabel}</span>
-                </div>
-                <div className="flex items-baseline gap-1.5 flex-wrap">
-                  <span className="text-[10px] text-muted-foreground/60 font-medium">Tier Profile:</span>
-                  <span className="text-xs font-semibold text-foreground" data-testid="text-outlook-tier">{outlook.tierProfile}</span>
-                </div>
+      <div className="sc-overview__outlook" data-testid="section-quick-outlook">
+        <div className="flex items-center gap-2 mb-3 flex-wrap">
+          <FileText className="w-4 h-4" style={{ color: '#caa14a' }} />
+          <p className="sc-overview__section-title">Quick Outlook</p>
+        </div>
+        {outlook.hasData ? (
+          <>
+            <div className="sc-overview__outlook-role-badge" data-testid="text-outlook-role">{outlook.roleLabel}</div>
+
+            <div className="sc-overview__outlook-meta" data-testid="outlook-stat-lines">
+              <div className="sc-overview__outlook-meta-item">
+                <span className="sc-overview__outlook-meta-label">Form:</span>
+                <span className="sc-overview__outlook-meta-value" data-testid="text-outlook-form">{outlook.formLabel}</span>
+                <span style={{ fontSize: '9px', color: '#94a3b8', fontFamily: 'ui-monospace, monospace' }}>({outlook.formDetail})</span>
               </div>
-              {outlook.sentence && (
-                <p className="text-[11px] text-muted-foreground leading-relaxed" data-testid="text-outlook-sentence">{outlook.sentence}</p>
-              )}
-            </>
-          ) : (
-            <p className="text-sm text-muted-foreground" data-testid="text-outlook">{outlook.noDataMsg}</p>
-          )}
-        </CardContent>
-      </Card>
+              <div className="sc-overview__outlook-meta-item">
+                <span className="sc-overview__outlook-meta-label">Volatility:</span>
+                <span className="sc-overview__outlook-meta-value" data-testid="text-outlook-volatility">{outlook.volatilityLabel}</span>
+              </div>
+              <div className="sc-overview__outlook-meta-item">
+                <span className="sc-overview__outlook-meta-label">Tier:</span>
+                <span className="sc-overview__outlook-meta-value" data-testid="text-outlook-tier">{outlook.tierProfile}</span>
+              </div>
+            </div>
+            {outlook.sentence && (
+              <p className="sc-overview__outlook-sentence" data-testid="text-outlook-sentence">{outlook.sentence}</p>
+            )}
+          </>
+        ) : (
+          <p style={{ fontSize: '14px', color: '#94a3b8' }} data-testid="text-outlook">{outlook.noDataMsg}</p>
+        )}
+      </div>
     </div>
   );
 }
