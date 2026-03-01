@@ -100,7 +100,6 @@ const TAB_CONFIG: { key: TabKey; label: string; icon: typeof Activity }[] = [
   { key: "gamelog", label: "Game Log", icon: Table },
   { key: "usage", label: "Usage & Trends", icon: TrendingUp },
   { key: "rankings", label: "Rankings & Value", icon: Trophy },
-  { key: "news", label: "News & Analysis", icon: Newspaper },
 ];
 
 function getHeadshotUrl(playerId: string): string {
