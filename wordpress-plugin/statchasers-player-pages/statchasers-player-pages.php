@@ -115,11 +115,18 @@ add_action('wp_enqueue_scripts', function () {
 });
 
 add_filter('script_loader_tag', function ($tag, $handle) {
-    if ($handle === 'sc-players-js' && strpos($tag, 'type="module"') === false) {
-        $tag = str_replace(' src=', ' type="module" src=', $tag);
-    }
+    if ($handle !== 'sc-players-js') return $tag;
+
+    $tag = preg_replace('/\s*data-rocket-[a-z-]+="[^"]*"/', '', $tag);
+    $tag = preg_replace('/\s*data-rocket-[a-z-]+\b/', '', $tag);
+    $tag = str_replace(' defer>', '>', $tag);
+    $tag = str_replace(' defer ', ' ', $tag);
+
+    $tag = preg_replace('/type="[^"]*"/', '', $tag);
+    $tag = str_replace('<script ', '<script type="module" ', $tag);
+
     return $tag;
-}, 10, 2);
+}, 9999, 2);
 
 add_action( 'admin_notices', function() {
     if ( ! current_user_can( 'manage_options' ) ) return;
