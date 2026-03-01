@@ -2292,6 +2292,7 @@
 .sc-gamelog__table-wrap {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
 .sc-gamelog__table {
   width: 100%;

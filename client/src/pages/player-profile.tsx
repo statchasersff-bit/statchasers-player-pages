@@ -1983,7 +1983,7 @@ function CareerStatsTable({ stats, position, format, onSeasonClick }: {
       </div>
 
       <div className="sc-gamelog__table-wrap" style={{ margin: '0 -4px' }}>
-        <table className="sc-gamelog__table" data-testid="table-career-stats">
+        <table className="sc-gamelog__table" style={{ minWidth: pos === 'RB' ? '520px' : '440px' }} data-testid="table-career-stats">
           <thead>
             <tr className="sc-gamelog__thead-row">
               {columns.map(col => (

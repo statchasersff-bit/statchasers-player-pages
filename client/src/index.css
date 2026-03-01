@@ -2556,7 +2556,7 @@
   box-shadow: 0 8px 24px rgba(0,0,0,0.06);
   overflow: hidden;
 }
-.sc-gamelog__table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.sc-gamelog__table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
 .sc-gamelog__table { width: 100%; font-size: 12px; border-collapse: collapse; }
 .sc-gamelog__thead-row { border-bottom: 2px solid rgba(15,23,42,0.08); }
 .sc-gamelog__th {
