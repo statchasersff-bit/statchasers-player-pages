@@ -1,0 +1,66 @@
+File Optimization
+CSS Files
+Need Help?
+
+
+Minify CSS removes whitespace and comments to reduce the file size.
+Excluded CSS Files
+Specify URLs of CSS files to be excluded from minification (one per line).
+statchasersff-bit.github.io
+Internal: The domain part of the URL will be stripped automatically. Use (.*).css wildcards to exclude all CSS files located at a specific path.
+3rd Party: Use either the full URL path or only the domain name, to exclude external CSS. More info
+
+Optimize CSS delivery eliminates render-blocking CSS on your website. Only one method can be selected. Remove Unused CSS is recommended for optimal performance.
+Remove Unused CSS Load CSS asynchronously
+Removes unused CSS per page and helps to reduce page size and HTTP requests. Recommended for best performance. Test thoroughly! More info
+CSS safelist
+Specify CSS filenames, IDs or classes that should not be removed (one per line).
+/wp-content/plugins/some-plugin/(.*).css
+.css-class
+#css_id
+tag
+JavaScript Files
+Need Help?
+
+
+Minify JavaScript removes whitespace and comments to reduce the file size.
+
+Combine JavaScript files combines your site’s internal, 3rd party and inline JS reducing HTTP requests. Not recommended if your site uses HTTP/2. More info
+ For compatibility and best results, this option is disabled when delay javascript execution is enabled.
+Excluded JavaScript Files
+Specify URLs of JavaScript files to be excluded from minification and concatenation (one per line).
+statchasersff-bit.github.io
+Internal: The domain part of the URL will be stripped automatically. Use (.*).js wildcards to exclude all JS files located at a specific path.
+3rd Party: Use either the full URL path or only the domain name, to exclude external JS. More info
+
+Load JavaScript deferred eliminates render-blocking JS on your site and can improve load time. More info
+Excluded JavaScript Files
+Specify URLs or keywords of JavaScript files to be excluded from defer (one per line). More info
+/wp-content/themes/some-theme/(.*).js
+
+Improves performance by delaying the loading of JavaScript files until user interaction (e.g. scroll, click). More info
+One-click exclusions
+When using the Delay JavaScript feature, you might notice that some elements in the viewport take time to appear.
+
+If you need these elements to load immediately, select the related plugins, themes, or services below to ensure they appear without delay.
+
+3rd parties
+
+Analytics & Trackers
+
+Ad Networks
+
+Payment Processors
+
+Other Services
+WordPress
+
+Themes
+
+Plugins
+Excluded JavaScript Files
+Specify URLs or keywords that can identify inline or JavaScript files to be excluded from delaying execution (one per line).
+sc-players-js
+Also, please check our documentation for a list of compatibility exclusions.
+
+The Safe Mode mode prevents all internal scripts from being delayed.
