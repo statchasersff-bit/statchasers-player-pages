@@ -1,0 +1,91 @@
+We need to implement “Position Average” (and optional percentile) benchmarks for the Production Risk section in Usage & Trends.
+
+Goal
+- Replace placeholder “Pos Avg” values for:
+  1) Yards/Catch
+  2) Catch %
+  3) TD/Target Rate
+with defensible, stable benchmarks that do NOT include players who barely play.
+
+Data assumptions
+- We have per-player season totals available (or can aggregate from game logs):
+  - rec_yards, rec_rec (receptions), rec_tgt (targets), rec_td (receiving TDs)
+  - player position (WR/RB/TE)
+- These benchmarks should be computed from “qualified” players only.
+
+Definitions (player-level metrics)
+- yards_per_catch = rec_yards / rec_rec (only if rec_rec > 0)
+- catch_pct = rec_rec / rec_tgt (only if rec_tgt > 0)
+- td_per_target = rec_td / rec_tgt (only if rec_tgt > 0)
+
+Qualification thresholds (exclude non-contributors)
+- WR: rec_tgt >= 30
+- TE: rec_tgt >= 20
+- RB: (rec_tgt >= 20) for receiving benchmarks; (if we later add rush metrics, use touches >= 50)
+Note: We are benchmarking receiving efficiency only, so filter by targets.
+
+Compute “Pos Avg” as WEIGHTED averages (do NOT average player averages)
+For each position P:
+- pos_avg_yards_per_catch(P) = sum(rec_yards for qualified P) / sum(rec_rec for qualified P)
+- pos_avg_catch_pct(P) = sum(rec_rec for qualified P) / sum(rec_tgt for qualified P)
+- pos_avg_td_per_target(P) = sum(rec_td for qualified P) / sum(rec_tgt for qualified P)
+
+Optional Premium: percentile within qualified position (recommended)
+- For each metric, compute player’s percentile rank among qualified players at that position using the player-level metric:
+  - yards_per_catch_percentile
+  - catch_pct_percentile
+  - td_per_target_percentile
+Implementation:
+- Build an array of player metric values for qualified players.
+- Percentile = rank(value) / (N-1) (handle N<=1) with ties handled by average rank (or simplest: sort and use index of insertion).
+Return integer percentile (0–100) or 1-decimal.
+
+Caching / performance
+- Benchmarks should not be computed per request by scanning all players.
+- Implement a server-side cache keyed by (season, position) with TTL (e.g., 6 hours) OR precompute daily.
+- If data is stored in DB, compute with aggregation queries.
+
+API changes
+- Add a new endpoint OR extend existing player response used by Usage & Trends:
+  - productionRiskBenchmarks: {
+      position: "WR",
+      season: 2025,
+      qualified_thresholds: { WR:30, TE:20, RB:20 },
+      posAvg: {
+        yardsPerCatch: number,
+        catchPct: number,
+        tdPerTarget: number
+      },
+      percentile: {   // optional
+        yardsPerCatch: number,
+        catchPct: number,
+        tdPerTarget: number
+      }
+    }
+
+UI changes
+- In “Efficiency Engine” display:
+  - Yards/Catch 11.9
+    ↑ +4.4 vs Pos Avg (7.5)   (or show “↑ Pos Avg 7.5” if you prefer)
+  - Catch % 83.3%
+    ↑ +18.3% vs Pos Avg (65.0%)
+  - TD/Target Rate 3.9%
+    ↓ -1.1% vs Pos Avg (5.0%)
+- If percentile included, add a subtle line:
+  - “78th percentile” under the delta.
+- Ensure formatting:
+  - yards/catch: 1 decimal
+  - catch% and td/target: 1 decimal percent
+  - pos avg same formatting
+
+Edge cases
+- If player position not WR/RB/TE, don’t show pos avg.
+- If player doesn’t meet qualification threshold, still show pos avg computed from qualified cohort, but hide percentile and add tooltip “Percentile requires qualification.”
+- Avoid divide-by-zero: if sums are 0, return null and hide benchmark.
+
+Acceptance criteria
+- “Pos Avg” values are stable and do not change when non-contributing players are included.
+- Benchmarks match weighted formulas (validate with a quick sanity check on sample data).
+- Endpoint returns benchmarks for the player’s position and season.
+- UI shows benchmark comparisons with correct up/down indicators.
+- Benchmarks are cached and fast.

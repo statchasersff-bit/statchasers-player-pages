@@ -1,0 +1,294 @@
+Architecture (clean + scalable)
+Goal
+
+For Patriots fantasy-relevant players in your tool (QB/RB/WR/TE/K):
+
+Pull Patriots roster page → get player profile URLs
+
+For each fantasy player you actually show, find their Patriots profile URL
+
+Visit player profile → extract most recent “Related News”
+
+Store/cache results
+
+Player page → “News & Analysis” tab calls your endpoint → renders cards
+
+Important (so you don’t get rate-limited)
+
+Cache results (e.g., refresh every 30–60 minutes)
+
+Don’t fetch 30 player pages on every user page-load
+
+Step 1 — Add a backend endpoint that returns news for ONE player
+
+Below is a Node/Express endpoint you can run on Replit/Render (same style as your other tools). It:
+
+builds a roster map (name → patriots player page url)
+
+fetches the player page
+
+extracts “Related News” links
+
+returns [{ title, url, type }]
+
+This intentionally avoids scraping the full article content. It only pulls the “Related News” list items from the player page.
+
+server.js (Patriots-only MVP)
+import express from "express";
+import cheerio from "cheerio";
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Simple in-memory cache (swap to KV/Redis later)
+let rosterCache = { ts: 0, map: new Map() };
+const ROSTER_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
+
+function normName(name) {
+  return name
+    .toLowerCase()
+    .replace(/\./g, "")
+    .replace(/'/g, "")
+    .replace(/\s+(jr|sr|ii|iii|iv|v)\b/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+async function fetchHtml(url) {
+  const res = await fetch(url, {
+    headers: {
+      "user-agent": "StatChasersBot/1.0 (+https://statchasers.com)",
+      "accept-language": "en-US,en;q=0.9",
+    },
+  });
+  if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
+  return await res.text();
+}
+
+async function getPatriotsRosterMap() {
+  const now = Date.now();
+  if (rosterCache.map.size && now - rosterCache.ts < ROSTER_TTL_MS) {
+    return rosterCache.map;
+  }
+
+  const rosterUrl = "https://www.patriots.com/team/players-roster/";
+  const html = await fetchHtml(rosterUrl);
+  const $ = cheerio.load(html);
+
+  // The roster page has lots of <a> links; we only want /team/players-roster/<slug>/
+  const map = new Map();
+
+  $('a[href^="/team/players-roster/"]').each((_, a) => {
+    const href = $(a).attr("href");
+    const text = $(a).text().trim();
+    if (!href || !text) return;
+
+    // Skip empty icon links / duplicates
+    if (text.length < 3) return;
+
+    const full = `https://www.patriots.com${href}`;
+    map.set(normName(text), full);
+  });
+
+  rosterCache = { ts: now, map };
+  return map;
+}
+
+function extractRelatedNews($) {
+  // Find the heading "Related News", then collect following links
+  // Works even if structure shifts slightly.
+  const related = [];
+
+  // Find any element that contains exact text "Related News"
+  const heading = $("h2").filter((_, el) => $(el).text().trim() === "Related News").first();
+  if (!heading.length) return related;
+
+  // Collect anchors after heading until the next h2
+  let node = heading.next();
+  while (node && node.length) {
+    if (node.is("h2")) break;
+
+    node.find("a").each((_, a) => {
+      const href = $(a).attr("href");
+      const rawText = $(a).text().replace(/\s+/g, " ").trim();
+      if (!href || !rawText) return;
+
+      // rawText often looks like: "news Transcript: Drake Maye Press Conference 2/10 Read the full transcript..."
+      // We'll strip the leading type token (news/video/etc) if present.
+      const parts = rawText.split(" ");
+      const first = parts[0].toLowerCase();
+      const type = ["news", "video", "audio"].includes(first) ? first : "news";
+      const title = ["news", "video", "audio"].includes(first) ? rawText.slice(first.length).trim() : rawText;
+
+      // Normalize URL
+      const url = href.startsWith("http") ? href : `https://www.patriots.com${href}`;
+
+      // De-dupe by URL
+      if (!related.some((x) => x.url === url)) {
+        related.push({ title, url, type });
+      }
+    });
+
+    node = node.next();
+  }
+
+  return related;
+}
+
+/**
+ * GET /patriots/player-news?player_name=Drake%20Maye&limit=5
+ */
+app.get("/patriots/player-news", async (req, res) => {
+  try {
+    const playerName = (req.query.player_name || "").toString().trim();
+    const limit = Math.min(parseInt(req.query.limit || "6", 10), 10);
+
+    if (!playerName) {
+      return res.status(400).json({ error: "player_name is required" });
+    }
+
+    const rosterMap = await getPatriotsRosterMap();
+    const url = rosterMap.get(normName(playerName));
+
+    if (!url) {
+      return res.json({ player_name: playerName, found: false, items: [] });
+    }
+
+    const html = await fetchHtml(url);
+    const $ = cheerio.load(html);
+
+    const items = extractRelatedNews($).slice(0, limit);
+
+    res.json({
+      player_name: playerName,
+      found: true,
+      patriots_profile_url: url,
+      items,
+      fetched_at: new Date().toISOString(),
+    });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.listen(PORT, () => console.log(`Patriots news server running on :${PORT}`));
+Step 2 — Hook your Player Page “News & Analysis” tab to this endpoint
+Frontend fetch + render cards (drop-in pattern)
+
+Assuming your player page already has:
+
+player.full_name (or similar)
+
+a tab container for News & Analysis
+
+async function loadPatriotsPlayerNews(playerName) {
+  const endpoint = `https://YOUR-NEWS-SERVICE.onrender.com/patriots/player-news?player_name=${encodeURIComponent(playerName)}&limit=6`;
+  const res = await fetch(endpoint);
+  if (!res.ok) throw new Error("Failed to load news");
+  return await res.json();
+}
+
+function renderNewsCards(containerEl, items) {
+  if (!items?.length) {
+    containerEl.innerHTML = `<div class="sc-empty">No recent Patriots-related news found.</div>`;
+    return;
+  }
+
+  containerEl.innerHTML = items.map((it) => `
+    <a class="sc-news-card" href="${it.url}" target="_blank" rel="noopener">
+      <div class="sc-news-card__top">
+        <span class="sc-badge sc-badge--type">${it.type.toUpperCase()}</span>
+        <span class="sc-news-card__source">Patriots.com</span>
+      </div>
+      <div class="sc-news-card__title">${escapeHtml(it.title)}</div>
+      <div class="sc-news-card__cta">Read →</div>
+    </a>
+  `).join("");
+}
+
+// tiny helper
+function escapeHtml(s) {
+  return String(s)
+    .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
+
+Minimal CSS to match your premium card vibe
+
+.sc-news-card{
+  display:block;
+  border:1px solid rgba(15,23,42,.10);
+  border-radius:16px;
+  padding:14px 14px;
+  background:#fff;
+  box-shadow:0 6px 18px rgba(15,23,42,.06);
+  text-decoration:none;
+  transition:transform .12s ease, box-shadow .12s ease;
+  margin:10px 0;
+}
+.sc-news-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 24px rgba(15,23,42,.10);
+}
+.sc-news-card__top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:8px;
+}
+.sc-badge{
+  display:inline-flex;
+  align-items:center;
+  height:22px;
+  padding:0 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+.sc-badge--type{
+  background:rgba(202,161,74,.18);
+  color:#7a5a14;
+  border:1px solid rgba(202,161,74,.35);
+}
+.sc-news-card__source{
+  font-size:12px;
+  font-weight:700;
+  color:#64748b;
+}
+.sc-news-card__title{
+  font-size:14px;
+  font-weight:900;
+  color:#0f172a;
+  line-height:1.25;
+}
+.sc-news-card__cta{
+  margin-top:8px;
+  font-size:12.5px;
+  font-weight:900;
+  color:#1d4ed8;
+}
+.sc-empty{
+  padding:14px;
+  border:1px dashed rgba(15,23,42,.18);
+  border-radius:14px;
+  background:#f8fafc;
+  color:#475569;
+  font-weight:700;
+}
+Step 3 — “Fantasy relevant players that are on my tool”
+
+For Patriots-only MVP, do this filter on your side:
+
+only call the endpoint for players where:
+
+team === "NE"
+
+pos in ["QB","RB","WR","TE","K"]
+
+That avoids unnecessary scraping of defensive guys and long snappers.
+
+Step 4 — Add the AI-generated blurb (next step, but easy)
+
+Once we’re successfully pulling the related news list, we’ll generate a 2–3 sentence blurb per item and store it (so we don’t pay/generate on every page load).
+
+Best practice: generate blurbs during your refresh job and cache them.

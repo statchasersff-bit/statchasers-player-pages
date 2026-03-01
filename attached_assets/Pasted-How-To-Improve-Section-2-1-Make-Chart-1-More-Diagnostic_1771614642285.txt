@@ -1,0 +1,131 @@
+How To Improve Section 2
+1️⃣ Make Chart 1 More Diagnostic
+
+Currently:
+Target Share per Week.
+
+Upgrade it by adding:
+
+• Season average horizontal line
+• Highlight last 4 weeks
+• Color recent trend segment differently
+
+That makes trend direction instantly readable.
+
+Also:
+Consider plotting:
+% deviation from season baseline.
+
+That visually shows magnitude.
+
+2️⃣ Upgrade Volume Context Chart
+
+Instead of just overlay:
+
+Add annotation logic:
+
+If:
+
+Team attempts ↓
+
+Player targets ↓
+
+Share stable
+
+Narrative:
+"Decline is team-driven."
+
+If:
+
+Team attempts stable
+
+Player targets ↓
+
+Share ↓
+
+Narrative:
+"Role contraction."
+
+Right now you show lines.
+Add diagnostic logic layer.
+
+3️⃣ High-Value Opportunity — Clarify Purpose
+
+Right now it feels like:
+
+“Another line chart.”
+
+To make it premium:
+
+Add:
+
+• TD points % overlay (not just raw TD points)
+• Or color weeks where >40% of points came from TDs
+
+This makes volatility visible.
+
+Otherwise it overlaps with Sustainability section.
+
+4️⃣ Improve Usage Shift Summary
+
+Current:
+
+Target share has remained stable at 15.7% over the last 4 games (season avg 16.9%). Team volume is also steady.
+
+This is good but slightly flat.
+
+Make it sharper:
+
+Example:
+
+Target share has hovered slightly below season average over the last four games, with team pass volume remaining consistent — suggesting mild role compression rather than offensive slowdown.
+
+It should feel analytical.
+
+💎 UX / Premium Feel Improvements
+A. Visual Hierarchy
+
+Right now all charts look equal.
+
+Make Target Share chart visually dominant.
+Slightly larger.
+Thicker primary line.
+
+It’s the most important.
+
+B. Remove Chart Toggles That Don’t Add Value
+
+If "Raw Tgt" and "% Team" are toggle buttons, ensure:
+
+They actually change perspective meaningfully
+
+Otherwise they feel decorative
+
+C. Add Micro Labels
+
+On each chart, show:
+
+Last 4 Avg: 15.7%
+Season Avg: 16.9%
+
+Inside chart header.
+
+That increases clarity.
+
+D. Reduce Cognitive Load
+
+Three charts is good.
+
+Four would be too many.
+
+You’re in a good range.
+
+Just ensure each chart has a unique purpose:
+
+Share trend
+
+Volume context
+
+TD dependency
+
+No overlap.

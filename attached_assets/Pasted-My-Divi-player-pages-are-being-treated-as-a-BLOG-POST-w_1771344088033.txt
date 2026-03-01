@@ -1,0 +1,62 @@
+My Divi player pages are being treated as a BLOG POST with right sidebar:
+<body class="... et_right_sidebar ..."> and the HTML shows <article class="type-post ... post-885 ...>.
+This breaks the Theme Builder header/footer and layout.
+
+Refactor the plugin to render inside a REAL WordPress Page context using a “container page” approach.
+
+Requirements:
+
+1) Create a plugin setting for a Container Page ID:
+- Add under Tools -> StatChasers Players a dropdown of pages to select “Container Page”
+- Option name: scpp_container_page_id
+- Also include a button to auto-create pages:
+  Parent page: "NFL" slug "nfl"
+  Child page: "Players" slug "players"
+  Save the Players page ID as the container page.
+
+2) Routing:
+- Keep player URL structure:
+  /nfl/players/ (directory)
+  /nfl/players/{slug}/ (player profile)
+- Use rewrite rules to capture:
+  sc_players_index = 1
+  sc_player_slug = {slug}
+
+3) Force WordPress query to the container PAGE:
+On requests that match sc_players_index or sc_player_slug:
+- In a hook like 'pre_get_posts' or 'parse_request':
+  - Load the container page post by ID.
+  - Set $wp_query flags so WP thinks this is that PAGE:
+    $wp_query->is_page = true;
+    $wp_query->is_singular = true;
+    $wp_query->is_home = false;
+    $wp_query->is_archive = false;
+    $wp_query->is_404 = false;
+  - Set queried object:
+    $wp_query->queried_object = $container_post;
+    $wp_query->queried_object_id = $container_post->ID;
+  - Set the posts array:
+    $wp_query->posts = array($container_post);
+    $wp_query->post = $container_post;
+    $wp_query->found_posts = 1;
+    $wp_query->post_count = 1;
+  - Set global $post and call setup_postdata($post)
+
+This MUST prevent Divi from using et_right_sidebar / type-post.
+
+4) Inject plugin output into the container page content:
+- Add a 'the_content' filter:
+  - If sc_players_index: replace content with the directory/search HTML.
+  - If sc_player_slug: replace content with the player profile HTML.
+- Keep all markup inside <div class="sc-players">...</div>
+- Remove any direct template_redirect rendering that bypasses WP page context.
+
+5) Divi layout:
+- Ensure the body classes become a PAGE layout (no et_right_sidebar) and Theme Builder header/footer matches my real pages.
+
+6) After changes:
+- Tell me exactly which hooks you used and which files changed.
+- Tell me to re-save permalinks and select the container page in settings.
+
+Important:
+Do NOT accidentally reuse a blog post as the context. The rendered article should be a PAGE, not type-post.

@@ -1,0 +1,129 @@
+What I’d Build
+1) Add a “Team” selector (primary filter)
+
+Dropdown with team logos (optional) + abbreviations
+
+Also allow quick-type: “BUF”, “Bills”, “Buffalo”
+
+When selected:
+
+Page switches from Division Grid View → Team Card View
+
+Add a clear “Back to League View” button
+
+This keeps your current UX intact while adding a premium “mode.”
+
+Team Card View Layout (Premium + Useful)
+A) 2-row grid of starters (fantasy relevant)
+
+For fantasy, don’t mimic Madden positions (LT/LG/etc). Keep it relevant:
+
+QB | RB1 | RB2 | WR1 | WR2 | WR3 | TE | FLEX | K | DEF
+
+That’s the “fantasy roster board.” Super intuitive.
+
+If you want to keep it tighter:
+
+Default = QB/RB/WR/TE/K/DEF
+
+Toggle “Show Depth” to reveal RB2/WR3/FLEX
+
+B) Each card shows (minimum)
+
+Headshot
+
+Name
+
+Position tag (Sleeper color pill)
+
+Depth role (WR1/WR2, RB1/RB2)
+
+One premium metric line (pick ONE):
+
+Dynasty Rank (WR9)
+
+2025 PPG
+
+Dynasty Value (KTC)
+
+“Role Stability” score (your sustainability score)
+
+Keep it to one metric so it stays clean.
+
+C) Card interaction
+
+Click → opens that player’s profile (same as today)
+
+Hover lift + subtle glow based on position color
+
+Why This Is a Great Idea (UX-wise)
+✅ Scanning becomes instant
+
+People think in teams all the time:
+
+“Show me the Packers weapons”
+
+“What’s the Patriots depth chart?”
+
+“Who’s starting for the Chargers?”
+
+Card boards make that visual.
+
+✅ It feels premium without extra data
+
+You’re using your existing data, just presenting it in a higher-status UI.
+
+✅ It creates a “hook”
+
+This is exactly the type of view people screenshot/share.
+
+Make It Not Just “Pretty” (Premium Enhancements)
+
+Add a small header panel above the card board:
+
+Team Summary Bar
+
+Offense Fantasy Strength (score)
+
+Total Starters Count
+
+Avg Starter Age
+
+Top Asset (best dynasty value)
+
+Injury count (if you add injuries later)
+
+This makes it feel like an analysis dashboard, not just roster cards.
+
+Implementation Approach (Clean + Simple)
+View Mode Toggle
+
+Top right near filters:
+
+League View (current)
+
+Team Board (new)
+
+Selecting a team automatically flips to Team Board.
+
+Position Mapping Logic
+
+Your existing “QB1/QB2, RB1/RB2…” logic fits perfectly.
+
+For FLEX:
+
+Choose best remaining fantasy starter by your rankings / PPG / dynasty value
+
+Or let user choose “FLEX logic: PPG | Dynasty Value | Projected”
+
+Keep it simple at first: default to PPG.
+
+My Recommendation for Your First Version (MVP)
+
+Do this first:
+
+Team dropdown
+
+Team Board with QB / RB1 / RB2 / WR1 / WR2 / WR3 / TE / K / DEF
+
+Each card: headshot + name + position + depth

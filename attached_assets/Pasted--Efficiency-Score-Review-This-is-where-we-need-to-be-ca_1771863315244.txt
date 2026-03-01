@@ -1,0 +1,152 @@
+🔴 Efficiency Score Review
+
+This is where we need to be careful.
+
+Because efficiency metrics are noisy.
+
+⚠️ QB Efficiency
+
+You’re using:
+
+Completion %
+
+FP per usage
+
+TD rate
+
+That’s strong.
+
+But beware:
+
+FP per usage already includes TD effect.
+
+TD rate separately also adds signal.
+
+There is mild double-counting.
+
+Not catastrophic, but something to monitor.
+
+⚠️ RB Efficiency
+yardsPerTouch − 4.0
+tdPerTouch − 3
+
+Make sure these baselines are:
+
+League averages for RB1 tier, not overall RB pool.
+
+If baseline is wrong, efficiency label becomes biased.
+
+⚠️ WR/TE Efficiency
+
+Yards per catch baseline = 8
+
+That’s very low for WR.
+
+League WR average is closer to 11–12.
+
+8 is more TE territory.
+
+If you keep 8:
+
+Almost every WR becomes efficiency-positive.
+
+This baseline must be calibrated per position.
+
+This is important.
+
+🎯 Does The Badge Concept Make Sense?
+
+Absolutely.
+
+Green / Amber / Red is intuitive.
+
+But the wording is critical.
+
+Instead of:
+
+“Efficiency-Driven (Regression Risk)”
+
+I’d shorten it to:
+
+“Efficiency-Driven”
+
+Then tooltip explains regression risk.
+
+You don’t want to scare users unnecessarily.
+
+Let them interpret.
+
+🧠 What This Actually Tells Users
+
+This metric answers:
+
+“Is this player scoring in line with his workload, or outperforming it?”
+
+That’s extremely valuable.
+
+Especially combined with:
+
+Sustainability score
+
+Role Direction
+
+Role Consistency
+
+This becomes a complete production profile.
+
+🔥 One Major Structural Suggestion
+
+Right now both Volume and Efficiency start at 50.
+
+That’s good.
+
+But you are adding raw additive boosts.
+
+This can cause:
+
+Extreme clustering
+
+Or runaway scores
+
+You may eventually want to:
+
+Normalize both sub-scores to 0–100 via percentile scaling.
+
+But for now, additive is fine.
+
+Just monitor distribution.
+
+🧩 The Real Question
+
+Will this badge flip constantly?
+
+If yes → Users lose trust.
+
+You want production type to feel meaningful and relatively sticky.
+
+Test:
+
+How many WR1s are Efficiency-Driven?
+
+How many RB1s are Volume-Backed?
+
+Does distribution match football intuition?
+
+If yes → you nailed it.
+
+🏆 Final Evaluation
+
+This is:
+
+✔ Conceptually sharp
+✔ Mathematically defensible
+✔ Position-adjusted
+✔ UX-friendly
+✔ Actually useful
+
+But:
+
+⚠ Calibrate baselines carefully
+⚠ Consider removing stability from volume
+⚠ Verify WR YPC baseline
+⚠ Watch for efficiency double-counting

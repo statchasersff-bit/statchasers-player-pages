@@ -1,0 +1,187 @@
+Right now your front page feels like:
+
+Generic SaaS template
+
+Too much gray
+
+Not enough hierarchy
+
+Not enough gold
+
+Not enough authority
+
+It doesn’t feel like a premium fantasy analytics brand yet.
+
+Let’s elevate it.
+
+🔥 Direction Shift
+Change headline to:
+Player Search
+
+Not “StatChasers.”
+
+StatChasers is your brand.
+Player Search is the tool.
+
+That instantly feels more intentional and product-focused.
+
+🏆 Premium StatChasers Front Page Layout
+SECTION 1 — Hero (White, Structured, Strong)
+Top (small gold accent line)
+
+Thin centered gold divider.
+
+Main Title
+
+Player Search
+
+42–48px
+
+Bold
+
+Navy
+
+Subtext (tighter and more confident)
+
+“Advanced player profiles, efficiency metrics, weekly finish data, and dynasty context — all in one place.”
+
+Shorter. Sharper.
+
+Primary CTA
+
+Large navy button:
+Search Players →
+
+Secondary CTA (outline)
+Browse All Teams
+
+💎 Premium Hero Styling
+.sc-hero {
+  background:#ffffff;
+  padding: 90px 20px 60px;
+  text-align:center;
+}
+
+.sc-hero__title {
+  font-size: 44px;
+  font-weight: 900;
+  color:#0f172a;
+  margin-bottom:16px;
+}
+
+.sc-hero__sub {
+  max-width: 640px;
+  margin:0 auto 30px;
+  color:#475569;
+  font-size:18px;
+  line-height:1.5;
+}
+
+.sc-hero__gold {
+  width:60px;
+  height:4px;
+  margin:0 auto 24px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#caa14a,#f4d27a);
+}
+
+This makes it feel intentional and premium.
+
+🧠 Section 2 — Feature Grid (Refined)
+
+Right now the feature cards look slightly flat and gray-heavy.
+
+Upgrade them:
+
+White background
+
+Subtle shadow
+
+Slight gold hover accent
+
+Stronger title hierarchy
+
+Example:
+
+.sc-feature {
+  background:#fff;
+  border:1px solid rgba(15,23,42,.08);
+  border-radius:16px;
+  padding:22px;
+  box-shadow:0 8px 24px rgba(15,23,42,.06);
+  transition: all .18s ease;
+}
+
+.sc-feature:hover{
+  transform:translateY(-4px);
+  box-shadow:0 16px 36px rgba(15,23,42,.12);
+  border-color:rgba(202,161,74,.4);
+}
+🔥 Visual Upgrade Ideas (Premium Touches)
+1️⃣ Add subtle StatChasers watermark pattern
+
+Very faint diagonal grid or SC monogram pattern in background (5% opacity).
+Adds brand presence without clutter.
+
+2️⃣ Use Gold Micro-Accents
+
+Gold underline under section titles
+
+Gold arrow icon in CTA button
+
+Gold dot before bullet lists
+
+Small touches. Big effect.
+
+✨ Copy Upgrade (Make It Feel Elite)
+
+Instead of:
+“Your edge in fantasy football…”
+
+Say something sharper:
+
+Option A:
+
+Search and analyze every fantasy-relevant NFL player with advanced metrics built for serious managers.
+
+Option B:
+
+Data-driven player profiles, weekly finish analytics, and role intelligence — built for competitive fantasy football.
+
+Shorter. Confident. Less marketing fluff.
+
+🧠 Structural Improvement
+
+Right now your homepage looks like a landing page.
+
+It should feel like a product gateway.
+
+After hero, add:
+
+“How It Works” 3-Step Strip
+
+Search a Player
+
+Analyze Role & Efficiency
+
+Gain the Edge
+
+Minimal icons. Clean layout.
+
+This increases perceived depth instantly.
+
+🏁 What This Achieves
+
+After redesign:
+
+Instead of:
+Template SaaS tool
+
+You get:
+Premium analytics platform
+
+Instead of:
+Friendly fantasy site
+
+You get:
+Authoritative fantasy intelligence brand

@@ -1,0 +1,153 @@
+The Right Way To Define Consistency
+
+Instead of raw point thresholds…
+
+Use Positional Tier Finishes
+
+Define Weekly Tiers Like This:
+QB
+
+QB1 week = Top 12 finish
+
+QB2 week = 13–24
+
+QB3+ = 25+
+
+RB
+
+RB1 week = Top 12
+
+RB2 week = 13–24
+
+RB3+ = 25+
+
+WR
+
+WR1 week = Top 12
+
+WR2 week = 13–24
+
+WR3 week = 25–36
+
+TE
+
+TE1 week = Top 12
+
+TE2 week = 13–24
+
+🧠 Now Define Consistency Properly
+Starter % (Best Name)
+
+Starter % = % of Games Finishing in Top 12
+
+Formula:
+
+Starter% = (Top 12 Finishes / Games Played) × 100
+
+
+This is clean, intuitive, and league-relevant.
+
+For superflex you could tweak QB to Top 18 later.
+
+🔥 Even Better: Tier Breakdown (This Is Premium)
+
+Instead of just one number, show:
+
+For a WR:
+
+WR1 % | WR2 % | WR3+ %
+
+Example:
+
+WR1: 31%
+WR2: 25%
+WR3+: 44%
+
+This tells a complete weekly profile.
+
+🚀 Even More Premium (StatChasers Advantage)
+
+Add:
+
+Elite % (Top 5 Finish)
+Starter % (Top 12)
+Bust % (Outside Top 24 or 36)
+
+Now you have:
+
+Ceiling
+Reliability
+Risk
+
+All in 3 numbers.
+
+🧮 Why This Is Better Than 20+ %
+
+Adjusts for scoring inflation
+
+Adjusts across seasons
+
+Adjusts across positions
+
+Works even in weird scoring weeks
+
+More fantasy-intelligent
+
+This is exactly how high-level analysts think.
+
+⚡ What I Recommend You Display
+
+In the Summary Bar:
+
+Games | PPG | Elite % | Starter % | Bust %
+
+Definitions:
+
+Elite %
+
+Top 5 finish (QB/RB/WR)
+Top 3 for TE (optional)
+
+Starter %
+
+Top 12 finish (all positions)
+
+Bust %
+
+QB: outside Top 18
+RB/WR: outside Top 24
+TE: outside Top 18
+
+🧠 Example (Josh Allen)
+
+Games: 16
+Elite %: 31%
+Starter %: 75%
+Bust %: 6%
+
+That’s incredibly powerful at a glance.
+
+💻 What to Tell Replit AI
+
+Paste this:
+
+Add tier-based consistency metrics to the player Game Log summary.
+
+Definitions:
+
+Elite% = Top 5 weekly finish at position (Top 3 for TE optional)
+Starter% = Top 12 weekly finish at position
+Bust% =
+  QB: finish > 18
+  RB/WR: finish > 24
+  TE: finish > 18
+
+Use:
+Metric% = (TierGames / GamesPlayed) * 100
+
+GamesPlayed = weeks with stats (exclude bye/inactive).
+
+Compute from FIN (weekly position rank).
+
+Display in summary strip:
+Games | PPG | Elite% | Starter% | Bust%

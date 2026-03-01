@@ -1,0 +1,225 @@
+TD Rate Signal (Your Biggest Lever)
+
+This is the most important part of the system — and it’s mostly excellent.
+
+What you did right:
+
+Use z-score vs positional mean
+
+Penalize >1 SD above average more aggressively
+
+Scale by TD dependency (tdPctBar / 30)
+
+Multiply heavier for non-QBs
+
+Make it convex (1.8x beyond 1 SD)
+
+That’s genuinely thoughtful modeling.
+
+⚠️ Refinement #1: The TD Dependency Scaling
+Multiply by (tdPctBar / 30)
+
+This assumes:
+
+30% TD share is neutral baseline.
+
+Is 30% actually the positional median?
+
+For QBs it may be ~28–32%.
+For RBs it could be closer to 35–40%.
+For WRs it varies heavily by archetype.
+
+If 30% is wrong, your penalty scaling gets biased.
+
+Better:
+
+Scale relative to positional median TD%.
+
+Example:
+
+tdDependencyFactor = playerTdPct / positionalMedianTdPct
+
+That keeps it position-normalized.
+
+⚠️ Refinement #2: Negative TD Boosts
+
+You give a boost to below-average TD rates.
+
+That’s mathematically consistent.
+
+But in practice?
+
+Below-average TD rate doesn’t guarantee positive regression. It often means:
+
+Bad offense
+
+Poor red zone role
+
+Low aDOT
+
+Weak QB
+
+Boosting too much for low TD rate could inflate sustainability unrealistically.
+
+I’d cap positive TD boost smaller than negative penalty.
+
+Example:
+
+Above average: full convex penalty
+
+Below average: capped at +12 instead of +25
+
+Regression upward is weaker than regression downward historically.
+
+🟡 2️⃣ Efficiency Signal
+
+Good structure. But one caution.
+
+⚠️ Potential Double Counting for QBs
+
+QB efficiency:
+
+FP per weighted usage (z-score × 12)
+
+TD rate already heavily influences FP per usage.
+
+So TD rate and efficiency are partially correlated.
+
+You are indirectly penalizing high TD QBs twice.
+
+It may not break the model — but it amplifies TD effect.
+
+Possible solution:
+Remove TD component from FP per usage before computing efficiency.
+Or accept that the TD penalty dominates and efficiency signal is secondary.
+
+🟢 3️⃣ Stability Signal
+(RoleConsistency − 55) × 0.3
+
+This is clean.
+
+Modest.
+Position-adjusted.
+Not overpowering.
+
+No issues here.
+
+🟢 4️⃣ Volume Signal
+(VolumeScore − 50) × 0.25
+
+Also clean.
+
+Small impact.
+Directional.
+Not overpowering.
+
+Good.
+
+🔵 5️⃣ QB Rushing Floor Signal
+
+This is smart.
+
+You’re recognizing:
+
+Dual-threat QBs have an independent scoring floor.
+
+That absolutely increases sustainability.
+
+Capping at +10 is reasonable.
+
+No issues here.
+
+📊 The Baseline of 57
+
+You start at:
+
+Score = 57 − signals...
+
+Why 57?
+
+You said:
+
+Perfectly average lands slightly above midpoint.
+
+That’s fine — but I’d test distribution.
+
+You want league median sustainability around 55–60.
+
+If median lands at 63–65, baseline is too high.
+If median lands at 48, too low.
+
+57 is reasonable — just verify.
+
+🧪 Distribution Expectations
+
+If calibrated correctly:
+
+QBs:
+Most starters 55–75
+Elite dual-threats 70–85
+TD-spike seasons 35–50
+
+RBs:
+Bellcows 65–80
+Committee TD backs 35–55
+Spike TD seasons <40
+
+WRs:
+High-target WRs 65–80
+TD-dependent deep threats 30–50
+
+TEs:
+McBride-type 70+
+Random TD TE1s 30–45
+
+If that’s what your data shows, you nailed calibration.
+
+🏆 Is This Better Than Production Type?
+
+Yes.
+
+Production Type = categorical driver.
+Sustainability = magnitude-adjusted regression risk.
+
+That separation is intelligent.
+
+A player can be:
+Efficiency-Driven but still moderately sustainable if deviation isn’t extreme.
+
+That’s good modeling.
+
+🔥 The 4 Things I’d Adjust
+
+Normalize TD dependency scaling to positional median.
+
+Cap positive TD boosts lower than negative penalties.
+
+Watch for QB TD double-counting via FP per usage.
+
+Validate baselines with real league distributions.
+
+That’s it.
+
+Structurally, this is strong.
+
+🧠 UX Recommendation (Critical)
+
+Users must understand this simply.
+
+Tooltip should say:
+
+📊 What Is Sustainability?
+
+Sustainability measures how likely a player’s current production level is to continue.
+
+It evaluates:
+
+• Touchdown rate vs league norms
+• Efficiency per opportunity
+• Weekly role stability
+• Overall workload
+• (For QBs) rushing floor
+
+Players with extreme TD rates or unusually high efficiency face higher regression risk.
+
+No formulas. No z-scores. No multipliers.

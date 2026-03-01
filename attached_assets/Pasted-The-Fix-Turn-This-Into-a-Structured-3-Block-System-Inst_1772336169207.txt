@@ -1,0 +1,144 @@
+The Fix: Turn This Into a Structured 3-Block System
+
+Instead of:
+
+[ Big Score ]
+[ Floating two metrics ]
+
+You want:
+
+┌─────────────────────────────┐
+| ROLE DIRECTION |
+| 29 / 100 [Declining] |
+| Progress Bar |
+| |
+| ┌────────────┬────────────┐ |
+| | Consistency| TD Dep | |
+| | 50 / 100 | 23% | |
+| └────────────┴────────────┘ |
+└─────────────────────────────┘
+
+Now it’s cohesive.
+
+🔷 Step 1: Wrap Everything in a Single Analytics Card
+
+Right now it looks like:
+
+Big card
+Then random metrics
+
+Instead:
+
+Everything should live inside ONE container card.
+
+Add:
+
+White background
+
+Soft shadow
+
+28–32px padding
+
+Consistent internal spacing
+
+This immediately fixes floating feel.
+
+🔷 Step 2: Create a Clear Sub-Section Divider
+
+Under the progress bar, add a subtle divider line.
+
+Very faint.
+
+Then label the next block:
+
+Signal Drivers
+
+Small uppercase label.
+
+Now Role Consistency + TD Dependency feel contextual.
+
+🔷 Step 3: Put Consistency & TD Dependency Into Structured Tiles
+
+Right now they’re just text.
+
+Instead:
+
+Give each its own mini-card:
+
+• Very light background tint
+• 12px radius
+• Internal padding
+• Centered value
+• Small label above
+• Micro description below
+
+Example:
+
+ROLE CONSISTENCY
+50 / 100
+Moderate Variance
+
+TD DEPENDENCY
+23%
+Balanced
+
+Now they feel intentional.
+
+🔷 Step 4: Align Them in a 2-Column Grid
+
+Don’t stack loosely.
+
+Use:
+
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 16px;
+
+Alignment = polish.
+
+🔷 Step 5: Add Visual Weight Hierarchy
+
+Right now everything is same tone.
+
+Use:
+
+Role Direction = SC Blue
+Declining badge = soft red
+Consistency number = gold
+TD Dependency number = SC Blue
+
+Controlled color variation creates structure.
+
+🔷 Step 6: Improve Vertical Rhythm
+
+Spacing should follow this pattern:
+
+Header
+16px
+Score
+12px
+Bar
+20px
+Divider
+20px
+Mini metrics
+
+Right now spacing is inconsistent.
+
+Premium design = consistent spacing rhythm.
+
+🔥 Advanced Upgrade (Optional but Elite)
+
+Instead of placing mini metrics under the big score…
+
+Split layout:
+
+Left:
+Role Direction big score
+
+Right:
+Consistency + TD Dependency stacked vertically
+
+Two-column layout.
+
+Feels more dashboard-like.

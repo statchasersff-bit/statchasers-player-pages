@@ -1,84 +1,33 @@
-# StatChasers - Fantasy Football Intelligence
+# StatChasers - Fantasy Football Player Pages
 
 ## Overview
-
-StatChasers is a fantasy football analytics platform designed to give users a competitive edge through player profiles, advanced stats, trends, and insights for NFL players. The repository currently contains only the compiled/built frontend assets (Vite build output), including minified JavaScript bundles and CSS.
-
-The application is a Single Page Application (SPA) targeting fantasy football enthusiasts who want data-driven insights to make better roster decisions.
+StatChasers is a programmatic SEO project focused on generating comprehensive player profile pages for NFL fantasy football. It leverages data from the Sleeper API to create individual player profiles with robust SEO features, including meta tags, sitemaps, and robots.txt. The project aims to provide fantasy football enthusiasts with detailed player analysis, historical game logs, and performance trends to inform their drafting and roster management decisions. It also includes a WordPress plugin for seamless integration with Divi-compatible sites.
 
 ## User Preferences
-
-Preferred communication style: Simple, everyday language.
+No specific user preferences were provided in the original `replit.md` file.
 
 ## System Architecture
+The project is built on an Express, Vite, and React (TypeScript) stack. It sources NFL player data and game statistics from the Sleeper API. Data is processed and stored in static JSON files, which include a comprehensive player dataset, an indexed set of fantasy-relevant players, game logs, and game scores.
 
-### Frontend Architecture
-
-- **Framework**: React (inferred from Vite build output structure and `id="root"` in HTML)
-- **Build Tool**: Vite (confirmed by `.vite/manifest.json` format)
-- **Styling**: Tailwind CSS (confirmed by CSS custom property resets like `--tw-border-spacing-x`, `--tw-translate-x`, etc.)
-- **Fonts**: Google Fonts — Inter and Open Sans, loaded via `<link rel="preconnect">`
-- **Entry Point**: `index.html` → compiled to `assets/index-BqhGZfQl.js` + `assets/index-C-YiVx7t.css`
-- **Rendering**: Client-side rendering (CSR) with an `id="root"` div as the React mount point
-- **SEO**: Includes Open Graph meta tags and a `<!-- SEO_META_PLACEHOLDER -->` comment, suggesting server-side meta injection may be planned or partially implemented
-
-### Build Output Structure
-
-```
-/
-├── .vite/manifest.json       # Vite build manifest mapping source to output
-├── assets/
-│   ├── index-BqhGZfQl.js    # Compiled and minified JS bundle
-│   └── index-C-YiVx7t.css   # Compiled Tailwind CSS
-└── assets/index.html         # Entry HTML file
-```
-
-### Key Architectural Notes
-
-- The repository only contains **compiled output**, not source files. When adding features, source files (typically in `src/`) need to be created or restored.
-- The `SEO_META_PLACEHOLDER` in the HTML suggests the app may use or plan to use server-side rendering (SSR) or a middleware layer to inject dynamic meta tags for SEO purposes.
-- The Vite manifest enables asset fingerprinting for cache-busting.
-
-### Recommended Source Structure (to be built)
-
-Since only build artifacts exist, the source architecture should follow:
-
-```
-src/
-├── components/       # Reusable UI components
-├── pages/            # Route-level page components (player profiles, stats, trends)
-├── hooks/            # Custom React hooks
-├── services/         # API calls and data fetching
-├── store/            # State management (Redux, Zustand, or Context)
-└── utils/            # Helper functions
-```
+**Key Architectural Decisions:**
+- **Data Pipeline:** A series of Node.js scripts (`buildPlayersIndex.js`, `buildDepthCharts.js`, `buildIndexedPlayers.js`, `buildGameLogs.js`, `buildGameScores.js`, `buildDynastyRankings.js`, `buildDraft.js`, `buildBios.js`, `buildStaticApi.js`) are used to fetch, normalize, and store data as static JSON files. This pre-generates API responses, eliminating the need for a live API server for most data, enhancing performance and scalability.
+- **Draft Data:** `scripts/buildDraft.js` builds `data/draft.json` by matching Sleeper player IDs to ESPN athlete data via ESPN's search + athlete APIs. Extracts draft year, round, pick, drafting team, and college. Coverage: ~364/487 players with full draft data; remaining are UDFAs or unmatched. One-time build step with incremental updates.
+- **Bio Data:** `scripts/buildBios.js` generates deterministic, fact-based biographical data for all indexed players using templates populated from game logs + `data/draft.json`. No fabricated claims, no coach names, no subjective language. Output structure: snapshot_bullets, style (how_he_wins + fantasy_translation with tags), timeline (draft/breakout/peak/injury/trend), career_context_tiles (floor driver, ceiling driver, stability, risk note), narrative_paragraphs, last_updated, sources. Breakout detection uses position-specific PPG thresholds (QB:19, RB:14, WR:13, TE:10.5) with minimum 8 games. Output saved to `data/bios.json`. Injected into profile JSONs by `buildStaticApi.js` and served via `bio` field in server API responses.
+- **Depth Chart Source:** OurLads.com (`https://www.ourlads.com/nfldepthcharts/depthchartpos/`) is the primary source for depth chart ordering. The `buildDepthCharts.js` script scrapes QB, RB, WR, TE, and PK position pages, parses the HTML tables with cheerio, and matches players to Sleeper IDs via fuzzy name matching. For WRs, OurLads provides sub-position roles: LWR (Left WR), RWR (Right WR), SWR (Slot WR) instead of generic WR1/WR2/WR3. Output saved to `data/depth_charts.json`.
+- **Indexed Player System:** Focuses on ~548 fantasy-relevant players across 32 teams for core content, with a comprehensive directory for all players. Ranking is driven by OurLads depth chart data when available, with Sleeper depth_chart_order as fallback. Per-position limits: QB: 2, RB: 4, WR: 6 (2 per sub-position: LWR, RWR, SWR), TE: 3, K: 1, DEF: 1.
+- **SEO & Performance:** Server-side meta tag injection, JSON-LD structured data, canonical URLs, and a generated sitemap ensure optimal search engine visibility. The use of static JSON files for data serving significantly improves page load times.
+- **Player Pages:** Individual player profile pages (`/nfl/players/:slug/`) are highly dynamic, featuring game log tables, trend charts, season selectors, and various calculated metrics.
+- **Metric Calculation Logic:** Advanced metrics like Games Played, Weekly Positional Rank, Tier-Finish Rates (Pos1%, Pos2%, Pos3%, Bust%), Volatility, Reliability Score, Role Grade, Goose Egg %, Role Direction (Momentum Score), and Role Consistency (Usage Stability) are computed dynamically.
+- **Scoring Format System:** Supports Standard, Half-PPR, and PPR formats. Raw stats are stored once, and fantasy points are computed dynamically based on the selected format, affecting all relevant metrics and visualizations. Server-side caching is implemented for weekly ranks and opponent ranks per season and format.
+- **UI/UX:** The player directory features a dark gradient hero, conference/division tabs, team-colored card borders, and a slide-over player preview panel. Player profile pages utilize a 6-tab layout (Overview, Bio, Game Log, Usage & Trends, Rankings & Value, News & Analysis) for organized information display. The UI includes dynamic elements like game score columns, totals/per-game toggles, and contextual display of stats (e.g., rushing columns for WR/TE only when applicable).
+- **Design System:** Unified premium design system across all player profile tabs. Primary SC Blue (`#0b3a7a`), Accent Gold (`#d4af37`), support SC Blue Light (`#1a4fa0`). CSS variables defined at `:root` in both `index.css` and `sc-components.css`. Key components: `SectionHeader` (SC Blue title + 48px gold gradient underline + muted subtitle), `sc-card` (12px radius, soft shadow, 28px padding), `sc-gamelog__segmented-control` (unified toggle pattern with gold gradient active state). All tabs use consistent `SectionHeader` components, `sc-card` containers, and unified segmented controls. Chart primary lines use SC Blue, rolling averages use Gold. Card/CardContent shadcn components removed from player profile in favor of native `sc-card` divs. Player directory cards scoped under `.sc-directory` class to avoid conflicts.
+- **WordPress Integration:** A dedicated WordPress plugin is designed for Divi-compatible sites, allowing player pages to be rendered directly within WordPress using React components and fetching data from static JSON files hosted on GitHub Pages. CSS is scoped to prevent theme conflicts.
+- **Team and Name Normalization:** Handles various team abbreviation aliases (e.g., JAC→JAX, WSH→WAS) and normalizes player names (smart quotes to straight apostrophes, hyphens preserved).
 
 ## External Dependencies
-
-### Confirmed
-
-| Dependency | Purpose |
-|---|---|
-| Google Fonts (Inter, Open Sans) | Typography — loaded via CDN |
-| Vite | Build tooling and asset bundling |
-| Tailwind CSS | Utility-first CSS styling framework |
-| React | UI framework (inferred from build output) |
-
-### Likely Needed (Not Yet Confirmed in Source)
-
-| Dependency | Purpose |
-|---|---|
-| NFL Stats API or similar | Player stats and fantasy data |
-| Backend API / Express | Server for data endpoints and SEO meta injection |
-| Database (e.g., PostgreSQL) | Storing player data, user preferences, cached stats |
-| Authentication service | User accounts for saving lineups or preferences |
-
-### Notes on Data Source
-
-The platform promises "player profiles, advanced stats, trends, and insights for every NFL player." This implies integration with an external NFL data provider such as:
-- **Sleeper API** (free, popular in fantasy)
-- **SportRadar** (paid, comprehensive)
-- **ESPN API** (unofficial)
-- **MySportsFeeds** (paid)
-
-A backend service will likely be needed to proxy these API calls (to protect API keys) and cache results to reduce API usage costs.
+- **Sleeper API:** (`https://api.sleeper.app/v1/players/nfl`) Primary data source for NFL player data and game statistics.
+- **OurLads:** (`https://www.ourlads.com/nfldepthcharts/depthchartpos/`) Primary source for depth chart ordering. Scraped for QB, RB, WR, TE, PK positions. Uses cheerio for HTML parsing. OurLads team abbreviation mapping: ARZ→ARI, RAM→LAR. WR sub-positions: LWR, RWR, SWR.
+- **ESPN API:** Used by `scripts/buildGameScores.js` to fetch NFL game scores. Also used by `scripts/buildDraft.js` to fetch draft round/pick data via ESPN athlete search + profile APIs.
+- **KeepTradeCut:** Integrated for dynasty consensus rankings, market value, and ADP data.
+- **NFL Team Sites:** Scraped for injury reports and player news/videos. Supported teams: Patriots (NE), Bills (BUF), Dolphins (MIA), Jets (NYJ), Ravens (BAL), Bengals (CIN), Browns (CLE), Steelers (PIT). Unified API routes `/api/team/news` and `/api/team/injury` accept a `team` parameter. Legacy `/api/patriots/*` routes maintained for backward compatibility. Team site configs defined in `TEAM_SITE_CONFIGS` in `server/routes.ts`.
+- **GitHub Pages:** Used to host static JSON data files for the WordPress plugin.

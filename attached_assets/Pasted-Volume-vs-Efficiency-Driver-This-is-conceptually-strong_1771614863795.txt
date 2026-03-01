@@ -1,0 +1,134 @@
+Volume vs Efficiency Driver
+
+This is conceptually strong.
+
+But right now it lacks context.
+
+Example:
+
+Yards/Target = 6.8
+Catch % = 64.4%
+TD/Target Rate = 6.8%
+
+Are those good?
+Average?
+Poor?
+
+Without position benchmarks, they are floating numbers.
+
+🔥 Improvement
+
+Add subtle context indicators:
+
+Yards/Target
+6.8
+↓ Below Pos Avg (7.9)
+
+Catch %
+64.4%
+≈ League Avg
+
+TD/Target Rate
+6.8%
+↑ Slightly Elevated
+
+That transforms it from stat display → evaluation tool.
+
+2️⃣ Balanced Badge (Volume vs Efficiency)
+
+The “Balanced” pill is good.
+
+But it feels slightly small relative to importance.
+
+Consider:
+
+Instead of small badge,
+Make a slightly more dominant classification:
+
+Production Driver:
+🟢 Balanced Volume/Efficiency
+
+Make it clear this is the diagnosis.
+
+3️⃣ TD Dependency Breakdown
+
+This is very good visually.
+
+Clean. Easy to digest.
+
+23% TD
+39% Yardage
+37% Receptions
+
+That distribution supports “Sustainable Volume Base.”
+
+No contradictions.
+
+This is strong UX.
+
+Only improvement:
+
+Add small tooltip explaining:
+
+“TD dependency above 35% may increase volatility.”
+
+That gives educational value.
+
+4️⃣ Regression Signal
+
+This is the most important part.
+
+46 / 100
+Moderate Risk
+
+Narrative:
+
+Target share has been reasonably consistent while a diverse scoring profile provides stability.
+
+This is coherent.
+
+No contradiction.
+
+But the emotional weight feels slightly weak.
+
+🔥 How To Make Regression Feel Premium
+A. Clarify Score Meaning
+
+What does 46 represent?
+
+Is 50 neutral?
+Is 100 safest?
+Is 0 extreme regression?
+
+Make scale explicit.
+
+Example:
+
+0–39 → Elevated Risk
+40–69 → Moderate Risk
+70–100 → Sustainable
+
+Right now users don’t know what 46 means intuitively.
+
+B. Strengthen Narrative Tone
+
+Current:
+“provides stability.”
+
+Upgrade to:
+
+Stable target share and balanced scoring reduce regression risk, though efficiency metrics remain near league average.
+
+Feels more analytical.
+
+C. Slightly Increase Visual Emphasis
+
+Regression Signal is the conclusion of the tab.
+
+Consider:
+
+• Slightly larger score
+• Slightly thicker progress bar
+• Slightly darker accent
+
+Make it feel like the verdict.

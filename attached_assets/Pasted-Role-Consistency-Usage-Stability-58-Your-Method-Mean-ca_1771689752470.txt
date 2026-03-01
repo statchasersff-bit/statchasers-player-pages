@@ -1,0 +1,310 @@
+Role Consistency (Usage Stability) — 58
+Your Method:
+
+Mean carries
+
+Std deviation
+
+CV = std / mean
+
+Nonlinear penalty formula:
+
+𝑆
+𝑐
+𝑜
+𝑟
+𝑒
+=
+100
+1
++
+(
+𝐶
+𝑉
+/
+0.4
+)
+2
+Score=
+1+(CV/0.4)
+2
+100
+	​
+
+Is it fair?
+
+Yes — conceptually.
+
+You’re:
+
+Normalizing variance relative to workload
+
+Penalizing volatility nonlinearly
+
+Anchoring 0.4 CV as “instability threshold”
+
+That’s mathematically sound.
+
+⚠️ Two Things to Improve
+1️⃣ Carries Only Is Too Narrow
+
+For RBs, primary usage is touches, not just carries.
+
+Cook had 2 carries in a game — but did he have receptions?
+
+If he had 5 catches, that week isn’t truly “low usage.”
+
+Recommendation:
+Use:
+
+𝑇
+𝑜
+𝑢
+𝑐
+ℎ
+𝑒
+𝑠
+=
+𝑐
+𝑎
+𝑟
+𝑟
+𝑖
+𝑒
+𝑠
++
+𝑡
+𝑎
+𝑟
+𝑔
+𝑒
+𝑡
+𝑠
+Touches=carries+targets
+
+And compute CV on touches per game.
+
+That makes it role-consistent across RB archetypes.
+
+2️⃣ CV Anchor (0.4) Needs Calibration
+
+Right now, 0.4 is arbitrary.
+
+You should:
+
+Calculate CV distribution for all qualified RBs
+
+Find median CV
+
+Set that as baseline
+
+If league median CV = 0.33, then 0.4 is too forgiving.
+
+But structure is solid.
+
+🔍 2️⃣ Role Momentum Score — 25 (Declining)
+
+This is actually well structured.
+
+What I Like:
+
+Weighted carries highest (correct)
+
+Convert to % change (correct)
+
+Normalize around 50 (smart UX)
+
+This is good.
+
+⚠️ Where It Can Break
+
+Your weighted sum:
+-99.8 → normalized -10 → formula 50 + (-10 × 2.5)
+
+That multiplier (2.5) is arbitrary.
+
+It controls sensitivity.
+
+If multiplier too high:
+
+Small usage shifts look dramatic.
+
+You need to:
+
+Backtest 50 RBs across season:
+
+Look at distribution of momentum scores
+
+Ensure 20–80 range actually spreads naturally.
+
+Right now 25 feels strong for a -3.2 carries drop.
+
+But it may be fair depending on context.
+
+Structure: Good.
+Calibration: Needs league-wide tuning.
+
+🔍 3️⃣ Sustainability Score — 51 (Moderate Risk)
+
+This is the most complex — and where subtle bias creeps in.
+
+Let’s analyze each component.
+
+TD Rate Penalty (+3.48 penalty)
+(
+𝑡
+𝑑
+𝑅
+𝑎
+𝑡
+𝑒
+−
+𝑝
+𝑜
+𝑠
+𝐴
+𝑣
+𝑔
+)
+×
+3.5
+×
+𝑡
+𝑑
+𝐷
+𝑒
+𝑝
+𝐹
+𝑎
+𝑐
+𝑡
+𝑜
+𝑟
+(tdRate−posAvg)×3.5×tdDepFactor
+
+Conceptually correct:
+Higher TD rate + high TD dependency = fragility.
+
+This is good.
+
+Yards/Touch Boost (+2.09)
+
+Also correct.
+Efficiency supports sustainability.
+
+But careful:
+
+Yards/touch can be volatile year-to-year.
+You may overweight this.
+
+Stability Boost (+0.60)
+
+Very small influence.
+That’s fine.
+
+Volume Boost (+2.00)
+
+Good inclusion.
+Volume stabilizes scoring.
+
+⚠️ Biggest Issue Here
+
+All components are linear.
+
+But regression risk is rarely linear.
+
+Example:
+
+TD rate from 3% → 4% (small)
+TD rate from 4% → 7% (big)
+
+Linear penalties underweight extreme cases.
+
+You may eventually want nonlinear TD penalty.
+
+But for now?
+This is acceptable.
+
+🧠 Big Picture: Do These 3 Scores Conflict?
+
+Let’s test logical coherence:
+
+Stability: 58 (moderate variance)
+Momentum: 25 (declining)
+Sustainability: 51 (moderate risk)
+
+This actually makes sense.
+
+Interpretation:
+
+Role recently declined.
+Workload moderately volatile.
+Production reasonably sustainable but not elite.
+
+No internal contradictions.
+
+That’s important.
+
+🎯 Is It Fair?
+
+Yes — structure is fair.
+
+But to be elite:
+
+You must calibrate against league distributions.
+
+Right now you’ve built a framework.
+Now you need percentile anchoring.
+
+🔥 Final Improvements I’d Recommend
+1️⃣ For RB Stability
+
+Use touches instead of carries.
+
+2️⃣ For Momentum
+
+Cap % change so extreme small-sample games don’t explode score.
+
+Example:
+Max delta contribution ±25 per metric.
+
+3️⃣ For Sustainability
+
+Normalize components relative to league std dev.
+
+Instead of:
+(tdRate - posAvg)
+
+Use:
+
+(
+𝑡
+𝑑
+𝑅
+𝑎
+𝑡
+𝑒
+−
+𝑝
+𝑜
+𝑠
+𝐴
+𝑣
+𝑔
+)
+/
+𝑙
+𝑒
+𝑎
+𝑔
+𝑢
+𝑒
+𝑆
+𝑡
+𝑑
+𝐷
+𝑒
+𝑣
+(tdRate−posAvg)/leagueStdDev
+
+That makes penalties fair across season
