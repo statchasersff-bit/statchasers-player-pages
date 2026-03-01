@@ -2377,96 +2377,102 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
     <div className="sc-usage" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }} data-testid="usage-trends-tab">
       <SectionHeader title="Usage & Trends" subtitle="Weekly role evolution and efficiency signals" />
 
-      <div className="sc-card" style={{ padding: 0, overflow: 'hidden' }} data-testid="opportunity-momentum-card">
-          <div className="space-y-4" style={{ padding: '24px 28px 0', background: 'linear-gradient(135deg, #fff 0%, rgba(11,58,122,0.02) 100%)' }}>
-            <div className="flex items-center justify-between gap-3 flex-wrap">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4" style={{ color: '#d4af37' }} />
-                <p style={{ fontSize: '13px', fontWeight: 700, color: '#0b3a7a', letterSpacing: '-0.01em' }}>Role Direction</p>
-                <TooltipProvider delayDuration={200}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span className="inline-flex items-center cursor-help">
-                        <Info className="w-3 h-3 text-muted-foreground/50" />
-                      </span>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom" className="max-w-[280px] text-xs leading-relaxed p-3">
-                      <p className="font-semibold mb-1.5">What does this measure?</p>
-                      <p className="mb-1">Measures whether a player's opportunity is expanding or shrinking compared to his season average.</p>
-                      <p className="mb-2 text-muted-foreground">Compares the last 4 games to full-season usage across key workload indicators. Does not measure fantasy performance or talent — only usage trends.</p>
-                      <div className="space-y-0.5 text-[10px]">
-                        <p><span className="font-semibold text-emerald-500">80+</span> <span className="text-muted-foreground">Role expanding significantly</span></p>
-                        <p><span className="font-semibold text-emerald-400">60–79</span> <span className="text-muted-foreground">Gradual expansion</span></p>
-                        <p><span className="font-semibold text-amber-400">40–59</span> <span className="text-muted-foreground">Stable usage</span></p>
-                        <p><span className="font-semibold text-red-400">0–39</span> <span className="text-muted-foreground">Shrinking opportunity</span></p>
-                      </div>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-              <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-[10px] font-bold uppercase tracking-wide ${momentumBg} ${momentumColor}`} data-testid="role-momentum-badge">
-                {momentumScore >= 60 ? <TrendingUp className="w-3.5 h-3.5" /> : momentumScore <= 39 ? <TrendingDown className="w-3.5 h-3.5" /> : <Minus className="w-3.5 h-3.5" />}
-                {momentumLabel}
-              </div>
+      <div className="sc-card" style={{ padding: '24px 28px' }} data-testid="opportunity-momentum-card">
+          <div className="flex items-center justify-between gap-3 flex-wrap" style={{ marginBottom: '16px' }}>
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4" style={{ color: '#d4af37' }} />
+              <p style={{ fontSize: '13px', fontWeight: 700, color: '#0b3a7a', letterSpacing: '-0.01em' }}>Role Direction</p>
+              <TooltipProvider delayDuration={200}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="inline-flex items-center cursor-help">
+                      <Info className="w-3 h-3 text-muted-foreground/50" />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="max-w-[280px] text-xs leading-relaxed p-3">
+                    <p className="font-semibold mb-1.5">What does this measure?</p>
+                    <p className="mb-1">Measures whether a player's opportunity is expanding or shrinking compared to his season average.</p>
+                    <p className="mb-2 text-muted-foreground">Compares the last 4 games to full-season usage across key workload indicators. Does not measure fantasy performance or talent — only usage trends.</p>
+                    <div className="space-y-0.5 text-[10px]">
+                      <p><span className="font-semibold text-emerald-500">80+</span> <span className="text-muted-foreground">Role expanding significantly</span></p>
+                      <p><span className="font-semibold text-emerald-400">60–79</span> <span className="text-muted-foreground">Gradual expansion</span></p>
+                      <p><span className="font-semibold text-amber-400">40–59</span> <span className="text-muted-foreground">Stable usage</span></p>
+                      <p><span className="font-semibold text-red-400">0–39</span> <span className="text-muted-foreground">Shrinking opportunity</span></p>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
-
-            <div className="flex items-end justify-between gap-4 flex-wrap">
-              <div>
-                <p className="text-4xl font-extrabold tabular-nums leading-none" style={{ color: momentumBarColor }} data-testid="text-momentum-score">
-                  {momentumScore}
-                  <span className="text-base font-semibold text-muted-foreground ml-1">/ 100</span>
-                </p>
-                <div className="mt-2 w-48">
-                  <div className="h-1.5 rounded-full bg-muted/30 overflow-hidden">
-                    <div className="h-full rounded-full transition-all duration-700 ease-out" style={{ width: `${momentumScore}%`, background: `linear-gradient(90deg, ${momentumBarColor}88, ${momentumBarColor})` }} />
-                  </div>
-                  <div className="flex justify-between mt-0.5">
-                    <span className="text-[8px] text-muted-foreground/50">0</span>
-                    <span className="text-[8px] text-muted-foreground/50">100</span>
-                  </div>
-                </div>
-                <p className={`text-[10px] mt-1 ${momentumColor}`} data-testid="text-momentum-micro">{momentumMicroText}</p>
-              </div>
-              <div className="flex gap-5 flex-wrap pb-1">
-                <div className="text-right">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center justify-end gap-1">Role Consistency
-                    <TooltipProvider delayDuration={200}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="inline-flex cursor-help"><Info className="w-2.5 h-2.5 text-muted-foreground/40" /></span>
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom" className="max-w-[270px] text-xs leading-relaxed p-3">
-                          <p className="font-semibold mb-1.5">What does this measure?</p>
-                          <p className="mb-1">Measures how steady a player's weekly workload is throughout the season.</p>
-                          <p className="mb-2 text-muted-foreground">Evaluates how much opportunity fluctuates game-to-game, adjusted for what's normal at the position. Does not measure fantasy points — only usage stability.</p>
-                          <div className="space-y-0.5 text-[10px] mb-2">
-                            <p><span className="font-semibold text-emerald-500">70+</span> <span className="text-muted-foreground">Highly predictable weekly role</span></p>
-                            <p><span className="font-semibold text-amber-400">45–69</span> <span className="text-muted-foreground">Moderate variance</span></p>
-                            <p><span className="font-semibold text-red-400">&lt;45</span> <span className="text-muted-foreground">Volatile, game-script dependent</span></p>
-                          </div>
-                          <p className="text-[10px] text-muted-foreground/70 border-t border-border/30 pt-1.5">{position === 'QB' ? 'QB workload combines pass attempts and rushing attempts (rushes weighted for higher fantasy leverage).' : position === 'RB' ? 'RB workload combines carries and receiving targets.' : 'Based on weekly target volume.'}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </p>
-                  <p className={`text-base font-bold tabular-nums ${stabilityColor}`} data-testid="text-stability-score">{stability}<span className="text-[10px] font-medium text-muted-foreground ml-0.5">/ 100</span></p>
-                  <p className={`text-[9px] font-medium ${stabilityColor}`}>{stabilityLabel}</p>
-                  {stabilityMicroText && <p className="text-[9px] text-muted-foreground mt-0.5" data-testid="text-stability-micro">{stabilityMicroText}</p>}
-                </div>
-                {position !== 'K' && (
-                  <div className="text-right">
-                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">TD Dependency</p>
-                    <p className="text-base font-bold tabular-nums text-foreground" data-testid="text-td-dependency">{tdDep.pct.toFixed(0)}%</p>
-                    <p className={`text-[9px] font-medium ${tdDep.pct < 20 ? 'text-emerald-500' : tdDep.pct >= 35 ? 'text-amber-400' : 'text-muted-foreground'}`}>{tdDep.label}</p>
-                  </div>
-                )}
-              </div>
+            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-[10px] font-bold uppercase tracking-wide ${momentumBg} ${momentumColor}`} data-testid="role-momentum-badge">
+              {momentumScore >= 60 ? <TrendingUp className="w-3.5 h-3.5" /> : momentumScore <= 39 ? <TrendingDown className="w-3.5 h-3.5" /> : <Minus className="w-3.5 h-3.5" />}
+              {momentumLabel}
             </div>
           </div>
 
-          <div className="h-px bg-gradient-to-r from-amber-500/30 via-amber-500/10 to-transparent" />
+          <div>
+            <p className="text-4xl font-extrabold tabular-nums leading-none" style={{ color: momentumBarColor }} data-testid="text-momentum-score">
+              {momentumScore}
+              <span className="text-base font-semibold text-muted-foreground ml-1">/ 100</span>
+            </p>
+            <div className="mt-2" style={{ maxWidth: '220px' }}>
+              <div className="h-1.5 rounded-full bg-muted/30 overflow-hidden">
+                <div className="h-full rounded-full transition-all duration-700 ease-out" style={{ width: `${momentumScore}%`, background: `linear-gradient(90deg, ${momentumBarColor}88, ${momentumBarColor})` }} />
+              </div>
+              <div className="flex justify-between mt-0.5">
+                <span className="text-[8px] text-muted-foreground/50">0</span>
+                <span className="text-[8px] text-muted-foreground/50">100</span>
+              </div>
+            </div>
+            <p className={`text-[10px] mt-1 ${momentumColor}`} data-testid="text-momentum-micro">{momentumMicroText}</p>
+          </div>
 
-          <div className="p-4 pt-3 space-y-3">
+          <div style={{ height: '1px', background: 'linear-gradient(90deg, rgba(11,58,122,0.08), rgba(11,58,122,0.03), transparent)', margin: '20px 0' }} />
+
+          <p style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#94a3b8', marginBottom: '12px' }}>Signal Drivers</p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: position !== 'K' ? '1fr 1fr' : '1fr', gap: '12px' }}>
+            <div style={{ background: 'rgba(11,58,122,0.03)', borderRadius: '12px', padding: '16px', textAlign: 'center' }}>
+              <p className="flex items-center justify-center gap-1" style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8', marginBottom: '6px', fontWeight: 600 }}>
+                Role Consistency
+                <TooltipProvider delayDuration={200}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="inline-flex cursor-help"><Info className="w-2.5 h-2.5 text-muted-foreground/40" /></span>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="max-w-[270px] text-xs leading-relaxed p-3">
+                      <p className="font-semibold mb-1.5">What does this measure?</p>
+                      <p className="mb-1">Measures how steady a player's weekly workload is throughout the season.</p>
+                      <p className="mb-2 text-muted-foreground">Evaluates how much opportunity fluctuates game-to-game, adjusted for what's normal at the position. Does not measure fantasy points — only usage stability.</p>
+                      <div className="space-y-0.5 text-[10px] mb-2">
+                        <p><span className="font-semibold text-emerald-500">70+</span> <span className="text-muted-foreground">Highly predictable weekly role</span></p>
+                        <p><span className="font-semibold text-amber-400">45–69</span> <span className="text-muted-foreground">Moderate variance</span></p>
+                        <p><span className="font-semibold text-red-400">&lt;45</span> <span className="text-muted-foreground">Volatile, game-script dependent</span></p>
+                      </div>
+                      <p className="text-[10px] text-muted-foreground/70 border-t border-border/30 pt-1.5">{position === 'QB' ? 'QB workload combines pass attempts and rushing attempts (rushes weighted for higher fantasy leverage).' : position === 'RB' ? 'RB workload combines carries and receiving targets.' : 'Based on weekly target volume.'}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </p>
+              <p style={{ fontSize: '22px', fontWeight: 800, color: '#d4af37', lineHeight: 1 }} className="tabular-nums" data-testid="text-stability-score">
+                {stability}<span style={{ fontSize: '11px', fontWeight: 500, color: '#94a3b8', marginLeft: '3px' }}>/ 100</span>
+              </p>
+              <p style={{ fontSize: '10px', fontWeight: 600, marginTop: '4px' }} className={stabilityColor}>{stabilityLabel}</p>
+              {stabilityMicroText && <p style={{ fontSize: '9px', color: '#94a3b8', marginTop: '2px' }} data-testid="text-stability-micro">{stabilityMicroText}</p>}
+            </div>
+            {position !== 'K' && (
+              <div style={{ background: 'rgba(11,58,122,0.03)', borderRadius: '12px', padding: '16px', textAlign: 'center' }}>
+                <p style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8', marginBottom: '6px', fontWeight: 600 }}>TD Dependency</p>
+                <p style={{ fontSize: '22px', fontWeight: 800, color: '#0b3a7a', lineHeight: 1 }} className="tabular-nums" data-testid="text-td-dependency">
+                  {tdDep.pct.toFixed(0)}%
+                </p>
+                <p style={{ fontSize: '10px', fontWeight: 600, marginTop: '4px' }} className={tdDep.pct < 20 ? 'text-emerald-500' : tdDep.pct >= 35 ? 'text-amber-400' : 'text-muted-foreground'}>{tdDep.label}</p>
+              </div>
+            )}
+          </div>
+
+          <div style={{ height: '1px', background: 'linear-gradient(90deg, rgba(11,58,122,0.08), rgba(11,58,122,0.03), transparent)', margin: '20px 0' }} />
+
+          <div className="space-y-3">
             <div className="overflow-x-auto">
               <table className="w-full text-xs" data-testid="table-momentum-deltas">
                 <thead>
