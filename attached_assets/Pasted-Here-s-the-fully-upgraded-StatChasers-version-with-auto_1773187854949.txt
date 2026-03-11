@@ -1,0 +1,529 @@
+Here’s the fully upgraded StatChasers version with:
+
+auto-links player names in blog posts
+
+pulls player names from your actual player pages
+
+supports aliases
+
+has a global admin setting to turn it on/off
+
+has a per-post checkbox to disable auto-linking
+
+only links the first mention of each player
+
+skips headings, existing links, scripts, and styles
+
+You can drop this into your custom player pages plugin.
+
+1) Full PHP code for your plugin
+<?php
+/**
+ * Plugin additions: StatChasers Player Auto-Linker
+ * Add this to your custom player pages plugin file or include it from a separate file.
+ */
+
+/* =========================================================
+   CONFIG
+========================================================= */
+
+/**
+ * Change this if your actual player post type slug is different.
+ * Example possibilities:
+ * - nfl_player
+ * - player
+ * - sc_player
+ */
+if (!defined('SC_PLAYER_AUTOLINK_POST_TYPE')) {
+    define('SC_PLAYER_AUTOLINK_POST_TYPE', 'nfl_player');
+}
+
+/* =========================================================
+   ADMIN SETTINGS
+========================================================= */
+
+add_action('admin_init', 'sc_player_autolink_register_settings');
+function sc_player_autolink_register_settings() {
+    register_setting('reading', 'sc_player_autolink_enabled', array(
+        'type'              => 'boolean',
+        'sanitize_callback' => 'sc_player_autolink_sanitize_checkbox',
+        'default'           => 1,
+    ));
+
+    register_setting('reading', 'sc_player_autolink_max_links_per_player', array(
+        'type'              => 'integer',
+        'sanitize_callback' => 'absint',
+        'default'           => 1,
+    ));
+
+    add_settings_field(
+        'sc_player_autolink_enabled',
+        'StatChasers Player Auto-Linking',
+        'sc_player_autolink_enabled_field_html',
+        'reading'
+    );
+
+    add_settings_field(
+        'sc_player_autolink_max_links_per_player',
+        'Max links per player per post',
+        'sc_player_autolink_max_links_field_html',
+        'reading'
+    );
+}
+
+function sc_player_autolink_sanitize_checkbox($value) {
+    return !empty($value) ? 1 : 0;
+}
+
+function sc_player_autolink_enabled_field_html() {
+    $value = get_option('sc_player_autolink_enabled', 1);
+    ?>
+    <label>
+        <input type="checkbox" name="sc_player_autolink_enabled" value="1" <?php checked(1, $value); ?> />
+        Automatically link player names in blog posts
+    </label>
+    <p class="description">Links player names in single blog posts to your player pages.</p>
+    <?php
+}
+
+function sc_player_autolink_max_links_field_html() {
+    $value = (int) get_option('sc_player_autolink_max_links_per_player', 1);
+    if ($value < 1) {
+        $value = 1;
+    }
+    ?>
+    <input
+        type="number"
+        name="sc_player_autolink_max_links_per_player"
+        value="<?php echo esc_attr($value); ?>"
+        min="1"
+        max="5"
+        step="1"
+        style="width:80px;"
+    />
+    <p class="description">Recommended: 1</p>
+    <?php
+}
+
+/* =========================================================
+   POST-LEVEL DISABLE CHECKBOX
+========================================================= */
+
+add_action('add_meta_boxes', 'sc_player_autolink_add_meta_box');
+function sc_player_autolink_add_meta_box() {
+    add_meta_box(
+        'sc_player_autolink_meta_box',
+        'StatChasers Player Auto-Linking',
+        'sc_player_autolink_meta_box_html',
+        'post',
+        'side',
+        'default'
+    );
+}
+
+function sc_player_autolink_meta_box_html($post) {
+    wp_nonce_field('sc_player_autolink_meta_box_action', 'sc_player_autolink_meta_box_nonce');
+    $disabled = get_post_meta($post->ID, '_sc_disable_player_autolink', true);
+    ?>
+    <label>
+        <input type="checkbox" name="sc_disable_player_autolink" value="1" <?php checked('1', $disabled); ?> />
+        Disable player auto-linking for this post
+    </label>
+    <p style="margin-top:8px;color:#666;">Useful for special articles or posts with awkward name collisions.</p>
+    <?php
+}
+
+add_action('save_post_post', 'sc_player_autolink_save_post_meta');
+function sc_player_autolink_save_post_meta($post_id) {
+    if (!isset($_POST['sc_player_autolink_meta_box_nonce'])) {
+        return;
+    }
+
+    if (!wp_verify_nonce($_POST['sc_player_autolink_meta_box_nonce'], 'sc_player_autolink_meta_box_action')) {
+        return;
+    }
+
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    $disabled = isset($_POST['sc_disable_player_autolink']) ? '1' : '';
+    if ($disabled) {
+        update_post_meta($post_id, '_sc_disable_player_autolink', '1');
+    } else {
+        delete_post_meta($post_id, '_sc_disable_player_autolink');
+    }
+}
+
+/* =========================================================
+   OPTIONAL PLAYER ALIASES FIELD
+========================================================= */
+
+add_action('add_meta_boxes', 'sc_player_aliases_add_meta_box');
+function sc_player_aliases_add_meta_box() {
+    add_meta_box(
+        'sc_player_aliases_meta_box',
+        'Player Aliases',
+        'sc_player_aliases_meta_box_html',
+        SC_PLAYER_AUTOLINK_POST_TYPE,
+        'normal',
+        'default'
+    );
+}
+
+function sc_player_aliases_meta_box_html($post) {
+    wp_nonce_field('sc_player_aliases_meta_box_action', 'sc_player_aliases_meta_box_nonce');
+    $aliases = get_post_meta($post->ID, '_sc_player_aliases', true);
+    ?>
+    <p>Enter alternate versions separated by a pipe <code>|</code>.</p>
+    <p>Example: <code>AJ Brown|A.J. Brown</code></p>
+    <textarea
+        name="sc_player_aliases"
+        rows="3"
+        style="width:100%;"
+    ><?php echo esc_textarea($aliases); ?></textarea>
+    <?php
+}
+
+add_action('save_post_' . SC_PLAYER_AUTOLINK_POST_TYPE, 'sc_player_aliases_save_meta');
+function sc_player_aliases_save_meta($post_id) {
+    if (!isset($_POST['sc_player_aliases_meta_box_nonce'])) {
+        return;
+    }
+
+    if (!wp_verify_nonce($_POST['sc_player_aliases_meta_box_nonce'], 'sc_player_aliases_meta_box_action')) {
+        return;
+    }
+
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    $aliases = isset($_POST['sc_player_aliases']) ? wp_unslash($_POST['sc_player_aliases']) : '';
+    $aliases = sanitize_text_field($aliases);
+
+    if ($aliases !== '') {
+        update_post_meta($post_id, '_sc_player_aliases', $aliases);
+    } else {
+        delete_post_meta($post_id, '_sc_player_aliases');
+    }
+}
+
+/* =========================================================
+   MAIN CONTENT FILTER
+========================================================= */
+
+add_filter('the_content', 'sc_autolink_player_names_in_posts', 20);
+function sc_autolink_player_names_in_posts($content) {
+    if (is_admin()) {
+        return $content;
+    }
+
+    if (!is_singular('post')) {
+        return $content;
+    }
+
+    if (!in_the_loop() || !is_main_query()) {
+        return $content;
+    }
+
+    if (!get_option('sc_player_autolink_enabled', 1)) {
+        return $content;
+    }
+
+    global $post;
+    if (!$post || empty($post->ID)) {
+        return $content;
+    }
+
+    $disable_for_post = get_post_meta($post->ID, '_sc_disable_player_autolink', true);
+    if ($disable_for_post === '1') {
+        return $content;
+    }
+
+    $player_map = sc_get_player_autolink_map();
+
+    if (empty($player_map) || !is_array($player_map)) {
+        return $content;
+    }
+
+    $max_links = (int) get_option('sc_player_autolink_max_links_per_player', 1);
+    if ($max_links < 1) {
+        $max_links = 1;
+    }
+
+    return sc_autolink_players_html($content, $player_map, array(
+        'max_links_per_player' => $max_links,
+        'nofollow'             => false,
+        'new_tab'              => false,
+        'link_class'           => 'sc-player-link',
+        'skip_headings'        => true,
+    ));
+}
+
+/* =========================================================
+   BUILD PLAYER MAP FROM REAL PLAYER PAGES
+========================================================= */
+
+function sc_get_player_autolink_map() {
+    $cache_key = 'sc_player_autolink_map_v1';
+    $cached = get_transient($cache_key);
+
+    if (is_array($cached)) {
+        return $cached;
+    }
+
+    $map = array();
+
+    $players = get_posts(array(
+        'post_type'              => SC_PLAYER_AUTOLINK_POST_TYPE,
+        'post_status'            => 'publish',
+        'numberposts'            => -1,
+        'orderby'                => 'title',
+        'order'                  => 'ASC',
+        'fields'                 => 'ids',
+        'no_found_rows'          => true,
+        'update_post_meta_cache' => false,
+        'update_post_term_cache' => false,
+        'suppress_filters'       => true,
+    ));
+
+    if (empty($players)) {
+        return $map;
+    }
+
+    foreach ($players as $player_id) {
+        $name = get_the_title($player_id);
+        $url  = get_permalink($player_id);
+
+        if (!$name || !$url) {
+            continue;
+        }
+
+        $name = trim(wp_strip_all_tags($name));
+        if ($name === '') {
+            continue;
+        }
+
+        $map[$name] = $url;
+
+        $aliases_raw = get_post_meta($player_id, '_sc_player_aliases', true);
+        if (!empty($aliases_raw)) {
+            $aliases = array_map('trim', explode('|', $aliases_raw));
+            foreach ($aliases as $alias) {
+                if ($alias !== '') {
+                    $map[$alias] = $url;
+                }
+            }
+        }
+    }
+
+    // Longest first so "Brian Thomas Jr." beats "Brian Thomas"
+    uksort($map, function($a, $b) {
+        return mb_strlen($b) <=> mb_strlen($a);
+    });
+
+    set_transient($cache_key, $map, 12 * HOUR_IN_SECONDS);
+
+    return $map;
+}
+
+/* =========================================================
+   CLEAR CACHE WHEN PLAYER PAGES CHANGE
+========================================================= */
+
+add_action('save_post_' . SC_PLAYER_AUTOLINK_POST_TYPE, 'sc_clear_player_autolink_map_cache');
+add_action('deleted_post', 'sc_clear_player_autolink_map_cache_on_delete');
+
+function sc_clear_player_autolink_map_cache() {
+    delete_transient('sc_player_autolink_map_v1');
+}
+
+function sc_clear_player_autolink_map_cache_on_delete($post_id) {
+    $post_type = get_post_type($post_id);
+    if ($post_type === SC_PLAYER_AUTOLINK_POST_TYPE) {
+        delete_transient('sc_player_autolink_map_v1');
+    }
+}
+
+/* =========================================================
+   HTML AUTO-LINK ENGINE
+========================================================= */
+
+function sc_autolink_players_html($html, $player_map, $args = array()) {
+    $defaults = array(
+        'max_links_per_player' => 1,
+        'nofollow'             => false,
+        'new_tab'              => false,
+        'link_class'           => '',
+        'skip_headings'        => true,
+    );
+
+    $args = wp_parse_args($args, $defaults);
+
+    $linked_counts = array();
+
+    // Split into tags and text nodes
+    $parts = preg_split('/(<[^>]+>)/u', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+    if (!$parts || !is_array($parts)) {
+        return $html;
+    }
+
+    $inside_anchor  = false;
+    $inside_script  = false;
+    $inside_style   = false;
+    $inside_heading = false;
+
+    foreach ($parts as &$part) {
+        if ($part === '') {
+            continue;
+        }
+
+        // Handle tags
+        if (isset($part[0]) && $part[0] === '<') {
+            if (preg_match('/^<a\b/i', $part)) {
+                $inside_anchor = true;
+            } elseif (preg_match('/^<\/a>/i', $part)) {
+                $inside_anchor = false;
+            } elseif (preg_match('/^<script\b/i', $part)) {
+                $inside_script = true;
+            } elseif (preg_match('/^<\/script>/i', $part)) {
+                $inside_script = false;
+            } elseif (preg_match('/^<style\b/i', $part)) {
+                $inside_style = true;
+            } elseif (preg_match('/^<\/style>/i', $part)) {
+                $inside_style = false;
+            } elseif (!empty($args['skip_headings']) && preg_match('/^<h[1-6]\b/i', $part)) {
+                $inside_heading = true;
+            } elseif (!empty($args['skip_headings']) && preg_match('/^<\/h[1-6]>/i', $part)) {
+                $inside_heading = false;
+            }
+
+            continue;
+        }
+
+        if ($inside_anchor || $inside_script || $inside_style || $inside_heading) {
+            continue;
+        }
+
+        foreach ($player_map as $player_name => $url) {
+            if (empty($player_name) || empty($url)) {
+                continue;
+            }
+
+            $current_count = isset($linked_counts[$player_name]) ? (int) $linked_counts[$player_name] : 0;
+            $max_allowed   = (int) $args['max_links_per_player'];
+
+            if ($current_count >= $max_allowed) {
+                continue;
+            }
+
+            $replacement = sc_build_player_link_html($player_name, $url, $args);
+
+            // Safer name matching:
+            // - not inside other letters/numbers
+            // - supports punctuation in names
+            $pattern = '/(?<![\p{L}\p{N}])(' . preg_quote($player_name, '/') . ')(?![\p{L}\p{N}])/u';
+
+            $part = preg_replace_callback(
+                $pattern,
+                function($matches) use ($player_name, $replacement, &$linked_counts, $max_allowed) {
+                    $current_count = isset($linked_counts[$player_name]) ? (int) $linked_counts[$player_name] : 0;
+
+                    if ($current_count >= $max_allowed) {
+                        return $matches[1];
+                    }
+
+                    $linked_counts[$player_name] = $current_count + 1;
+                    return $replacement;
+                },
+                $part,
+                $max_allowed - $current_count
+            );
+        }
+    }
+    unset($part);
+
+    return implode('', $parts);
+}
+
+/* =========================================================
+   BUILD LINK HTML
+========================================================= */
+
+function sc_build_player_link_html($player_name, $url, $args = array()) {
+    $attrs = array();
+
+    $attrs[] = 'href="' . esc_url($url) . '"';
+
+    if (!empty($args['link_class'])) {
+        $attrs[] = 'class="' . esc_attr($args['link_class']) . '"';
+    }
+
+    if (!empty($args['new_tab'])) {
+        $attrs[] = 'target="_blank"';
+        $attrs[] = 'rel="noopener noreferrer"';
+    } elseif (!empty($args['nofollow'])) {
+        $attrs[] = 'rel="nofollow"';
+    }
+
+    return '<a ' . implode(' ', $attrs) . '>' . esc_html($player_name) . '</a>';
+}
+2) CSS for branded player links
+
+Add this to your site CSS or plugin stylesheet:
+
+.sc-player-link{
+  color:#0b3a7a;
+  text-decoration:none;
+  font-weight:600;
+  border-bottom:1px solid rgba(212,175,55,.68);
+  transition:color .18s ease, border-color .18s ease, opacity .18s ease;
+}
+
+.sc-player-link:hover{
+  color:#082a59;
+  border-bottom-color:#d4af37;
+}
+
+If you want it a little more premium/subtle, use this instead:
+
+.sc-player-link{
+  color:inherit;
+  text-decoration:none;
+  font-weight:600;
+  box-shadow:inset 0 -1px 0 rgba(212,175,55,.75);
+  transition:box-shadow .18s ease, color .18s ease;
+}
+
+.sc-player-link:hover{
+  color:#0b3a7a;
+  box-shadow:inset 0 -2px 0 #d4af37;
+}
+3) What you need to adjust before using it
+
+There is one important thing:
+
+Change this if needed:
+define('SC_PLAYER_AUTOLINK_POST_TYPE', 'nfl_player');
+
+If your actual player pages are not stored under nfl_player, replace it with your real post type slug.
+
+Examples:
+
+define('SC_PLAYER_AUTOLINK_POST_TYPE', 'player');
+
+or
+
+define('SC_PLAYER_AUTOLINK_POST_TYPE', 'sc_player');
+
+If your player pages are not a WordPress post type at all, but instead are generated another way from your custom plugin routes, then I’d want to wire the player map directly to that source instead.
