@@ -46,6 +46,21 @@ function sc_get_player_autolink_map() {
     $indexed_set = array_flip($indexed_slugs);
     $players = sc_get_players();
 
+    $aliases = array(
+        'aj-brown'           => array("AJ Brown"),
+        'dk-metcalf'         => array("DK Metcalf"),
+        'kj-osborn'          => array("KJ Osborn"),
+        'dj-moore'           => array("DJ Moore"),
+        'ceedee-lamb'        => array("Cee Dee Lamb"),
+        'amon-ra-st-brown'   => array("Amon-Ra St Brown"),
+        'ja-marr-chase'      => array("Jamarr Chase"),
+        'brian-thomas'        => array("Brian Thomas Jr.", "Brian Thomas Jr"),
+        'travis-etienne'     => array("Travis Etienne Jr.", "Travis Etienne Jr"),
+        'marvin-harrison'    => array("Marvin Harrison Jr.", "Marvin Harrison Jr"),
+        'michael-pittman'    => array("Michael Pittman Jr.", "Michael Pittman Jr"),
+        'odell-beckham'      => array("Odell Beckham Jr.", "Odell Beckham Jr"),
+    );
+
     foreach ($players as $p) {
         if (!isset($p['slug']) || !isset($p['name'])) continue;
         if (!isset($indexed_set[$p['slug']])) continue;
@@ -53,6 +68,12 @@ function sc_get_player_autolink_map() {
         $name = $p['name'];
         $url = home_url('/nfl/players/' . $p['slug'] . '/');
         $map[$name] = $url;
+
+        if (isset($aliases[$p['slug']])) {
+            foreach ($aliases[$p['slug']] as $alias) {
+                $map[$alias] = $url;
+            }
+        }
     }
 
     return $map;
