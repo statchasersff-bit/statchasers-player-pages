@@ -25,6 +25,7 @@ require_once SC_PLUGIN_DIR . 'includes/rest.php';
 require_once SC_PLUGIN_DIR . 'includes/seo.php';
 require_once SC_PLUGIN_DIR . 'includes/sitemap.php';
 require_once SC_PLUGIN_DIR . 'includes/admin-page.php';
+require_once SC_PLUGIN_DIR . 'includes/autolink.php';
 
 register_activation_hook( __FILE__, 'sc_activate' );
 register_deactivation_hook( __FILE__, 'sc_deactivate' );
@@ -51,6 +52,13 @@ add_action( SC_CRON_HOOK, 'sc_refresh_players_data' );
  * Enqueue plugin assets – remote (GitHub Pages) with local fallback.
  */
 add_action('wp_enqueue_scripts', function () {
+    if (is_singular('post')) {
+        wp_add_inline_style('wp-block-library', '
+            .sc-player-link { color: #0b3a7a; text-decoration: none; font-weight: 600; border-bottom: 1px solid rgba(212,175,55,.65); transition: all .18s ease; }
+            .sc-player-link:hover { color: #082a59; border-bottom-color: #d4af37; }
+        ');
+    }
+
     if (!function_exists('sc_detect_route') || !sc_detect_route()) return;
 
     wp_enqueue_style('sc-google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap', [], null);

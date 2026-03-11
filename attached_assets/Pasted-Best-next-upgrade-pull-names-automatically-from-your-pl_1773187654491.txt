@@ -1,0 +1,85 @@
+Best next upgrade: pull names automatically from your player pages
+
+Right now the example uses a manual array. That works, but the smarter version is to generate the map from your actual player post type or player index data.
+
+If your player pages are stored as a custom post type like nfl_player, swap sc_get_player_autolink_map() with this:
+
+function sc_get_player_autolink_map() {
+    $map = array();
+
+    $players = get_posts(array(
+        'post_type'      => 'nfl_player',
+        'post_status'    => 'publish',
+        'numberposts'    => -1,
+        'orderby'        => 'title',
+        'order'          => 'ASC',
+        'fields'         => 'ids',
+        'no_found_rows'  => true,
+    ));
+
+    if (empty($players)) {
+        return $map;
+    }
+
+    foreach ($players as $player_id) {
+        $name = get_the_title($player_id);
+        $url  = get_permalink($player_id);
+
+        if ($name && $url) {
+            $map[$name] = $url;
+
+            // Optional aliases
+            $alias = get_post_meta($player_id, '_sc_player_aliases', true);
+            if (!empty($alias)) {
+                $aliases = array_map('trim', explode('|', $alias));
+                foreach ($aliases as $a) {
+                    if ($a !== '') {
+                        $map[$a] = $url;
+                    }
+                }
+            }
+        }
+    }
+
+    return $map;
+}
+
+That lets you maintain aliases like:
+
+AJ Brown|A.J. Brown
+
+DK Metcalf|D.K. Metcalf
+
+Brian Thomas Jr.|Brian Thomas
+
+4) Recommended behavior for StatChasers
+
+For your site, I’d use these rules:
+
+only run on post
+
+link first mention only
+
+skip headings
+
+skip existing links
+
+only link to live player pages
+
+support aliases via custom field
+
+That gives you clean internal linking without making articles look spammy.
+
+5) Important caveats
+
+This is good, but names can still get tricky with:
+
+common last names only
+
+players with suffixes like Jr., Sr., III
+
+duplicate names
+
+awkward matches in quoted text
+
+That is why full-name matching + aliases + first mention only is the best setup.

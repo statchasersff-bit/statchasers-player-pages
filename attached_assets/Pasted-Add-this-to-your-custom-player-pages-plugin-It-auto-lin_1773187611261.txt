@@ -1,0 +1,227 @@
+Add this to your custom player-pages plugin. It auto-links player names in blog post content to your player pages, skips existing links, and only links the first mention of each player.
+
+What this does
+
+scans post content on the frontend
+
+only runs on single blog posts
+
+matches player names from a player map
+
+links first mention only
+
+skips anything already inside an <a> tag
+
+avoids linking inside headings if you want that behavior later
+
+1) Add this PHP to your plugin
+<?php
+/**
+ * StatChasers Player Auto-Linker
+ * Add to your custom player pages plugin.
+ */
+
+/**
+ * Main content filter
+ */
+add_filter('the_content', 'sc_autolink_player_names_in_posts', 20);
+
+function sc_autolink_player_names_in_posts($content) {
+    if (is_admin()) {
+        return $content;
+    }
+
+    // Only run on single blog posts
+    if (!is_singular('post')) {
+        return $content;
+    }
+
+    if (empty($content) || stripos($content, '<a ') === false && stripos($content, ' ') === false) {
+        // keep going normally; this check is just harmless
+    }
+
+    $player_map = sc_get_player_autolink_map();
+
+    if (empty($player_map) || !is_array($player_map)) {
+        return $content;
+    }
+
+    return sc_autolink_players_html($content, $player_map, array(
+        'max_links_per_player' => 1,
+        'nofollow'             => false,
+        'new_tab'              => false,
+        'link_class'           => 'sc-player-link',
+    ));
+}
+
+/**
+ * Build your player map.
+ * KEY = display/match name
+ * VALUE = player URL
+ *
+ * Replace this with your real data source later if needed.
+ */
+function sc_get_player_autolink_map() {
+    return array(
+        'Josh Allen'            => home_url('/nfl/players/josh-allen/'),
+        'Patrick Mahomes'       => home_url('/nfl/players/patrick-mahomes/'),
+        'Bijan Robinson'        => home_url('/nfl/players/bijan-robinson/'),
+        'Drake London'          => home_url('/nfl/players/drake-london/'),
+        'A.J. Brown'            => home_url('/nfl/players/aj-brown/'),
+        'AJ Brown'              => home_url('/nfl/players/aj-brown/'),
+        'CeeDee Lamb'           => home_url('/nfl/players/ceedee-lamb/'),
+        'Puka Nacua'            => home_url('/nfl/players/puka-nacua/'),
+        'Malik Willis'          => home_url('/nfl/players/malik-willis/'),
+        'Mike Evans'            => home_url('/nfl/players/mike-evans/'),
+    );
+}
+
+/**
+ * Auto-link player names in HTML while skipping existing links/scripts/styles.
+ */
+function sc_autolink_players_html($html, $player_map, $args = array()) {
+    $defaults = array(
+        'max_links_per_player' => 1,
+        'nofollow'             => false,
+        'new_tab'              => false,
+        'link_class'           => '',
+    );
+
+    $args = wp_parse_args($args, $defaults);
+
+    // Sort longest names first so "Michael Pittman Jr." matches before "Michael Pittman"
+    uksort($player_map, function($a, $b) {
+        return mb_strlen($b) <=> mb_strlen($a);
+    });
+
+    $linked_counts = array();
+
+    // Split HTML into tags vs text
+    $parts = preg_split('/(<[^>]+>)/u', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+    if (!$parts || !is_array($parts)) {
+        return $html;
+    }
+
+    $inside_anchor = false;
+    $inside_script = false;
+    $inside_style  = false;
+    $inside_h_tag  = false;
+
+    foreach ($parts as &$part) {
+        if ($part === '') {
+            continue;
+        }
+
+        // Tag handling
+        if ($part[0] === '<') {
+            $tag_lower = strtolower($part);
+
+            // Track protected zones
+            if (preg_match('/^<a\b/i', $part)) {
+                $inside_anchor = true;
+            } elseif (preg_match('/^<\/a>/i', $part)) {
+                $inside_anchor = false;
+            } elseif (preg_match('/^<script\b/i', $part)) {
+                $inside_script = true;
+            } elseif (preg_match('/^<\/script>/i', $part)) {
+                $inside_script = false;
+            } elseif (preg_match('/^<style\b/i', $part)) {
+                $inside_style = true;
+            } elseif (preg_match('/^<\/style>/i', $part)) {
+                $inside_style = false;
+            } elseif (preg_match('/^<h[1-6]\b/i', $part)) {
+                $inside_h_tag = true;
+            } elseif (preg_match('/^<\/h[1-6]>/i', $part)) {
+                $inside_h_tag = false;
+            }
+
+            continue;
+        }
+
+        // Only replace in normal text nodes
+        if ($inside_anchor || $inside_script || $inside_style || $inside_h_tag) {
+            continue;
+        }
+
+        foreach ($player_map as $player_name => $url) {
+            if (empty($player_name) || empty($url)) {
+                continue;
+            }
+
+            $current_count = isset($linked_counts[$player_name]) ? $linked_counts[$player_name] : 0;
+
+            if ($current_count >= (int) $args['max_links_per_player']) {
+                continue;
+            }
+
+            $replacement = sc_build_player_link_html($player_name, $url, $args);
+
+            // Word boundary-ish matching, but safer for names with punctuation
+            $pattern = '/(?<![\p{L}\p{N}])(' . preg_quote($player_name, '/') . ')(?![\p{L}\p{N}])/u';
+
+            $part_before = $part;
+
+            $part = preg_replace_callback(
+                $pattern,
+                function($matches) use ($player_name, $replacement, &$linked_counts, $args) {
+                    $current_count = isset($linked_counts[$player_name]) ? $linked_counts[$player_name] : 0;
+
+                    if ($current_count >= (int) $args['max_links_per_player']) {
+                        return $matches[1];
+                    }
+
+                    $linked_counts[$player_name] = $current_count + 1;
+                    return $replacement;
+                },
+                $part,
+                (int) $args['max_links_per_player'] - $current_count
+            );
+
+            if ($part !== $part_before) {
+                // Once changed, move on to next player
+            }
+        }
+    }
+    unset($part);
+
+    return implode('', $parts);
+}
+
+/**
+ * Build the actual anchor tag
+ */
+function sc_build_player_link_html($player_name, $url, $args = array()) {
+    $attrs = array();
+
+    $attrs[] = 'href="' . esc_url($url) . '"';
+
+    if (!empty($args['link_class'])) {
+        $attrs[] = 'class="' . esc_attr($args['link_class']) . '"';
+    }
+
+    if (!empty($args['new_tab'])) {
+        $attrs[] = 'target="_blank"';
+        $attrs[] = 'rel="noopener noreferrer"';
+    } elseif (!empty($args['nofollow'])) {
+        $attrs[] = 'rel="nofollow"';
+    }
+
+    return '<a ' . implode(' ', $attrs) . '>' . esc_html($player_name) . '</a>';
+}
+2) Add optional styling
+
+Put this in your CSS if you want linked players to look branded.
+
+.sc-player-link{
+  color:#0b3a7a;
+  text-decoration:none;
+  font-weight:600;
+  border-bottom:1px solid rgba(212,175,55,.65);
+  transition:all .18s ease;
+}
+
+.sc-player-link:hover{
+  color:#082a59;
+  border-bottom-color:#d4af37;
+}
