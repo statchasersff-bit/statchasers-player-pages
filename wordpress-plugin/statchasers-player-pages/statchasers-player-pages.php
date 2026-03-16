@@ -67,7 +67,7 @@ add_action('wp_enqueue_scripts', function () {
     $manifest_url = $remote_base . '.vite/manifest.json';
     $api_base_url = defined('SC_API_BASE_URL') ? SC_API_BASE_URL : '';
 
-    $cache_key = 'sc_players_remote_manifest_v2';
+    $cache_key = 'sc_players_remote_manifest_v3';
     $manifest = get_transient($cache_key);
 
     if (!$manifest) {

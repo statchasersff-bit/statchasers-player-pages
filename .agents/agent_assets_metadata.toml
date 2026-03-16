@@ -6,3 +6,9 @@ id = "GG3HWT57v5gldyqoRavTV"
 uri = "file://github-pages-assets-v0.6.0.zip"
 type = "unspecified"
 title = "GitHub Pages Assets v0.6.0 (JS + CSS)"
+
+[[outputs]]
+id = "2RIXNaAknixQydg5nolx3"
+uri = "file://statchasers-player-pages-v0.6.1.zip"
+type = "unspecified"
+title = "StatChasers Player Pages v0.6.1 (fixed)"
