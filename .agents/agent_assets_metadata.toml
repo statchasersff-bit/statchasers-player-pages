@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "GG3HWT57v5gldyqoRavTV"
+uri = "file://github-pages-assets-v0.6.0.zip"
+type = "unspecified"
+title = "GitHub Pages Assets v0.6.0 (JS + CSS)"
