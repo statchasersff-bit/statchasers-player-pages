@@ -13,6 +13,8 @@ declare global {
       baseUrl?: string;
       indexedUrl?: string;
       apiBaseUrl?: string;
+      preloadedIndexed?: unknown;
+      preloadedPlayers?: unknown;
     };
   }
 }
@@ -126,6 +128,14 @@ const useWPLocation = (): [string, (to: string) => void] => {
   const path = window.location.pathname + window.location.search;
   return [path, (to: string) => { window.location.href = to; }];
 };
+
+// Seed query cache from server-preloaded data so the index page renders instantly.
+if (config.preloadedIndexed) {
+  queryClient.setQueryData(["/api/indexed-players"], config.preloadedIndexed);
+}
+if (config.preloadedPlayers) {
+  queryClient.setQueryData(["/api/players"], config.preloadedPlayers);
+}
 
 const mountPoint = document.querySelector(".scpp-root");
 if (mountPoint) {

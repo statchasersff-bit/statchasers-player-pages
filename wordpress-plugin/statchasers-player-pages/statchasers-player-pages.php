@@ -3,7 +3,7 @@
  * Plugin Name: StatChasers Player Pages
  * Plugin URI:  https://statchasers.com
  * Description: Programmatic SEO-friendly NFL player pages powered by the Sleeper API. Adds /nfl/players/ directory and /nfl/players/{slug}/ profile pages using your theme's header/footer.
- * Version:     0.5.0
+ * Version:     0.6.2
  * Author:      StatChasers
  * Author URI:  https://statchasers.com
  * License:     GPL-2.0+
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'SC_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'SC_VERSION', '0.5.0' );
+define( 'SC_VERSION', '0.6.2' );
 define( 'SC_CRON_HOOK', 'sc_daily_player_refresh' );
 
 require_once SC_PLUGIN_DIR . 'includes/cache.php';
@@ -49,7 +49,26 @@ function sc_deactivate() {
 add_action( SC_CRON_HOOK, 'sc_refresh_players_data' );
 
 /**
+ * Fetch a remote JSON file with transient caching. Returns parsed array or null.
+ */
+function sc_fetch_remote_json( $url, $cache_key, $ttl = HOUR_IN_SECONDS ) {
+    $cached = get_transient( $cache_key );
+    if ( $cached !== false ) return $cached;
+
+    $res = wp_remote_get( $url, [ 'timeout' => 8 ] );
+    if ( is_wp_error( $res ) || wp_remote_retrieve_response_code( $res ) !== 200 ) return null;
+
+    $data = json_decode( wp_remote_retrieve_body( $res ), true );
+    if ( ! is_array( $data ) ) return null;
+
+    set_transient( $cache_key, $data, $ttl );
+    return $data;
+}
+
+/**
  * Enqueue plugin assets – remote (GitHub Pages) with local fallback.
+ * On the index page, pre-fetches player JSON server-side and injects it
+ * so React can render instantly with no client-side loading state.
  */
 add_action('wp_enqueue_scripts', function () {
     if (is_singular('post')) {
@@ -67,21 +86,33 @@ add_action('wp_enqueue_scripts', function () {
     $manifest_url = $remote_base . '.vite/manifest.json';
     $api_base_url = defined('SC_API_BASE_URL') ? SC_API_BASE_URL : '';
 
-    $cache_key = 'sc_players_remote_manifest_v3';
-    $manifest = get_transient($cache_key);
+    $manifest = sc_fetch_remote_json( $manifest_url, 'sc_players_remote_manifest_v3', 10 * MINUTE_IN_SECONDS );
+    $use_remote = is_array($manifest);
 
-    if (!$manifest) {
-        $res = wp_remote_get($manifest_url, ['timeout' => 5]);
-        if (!is_wp_error($res) && wp_remote_retrieve_response_code($res) === 200) {
-            $json = json_decode(wp_remote_retrieve_body($res), true);
-            if (is_array($json)) {
-                $manifest = $json;
-                set_transient($cache_key, $manifest, 10 * MINUTE_IN_SECONDS);
-            }
-        }
+    // Pre-load player data server-side on the index page so React renders instantly.
+    $preloaded_indexed = null;
+    $preloaded_players = null;
+    if ( function_exists('sc_is_players_index') && sc_is_players_index() ) {
+        $preloaded_indexed = sc_fetch_remote_json(
+            $remote_base . 'data/indexed-players.json',
+            'sc_preload_indexed_v1',
+            6 * HOUR_IN_SECONDS
+        );
+        $preloaded_players = sc_fetch_remote_json(
+            $remote_base . 'data/players.json',
+            'sc_preload_players_v1',
+            6 * HOUR_IN_SECONDS
+        );
     }
 
-    $use_remote = is_array($manifest);
+    $config = [
+        'restUrl'    => rest_url('statchasers/v1/players'),
+        'baseUrl'    => home_url('/nfl/players/'),
+        'indexedUrl' => rest_url('statchasers/v1/indexed-players'),
+        'apiBaseUrl' => $api_base_url,
+    ];
+    if ( $preloaded_indexed !== null ) $config['preloadedIndexed'] = $preloaded_indexed;
+    if ( $preloaded_players !== null ) $config['preloadedPlayers'] = $preloaded_players;
 
     if ($use_remote) {
         $entry = $manifest['src/wp-entry.tsx'] ?? $manifest['index.html'] ?? null;
@@ -97,14 +128,7 @@ add_action('wp_enqueue_scripts', function () {
             }
 
             wp_enqueue_script('sc-players-js', $remote_base . $js_file, [], $ver, true);
-
-            wp_localize_script('sc-players-js', 'scPlayersConfig', [
-                'restUrl'    => rest_url('statchasers/v1/players'),
-                'baseUrl'    => home_url('/nfl/players/'),
-                'indexedUrl' => rest_url('statchasers/v1/indexed-players'),
-                'apiBaseUrl' => $api_base_url,
-            ]);
-
+            wp_localize_script('sc-players-js', 'scPlayersConfig', $config);
             return;
         }
     }
@@ -113,13 +137,7 @@ add_action('wp_enqueue_scripts', function () {
     $ver = file_exists($js_path) ? filemtime($js_path) : SC_VERSION;
 
     wp_enqueue_script('sc-players-js', plugin_dir_url(__FILE__) . 'assets/players.js', [], $ver, true);
-
-    wp_localize_script('sc-players-js', 'scPlayersConfig', [
-        'restUrl'    => rest_url('statchasers/v1/players'),
-        'baseUrl'    => home_url('/nfl/players/'),
-        'indexedUrl' => rest_url('statchasers/v1/indexed-players'),
-        'apiBaseUrl' => $api_base_url,
-    ]);
+    wp_localize_script('sc-players-js', 'scPlayersConfig', $config);
 });
 
 add_filter('script_loader_tag', function ($tag, $handle) {
