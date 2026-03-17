@@ -1,0 +1,68 @@
+Add a Game Log Summary at the top
+
+This is critical for SEO.
+
+Right now your page probably jumps straight into data.
+
+Instead, add a short written summary explaining:
+
+how the player performed across the season
+
+how often they produced QB1 weeks
+
+how volatile they were
+
+what their best/worst games looked like
+
+Example
+
+For Josh Allen:
+
+Josh Allen’s 2025 game log shows the profile of a high-end fantasy quarterback capable of producing elite weekly ceilings while maintaining a relatively stable scoring floor. Across 17 games, Allen averaged 22.0 fantasy points per game and delivered QB1 finishes in 65% of his appearances.
+
+His best performance came in Week 11 against Tampa Bay, where he scored 44.7 fantasy points behind a multi-touchdown outing with rushing production. Even in quieter weeks, Allen’s rushing usage helped prevent complete fantasy busts, with no games falling into the QB37+ range.
+
+The game log also reveals some late-season cooling, with fantasy production declining over the final stretch despite stable rushing involvement. Overall, Allen’s weekly results confirm his status as one of the most reliable high-ceiling fantasy quarterbacks.
+
+Replit AI prompt
+Add a new “Game Log Summary” section at the top of the player Game Log page.
+
+Requirements:
+- Place this section below the page header and above the performance distribution charts
+- Write 2–3 concise editorial paragraphs summarizing the player’s weekly fantasy performance across the season
+- Reference key indicators such as:
+  - fantasy points per game
+  - QB1/QB2 finish rates
+  - best game
+  - worst game
+  - consistency or volatility patterns
+- The tone should read like fantasy football analysis, not generic stat descriptions
+
+Design:
+- Display inside a premium card container
+- Title should be H2: “Season Game Log Summary”
+- Ensure the text is indexable HTML for SEO
+- Keep the copy readable and not overly long
+2. Add Performance Pattern Insights
+
+This helps users understand the story behind the numbers.
+
+Example insights:
+
+strong early-season stretch
+
+late-season decline
+
+consistent QB1 production
+
+touchdown-driven spike weeks
+
+Example output
+
+Performance Pattern Insights
+
+Allen produced 13 elite QB1 weeks, demonstrating one of the highest weekly ceilings in fantasy football.
+
+Only one true bust week, highlighting a strong weekly floor.
+
+Production cooled late in the season despite rising rushing usage.

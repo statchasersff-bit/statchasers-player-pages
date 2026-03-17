@@ -1,0 +1,240 @@
+Add a top “Fantasy Outlook Summary” block
+
+This is the single most important improvement.
+
+What it should do
+
+A 200–350 word paragraph block right near the top that explains:
+
+what kind of fantasy asset the player is
+
+how they scored last year
+
+what drives their production
+
+whether the trend is improving or declining
+
+how managers should view them in redraft and dynasty
+
+Example for Josh Allen
+
+Something like:
+
+Josh Allen enters 2026 as one of fantasy football’s highest-upside quarterbacks thanks to his dual-threat role and weekly touchdown ceiling. In 2025, Allen averaged 22.0 fantasy points per game and finished as a QB1 in 65% of his games, keeping him in the elite fantasy tier despite some late-season cooling.
+
+His profile continues to be supported by rushing usage, which helps stabilize his weekly floor even when passing efficiency dips. Recent trend data showed an increase in rushing attempts, although overall production softened toward the end of the season. That combination still makes Allen one of the safest high-end quarterback options in both redraft and dynasty formats.
+
+For fantasy managers, Allen’s value comes from his ability to produce spike weeks through both the air and on the ground. His risk is lower than most quarterbacks because his rushing role protects him from complete bust weeks, but some week-to-week volatility remains when touchdown production falls.
+
+That kind of block is gold for SEO.
+
+What to tell Replit AI
+
+Use this prompt:
+
+Update the NFL player Overview page to add a new “Fantasy Outlook Summary” content block directly below the player header and above the first analytics cards.
+
+Requirements:
+- Add a new section titled: Fantasy Outlook Summary
+- Render 2–3 concise paragraphs of indexable text
+- This summary should be generated dynamically from existing player data when available
+- The tone should read like fantasy football analysis, not generic biography text
+- It should reference:
+  - fantasy points per game
+  - positional finish quality (QB1/QB2/etc. when relevant)
+  - primary production drivers (rushing, targets, red-zone role, efficiency, volume, etc.)
+  - recent trend direction if available
+  - short fantasy takeaway for managers
+- The copy should feel premium/editorial and avoid robotic repetition
+- If data is missing, gracefully fall back to a shorter generic summary
+
+Design requirements:
+- Keep styling premium and consistent with StatChasers player pages
+- Place the block in a clean card/container with good spacing
+- Title should be H2
+- Body copy should be highly readable on mobile and desktop
+- Limit width for readability
+- Do not make this look like a plain blog post; keep it integrated with the analytics UI
+
+SEO requirements:
+- Render this as server-visible/indexable HTML text, not hidden in tooltips or canvas
+- Use semantic heading structure
+- Ensure this content appears high enough on the page to help search engines understand page relevance
+2. Add a new “At a Glance” section
+
+You already have a lot of metrics, but users and Google both benefit from a fast summary layer.
+
+What it should include
+
+A simple 4-card row near the top, with labels like:
+
+Fantasy Tier
+
+Weekly Profile
+
+Primary Edge
+
+Main Risk
+
+Example for Josh Allen
+
+Fantasy Tier: Elite QB1
+
+Weekly Profile: High floor, high ceiling
+
+Primary Edge: Rushing production
+
+Main Risk: Touchdown volatility
+
+This is great because it makes the page readable in 5 seconds.
+
+What to tell Replit AI
+Add a new “At a Glance” summary section below the Fantasy Outlook Summary and above the detailed analytics modules.
+
+Requirements:
+- Show 4 compact premium summary cards:
+  1. Fantasy Tier
+  2. Weekly Profile
+  3. Primary Edge
+  4. Main Risk
+- Populate values dynamically based on available player metrics
+- Example outputs:
+  - Elite QB1
+  - High floor / high ceiling
+  - Rushing upside
+  - TD volatility
+- Cards should be concise, visually clean, and easy to scan
+- This section should summarize the player in plain fantasy language, not raw stat language
+
+Design:
+- Match existing StatChasers premium card styling
+- Responsive 4-column desktop, 2-column tablet, 1-column mobile if needed
+- Keep equal heights
+- Use subtle emphasis for values, muted labels
+- Avoid clutter or too much explanatory text
+3. Add section intros above existing modules
+
+Right now your page jumps quickly into metrics. That is great for power users, but a small amount of framing text will help a lot.
+
+For example, before your Performance section, add 1 short sentence:
+
+Season scoring output, finish consistency, and weekly reliability indicators.
+
+Before Trend Diagnostics:
+
+Rolling production trends and recent usage shifts that may impact fantasy value.
+
+Before Role Snapshot:
+
+Recent role indicators compared against season-long baseline usage.
+
+These little intros help both humans and search engines.
+
+What to tell Replit AI
+Improve the Overview page by adding short editorial section intros above each major analytics block.
+
+Requirements:
+- Add a 1-sentence supporting intro under each major section title
+- Keep each intro concise, useful, and written in fantasy-analysis language
+- Do not over-explain or add fluff
+- This should improve readability and SEO context without disrupting the dashboard feel
+
+Examples of sections that need intros:
+- Performance
+- Risk Assessment
+- Trend Diagnostics
+- Role Snapshot
+- Season Stat Summary
+- Career Profile
+- Quick Outlook
+
+Design:
+- Intro text should appear directly under the H2/H3 heading
+- Use muted text styling
+- Maintain premium spacing and hierarchy
+- Keep intros indexable and not hidden
+4. Improve headings so they target fantasy search better
+
+Some of your headings are good product headings, but not ideal SEO headings.
+
+For example:
+
+“Performance” is okay, but “2025 Fantasy Performance” is better
+
+“Risk Assessment” could be “Weekly Fantasy Risk Assessment”
+
+“Role Snapshot” could be “Role and Usage Snapshot”
+
+“Quick Outlook” could be “2026 Fantasy Outlook”
+
+You do not need to rename everything aggressively, but adding “fantasy,” “2025,” “2026,” “usage,” “dynasty,” or position terms helps.
+
+What to tell Replit AI
+Refine Overview page section headings to be more SEO-friendly and fantasy-specific while keeping the premium product feel.
+
+Requirements:
+- Update generic headings to more descriptive fantasy-oriented versions where appropriate
+- Examples:
+  - Performance → 2025 Fantasy Performance
+  - Risk Assessment → Weekly Fantasy Risk Assessment
+  - Trend Diagnostics → Recent Fantasy Trend Diagnostics
+  - Role Snapshot → Role and Usage Snapshot
+  - Quick Outlook → 2026 Fantasy Outlook
+- Keep heading language concise and natural
+- Do not keyword-stuff
+- Preserve a clean semantic heading structure (H2/H3)
+5. Add a “Fantasy Strengths and Risk Factors” block
+
+This would sit below the main analytics section and above related links.
+
+Why it matters
+
+It gives you more text, more interpretation, and more fantasy-search alignment.
+
+Suggested format
+
+Two columns:
+
+Fantasy Strengths
+
+rushing floor
+
+weekly ceiling
+
+stable starting role
+
+red-zone involvement
+
+Risk Factors
+
+touchdown dependence
+
+recent passing volume decline
+
+weekly volatility
+
+scheme/game-script sensitivity
+
+This is simple but powerful.
+
+What to tell Replit AI
+Add a new Overview section titled “Fantasy Strengths and Risk Factors” below the main analytics modules.
+
+Requirements:
+- Create a 2-column layout:
+  - Left column: Fantasy Strengths
+  - Right column: Risk Factors
+- Each column should contain 3–5 concise bullet points generated dynamically from existing player data when possible
+- Points should be written in plain fantasy football language, not raw metric labels
+- Examples:
+  - Rushing floor stabilizes weekly scoring
+  - Multi-touchdown upside creates elite ceiling
+  - Recent passing volume decline adds concern
+  - Production relies heavily on TD efficiency
+- If dynamic generation is not possible yet, create a clean fallback structure that can be populated later
+
+Design:
+- Premium card/grid styling
+- Clear section heading and short intro sentence
+- Mobile responsive
+- Keep bullets visually polished, not generic browser bullets

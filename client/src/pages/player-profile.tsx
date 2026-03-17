@@ -1001,6 +1001,194 @@ type PlayerWithSeasons = Player & {
   productionRiskBenchmarks?: BenchmarkData;
 };
 
+function generateFantasyOutlookSummary(player: PlayerWithSeasons, stats: ReturnType<typeof computeGameLogStats>, format: ScoringFormat): string[] {
+  if (!stats || stats.gamesPlayed === 0) return [];
+  const pos = player.position || '';
+  const name = player.name || 'This player';
+  const team = player.team || '';
+  const season = player.season || 2025;
+  const ppg = stats.ppg.toFixed(1);
+  const gp = stats.gamesPlayed;
+  const pos1Pct = stats.pos1Pct.toFixed(0);
+  const topRate = stats.pos1Pct + stats.pos2Pct;
+  const bustPct = stats.bustPct.toFixed(0);
+  const ppgDelta = stats.ppg > 0 ? ((stats.last4Ppg - stats.ppg) / stats.ppg) * 100 : 0;
+  const trendWord = ppgDelta > 8 ? 'trending upward' : ppgDelta < -12 ? 'cooling late in the year' : 'relatively steady';
+  const roleWord = topRate >= 60 ? 'a reliable weekly starter' : topRate >= 35 ? 'a flex-range contributor' : 'a situational option';
+  const volWord = stats.volatility < 6 ? 'consistent' : stats.volatility < 9 ? 'moderately volatile' : 'boom-or-bust';
+  const cp = player.careerProfile;
+  const seasonsPlayed = cp ? cp.seasons : 1;
+
+  const p1Parts: string[] = [];
+  p1Parts.push(`${name} finished the ${season} season as ${roleWord} at the ${pos} position`);
+  if (team) p1Parts.push(`playing for the ${team}`);
+  p1Parts.push(`averaging ${ppg} fantasy points per game across ${gp} games`);
+  if (player.seasonRank) p1Parts.push(`and finishing as the ${pos}${player.seasonRank} overall`);
+  const p1 = p1Parts.join(', ') + '.';
+
+  let p2 = '';
+  if (pos === 'QB') {
+    p2 = `His weekly output was ${volWord}, with a ${pos1Pct}% rate of finishing inside the top-12 at quarterback. Production was ${trendWord} heading into the final stretch of the season. For fantasy managers in redraft formats, that consistency grade and scoring volume place him in a defined tier heading into 2026 planning.`;
+  } else if (pos === 'RB') {
+    p2 = `His scoring profile was ${volWord} week to week, finishing as a top-${topRate >= 60 ? '24' : '36'} back ${pos1Pct}% of the time. Production was ${trendWord} late in the season. The bust rate of ${bustPct}% is an important floor signal for lineup decisions, particularly in PPR formats where receiving work adds a secondary scoring lane.`;
+  } else if (pos === 'WR') {
+    p2 = `His weekly profile was ${volWord}, converting into a top-24 receiver finish ${pos1Pct}% of the time. Scoring was ${trendWord} over the second half of the schedule. Both his ceiling and floor are tied closely to target volume and red-zone opportunities, making matchup awareness more impactful in this profile than for run-first options.`;
+  } else if (pos === 'TE') {
+    p2 = `His weekly output was ${volWord}, landing inside the top-12 at tight end ${pos1Pct}% of the time. Scoring was ${trendWord} as the season progressed. At tight end, where positional depth is thin, consistent target volume and red-zone involvement carry outsized value and define the floor better than touchdown rate alone.`;
+  } else {
+    p2 = `His weekly output was ${volWord}, finishing in a startable range ${pos1Pct}% of the time. Production was ${trendWord} late in the season.`;
+  }
+
+  let p3 = '';
+  if (cp && seasonsPlayed >= 2) {
+    const durPct = cp.durabilityPct.toFixed(0);
+    const careerPpg = cp.ppg.toFixed(1);
+    p3 = `Across ${cp.seasons} seasons, ${name} has averaged ${careerPpg} points per game with a durability rate of ${durPct}%, appearing in ${cp.gamesPlayed} of ${cp.maxGames} possible games. That track record provides helpful context for evaluating whether the ${season} production reflects a true baseline or a short-term variance window.`;
+  }
+
+  return [p1, p2, p3].filter(Boolean);
+}
+
+function generateAtAGlance(player: PlayerWithSeasons, stats: ReturnType<typeof computeGameLogStats>, format: ScoringFormat): { label: string; value: string }[] {
+  if (!stats || stats.gamesPlayed === 0) return [];
+  const pos = player.position || '';
+  const topRate = stats.pos1Pct + stats.pos2Pct;
+  const cvRatio = stats.ppg > 0 ? stats.volatility / stats.ppg : 2;
+
+  const tier = (() => {
+    const benchmarks: Record<string, number[]> = { QB: [22, 17], RB: [16, 11], WR: [14, 9], TE: [11, 7] };
+    const [elite, avg] = benchmarks[pos] || [14, 9];
+    if (stats.ppg >= elite) return `Elite ${pos}1`;
+    if (stats.ppg >= avg && topRate >= 55) return `Solid ${pos}1`;
+    if (stats.ppg >= avg) return `${pos}2 Range`;
+    return `Streaming ${pos}`;
+  })();
+
+  const weeklyProfile = (() => {
+    const highFloor = stats.bustPct < 20;
+    const highCeiling = stats.pos1Pct > 40;
+    if (highFloor && highCeiling) return 'High floor, high ceiling';
+    if (highFloor) return 'Safe floor, moderate ceiling';
+    if (highCeiling) return 'Volatile, high upside';
+    return 'Boom-or-bust profile';
+  })();
+
+  const primaryEdge = (() => {
+    if (pos === 'QB') return stats.ppg >= 22 ? 'Dual-threat scoring' : 'Passing volume';
+    if (pos === 'RB') {
+      const rec = (player.careerSeasonStats?.[0]?.receptions ?? 0);
+      return rec >= 50 ? 'Receiving + rushing role' : 'Rushing volume and goal-line';
+    }
+    if (pos === 'WR') return stats.pos1Pct > 40 ? 'Target share depth' : 'Matchup upside';
+    if (pos === 'TE') return 'Target share at thin position';
+    return 'Usage volume';
+  })();
+
+  const mainRisk = (() => {
+    if (cvRatio >= 0.7) return 'High week-to-week variance';
+    if (stats.bustPct >= 30) return 'Floor risk, bust-prone weeks';
+    if (stats.pos1Pct < 25) return 'Limited ceiling weeks';
+    const ppgDelta = stats.ppg > 0 ? ((stats.last4Ppg - stats.ppg) / stats.ppg) * 100 : 0;
+    if (ppgDelta < -15) return 'Late-season scoring decline';
+    return 'TD-dependent production';
+  })();
+
+  return [
+    { label: 'Fantasy Tier', value: tier },
+    { label: 'Weekly Profile', value: weeklyProfile },
+    { label: 'Primary Edge', value: primaryEdge },
+    { label: 'Main Risk', value: mainRisk },
+  ];
+}
+
+function generateStrengthsAndRisks(player: PlayerWithSeasons, stats: ReturnType<typeof computeGameLogStats>): { strengths: string[]; risks: string[] } {
+  if (!stats || stats.gamesPlayed === 0) return { strengths: [], risks: [] };
+  const pos = player.position || '';
+  const topRate = stats.pos1Pct + stats.pos2Pct;
+  const cvRatio = stats.ppg > 0 ? stats.volatility / stats.ppg : 2;
+  const ppgDelta = stats.ppg > 0 ? ((stats.last4Ppg - stats.ppg) / stats.ppg) * 100 : 0;
+  const cp = player.careerProfile;
+
+  const strengths: string[] = [];
+  const risks: string[] = [];
+
+  if (topRate >= 60) strengths.push(`Finishes in startable range ${topRate.toFixed(0)}% of weeks`);
+  if (stats.pos1Pct >= 40) strengths.push(`Top-tier finish rate of ${stats.pos1Pct.toFixed(0)}% creates ceiling upside`);
+  if (stats.bustPct < 20) strengths.push('Reliable weekly floor with minimal bust risk');
+  if (cvRatio < 0.5) strengths.push('Consistent scoring with low week-to-week variance');
+  if (cp && cp.durabilityPct >= 85) strengths.push(`Strong availability, appearing in ${cp.durabilityPct.toFixed(0)}% of possible games`);
+  if (ppgDelta > 8) strengths.push('Trending upward heading into the offseason');
+  if (pos === 'QB' && stats.ppg >= 22) strengths.push('Dual-threat ability protects scoring floor each week');
+  if (pos === 'RB') {
+    const rec = player.careerSeasonStats?.[0]?.receptions ?? 0;
+    if (rec >= 50) strengths.push('Receiving role adds PPR value on top of rushing work');
+  }
+  if (strengths.length < 3) strengths.push(`Established ${pos} role with meaningful snap share`);
+
+  if (cvRatio >= 0.7) risks.push('High week-to-week variance makes lineup decisions difficult');
+  if (stats.bustPct >= 30) risks.push(`Bust rate of ${stats.bustPct.toFixed(0)}% is a real concern for floor-sensitive formats`);
+  if (ppgDelta < -12) risks.push('Late-season scoring decline raises questions about role consistency');
+  if (stats.pos1Pct < 25) risks.push('Limited ceiling weeks reduce upside in tournaments and daily formats');
+  if (cp && cp.durabilityPct < 80) risks.push(`Availability concerns, playing just ${cp.durabilityPct.toFixed(0)}% of games in career`);
+  if (pos === 'WR' || pos === 'TE') risks.push('Production tied to target volume and quarterback efficiency');
+  if (risks.length < 3) risks.push('Scheme or usage changes could shift value meaningfully');
+
+  return { strengths: strengths.slice(0, 5), risks: risks.slice(0, 5) };
+}
+
+function generateGameLogSummary(player: PlayerWithSeasons, entries: GameLogEntry[], stats: ReturnType<typeof computeGameLogStats>, format: ScoringFormat): string[] {
+  if (!stats || stats.gamesPlayed === 0) return [];
+  const pos = player.position || '';
+  const name = player.name || 'This player';
+  const ppg = stats.ppg.toFixed(1);
+  const gp = stats.gamesPlayed;
+  const pos1Pct = stats.pos1Pct.toFixed(0);
+  const bustPct = stats.bustPct.toFixed(0);
+  const played = entries.filter(e => hasParticipation(e.stats, pos));
+  const best = played.length > 0 ? played.reduce((b, e) => fpts(e, format) > fpts(b, format) ? e : b, played[0]) : null;
+  const worst = played.length > 0 ? played.reduce((w, e) => fpts(e, format) < fpts(w, format) ? e : w, played[0]) : null;
+
+  const p1 = `${name} played ${gp} games this season, averaging ${ppg} fantasy points per game. A top-tier positional finish came in ${pos1Pct}% of those weeks, while a bust-level output occurred ${bustPct}% of the time. That spread gives managers a practical picture of the weekly floor and ceiling when setting lineups.`;
+
+  let p2 = '';
+  if (best && worst) {
+    const bestPts = fpts(best, format).toFixed(1);
+    const worstPts = fpts(worst, format).toFixed(1);
+    p2 = `The peak output was ${bestPts} points in Week ${best.week}${best.opp ? ` against ${best.opp}` : ''}, while the low came in at ${worstPts} points in Week ${worst.week}${worst.opp ? ` against ${worst.opp}` : ''}. That range of ${(parseFloat(bestPts) - parseFloat(worstPts)).toFixed(1)} points between the best and worst active games captures the scoring variance managers should factor into start-sit decisions.`;
+  }
+
+  return [p1, p2].filter(Boolean);
+}
+
+function generateUsageSummary(player: PlayerWithSeasons, deltaRows: { label: string; key: string; delta: number; seasonAvg: number; recentAvg: number; pct?: boolean }[], momentumScore: number): string[] {
+  if (deltaRows.length === 0) return [];
+  const name = player.name || 'This player';
+  const pos = player.position || '';
+  const momentumWord = momentumScore >= 70 ? 'expanded meaningfully' : momentumScore >= 55 ? 'held steady' : momentumScore <= 35 ? 'contracted' : 'remained stable';
+  const topDelta = deltaRows.reduce((best, d) => Math.abs(d.delta) > Math.abs(best.delta) ? d : best, deltaRows[0]);
+  const topDir = topDelta.delta > 0 ? 'increased' : 'decreased';
+  const topLabel = topDelta.label.replace(/ \(Team\)/, '').replace(/\/G/, ' per game');
+
+  const p1 = `Recent usage for ${name} has ${momentumWord} compared to the season-long baseline. The metric with the largest shift is ${topLabel}, which has ${topDir} by ${Math.abs(topDelta.delta).toFixed(1)}${topDelta.pct ? 'pp' : ''} over the last four games. These role signals are among the most predictive short-term indicators for ${pos} fantasy value.`;
+
+  const risingRows = deltaRows.filter(d => d.delta > 0);
+  const fallingRows = deltaRows.filter(d => d.delta < 0);
+  let p2 = '';
+  if (risingRows.length > 0 && fallingRows.length > 0) {
+    const rising = risingRows.map(d => d.label.replace(/ \(Team\)/, '')).slice(0, 2).join(' and ');
+    const falling = fallingRows.map(d => d.label.replace(/ \(Team\)/, '')).slice(0, 2).join(' and ');
+    p2 = `On the positive side, ${rising} have trended upward in recent weeks. At the same time, ${falling} has pulled back versus the season average. A mixed signal like this often reflects a role shift or changing game script rather than a fundamental change in value, so monitoring the next few games is worthwhile before making roster decisions.`;
+  } else if (risingRows.length >= 3) {
+    const rising = risingRows.map(d => d.label.replace(/ \(Team\)/, '')).slice(0, 3).join(', ');
+    p2 = `Multiple usage metrics are moving in the right direction recently, including ${rising}. Broad usage expansion across categories is one of the stronger short-term predictors of fantasy upside and suggests the role may be growing heading into the final stretch.`;
+  } else if (fallingRows.length >= 3) {
+    const falling = fallingRows.map(d => d.label.replace(/ \(Team\)/, '')).slice(0, 3).join(', ');
+    p2 = `Several usage metrics have pulled back recently, including ${falling}. Across-the-board contraction in role signals can foreshadow lower fantasy ceilings in the near term and warrants attention before rostering or starting decisions.`;
+  }
+
+  return [p1, p2].filter(Boolean);
+}
+
 function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSeasons; entries: GameLogEntry[]; format?: ScoringFormat }) {
   const stats = computeGameLogStats(entries, player.position, format);
   const keyStats = getKeyStatSummary(entries, player.position);
@@ -1023,8 +1211,36 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
   })();
   const ppgDelta = seasonPpg - posAvgPpg;
 
+  const outlookParas = generateFantasyOutlookSummary(player, stats, format);
+  const atAGlance = generateAtAGlance(player, stats, format);
+  const { strengths, risks } = generateStrengthsAndRisks(player, stats);
+
   return (
     <div className="sc-overview" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+
+      {outlookParas.length > 0 && (
+        <div className="sc-overview__section" style={{ padding: '20px' }}>
+          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--sc-gold)', marginBottom: '12px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>Fantasy Outlook Summary</h2>
+          {outlookParas.map((p, i) => (
+            <p key={i} style={{ fontSize: '14px', lineHeight: '1.75', color: 'var(--sc-text-muted, #94a3b8)', marginBottom: i < outlookParas.length - 1 ? '12px' : 0 }}>{p}</p>
+          ))}
+        </div>
+      )}
+
+      {atAGlance.length > 0 && (
+        <div className="sc-overview__section" style={{ padding: '20px' }}>
+          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--sc-gold)', marginBottom: '16px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>At a Glance</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+            {atAGlance.map((card) => (
+              <div key={card.label} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '8px', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <p style={{ fontSize: '10px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{card.label}</p>
+                <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--sc-text, #e2e8f0)' }}>{card.value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {hasData ? (() => {
         const volLabel = stats.volatility < 6 ? 'Stable' : stats.volatility < 9 ? 'Moderate' : 'Volatile';
         const volColor = stats.volatility < 6
@@ -1063,7 +1279,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
               </Badge>
             </div>
 
-            <SectionHeader title="Performance" subtitle="Season scoring output and positional finish rates" />
+            <SectionHeader title="2025 Fantasy Performance" subtitle="Season scoring output and positional finish rates" />
 
             <div className={`grid gap-3 ${thresholds.hasTier3 ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2 md:grid-cols-3'}`}>
               <div className="sc-overview__stat-cell">
@@ -1128,7 +1344,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
           </div>
 
           <div className="sc-overview__section" style={{ padding: '20px' }}>
-            <SectionHeader title="Risk Assessment" subtitle="Downside exposure and weekly floor indicators" />
+            <SectionHeader title="Weekly Fantasy Risk Assessment" subtitle="Downside exposure and weekly floor indicators" />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div className="sc-overview__risk-cell sc-overview__risk-cell--bust" data-tooltip="Percentage of games finishing outside startable range" data-testid="risk-cell-bust">
                 <p className="sc-overview__stat-label">Bust %</p>
@@ -1222,7 +1438,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
             return (
               <div className="sc-overview__trend-card" data-testid="section-trend-diagnostics">
                 <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
-                  <SectionHeader title="Trend Diagnostics" subtitle="Weekly production arc and rolling efficiency signals" />
+                  <SectionHeader title="Recent Fantasy Trend Diagnostics" subtitle="Weekly production arc and rolling efficiency signals" />
                   <MomentumBadge data={weeklyPts} unit="PPG" />
                 </div>
 
@@ -1433,7 +1649,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
 
             return (
               <div className="sc-overview__section" data-testid="section-role-snapshot">
-                <SectionHeader title="Role Snapshot" subtitle="Season baseline vs recent usage comparison" />
+                <SectionHeader title="Role and Usage Snapshot" subtitle="Season baseline vs recent usage comparison" />
                   {usageCards.length > 0 && (
                     <>
                       <p style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#94a3b8', marginBottom: '8px' }}>Usage</p>
@@ -1590,10 +1806,41 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
         </div>
       )}
 
+      {(strengths.length > 0 || risks.length > 0) && (
+        <div className="sc-overview__section" style={{ padding: '20px' }} data-testid="section-strengths-risks">
+          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--sc-gold)', marginBottom: '4px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>Fantasy Strengths and Risk Factors</h2>
+          <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '16px' }}>Key production drivers and downside factors heading into 2026.</p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div>
+              <p style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#16a34a', marginBottom: '10px' }}>Strengths</p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {strengths.map((s, i) => (
+                  <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13px', color: '#cbd5e1', lineHeight: '1.5' }}>
+                    <span style={{ color: '#16a34a', fontWeight: 700, marginTop: '1px', flexShrink: 0 }}>+</span>
+                    {s}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#ef4444', marginBottom: '10px' }}>Risk Factors</p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {risks.map((r, i) => (
+                  <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13px', color: '#cbd5e1', lineHeight: '1.5' }}>
+                    <span style={{ color: '#ef4444', fontWeight: 700, marginTop: '1px', flexShrink: 0 }}>-</span>
+                    {r}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="sc-overview__outlook" data-testid="section-quick-outlook">
         <div className="flex items-center gap-2 mb-3 flex-wrap">
           <FileText className="w-4 h-4" style={{ color: '#d4af37' }} />
-          <SectionHeader title="Quick Outlook" subtitle="Projected role trajectory and risk summary" />
+          <SectionHeader title="2026 Fantasy Outlook" subtitle="Projected role trajectory and risk summary" />
         </div>
         {outlook.hasData ? (
           <>
@@ -1767,8 +2014,20 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
 
   const filterForTable: 'full' | 'last5' = gameFilter === 'full' ? 'full' : 'last5';
 
+  const gameLogSummaryParas = generateGameLogSummary(player, entries, stats, format);
+
   return (
     <div className="sc-gamelog" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+
+      {gameLogSummaryParas.length > 0 && (
+        <div className="sc-overview__section" style={{ padding: '20px' }} data-testid="section-gamelog-summary">
+          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--sc-gold)', marginBottom: '12px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>Season Game Log Summary</h2>
+          {gameLogSummaryParas.map((p, i) => (
+            <p key={i} style={{ fontSize: '14px', lineHeight: '1.75', color: 'var(--sc-text-muted, #94a3b8)', marginBottom: i < gameLogSummaryParas.length - 1 ? '12px' : 0 }}>{p}</p>
+          ))}
+        </div>
+      )}
+
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <SectionHeader title="Game Log" subtitle="Performance distribution and finish outcomes" />
         <div className="flex items-center gap-2 flex-wrap">
@@ -2372,9 +2631,20 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   const playerRoleRows = deltaRows.filter(d => !(d as any).context);
   const contextRows = deltaRows.filter(d => (d as any).context);
 
+  const usageSummaryParas = generateUsageSummary(player, deltaRows, momentumScore);
+
   return (
     <div className="sc-usage" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }} data-testid="usage-trends-tab">
-      <SectionHeader title="Usage & Trends" subtitle="Weekly role evolution and efficiency signals" />
+      <SectionHeader title="Role and Usage Trends" subtitle="Weekly role evolution and efficiency signals" />
+
+      {usageSummaryParas.length > 0 && (
+        <div className="sc-overview__section" style={{ padding: '20px' }} data-testid="section-usage-summary">
+          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--sc-gold)', marginBottom: '12px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>Role and Usage Summary</h2>
+          {usageSummaryParas.map((p, i) => (
+            <p key={i} style={{ fontSize: '14px', lineHeight: '1.75', color: 'var(--sc-text-muted, #94a3b8)', marginBottom: i < usageSummaryParas.length - 1 ? '12px' : 0 }}>{p}</p>
+          ))}
+        </div>
+      )}
 
       <div className="sc-card" style={{ padding: '24px 28px' }} data-testid="opportunity-momentum-card">
           <div className="flex items-center justify-between gap-3 flex-wrap" style={{ marginBottom: '16px' }}>
