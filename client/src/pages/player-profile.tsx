@@ -5203,7 +5203,7 @@ export default function PlayerProfile() {
               );
             })}
           </nav>
-          <div className="py-2 border-t border-slate-100 dark:border-slate-800">
+          <div className="py-2 border-t border-slate-100 dark:border-slate-800 flex justify-center sm:justify-start">
             <ScoringFormatToggle format={scoringFormat} onChange={setScoringFormat} />
           </div>
         </div>
