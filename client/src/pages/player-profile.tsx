@@ -1470,7 +1470,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
 
       {atAGlance.length > 0 && (
         <div className="sc-overview__section" style={{ padding: '20px' }}>
-          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--sc-gold)', marginBottom: '16px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>At a Glance</h2>
+          <SectionHeader title="At a Glance" />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
             {atAGlance.map((card) => (
               <div key={card.label} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '8px', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -1927,7 +1927,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
 
           {keyStats.length > 0 && (
             <div className="sc-overview__section">
-              <p className="sc-overview__section-title" style={{ marginBottom: '12px' }}>Season Stat Summary</p>
+              <SectionHeader title="Season Stat Summary" />
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {keyStats.map(s => (
                   <div key={s.label} className="sc-overview__stat-cell">
@@ -2049,8 +2049,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
 
       {(strengths.length > 0 || risks.length > 0) && (
         <div className="sc-overview__section" style={{ padding: '20px' }} data-testid="section-strengths-risks">
-          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--sc-gold)', marginBottom: '4px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>Fantasy Strengths and Risk Factors</h2>
-          <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '16px' }}>Key production drivers and downside factors heading into 2026.</p>
+          <SectionHeader title="Fantasy Strengths and Risk Factors" subtitle="Key production drivers and downside factors heading into 2026." />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <div>
               <p style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#16a34a', marginBottom: '10px' }}>Strengths</p>
@@ -2272,8 +2271,7 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
 
       {performanceInsights.length > 0 && (
         <div className="sc-overview__section" style={{ padding: '20px' }} data-testid="section-performance-insights">
-          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--sc-gold)', marginBottom: '4px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>Performance Pattern Insights</h2>
-          <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '16px' }}>Key patterns from the weekly scoring distribution this season.</p>
+          <SectionHeader title="Performance Pattern Insights" subtitle="Key patterns from the weekly scoring distribution this season." />
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {performanceInsights.map((ins, i) => {
               const dotColor = ins.icon === 'up' ? '#22c55e' : ins.icon === 'down' ? '#ef4444' : '#94a3b8';
@@ -3390,8 +3388,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
 
       {roleStabilityData.cards.length > 0 && (
         <div className="sc-overview__section" style={{ padding: '20px' }} data-testid="section-role-stability-risk">
-          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--sc-gold)', marginBottom: '4px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>Role Stability and Risk</h2>
-          <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '16px' }}>How consistent and sustainable this player's usage and scoring profile is right now.</p>
+          <SectionHeader title="Role Stability and Risk" subtitle="How consistent and sustainable this player's usage and scoring profile is right now." />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', marginBottom: '16px' }}>
             {roleStabilityData.cards.map((card, i) => (
               <div key={i} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '8px', padding: '12px 14px' }}>
@@ -3813,8 +3810,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
 
       {fantasyTakeaways.length > 0 && (
         <div className="sc-overview__section" style={{ padding: '20px' }} data-testid="section-fantasy-takeaways">
-          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--sc-gold)', marginBottom: '4px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>Fantasy Takeaways</h2>
-          <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '16px' }}>What the usage and role data means for fantasy decisions right now.</p>
+          <SectionHeader title="Fantasy Takeaways" subtitle="What the usage and role data means for fantasy decisions right now." />
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {fantasyTakeaways.map((tw, i) => {
               const borderColor = tw.icon === 'up' ? '#22c55e' : tw.icon === 'down' ? '#ef4444' : '#64748b';
