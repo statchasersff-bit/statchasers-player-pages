@@ -12,3 +12,9 @@ id = "2RIXNaAknixQydg5nolx3"
 uri = "file://statchasers-player-pages-v0.6.1.zip"
 type = "unspecified"
 title = "StatChasers Player Pages v0.6.1 (fixed)"
+
+[[outputs]]
+id = "Vv2Muc4pBj81Y9WWT0cdm"
+uri = "file://wordpress-plugin/statchasers-player-pages.zip"
+type = "unspecified"
+title = "StatChasers Player Pages Plugin"
