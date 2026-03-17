@@ -4885,7 +4885,7 @@ function PlayerProfileSkeleton() {
   return (
     <>
       <div className="bg-slate-50 dark:bg-[#0B1634] border-b-2 border-slate-200 dark:border-slate-700">
-        <div className="max-w-4xl mx-auto px-4 py-10">
+        <div className="max-w-7xl mx-auto px-4 py-10">
           <div className="flex items-center gap-6 flex-wrap">
             <Skeleton className="w-24 h-24 md:w-28 md:h-28 rounded-full" />
             <div>
@@ -4897,7 +4897,7 @@ function PlayerProfileSkeleton() {
           </div>
         </div>
       </div>
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex gap-2 mb-6 flex-wrap">
           {Array.from({ length: 5 }).map((_, i) => (
             <Skeleton key={i} className="h-9 w-24 rounded-md" />
@@ -5018,7 +5018,7 @@ export default function PlayerProfile() {
   if (error || !player) {
     return (
       <div className="min-h-screen bg-background">
-        <div className="max-w-4xl mx-auto px-4 py-16 text-center">
+        <div className="max-w-7xl mx-auto px-4 py-16 text-center">
           <AlertTriangle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-foreground mb-2" data-testid="text-not-found">Player Not Found</h1>
           <p className="text-muted-foreground mb-6">
@@ -5062,7 +5062,7 @@ export default function PlayerProfile() {
         <div className="absolute inset-0 hidden dark:block" style={{ background: 'linear-gradient(135deg, #0B1634 0%, #111D42 40%, #0F172A 100%)' }} />
         <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, transparent 0%, ${teamColor}88 20%, ${teamColor} 50%, ${teamColor}88 80%, transparent 100%)` }} />
 
-        <div className="relative max-w-4xl mx-auto px-4 pt-5 pb-6">
+        <div className="relative max-w-7xl mx-auto px-4 pt-5 pb-6">
           <div className="flex items-center justify-between mb-4">
             <Link href="/nfl/players">
               <Button variant="ghost" size="sm" className="-ml-1 text-slate-600 dark:text-slate-300" data-testid="button-back">
@@ -5178,7 +5178,7 @@ export default function PlayerProfile() {
       </section>
 
       <div className="sticky top-[53px] z-40 border-b" style={{ background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(8px)', borderColor: 'rgba(11,58,122,0.08)' }}>
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4">
           <nav
             className="flex gap-0.5 overflow-x-auto -mb-px scrollbar-hide"
             style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
@@ -5226,7 +5226,7 @@ export default function PlayerProfile() {
         </div>
       </div>
 
-      <main className="max-w-4xl mx-auto px-4 py-6">
+      <main className="max-w-7xl mx-auto px-4 py-6">
         {player.injury_status && (
           <div className="sc-card" style={{ padding: '16px 24px', marginBottom: '24px', borderColor: 'rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.05)' }}>
               <div className="flex items-center gap-3 flex-wrap">
