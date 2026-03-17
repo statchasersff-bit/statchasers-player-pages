@@ -1800,13 +1800,25 @@
 .sc-bio__section-header {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
   font-size: 14px;
-  font-weight: 800;
-  color: #0f172a;
-  letter-spacing: 0.02em;
+  font-weight: 700;
+  color: var(--sc-blue);
+  letter-spacing: -0.01em;
+  margin-bottom: 16px;
 }
-.dark .sc-bio__section-header { color: hsl(var(--foreground)); }
+.sc-bio__section-header::after {
+  content: '';
+  display: block;
+  flex-basis: 100%;
+  height: 3px;
+  width: 48px;
+  max-width: 48px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #d4af37, #e5c95c);
+  margin-top: 2px;
+}
 .sc-bio__section-header svg {
   color: #d4af37;
   flex-shrink: 0;
