@@ -5103,30 +5103,17 @@ export default function PlayerProfile() {
 
             {/* Row 2 on mobile / Col 2 on desktop: Scoring toggle + Bio meta */}
             <div className="flex flex-col justify-center gap-3 py-3 md:px-5 md:py-2 flex-1 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
-              <ScoringFormatToggle format={scoringFormat} onChange={setScoringFormat} />
-              <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 flex-wrap" data-testid="text-player-meta">
-                {player.age && (
-                  <span>Age <span className="font-semibold text-slate-700 dark:text-slate-300">{player.age}</span></span>
-                )}
-                {player.height && (
-                  <>
-                    <span className="text-slate-300 dark:text-slate-600">|</span>
-                    <span className="font-semibold text-slate-700 dark:text-slate-300">{formatHeight(player.height)}</span>
-                  </>
-                )}
-                {player.weight && (
-                  <>
-                    <span className="text-slate-300 dark:text-slate-600">|</span>
-                    <span><span className="font-semibold text-slate-700 dark:text-slate-300">{player.weight}</span> lbs</span>
-                  </>
-                )}
-                {player.years_exp != null && (
-                  <>
-                    <span className="text-slate-300 dark:text-slate-600">|</span>
-                    <span>Exp <span className="font-semibold text-slate-700 dark:text-slate-300">{player.years_exp} yr{player.years_exp !== 1 ? 's' : ''}</span></span>
-                  </>
-                )}
+              <div className="overflow-x-auto">
+                <ScoringFormatToggle format={scoringFormat} onChange={setScoringFormat} />
               </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap overflow-x-auto" data-testid="text-player-meta">
+                {[
+                  player.age ? `Age ${player.age}` : null,
+                  player.height ? formatHeight(player.height) : null,
+                  player.weight ? `${player.weight} lbs` : null,
+                  player.years_exp != null ? `Exp ${player.years_exp} yr${player.years_exp !== 1 ? 's' : ''}` : null,
+                ].filter(Boolean).join('  |  ')}
+              </p>
               <div className="flex items-center gap-1.5" data-testid="text-player-status">
                 {player.injury_status ? (
                   <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
