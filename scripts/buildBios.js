@@ -128,7 +128,17 @@ function computeDerived(pos, seasons, draft) {
     : null;
 
   const threshold = BREAKOUT_THRESHOLDS[pos] || 14;
-  const breakoutSeason = seasons.find(s => s.ppg >= threshold && s.games >= 8) || null;
+  // Breakout = first season crossing the threshold AFTER at least one season below it.
+  // If the earliest season in the dataset already meets the threshold we cannot confirm
+  // a breakout occurred within the data window, so we leave it null.
+  let breakoutSeason = null;
+  for (let i = 1; i < seasons.length; i++) {
+    const hadBelowThreshold = seasons.slice(0, i).some(s => s.ppg < threshold);
+    if (hadBelowThreshold && seasons[i].ppg >= threshold && seasons[i].games >= 8) {
+      breakoutSeason = seasons[i];
+      break;
+    }
+  }
 
   let trend = null;
   if (seasons.length >= 2) {
