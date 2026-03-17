@@ -5179,7 +5179,7 @@ export default function PlayerProfile() {
                     cursor: 'pointer',
                     background: 'none',
                     border: 'none',
-                    flex: '1 1 0',
+                    flex: 'none',
                   }}
                   onMouseEnter={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.color = '#0b3a7a'; }}
                   onMouseLeave={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.color = '#94a3b8'; }}
