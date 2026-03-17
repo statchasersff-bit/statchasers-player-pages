@@ -1454,8 +1454,8 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
             {atAGlance.map((card) => (
               <div key={card.label} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '8px', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <p style={{ fontSize: '10px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{card.label}</p>
-                <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--sc-text, #e2e8f0)' }}>{card.value}</p>
+                <p style={{ fontSize: '10px', fontWeight: 600, color: 'var(--sc-text-muted, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{card.label}</p>
+                <p style={{ fontSize: '13px', fontWeight: 700, color: 'var(--sc-text, #f1f5f9)' }}>{card.value}</p>
               </div>
             ))}
           </div>
@@ -2253,13 +2253,13 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
       {performanceInsights.length > 0 && (
         <div className="sc-overview__section" style={{ padding: '20px' }} data-testid="section-performance-insights">
           <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--sc-gold)', marginBottom: '4px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>Performance Pattern Insights</h2>
-          <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '16px' }}>Key patterns from the weekly scoring distribution this season.</p>
+          <p style={{ fontSize: '12px', color: 'var(--sc-text-muted, #94a3b8)', marginBottom: '16px' }}>Key patterns from the weekly scoring distribution this season.</p>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {performanceInsights.map((ins, i) => {
               const dotColor = ins.icon === 'up' ? '#22c55e' : ins.icon === 'down' ? '#ef4444' : '#94a3b8';
               const icon = ins.icon === 'up' ? '▲' : ins.icon === 'down' ? '▼' : '●';
               return (
-                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }} data-testid={`insight-pattern-${i}`}>
+                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', color: 'var(--sc-text, #f1f5f9)', lineHeight: '1.6' }} data-testid={`insight-pattern-${i}`}>
                   <span style={{ color: dotColor, fontSize: '9px', fontWeight: 700, marginTop: '4px', flexShrink: 0, letterSpacing: '0' }}>{icon}</span>
                   {ins.text}
                 </li>
