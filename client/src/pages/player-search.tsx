@@ -741,12 +741,6 @@ export default function PlayerSearch() {
             />
           ) : (
           <div>
-            <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
-              <p className="text-sm text-muted-foreground" data-testid="text-indexed-count">
-                {totalPlayers} fantasy-relevant players across 32 NFL teams
-              </p>
-            </div>
-
             <Tabs defaultValue="AFC" value={conference} onValueChange={setConference} data-testid="tabs-conference">
               <TabsList className="mb-6" data-testid="tabs-conference-list">
                 <TabsTrigger value="AFC" data-testid="tab-afc">AFC</TabsTrigger>
