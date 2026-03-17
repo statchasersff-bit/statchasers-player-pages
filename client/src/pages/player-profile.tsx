@@ -1255,12 +1255,15 @@ function generateUsageSummary(player: PlayerWithSeasons, deltaRows: { label: str
   if (deltaRows.length === 0) return [];
   const name = player.name || 'This player';
   const pos = player.position || '';
-  const momentumWord = momentumScore >= 70 ? 'expanded meaningfully' : momentumScore >= 55 ? 'held steady' : momentumScore <= 35 ? 'contracted' : 'remained stable';
+  const season = player.season || 2025;
+  const momentumWord = momentumScore >= 70 ? 'expanded meaningfully' : momentumScore >= 55 ? 'held steady' : momentumScore <= 35 ? 'contracted' : 'remained relatively stable';
   const topDelta = deltaRows.reduce((best, d) => Math.abs(d.delta) > Math.abs(best.delta) ? d : best, deltaRows[0]);
   const topDir = topDelta.delta > 0 ? 'increased' : 'decreased';
-  const topLabel = topDelta.label.replace(/ \(Team\)/, '').replace(/\/G/, ' per game');
+  const topLabel = topDelta.label.replace(/ \(Team\)/, '').replace(/\/G/, ' per game').toLowerCase();
+  const topMag = topDelta.pct ? `${Math.abs(topDelta.delta).toFixed(1)} percentage points` : `${Math.abs(topDelta.delta).toFixed(1)} per game`;
+  const roleWord = momentumScore >= 60 ? 'a strengthening offensive role' : momentumScore <= 39 ? 'a narrowing role' : 'a stable role in the offense';
 
-  const p1 = `Recent usage for ${name} has ${momentumWord} compared to the season-long baseline. The metric with the largest shift is ${topLabel}, which has ${topDir} by ${Math.abs(topDelta.delta).toFixed(1)}${topDelta.pct ? 'pp' : ''} over the last four games. These role signals are among the most predictive short-term indicators for ${pos} fantasy value.`;
+  const p1 = `${name}'s usage profile in ${season} has ${momentumWord} over the last four weeks, pointing to ${roleWord}. The biggest shift in the recent window is ${topLabel}, which has ${topDir} by ${topMag} compared to the season baseline. For ${pos} fantasy managers, these near-term volume signals are among the most actionable leading indicators heading into lineup decisions.`;
 
   const risingRows = deltaRows.filter(d => d.delta > 0);
   const fallingRows = deltaRows.filter(d => d.delta < 0);
@@ -1268,16 +1271,119 @@ function generateUsageSummary(player: PlayerWithSeasons, deltaRows: { label: str
   if (risingRows.length > 0 && fallingRows.length > 0) {
     const rising = risingRows.map(d => d.label.replace(/ \(Team\)/, '')).slice(0, 2).join(' and ');
     const falling = fallingRows.map(d => d.label.replace(/ \(Team\)/, '')).slice(0, 2).join(' and ');
-    p2 = `On the positive side, ${rising} have trended upward in recent weeks. At the same time, ${falling} has pulled back versus the season average. A mixed signal like this often reflects a role shift or changing game script rather than a fundamental change in value, so monitoring the next few games is worthwhile before making roster decisions.`;
+    p2 = `The recent snapshot shows a mixed signal, with ${rising} trending upward while ${falling} has pulled back versus the full-season average. This kind of divergence often reflects a short-term game-script shift rather than a fundamental role change, but tracking how these metrics settle over the next few games is important before making roster or trade decisions.`;
   } else if (risingRows.length >= 3) {
     const rising = risingRows.map(d => d.label.replace(/ \(Team\)/, '')).slice(0, 3).join(', ');
-    p2 = `Multiple usage metrics are moving in the right direction recently, including ${rising}. Broad usage expansion across categories is one of the stronger short-term predictors of fantasy upside and suggests the role may be growing heading into the final stretch.`;
+    p2 = `Multiple usage categories are moving in a positive direction recently, with ${rising} all trending upward. Broad-based expansion across volume metrics is one of the stronger short-term signals of growing fantasy upside and suggests the offensive role may be deepening.`;
   } else if (fallingRows.length >= 3) {
     const falling = fallingRows.map(d => d.label.replace(/ \(Team\)/, '')).slice(0, 3).join(', ');
-    p2 = `Several usage metrics have pulled back recently, including ${falling}. Across-the-board contraction in role signals can foreshadow lower fantasy ceilings in the near term and warrants attention before rostering or starting decisions.`;
+    p2 = `Several categories have pulled back in the recent window, with ${falling} all contracting versus the season average. When multiple usage metrics decline together, it can foreshadow lower fantasy ceilings in the near term and is worth flagging before start-sit or trade decisions.`;
+  } else if (risingRows.length > 0) {
+    const rising = risingRows.map(d => d.label.replace(/ \(Team\)/, '')).join(' and ');
+    p2 = `${rising} has been trending upward in the recent window, providing a modest positive signal for near-term role direction. The other usage metrics remain close to season averages, suggesting the role is holding steady overall.`;
+  } else if (fallingRows.length > 0) {
+    const falling = fallingRows.map(d => d.label.replace(/ \(Team\)/, '')).join(' and ');
+    p2 = `${falling} has ticked back slightly in recent weeks. The rest of the usage profile stays near season averages, so this does not yet signal a major role change, but it is worth monitoring as the weeks ahead unfold.`;
   }
 
-  return [p1, p2].filter(Boolean);
+  const p3 = momentumScore >= 60
+    ? `Overall, the role trend is a positive signal for ${name}'s near-term fantasy value. Expanding usage at this stage of the season typically sustains or increases in the short term, making this player a higher-confidence option than the season average alone might suggest.`
+    : momentumScore <= 39
+    ? `Overall, the contracting usage trend introduces some caution around ${name}'s near-term fantasy value. Declining volume signals at the positional level are among the most reliable predictors of scoring declines, so managing expectations until the role stabilizes is prudent.`
+    : `Overall, the usage trend paints a picture of a stable role that is holding near its season-long baseline. That consistency is a positive signal for floor management, even if it does not add meaningful upside to the weekly ceiling.`;
+
+  return [p1, p2, p3].filter(Boolean);
+}
+
+function generateRoleStabilityRisk(
+  player: PlayerWithSeasons,
+  stability: number,
+  stabilityLabel: string,
+  stabilityMicroText: string | null,
+  tdDep: { pct: number; label: string; tag: string; isHigh: boolean },
+  momentumScore: number,
+): { cards: { label: string; value: string; sub?: string; color: string }[]; insight: string } {
+  const pos = player.position || '';
+  const name = player.name || 'This player';
+
+  const stabilityColor = stability >= 70 ? '#22c55e' : stability >= 45 ? '#f59e0b' : '#ef4444';
+  const tdColor = tdDep.pct >= 40 ? '#f59e0b' : tdDep.pct >= 25 ? '#94a3b8' : '#22c55e';
+  const directionColor = momentumScore >= 60 ? '#22c55e' : momentumScore <= 39 ? '#ef4444' : '#f59e0b';
+  const directionLabel = momentumScore >= 80 ? 'Expanding fast' : momentumScore >= 60 ? 'Expanding' : momentumScore <= 25 ? 'Declining sharply' : momentumScore <= 39 ? 'Declining' : 'Stable';
+
+  const cards = [
+    { label: 'Role Stability', value: `${stability}/100`, sub: stabilityLabel, color: stabilityColor },
+    { label: 'TD Dependency', value: `${tdDep.pct.toFixed(0)}%`, sub: tdDep.label, color: tdColor },
+    { label: 'Role Direction', value: directionLabel, sub: `Score: ${momentumScore}/100`, color: directionColor },
+    ...(stabilityMicroText ? [{ label: 'Volume Variance', value: stabilityMicroText.replace(/Workload varies /i, '').replace(/Targets vary /i, ''), sub: 'Week-to-week spread', color: '#94a3b8' }] : []),
+  ];
+
+  let insight = '';
+  if (stability >= 70 && tdDep.pct < 35) {
+    insight = `${name}'s production profile is backed by consistent volume rather than touchdown spikes, which is one of the most reliable patterns in fantasy. The stable role and moderate TD reliance create a floor-friendly setup that holds value even in low-scoring games.`;
+  } else if (stability >= 70 && tdDep.pct >= 35) {
+    insight = `${name} carries a consistent usage base, but a meaningful share of production comes from touchdowns. While the floor is supported by volume, the ceiling is more TD-sensitive than the usage score alone implies, which introduces some regression risk if scoring efficiency normalizes.`;
+  } else if (stability < 45 && tdDep.pct >= 35) {
+    insight = `Both usage consistency and TD reliance present risk here. High week-to-week volatility in volume, combined with above-average TD dependency, creates a profile where the scoring floor can move sharply in either direction depending on game script and red-zone opportunity.`;
+  } else if (stability < 45) {
+    insight = `The volatile usage pattern is the primary risk signal for ${name}. Even when target share or touches look reasonable on average, the week-to-week swings make reliable floor projections difficult and widen the range of outcomes for any given week.`;
+  } else {
+    insight = `${name} sits in a moderate risk band, with usage consistency and TD reliance both near positional averages for the ${pos} position. The profile does not carry extreme floor or ceiling risk, making the recent role direction score the most useful signal for near-term decisions.`;
+  }
+
+  return { cards, insight };
+}
+
+function generateFantasyTakeaways(
+  player: PlayerWithSeasons,
+  deltaRows: { label: string; key: string; delta: number; seasonAvg: number; recentAvg: number; pct?: boolean }[],
+  momentumScore: number,
+  stability: number,
+  tdDep: { pct: number; label: string; tag: string; isHigh: boolean },
+): { icon: 'up' | 'down' | 'neutral'; text: string }[] {
+  if (deltaRows.length === 0) return [];
+  const name = player.name || 'This player';
+  const pos = player.position || '';
+  const takeaways: { icon: 'up' | 'down' | 'neutral'; text: string }[] = [];
+
+  const risingRows = deltaRows.filter(d => d.delta > 0);
+  const fallingRows = deltaRows.filter(d => d.delta < 0);
+  const topRising = risingRows.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))[0];
+  const topFalling = fallingRows.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))[0];
+
+  if (momentumScore >= 60) {
+    takeaways.push({ icon: 'up', text: `Role is expanding relative to the season baseline, improving the weekly floor and near-term upside for ${pos} managers.` });
+  } else if (momentumScore <= 39) {
+    takeaways.push({ icon: 'down', text: `Role is contracting in the recent window, which is a caution signal for weekly start decisions until volume recovers.` });
+  } else {
+    takeaways.push({ icon: 'neutral', text: `Overall role remains stable versus the season average, supporting a predictable scoring range without meaningful upside expansion.` });
+  }
+
+  if (topRising) {
+    const label = topRising.label.replace(/ \(Team\)/, '').toLowerCase();
+    takeaways.push({ icon: 'up', text: `Rising ${label} strengthens the weekly scoring floor and signals growing offensive involvement.` });
+  }
+
+  if (topFalling) {
+    const label = topFalling.label.replace(/ \(Team\)/, '').toLowerCase();
+    takeaways.push({ icon: 'down', text: `Declining ${label} pulls the ceiling down slightly and is worth monitoring before commit-to-start decisions.` });
+  }
+
+  if (tdDep.pct >= 40) {
+    takeaways.push({ icon: 'down', text: `TD dependency of ${tdDep.pct.toFixed(0)}% means production is sensitive to red-zone outcomes, which can swing the week by several points in either direction.` });
+  } else if (tdDep.pct < 20) {
+    takeaways.push({ icon: 'up', text: `Low TD reliance means scoring is grounded in volume rather than touchdown luck, reducing variance and supporting a more reliable floor.` });
+  } else {
+    takeaways.push({ icon: 'neutral', text: `TD reliance is moderate at ${tdDep.pct.toFixed(0)}%, meaning scoring is balanced between yardage volume and touchdown contribution.` });
+  }
+
+  if (stability >= 70) {
+    takeaways.push({ icon: 'up', text: `High usage consistency creates a predictable week-to-week range, making ${name} easier to deploy with confidence in matchup-neutral situations.` });
+  } else if (stability < 45) {
+    takeaways.push({ icon: 'down', text: `Volatile week-to-week usage widens the scoring range and increases the risk of down weeks even when the role appears intact on average.` });
+  }
+
+  return takeaways.slice(0, 5);
 }
 
 function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSeasons; entries: GameLogEntry[]; format?: ScoringFormat }) {
@@ -2743,6 +2849,8 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
   const contextRows = deltaRows.filter(d => (d as any).context);
 
   const usageSummaryParas = generateUsageSummary(player, deltaRows, momentumScore);
+  const roleStabilityData = generateRoleStabilityRisk(player, stability, stabilityLabel, stabilityMicroText, tdDep, momentumScore);
+  const fantasyTakeaways = generateFantasyTakeaways(player, deltaRows, momentumScore, stability, tdDep);
 
   return (
     <div className="sc-usage" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }} data-testid="usage-trends-tab">
@@ -3236,6 +3344,26 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
         );
       })()}
 
+      {roleStabilityData.cards.length > 0 && (
+        <div className="sc-overview__section" style={{ padding: '20px' }} data-testid="section-role-stability-risk">
+          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--sc-gold)', marginBottom: '4px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>Role Stability and Risk</h2>
+          <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '16px' }}>How consistent and sustainable this player's usage and scoring profile is right now.</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px', marginBottom: '16px' }}>
+            {roleStabilityData.cards.map((card, i) => (
+              <div key={i} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '8px', padding: '12px 14px' }}>
+                <p style={{ fontSize: '10px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '4px' }}>{card.label}</p>
+                <p style={{ fontSize: '14px', fontWeight: 700, color: card.color, marginBottom: card.sub ? '2px' : '0' }}>{card.value}</p>
+                {card.sub && <p style={{ fontSize: '10px', color: '#64748b' }}>{card.sub}</p>}
+              </div>
+            ))}
+          </div>
+          <div style={{ background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)', borderRadius: '8px', padding: '12px 14px' }}>
+            <p style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6366f1', marginBottom: '6px' }}>Insight</p>
+            <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.65' }} data-testid="text-role-stability-insight">{roleStabilityData.insight}</p>
+          </div>
+        </div>
+      )}
+
       {position !== 'K' && activeEntries.length >= 3 && (() => {
         const gp = activeEntries.length;
         const stat = (key: string) => activeEntries.reduce((sum, e) => sum + getStat(e, key), 0);
@@ -3638,6 +3766,30 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
           </>
         );
       })()}
+
+      {fantasyTakeaways.length > 0 && (
+        <div className="sc-overview__section" style={{ padding: '20px' }} data-testid="section-fantasy-takeaways">
+          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--sc-gold)', marginBottom: '4px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>Fantasy Takeaways</h2>
+          <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '16px' }}>What the usage and role data means for fantasy decisions right now.</p>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {fantasyTakeaways.map((tw, i) => {
+              const borderColor = tw.icon === 'up' ? '#22c55e' : tw.icon === 'down' ? '#ef4444' : '#64748b';
+              const iconColor = tw.icon === 'up' ? '#22c55e' : tw.icon === 'down' ? '#ef4444' : '#94a3b8';
+              const icon = tw.icon === 'up' ? '▲' : tw.icon === 'down' ? '▼' : '●';
+              return (
+                <li
+                  key={i}
+                  style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '10px 12px', background: 'rgba(255,255,255,0.02)', border: `1px solid rgba(255,255,255,0.06)`, borderLeft: `3px solid ${borderColor}`, borderRadius: '6px', fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}
+                  data-testid={`takeaway-${i}`}
+                >
+                  <span style={{ color: iconColor, fontSize: '8px', fontWeight: 700, marginTop: '5px', flexShrink: 0 }}>{icon}</span>
+                  {tw.text}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
