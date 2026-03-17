@@ -5118,28 +5118,10 @@ export default function PlayerProfile() {
               </div>
             </div>
 
-            {/* Row 2 on mobile / Col 2 on desktop: Weekly trend sparkline */}
-            {player.trends?.weeklyFantasyPoints && player.trends.weeklyFantasyPoints.length > 0 && (() => {
-              const pts = player.trends!.weeklyFantasyPoints;
-              const maxPts = Math.max(...pts, 1);
-              return (
-                <div className="hidden md:flex flex-col items-center justify-center px-10 flex-1 min-w-0">
-                  <p className="text-[9px] font-bold uppercase tracking-widest mb-2.5" style={{ color: 'rgba(148,163,184,0.7)' }}>Weekly Points</p>
-                  <div className="flex items-end gap-[3px] w-full" style={{ height: '42px', maxWidth: '220px' }}>
-                    {pts.map((p, i) => {
-                      const pct = Math.max((p / maxPts) * 100, p > 0 ? 4 : 1.5);
-                      const color = p <= 0 ? 'rgba(148,163,184,0.25)' : p >= 20 ? `${teamColor}cc` : p >= 10 ? `${teamColor}88` : `${teamColor}55`;
-                      return (
-                        <div key={i} className="flex-1 rounded-t-sm transition-all" style={{ height: `${pct}%`, background: color, minHeight: '2px' }} />
-                      );
-                    })}
-                  </div>
-                  <p className="text-[9px] mt-1.5" style={{ color: 'rgba(148,163,184,0.55)' }}>{pts.length} weeks</p>
-                </div>
-              );
-            })()}
+            {/* Spacer: pushes stats box to the right on desktop */}
+            <div className="hidden md:block flex-1" />
 
-            {/* Row 3 on mobile / Col 3 on desktop: 2025 Fantasy Season Stats Box */}
+            {/* Row 2 on mobile / Col 2 on desktop: 2025 Fantasy Season Stats Box */}
             {headerPpg !== null && (
               <div className="w-full md:w-auto md:flex-shrink-0 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 md:self-center mt-0 md:mt-0">
                 <div className="px-3 py-1.5 text-white text-[10px] font-bold tracking-widest uppercase" style={{ background: teamColor }}>
