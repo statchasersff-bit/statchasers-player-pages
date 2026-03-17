@@ -1140,24 +1140,115 @@ function generateGameLogSummary(player: PlayerWithSeasons, entries: GameLogEntry
   if (!stats || stats.gamesPlayed === 0) return [];
   const pos = player.position || '';
   const name = player.name || 'This player';
+  const season = player.season || 2025;
   const ppg = stats.ppg.toFixed(1);
   const gp = stats.gamesPlayed;
-  const pos1Pct = stats.pos1Pct.toFixed(0);
-  const bustPct = stats.bustPct.toFixed(0);
+  const topRate = stats.pos1Pct + stats.pos2Pct;
+  const cvRatio = stats.ppg > 0 ? stats.volatility / stats.ppg : 2;
+  const volWord = cvRatio < 0.4 ? 'stable' : cvRatio < 0.65 ? 'moderately consistent' : 'volatile';
   const played = entries.filter(e => hasParticipation(e.stats, pos));
   const best = played.length > 0 ? played.reduce((b, e) => fpts(e, format) > fpts(b, format) ? e : b, played[0]) : null;
   const worst = played.length > 0 ? played.reduce((w, e) => fpts(e, format) < fpts(w, format) ? e : w, played[0]) : null;
 
-  const p1 = `${name} played ${gp} games this season, averaging ${ppg} fantasy points per game. A top-tier positional finish came in ${pos1Pct}% of those weeks, while a bust-level output occurred ${bustPct}% of the time. That spread gives managers a practical picture of the weekly floor and ceiling when setting lineups.`;
+  const tierLabel = ((): string => {
+    const benchmarks: Record<string, number[]> = { QB: [22, 17], RB: [14, 10], WR: [13, 9], TE: [11, 7] };
+    const [elite, avg] = benchmarks[pos] || [13, 9];
+    if (stats.ppg >= elite) return 'elite-level';
+    if (stats.ppg >= avg && topRate >= 55) return 'reliable starter-level';
+    if (stats.ppg >= avg) return 'solid';
+    return 'situational';
+  })();
+
+  const roleWord = topRate >= 60 ? 'a reliable weekly starter' : topRate >= 40 ? 'a flex-range option' : 'a streaming-grade player';
+
+  const p1Parts: string[] = [];
+  p1Parts.push(`${name}'s ${season} game log shows the profile of ${roleWord} at the ${pos} position`);
+  p1Parts.push(`averaging ${ppg} fantasy points per game across ${gp} appearances`);
+  p1Parts.push(`with ${tierLabel} weekly output`);
+  const pos1Label = pos === 'QB' ? 'QB1' : pos === 'RB' ? 'RB1' : pos === 'WR' ? 'WR1' : pos === 'TE' ? 'TE1' : 'top-tier';
+  p1Parts.push(`and ${pos1Label} finishes in ${stats.pos1Pct.toFixed(0)}% of weeks`);
+  const p1 = p1Parts.join(', ') + '.';
 
   let p2 = '';
   if (best && worst) {
     const bestPts = fpts(best, format).toFixed(1);
     const worstPts = fpts(worst, format).toFixed(1);
-    p2 = `The peak output was ${bestPts} points in Week ${best.week}${best.opp ? ` against ${best.opp}` : ''}, while the low came in at ${worstPts} points in Week ${worst.week}${worst.opp ? ` against ${worst.opp}` : ''}. That range of ${(parseFloat(bestPts) - parseFloat(worstPts)).toFixed(1)} points between the best and worst active games captures the scoring variance managers should factor into start-sit decisions.`;
+    const range = (parseFloat(bestPts) - parseFloat(worstPts)).toFixed(1);
+    const bustNote = stats.bustPct < 15
+      ? `Even in quieter weeks, production rarely fell into a true bust range, with a bust rate of just ${stats.bustPct.toFixed(0)}%.`
+      : stats.bustPct >= 35
+      ? `The bust rate of ${stats.bustPct.toFixed(0)}% is a meaningful risk signal that managers should account for when setting lineups.`
+      : `The bust rate of ${stats.bustPct.toFixed(0)}% reflects some week-to-week risk that managers must weigh in close start-sit decisions.`;
+    p2 = `The peak game was ${bestPts} points in Week ${best.week}${best.opp ? ` against ${best.opp}` : ''}, while the floor came in at ${worstPts} points in Week ${worst.week}${worst.opp ? ` against ${worst.opp}` : ''}. That ${range}-point range between the best and worst active games reflects a ${volWord} weekly scoring profile. ${bustNote}`;
   }
 
-  return [p1, p2].filter(Boolean);
+  let p3 = '';
+  const ppgDelta = stats.ppg > 0 ? ((stats.last4Ppg - stats.ppg) / stats.ppg) * 100 : 0;
+  if (Math.abs(ppgDelta) > 8 && played.length >= 6) {
+    const trendDir = ppgDelta > 0 ? 'upward' : 'downward';
+    const trendMag = Math.abs(ppgDelta) > 20 ? 'sharply' : 'moderately';
+    const last4Pts = stats.last4Ppg.toFixed(1);
+    if (ppgDelta > 0) {
+      p3 = `The game log also reveals a positive late-season trend, with scoring moving ${trendMag} ${trendDir} over the final four games to ${last4Pts} PPG. That closing momentum is an important signal for dynasty and keeper managers evaluating forward value heading into the offseason.`;
+    } else {
+      p3 = `The game log also shows some late-season cooling, with production slipping ${trendMag} ${trendDir} over the final four games to ${last4Pts} PPG versus the ${stats.ppg.toFixed(1)} season average. Whether that reflects a true role shift or game-script variance is worth tracking heading into 2026.`;
+    }
+  }
+
+  return [p1, p2, p3].filter(Boolean);
+}
+
+function generatePerformancePatternInsights(player: PlayerWithSeasons, entries: GameLogEntry[], stats: ReturnType<typeof computeGameLogStats>, format: ScoringFormat): { icon: 'up' | 'down' | 'neutral'; text: string }[] {
+  if (!stats || stats.gamesPlayed === 0) return [];
+  const pos = player.position || '';
+  const name = player.name || 'This player';
+  const played = entries.filter(e => hasParticipation(e.stats, pos));
+  const insights: { icon: 'up' | 'down' | 'neutral'; text: string }[] = [];
+
+  const pos1Label = pos === 'QB' ? 'QB1' : pos === 'RB' ? 'RB24' : pos === 'WR' ? 'WR2' : pos === 'TE' ? 'TE1' : 'top-tier';
+  const topRate = stats.pos1Pct + stats.pos2Pct;
+  const cvRatio = stats.ppg > 0 ? stats.volatility / stats.ppg : 2;
+  const ppgDelta = stats.ppg > 0 ? ((stats.last4Ppg - stats.ppg) / stats.ppg) * 100 : 0;
+
+  if (stats.pos1Pct >= 50) {
+    insights.push({ icon: 'up', text: `${name} produced elite weekly finishes in ${stats.pos1Games} of ${stats.gamesPlayed} games, one of the more consistent ceiling profiles at the ${pos} position.` });
+  } else if (stats.pos1Pct >= 30) {
+    insights.push({ icon: 'up', text: `${name} landed in the ${pos1Label} finish range ${stats.pos1Games} times this season, providing meaningful upside for managers who started him consistently.` });
+  }
+
+  if (stats.bustPct < 15) {
+    insights.push({ icon: 'up', text: `Only ${stats.bustGames} bust-level week${stats.bustGames === 1 ? '' : 's'} this season, indicating a strong weekly floor that makes roster decisions easier.` });
+  } else if (stats.bustPct >= 35) {
+    insights.push({ icon: 'down', text: `Bust-level outputs in ${stats.bustGames} of ${stats.gamesPlayed} games highlight real floor risk, especially in head-to-head matchup formats.` });
+  }
+
+  if (cvRatio < 0.4) {
+    insights.push({ icon: 'up', text: `Scoring was remarkably consistent week to week, with low variance suggesting a role that held steady regardless of opponent or game script.` });
+  } else if (cvRatio >= 0.7) {
+    insights.push({ icon: 'down', text: `High week-to-week variance makes the weekly ceiling hard to predict and leans the profile toward boom-or-bust territory.` });
+  }
+
+  if (ppgDelta > 12 && played.length >= 6) {
+    insights.push({ icon: 'up', text: `A notable late-season scoring surge, with the last four games averaging ${stats.last4Ppg.toFixed(1)} PPG versus the ${stats.ppg.toFixed(1)} season mark, suggests an expanding role heading into 2026.` });
+  } else if (ppgDelta < -15 && played.length >= 6) {
+    insights.push({ icon: 'down', text: `Production declined in the back half of the season, with the last four games averaging ${stats.last4Ppg.toFixed(1)} PPG against the ${stats.ppg.toFixed(1)} full-season average. Worth monitoring for offseason role clarity.` });
+  } else if (ppgDelta >= 0 && played.length >= 6) {
+    insights.push({ icon: 'neutral', text: `Scoring held relatively steady through the final stretch of the season, with the last four games averaging ${stats.last4Ppg.toFixed(1)} PPG close to the ${stats.ppg.toFixed(1)} full-season average.` });
+  }
+
+  if (topRate >= 70) {
+    insights.push({ icon: 'up', text: `Startable-range finishes (${pos1Label} or better) in ${topRate.toFixed(0)}% of weeks make this one of the more reliable floor profiles at the position.` });
+  }
+
+  if (played.length > 0) {
+    const topHalf = [...played].sort((a, b) => fpts(b, format) - fpts(a, format)).slice(0, Math.ceil(played.length / 2));
+    const topHalfPpg = topHalf.reduce((s, e) => s + fpts(e, format), 0) / topHalf.length;
+    if (topHalfPpg > stats.ppg * 1.5) {
+      insights.push({ icon: 'neutral', text: `When scoring is above median, the ceiling jumps significantly (${topHalfPpg.toFixed(1)} PPG in the top half of games), which gives this profile strong tournament upside.` });
+    }
+  }
+
+  return insights.slice(0, 5);
 }
 
 function generateUsageSummary(player: PlayerWithSeasons, deltaRows: { label: string; key: string; delta: number; seasonAvg: number; recentAvg: number; pct?: boolean }[], momentumScore: number): string[] {
@@ -2015,6 +2106,7 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
   const filterForTable: 'full' | 'last5' = gameFilter === 'full' ? 'full' : 'last5';
 
   const gameLogSummaryParas = generateGameLogSummary(player, entries, stats, format);
+  const performanceInsights = generatePerformancePatternInsights(player, entries, stats, format);
 
   return (
     <div className="sc-gamelog" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
@@ -2025,6 +2117,25 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
           {gameLogSummaryParas.map((p, i) => (
             <p key={i} style={{ fontSize: '14px', lineHeight: '1.75', color: 'var(--sc-text-muted, #94a3b8)', marginBottom: i < gameLogSummaryParas.length - 1 ? '12px' : 0 }}>{p}</p>
           ))}
+        </div>
+      )}
+
+      {performanceInsights.length > 0 && (
+        <div className="sc-overview__section" style={{ padding: '20px' }} data-testid="section-performance-insights">
+          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--sc-gold)', marginBottom: '4px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>Performance Pattern Insights</h2>
+          <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '16px' }}>Key patterns from the weekly scoring distribution this season.</p>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {performanceInsights.map((ins, i) => {
+              const dotColor = ins.icon === 'up' ? '#22c55e' : ins.icon === 'down' ? '#ef4444' : '#94a3b8';
+              const icon = ins.icon === 'up' ? '▲' : ins.icon === 'down' ? '▼' : '●';
+              return (
+                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }} data-testid={`insight-pattern-${i}`}>
+                  <span style={{ color: dotColor, fontSize: '9px', fontWeight: 700, marginTop: '4px', flexShrink: 0, letterSpacing: '0' }}>{icon}</span>
+                  {ins.text}
+                </li>
+              );
+            })}
+          </ul>
         </div>
       )}
 
