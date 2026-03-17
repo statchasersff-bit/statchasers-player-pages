@@ -113,45 +113,45 @@ function PlayerHeadshot({ playerId, name, team }: { playerId: string; name: stri
 
   return (
     <div className="relative flex-shrink-0" data-testid="img-headshot">
-      {logoUrl && (
-        <img
-          src={logoUrl}
-          alt=""
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            width: '160%',
-            height: '160%',
-            top: '-30%',
-            left: '-30%',
-            opacity: 0.1,
-            objectFit: 'contain',
-            pointerEvents: 'none',
-            userSelect: 'none',
-          }}
-        />
-      )}
       <div
         className="relative w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden"
         style={{
-          zIndex: 1,
           border: '3px solid #0b3a7a',
           boxShadow: '0 0 0 2px #d4af37 inset, 0 4px 16px rgba(11,58,122,0.18), 0 2px 6px rgba(0,0,0,0.10)',
-          background: '#fff',
+          background: '#f1f5f9',
         }}
       >
+        {logoUrl && (
+          <img
+            src={logoUrl}
+            alt=""
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
+              opacity: 0.18,
+              padding: '14%',
+              pointerEvents: 'none',
+              userSelect: 'none',
+              zIndex: 0,
+            }}
+          />
+        )}
         {!imgError ? (
           <img
             src={headshotUrl}
             alt={`${name} headshot`}
             className="w-full h-full object-cover"
-            style={{ background: '#f1f5f9' }}
+            style={{ position: 'relative', zIndex: 1 }}
             onError={() => setImgError(true)}
           />
         ) : (
           <div
             className="w-full h-full flex items-center justify-center"
-            style={{ background: '#f1f5f9' }}
+            style={{ position: 'relative', zIndex: 1 }}
             data-testid="img-headshot-fallback"
           >
             <User className="w-10 h-10 md:w-12 md:h-12 text-slate-400" />
