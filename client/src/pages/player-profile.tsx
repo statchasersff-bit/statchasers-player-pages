@@ -1006,37 +1006,61 @@ function generateFantasyOutlookSummary(player: PlayerWithSeasons, stats: ReturnT
   const pos = player.position || '';
   const name = player.name || 'This player';
   const team = player.team || '';
+  const teamFull = TEAM_FULL_NAMES[team] || team;
   const season = player.season || 2025;
   const ppg = stats.ppg.toFixed(1);
   const gp = stats.gamesPlayed;
-  const pos1Pct = stats.pos1Pct.toFixed(0);
+  const pos1PctNum = stats.pos1Pct;
+  const pos1Pct = pos1PctNum.toFixed(0);
   const topRate = stats.pos1Pct + stats.pos2Pct;
   const bustPct = stats.bustPct.toFixed(0);
   const ppgDelta = stats.ppg > 0 ? ((stats.last4Ppg - stats.ppg) / stats.ppg) * 100 : 0;
   const trendWord = ppgDelta > 8 ? 'trending upward' : ppgDelta < -12 ? 'cooling late in the year' : 'relatively steady';
   const roleWord = topRate >= 60 ? 'a reliable weekly starter' : topRate >= 35 ? 'a flex-range contributor' : 'a situational option';
-  const volWord = stats.volatility < 6 ? 'consistent' : stats.volatility < 9 ? 'moderately volatile' : 'boom-or-bust';
+  const cvRatio = stats.ppg > 0 ? stats.volatility / stats.ppg : 2;
+  const varianceWord = cvRatio < 0.4 ? 'low week-to-week variance' : cvRatio < 0.7 ? 'moderate week-to-week variance' : 'high week-to-week variance';
   const cp = player.careerProfile;
   const seasonsPlayed = cp ? cp.seasons : 1;
 
   const p1Parts: string[] = [];
   p1Parts.push(`${name} finished the ${season} season as ${roleWord} at the ${pos} position`);
-  if (team) p1Parts.push(`playing for the ${team}`);
+  if (teamFull) p1Parts.push(`playing for the ${teamFull}`);
   p1Parts.push(`averaging ${ppg} fantasy points per game across ${gp} games`);
   if (player.seasonRank) p1Parts.push(`and finishing as the ${pos}${player.seasonRank} overall`);
   const p1 = p1Parts.join(', ') + '.';
 
   let p2 = '';
   if (pos === 'QB') {
-    p2 = `His weekly output was ${volWord}, with a ${pos1Pct}% rate of finishing inside the top-12 at quarterback. Production was ${trendWord} heading into the final stretch of the season. For fantasy managers in redraft formats, that consistency grade and scoring volume place him in a defined tier heading into 2026 planning.`;
+    if (pos1PctNum >= 50) {
+      p2 = `He finished inside the top-12 at quarterback in ${pos1Pct}% of his starts, showing strong weekly reliability with ${varianceWord}. Production was ${trendWord} heading into the final stretch of the season. That ceiling rate places him firmly in QB1 territory for redraft formats heading into 2026.`;
+    } else if (pos1PctNum >= 25) {
+      p2 = `He landed in the top-12 at quarterback ${pos1Pct}% of the time, with ${varianceWord} in weekly output. Production was ${trendWord} late in the season. That finish rate puts him in the QB2 range for most formats, with upside in favorable matchups.`;
+    } else if (pos1PctNum > 0) {
+      p2 = `He reached the top-12 at quarterback in just ${pos1Pct}% of starts, with ${varianceWord} around a below-starter scoring baseline. Production was ${trendWord} heading into the final stretch. At this volume and finish rate, he projects as a streaming option rather than a reliable weekly starter for 2026.`;
+    } else {
+      p2 = `He did not finish inside the top-12 at quarterback in any of his ${gp} active games this season, with ${varianceWord} around a below-starter scoring level. Production was ${trendWord} late in the season. That output places him outside reliable starter range heading into 2026 planning.`;
+    }
   } else if (pos === 'RB') {
-    p2 = `His scoring profile was ${volWord} week to week, finishing as a top-${topRate >= 60 ? '24' : '36'} back ${pos1Pct}% of the time. Production was ${trendWord} late in the season. The bust rate of ${bustPct}% is an important floor signal for lineup decisions, particularly in PPR formats where receiving work adds a secondary scoring lane.`;
+    const tierLabel = topRate >= 60 ? '24' : '36';
+    if (topRate >= 40) {
+      p2 = `His scoring profile showed ${varianceWord}, finishing as a top-${tierLabel} back ${pos1Pct}% of the time. Production was ${trendWord} late in the season. The bust rate of ${bustPct}% is an important floor signal for lineup decisions, particularly in PPR formats where receiving work adds a secondary scoring lane.`;
+    } else {
+      p2 = `He finished as a top-${tierLabel} back in just ${pos1Pct}% of games, with ${varianceWord} around a below-starter workload. Production was ${trendWord} late in the season. A bust rate of ${bustPct}% reflects the limited upside weeks and signals a depth or handcuff profile rather than a consistent starter.`;
+    }
   } else if (pos === 'WR') {
-    p2 = `His weekly profile was ${volWord}, converting into a top-24 receiver finish ${pos1Pct}% of the time. Scoring was ${trendWord} over the second half of the schedule. Both his ceiling and floor are tied closely to target volume and red-zone opportunities, making matchup awareness more impactful in this profile than for run-first options.`;
+    if (pos1PctNum >= 30) {
+      p2 = `His weekly profile showed ${varianceWord}, converting into a top-24 receiver finish ${pos1Pct}% of the time. Scoring was ${trendWord} over the second half of the schedule. Both ceiling and floor are tied closely to target volume and red-zone looks, making matchup awareness more impactful than for run-first options.`;
+    } else {
+      p2 = `He reached a top-24 receiver finish in just ${pos1Pct}% of games, with ${varianceWord} around a limited target role. Scoring was ${trendWord} over the second half of the schedule. At this finish rate, he fits a depth or matchup-play profile rather than a reliable flex option.`;
+    }
   } else if (pos === 'TE') {
-    p2 = `His weekly output was ${volWord}, landing inside the top-12 at tight end ${pos1Pct}% of the time. Scoring was ${trendWord} as the season progressed. At tight end, where positional depth is thin, consistent target volume and red-zone involvement carry outsized value and define the floor better than touchdown rate alone.`;
+    if (pos1PctNum >= 30) {
+      p2 = `His weekly output showed ${varianceWord}, landing inside the top-12 at tight end ${pos1Pct}% of the time. Scoring was ${trendWord} as the season progressed. At tight end, where positional depth is thin, consistent target volume and red-zone involvement carry outsized value.`;
+    } else {
+      p2 = `He finished inside the top-12 at tight end in just ${pos1Pct}% of games, with ${varianceWord} around a limited role. Scoring was ${trendWord} as the season progressed. That finish rate reflects a depth profile rather than a reliable starting tight end option.`;
+    }
   } else {
-    p2 = `His weekly output was ${volWord}, finishing in a startable range ${pos1Pct}% of the time. Production was ${trendWord} late in the season.`;
+    p2 = `His weekly output showed ${varianceWord}, finishing in a startable range ${pos1Pct}% of the time. Production was ${trendWord} late in the season.`;
   }
 
   let p3 = '';
