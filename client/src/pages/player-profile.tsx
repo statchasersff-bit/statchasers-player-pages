@@ -1461,7 +1461,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
 
       {outlookParas.length > 0 && (
         <div className="sc-overview__section" style={{ padding: '20px' }}>
-          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--sc-gold)', marginBottom: '12px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>Fantasy Outlook Summary</h2>
+          <SectionHeader title="Fantasy Outlook Summary" />
           {outlookParas.map((p, i) => (
             <p key={i} style={{ fontSize: '14px', lineHeight: '1.75', color: 'var(--sc-text-muted, #94a3b8)', marginBottom: i < outlookParas.length - 1 ? '12px' : 0 }}>{p}</p>
           ))}
@@ -2262,7 +2262,7 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
 
       {gameLogSummaryParas.length > 0 && (
         <div className="sc-overview__section" style={{ padding: '20px' }} data-testid="section-gamelog-summary">
-          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--sc-gold)', marginBottom: '12px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>Season Game Log Summary</h2>
+          <SectionHeader title="Season Game Log Summary" />
           {gameLogSummaryParas.map((p, i) => (
             <p key={i} style={{ fontSize: '14px', lineHeight: '1.75', color: 'var(--sc-text-muted, #94a3b8)', marginBottom: i < gameLogSummaryParas.length - 1 ? '12px' : 0 }}>{p}</p>
           ))}
@@ -2900,7 +2900,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
 
       {usageSummaryParas.length > 0 && (
         <div className="sc-overview__section" style={{ padding: '20px' }} data-testid="section-usage-summary">
-          <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--sc-gold)', marginBottom: '12px', letterSpacing: '0.03em', textTransform: 'uppercase' }}>Role and Usage Summary</h2>
+          <SectionHeader title="Role and Usage Summary" />
           {usageSummaryParas.map((p, i) => (
             <p key={i} style={{ fontSize: '14px', lineHeight: '1.75', color: 'var(--sc-text-muted, #94a3b8)', marginBottom: i < usageSummaryParas.length - 1 ? '12px' : 0 }}>{p}</p>
           ))}
