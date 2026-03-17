@@ -5097,35 +5097,28 @@ export default function PlayerProfile() {
                   <span className="text-slate-300 dark:text-slate-600 text-xs">&middot;</span>
                   <span className="text-xs text-slate-500 dark:text-slate-400">{positionFull}</span>
                 </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 whitespace-nowrap" data-testid="text-player-meta">
+                  {[
+                    player.age ? `Age ${player.age}` : null,
+                    player.height ? formatHeight(player.height) : null,
+                    player.weight ? `${player.weight} lbs` : null,
+                    player.years_exp != null ? `Exp ${player.years_exp} yr${player.years_exp !== 1 ? 's' : ''}` : null,
+                  ].filter(Boolean).join('  |  ')}
+                </p>
+                <div className="flex items-center gap-1.5 mt-1" data-testid="text-player-status">
+                  {player.injury_status ? (
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
+                      {player.injury_status}
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
+                      {player.status || 'Active'}
+                    </span>
+                  )}
+                </div>
                 <div className="mt-2 h-[2px] w-10 rounded-full" style={{ background: teamColor }} />
-              </div>
-            </div>
-
-            {/* Row 2 on mobile / Col 2 on desktop: Scoring toggle + Bio meta */}
-            <div className="flex flex-col justify-center gap-3 py-3 md:px-5 md:py-2 flex-1 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
-              <div className="overflow-x-auto">
-                <ScoringFormatToggle format={scoringFormat} onChange={setScoringFormat} />
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap overflow-x-auto" data-testid="text-player-meta">
-                {[
-                  player.age ? `Age ${player.age}` : null,
-                  player.height ? formatHeight(player.height) : null,
-                  player.weight ? `${player.weight} lbs` : null,
-                  player.years_exp != null ? `Exp ${player.years_exp} yr${player.years_exp !== 1 ? 's' : ''}` : null,
-                ].filter(Boolean).join('  |  ')}
-              </p>
-              <div className="flex items-center gap-1.5" data-testid="text-player-status">
-                {player.injury_status ? (
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
-                    {player.injury_status}
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
-                    {player.status || 'Active'}
-                  </span>
-                )}
               </div>
             </div>
 
@@ -5166,11 +5159,12 @@ export default function PlayerProfile() {
 
       <div className="sticky top-[53px] z-40 border-b" style={{ background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(8px)', borderColor: 'rgba(11,58,122,0.08)' }}>
         <div className="max-w-7xl mx-auto px-4">
-          <nav
-            className="flex gap-0.5 overflow-x-auto -mb-px scrollbar-hide"
-            style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            data-testid="profile-tabs"
-          >
+          <div className="flex items-center justify-between gap-4">
+            <nav
+              className="flex gap-0.5 overflow-x-auto -mb-px scrollbar-hide flex-1"
+              style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              data-testid="profile-tabs"
+            >
             {TAB_CONFIG.map(tab => {
               const isActive = activeTab === tab.key;
               const Icon = tab.icon;
@@ -5209,7 +5203,11 @@ export default function PlayerProfile() {
                 </button>
               );
             })}
-          </nav>
+            </nav>
+            <div className="flex-shrink-0 py-2">
+              <ScoringFormatToggle format={scoringFormat} onChange={setScoringFormat} />
+            </div>
+          </div>
         </div>
       </div>
 
