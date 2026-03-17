@@ -106,18 +106,19 @@ function getHeadshotUrl(playerId: string): string {
   return `https://sleepercdn.com/content/nfl/players/thumb/${playerId}.jpg`;
 }
 
-function PlayerHeadshot({ playerId, name, team }: { playerId: string; name: string; teamColor?: string; team?: string }) {
+function PlayerHeadshot({ playerId, name, teamColor, team }: { playerId: string; name: string; teamColor?: string; team?: string }) {
   const [imgError, setImgError] = useState(false);
   const headshotUrl = getHeadshotUrl(playerId);
   const logoUrl = team ? `https://sleepercdn.com/images/team_logos/nfl/${team.toLowerCase()}.png` : null;
+  const ringColor = teamColor || '#0b3a7a';
 
   return (
     <div className="relative flex-shrink-0" data-testid="img-headshot">
       <div
         className="relative w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden"
         style={{
-          border: '3px solid #0b3a7a',
-          boxShadow: '0 0 0 2px #d4af37 inset, 0 4px 16px rgba(11,58,122,0.18), 0 2px 6px rgba(0,0,0,0.10)',
+          border: `3px solid ${ringColor}`,
+          boxShadow: `0 0 0 2px #d4af37 inset, 0 4px 16px ${ringColor}44, 0 2px 6px rgba(0,0,0,0.10)`,
           background: '#f1f5f9',
         }}
       >
