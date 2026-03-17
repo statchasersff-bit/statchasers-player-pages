@@ -3,7 +3,7 @@
  * Plugin Name: StatChasers Player Pages
  * Plugin URI:  https://statchasers.com
  * Description: Programmatic SEO-friendly NFL player pages powered by the Sleeper API. Adds /nfl/players/ directory and /nfl/players/{slug}/ profile pages using your theme's header/footer.
- * Version:     0.6.2
+ * Version:     0.6.3
  * Author:      StatChasers
  * Author URI:  https://statchasers.com
  * License:     GPL-2.0+
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'SC_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'SC_VERSION', '0.6.2' );
+define( 'SC_VERSION', '0.6.3' );
 define( 'SC_CRON_HOOK', 'sc_daily_player_refresh' );
 
 require_once SC_PLUGIN_DIR . 'includes/cache.php';
@@ -83,11 +83,7 @@ add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style('sc-google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap', [], null);
 
     $remote_base = 'https://statchasersff-bit.github.io/statchasers-player-pages/';
-    $manifest_url = $remote_base . '.vite/manifest.json';
     $api_base_url = defined('SC_API_BASE_URL') ? SC_API_BASE_URL : '';
-
-    $manifest = sc_fetch_remote_json( $manifest_url, 'sc_players_remote_manifest_v3', 10 * MINUTE_IN_SECONDS );
-    $use_remote = is_array($manifest);
 
     // Pre-load player data server-side on the index page so React renders instantly.
     $preloaded_indexed = null;
@@ -114,27 +110,14 @@ add_action('wp_enqueue_scripts', function () {
     if ( $preloaded_indexed !== null ) $config['preloadedIndexed'] = $preloaded_indexed;
     if ( $preloaded_players !== null ) $config['preloadedPlayers'] = $preloaded_players;
 
-    if ($use_remote) {
-        $entry = $manifest['src/wp-entry.tsx'] ?? $manifest['index.html'] ?? null;
-        if (!$entry || empty($entry['file'])) {
-            $use_remote = false;
-        } else {
-            $js_file = $entry['file'];
-            $css_files = $entry['css'] ?? [];
-            $ver = md5($js_file);
+    // Always load the bundled local JS/CSS — no remote GitHub Pages dependency for scripts.
+    $js_path  = plugin_dir_path(__FILE__) . 'assets/players.js';
+    $css_path = plugin_dir_path(__FILE__) . 'assets/players.css';
+    $ver      = file_exists($js_path) ? filemtime($js_path) : SC_VERSION;
 
-            foreach ($css_files as $i => $css) {
-                wp_enqueue_style("sc-players-css-remote-$i", $remote_base . $css, [], $ver);
-            }
-
-            wp_enqueue_script('sc-players-js', $remote_base . $js_file, [], $ver, true);
-            wp_localize_script('sc-players-js', 'scPlayersConfig', $config);
-            return;
-        }
+    if ( file_exists($css_path) ) {
+        wp_enqueue_style('sc-players-css', plugin_dir_url(__FILE__) . 'assets/players.css', [], $ver);
     }
-
-    $js_path = plugin_dir_path(__FILE__) . 'assets/players.js';
-    $ver = file_exists($js_path) ? filemtime($js_path) : SC_VERSION;
 
     wp_enqueue_script('sc-players-js', plugin_dir_url(__FILE__) . 'assets/players.js', [], $ver, true);
     wp_localize_script('sc-players-js', 'scPlayersConfig', $config);
