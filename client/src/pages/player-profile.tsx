@@ -5185,29 +5185,26 @@ export default function PlayerProfile() {
           >
             {TAB_CONFIG.map(tab => {
               const isActive = activeTab === tab.key;
-              const Icon = tab.icon;
-              const shortLabel = tab.key === 'gamelog' ? 'Log' : tab.key === 'rankings' ? 'Value' : tab.label.split(' ')[0];
               return (
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className="sc-profile-tab relative flex items-center justify-center whitespace-nowrap"
+                  className="sc-profile-tab relative whitespace-nowrap"
                   style={{
                     fontWeight: isActive ? 700 : 500,
                     color: isActive ? '#0b3a7a' : '#94a3b8',
-                    transition: 'color 0.2s ease, transform 0.15s ease',
+                    transition: 'color 0.2s ease',
                     cursor: 'pointer',
                     background: 'none',
                     border: 'none',
                     flex: 'none',
+                    display: 'inline-block',
                   }}
                   onMouseEnter={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.color = '#0b3a7a'; }}
                   onMouseLeave={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.color = '#94a3b8'; }}
                   data-testid={`tab-${tab.key}`}
                 >
-                  <Icon className="w-4 h-4 hidden sm:block" style={{ color: isActive ? '#d4af37' : 'inherit' }} />
-                  <span className="hidden sm:inline">{tab.label}</span>
-                  <span className="sm:hidden">{shortLabel}</span>
+                  {tab.label}
                   <span
                     className="absolute bottom-0 left-1 right-1 sm:left-2 sm:right-2 rounded-full"
                     style={{
