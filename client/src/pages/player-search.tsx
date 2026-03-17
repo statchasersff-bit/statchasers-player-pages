@@ -501,10 +501,10 @@ export default function PlayerSearch() {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <Zap className="w-5 h-5 sc-header__gold-icon" />
-                <span className="sc-header__kicker">Command Index</span>
+                <span className="sc-header__kicker">Player Intelligence</span>
               </div>
               <h1 className="sc-hero-title" data-testid="text-page-title">
-                NFL Player Command Index
+                Fantasy Football Player Stats &amp; Analytics
               </h1>
               <div className="sc-hero-underline" />
               <p className="sc-header__sub mt-3">
