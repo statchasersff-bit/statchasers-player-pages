@@ -619,7 +619,20 @@ function sc_fill_missing_weeks( $entries, $team, $season ) {
  * Fetch game logs from Sleeper API for the given seasons and save locally.
  * Returns true on success, WP_Error on failure.
  */
-function sc_fetch_and_save_game_logs( $seasons = [ 2023, 2024, 2025 ] ) {
+function sc_full_career_seasons() {
+    $current = (int) date( 'Y' );
+    /* Sleeper stats API has data from 2018 onwards */
+    $first = 2018;
+    /* If we're early in the year (before Sep) the current NFL season hasn't started yet */
+    $last  = ( (int) date( 'n' ) >= 9 ) ? $current : $current - 1;
+    return range( $first, $last );
+}
+
+function sc_fetch_and_save_game_logs( $seasons = null ) {
+    if ( $seasons === null ) {
+        $seasons = sc_full_career_seasons();
+    }
+
     $players   = sc_get_players();
     if ( empty( $players ) ) return new WP_Error( 'no_players', 'Player index is empty. Refresh it first.' );
 
@@ -629,7 +642,7 @@ function sc_fetch_and_save_game_logs( $seasons = [ 2023, 2024, 2025 ] ) {
     }
 
     sc_ensure_sc_dir();
-    @set_time_limit( 300 );
+    @set_time_limit( 600 );
 
     $errors = [];
     foreach ( $seasons as $season ) {

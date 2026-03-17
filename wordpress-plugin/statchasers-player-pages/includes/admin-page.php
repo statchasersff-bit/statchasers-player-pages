@@ -65,9 +65,10 @@ function sc_handle_admin_actions() {
 
     if ( isset( $_POST['sc_fetch_gamelogs'] ) ) {
         if ( ! check_admin_referer( 'sc_admin_nonce', 'sc_nonce' ) ) return;
-        $result = sc_fetch_and_save_game_logs( [ 2023, 2024, 2025 ] );
+        $result = sc_fetch_and_save_game_logs();
         if ( $result === true ) {
-            add_settings_error( 'statchasers', 'gamelogs_success', 'Game logs fetched and saved successfully for 2023, 2024, 2025!', 'success' );
+            $fetched_seasons = sc_full_career_seasons();
+            add_settings_error( 'statchasers', 'gamelogs_success', 'Game logs fetched and saved for full careers (' . min( $fetched_seasons ) . '-' . max( $fetched_seasons ) . ')!', 'success' );
         } else {
             $msg = is_wp_error( $result ) ? $result->get_error_message() : 'Unknown error.';
             add_settings_error( 'statchasers', 'gamelogs_error', 'Failed to fetch game logs: ' . $msg, 'error' );
@@ -392,8 +393,14 @@ function sc_render_admin_page() {
             <form method="post">
                 <?php wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' ); ?>
                 <p>
-                    <input type="submit" name="sc_fetch_gamelogs" class="button button-primary" value="Fetch Game Logs (2023-2025)" />
-                    <span class="description" style="margin-left: 8px;">Fetches from Sleeper API (3 seasons &times; 18 weeks). Takes ~2 min.</span>
+                <?php
+                $career_seasons = function_exists( 'sc_full_career_seasons' ) ? sc_full_career_seasons() : range( 2018, 2025 );
+                $season_min     = min( $career_seasons );
+                $season_max     = max( $career_seasons );
+                $season_count   = count( $career_seasons );
+                ?>
+                    <input type="submit" name="sc_fetch_gamelogs" class="button button-primary" value="Fetch Full Career Game Logs (<?php echo esc_attr( $season_min . '-' . $season_max ); ?>)" />
+                    <span class="description" style="margin-left: 8px;">Fetches <?php echo esc_html( $season_count ); ?> seasons &times; 18 weeks from Sleeper API. Takes ~<?php echo esc_html( round( $season_count * 1.5 ) ); ?> min.</span>
                 </p>
             </form>
         </div>

@@ -1045,9 +1045,7 @@ export async function registerRoutes(
     const seasonParam = req.query.season ? parseInt(req.query.season as string, 10) : null;
     const radius = 3;
 
-    const availableSeasons = [2025, 2024, 2023].filter(s => {
-      try { loadGameLogs(s); return true; } catch { return false; }
-    });
+    const availableSeasons = getAvailableSeasons();
     const activeSeason = seasonParam && availableSeasons.includes(seasonParam) ? seasonParam : availableSeasons[0] || 2025;
 
     if (!player.position) {
