@@ -62,6 +62,27 @@ function sc_handle_admin_actions() {
             add_settings_error( 'statchasers', 'indexed_error', 'Failed to generate indexed player list. Check the error log.', 'error' );
         }
     }
+
+    if ( isset( $_POST['sc_fetch_gamelogs'] ) ) {
+        if ( ! check_admin_referer( 'sc_admin_nonce', 'sc_nonce' ) ) return;
+        $result = sc_fetch_and_save_game_logs( [ 2023, 2024, 2025 ] );
+        if ( $result === true ) {
+            add_settings_error( 'statchasers', 'gamelogs_success', 'Game logs fetched and saved successfully for 2023, 2024, 2025!', 'success' );
+        } else {
+            $msg = is_wp_error( $result ) ? $result->get_error_message() : 'Unknown error.';
+            add_settings_error( 'statchasers', 'gamelogs_error', 'Failed to fetch game logs: ' . $msg, 'error' );
+        }
+    }
+
+    if ( isset( $_POST['sc_fetch_gamescores'] ) || isset( $_POST['sc_fetch_supplemental'] ) ) {
+        if ( ! check_admin_referer( 'sc_admin_nonce', 'sc_nonce' ) ) return;
+        $result = sc_fetch_and_save_supplemental_data();
+        if ( $result ) {
+            add_settings_error( 'statchasers', 'supplemental_success', 'Supplemental data (bye weeks, game scores, bios, dynasty) fetched successfully!', 'success' );
+        } else {
+            add_settings_error( 'statchasers', 'supplemental_error', 'Some supplemental files failed. Check error log.', 'warning' );
+        }
+    }
 }
 
 function sc_auto_create_container_pages() {
@@ -333,18 +354,15 @@ function sc_render_admin_page() {
 
         <!-- Game Log Data -->
         <div class="card" style="max-width: 700px; padding: 20px; margin-top: 20px;">
-            <h2>Game Log Data</h2>
+            <h2>Game Log Data (Sleeper API)</h2>
             <?php
-            $gl_last_fetch    = get_option( 'sc_gamelogs_last_fetch', 'Never' );
-            $gs_last_fetch    = get_option( 'sc_gamescores_last_fetch', 'Never' );
-            $gl_seasons       = function_exists( 'sc_get_available_seasons' ) ? sc_get_available_seasons() : array();
-            $gl_season_count  = count( $gl_seasons );
-            $gs_path          = function_exists( 'sc_get_game_scores_path' ) ? sc_get_game_scores_path() : '';
-            $gs_exists        = $gs_path && file_exists( $gs_path );
+            $gl_last_fetch   = get_option( 'sc_gamelogs_last_fetch', 'Never' );
+            $gl_seasons      = function_exists( 'sc_get_available_seasons' ) ? sc_get_available_seasons() : array();
+            $gl_season_count = count( $gl_seasons );
             ?>
             <table class="form-table">
                 <tr>
-                    <th>Game Logs Last Fetch</th>
+                    <th>Last Fetch</th>
                     <td><strong><?php echo esc_html( $gl_last_fetch ); ?></strong></td>
                 </tr>
                 <tr>
@@ -362,7 +380,7 @@ function sc_render_admin_page() {
                     <td>
                         <?php
                         foreach ( $gl_seasons as $s ) {
-                            $s_logs = function_exists( 'sc_load_game_logs' ) ? sc_load_game_logs( $s ) : array();
+                            $s_logs  = function_exists( 'sc_load_game_logs' ) ? sc_load_game_logs( $s ) : array();
                             $s_count = is_array( $s_logs ) ? count( $s_logs ) : 0;
                             echo '<strong>' . esc_html( $s ) . ':</strong> ' . esc_html( number_format( $s_count ) ) . ' players&nbsp;&nbsp;';
                         }
@@ -370,27 +388,52 @@ function sc_render_admin_page() {
                     </td>
                 </tr>
                 <?php endif; ?>
-                <tr>
-                    <th>Game Scores Last Fetch</th>
-                    <td><strong><?php echo esc_html( $gs_last_fetch ); ?></strong></td>
-                </tr>
-                <tr>
-                    <th>Game Scores File</th>
-                    <td><?php echo $gs_exists ? '<span style="color:green;">Exists</span>' : '<span style="color:red;">Not found</span>'; ?></td>
-                </tr>
             </table>
-            <form method="post" style="display: inline-block; margin-right: 8px;">
+            <form method="post">
                 <?php wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' ); ?>
                 <p>
-                    <input type="submit" name="sc_fetch_gamelogs" class="button button-primary" value="Fetch Game Logs" />
-                    <span class="description" style="margin-left: 8px;">Fetches from Sleeper API (3 seasons &times; 18 weeks). Takes ~1-2 min.</span>
+                    <input type="submit" name="sc_fetch_gamelogs" class="button button-primary" value="Fetch Game Logs (2023-2025)" />
+                    <span class="description" style="margin-left: 8px;">Fetches from Sleeper API (3 seasons &times; 18 weeks). Takes ~2 min.</span>
                 </p>
             </form>
-            <form method="post" style="display: inline-block;">
+        </div>
+
+        <!-- Supplemental Data -->
+        <div class="card" style="max-width: 700px; padding: 20px; margin-top: 20px;">
+            <h2>Supplemental Data</h2>
+            <p style="color: #666;">Bios, dynasty rankings, game scores, and bye weeks are downloaded from GitHub Pages once and served locally. No Replit server required.</p>
+            <?php
+            $supp_last_fetch = get_option( 'sc_supplemental_last_fetch', 'Never' );
+            $files_to_check  = [];
+            if ( function_exists( 'sc_get_bios_path' ) )        $files_to_check['Bios']           = sc_get_bios_path();
+            if ( function_exists( 'sc_get_dynasty_path' ) )     $files_to_check['Dynasty Rankings']= sc_get_dynasty_path();
+            if ( function_exists( 'sc_get_game_scores_path' ) ) $files_to_check['Game Scores']    = sc_get_game_scores_path();
+            if ( function_exists( 'sc_get_bye_weeks_path' ) )   $files_to_check['Bye Weeks']      = sc_get_bye_weeks_path();
+            ?>
+            <table class="form-table">
+                <tr>
+                    <th>Last Fetch</th>
+                    <td><strong><?php echo esc_html( $supp_last_fetch ); ?></strong></td>
+                </tr>
+                <?php foreach ( $files_to_check as $label => $path ) : ?>
+                <tr>
+                    <th><?php echo esc_html( $label ); ?></th>
+                    <td>
+                        <?php if ( file_exists( $path ) ) : ?>
+                            <span style="color:green;">&#10003; Cached</span>
+                            <small style="color:#999; margin-left:8px;"><?php echo esc_html( size_format( filesize( $path ) ) ); ?></small>
+                        <?php else : ?>
+                            <span style="color:red;">Not fetched</span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </table>
+            <form method="post">
                 <?php wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' ); ?>
                 <p>
-                    <input type="submit" name="sc_fetch_gamescores" class="button button-secondary" value="Fetch Game Scores" />
-                    <span class="description" style="margin-left: 8px;">Fetches from ESPN API.</span>
+                    <input type="submit" name="sc_fetch_supplemental" class="button button-primary" value="Fetch Supplemental Data" />
+                    <span class="description" style="margin-left: 8px;">Downloads bios, dynasty, game scores, bye weeks from GitHub Pages.</span>
                 </p>
             </form>
         </div>

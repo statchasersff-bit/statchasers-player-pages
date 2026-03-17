@@ -380,3 +380,395 @@ function sc_generate_indexed_players() {
 
     return true;
 }
+
+/* ====================================================================
+ * GAME LOG DATA — paths, loaders, helpers
+ * ==================================================================== */
+
+function sc_get_game_log_dir() {
+    $upload_dir = wp_upload_dir();
+    return $upload_dir['basedir'] . '/statchasers/game_logs';
+}
+
+function sc_get_game_scores_path() {
+    $upload_dir = wp_upload_dir();
+    return $upload_dir['basedir'] . '/statchasers/game_scores.json';
+}
+
+function sc_get_bios_path() {
+    $upload_dir = wp_upload_dir();
+    return $upload_dir['basedir'] . '/statchasers/bios.json';
+}
+
+function sc_get_dynasty_path() {
+    $upload_dir = wp_upload_dir();
+    return $upload_dir['basedir'] . '/statchasers/dynasty_rankings.json';
+}
+
+function sc_get_bye_weeks_path() {
+    $upload_dir = wp_upload_dir();
+    return $upload_dir['basedir'] . '/statchasers/bye_weeks.json';
+}
+
+function sc_ensure_sc_dir() {
+    $upload_dir = wp_upload_dir();
+    $sc_dir = $upload_dir['basedir'] . '/statchasers';
+    if ( ! file_exists( $sc_dir ) ) wp_mkdir_p( $sc_dir );
+    $gl_dir = $sc_dir . '/game_logs';
+    if ( ! file_exists( $gl_dir ) ) wp_mkdir_p( $gl_dir );
+    return $sc_dir;
+}
+
+function sc_get_available_seasons() {
+    static $cache = null;
+    if ( $cache !== null ) return $cache;
+    $dir = sc_get_game_log_dir();
+    if ( ! is_dir( $dir ) ) { $cache = []; return $cache; }
+    $files   = glob( $dir . '/*.json' );
+    $seasons = [];
+    foreach ( $files as $f ) {
+        $name = basename( $f, '.json' );
+        if ( is_numeric( $name ) ) $seasons[] = (int) $name;
+    }
+    rsort( $seasons );
+    $cache = $seasons;
+    return $cache;
+}
+
+function sc_load_game_logs( $season ) {
+    static $cache = [];
+    if ( isset( $cache[ $season ] ) ) return $cache[ $season ];
+    $file = sc_get_game_log_dir() . '/' . $season . '.json';
+    if ( ! file_exists( $file ) ) { $cache[ $season ] = []; return []; }
+    $data = json_decode( file_get_contents( $file ), true );
+    $cache[ $season ] = is_array( $data ) ? $data : [];
+    return $cache[ $season ];
+}
+
+function sc_get_season_max_week( $season ) {
+    $logs = sc_load_game_logs( $season );
+    $max  = 0;
+    foreach ( $logs as $entries ) {
+        foreach ( $entries as $e ) {
+            if ( $e['week'] > $max ) $max = $e['week'];
+        }
+    }
+    return max( $max, $season >= 2021 ? 18 : 17 );
+}
+
+function sc_load_game_scores() {
+    static $cache = null;
+    if ( $cache !== null ) return $cache;
+    $path = sc_get_game_scores_path();
+    if ( ! file_exists( $path ) ) { $cache = []; return []; }
+    $data  = json_decode( file_get_contents( $path ), true );
+    $cache = is_array( $data ) ? $data : [];
+    return $cache;
+}
+
+function sc_get_game_score( $season, $team, $week ) {
+    if ( ! $team ) return null;
+    $scores = sc_load_game_scores();
+    $season_scores = isset( $scores[ (string) $season ] ) ? $scores[ (string) $season ] : null;
+    if ( ! $season_scores ) return null;
+    $t   = sc_normalize_team( $team );
+    $key = $t . '_' . $week;
+    $entry = isset( $season_scores[ $key ] ) ? $season_scores[ $key ] : null;
+    if ( ! $entry ) return null;
+    return [ 'tm' => $entry['tm'], 'opp' => $entry['opp'], 'r' => $entry['r'] ];
+}
+
+function sc_load_bios() {
+    static $cache = null;
+    if ( $cache !== null ) return $cache;
+    $path = sc_get_bios_path();
+    if ( ! file_exists( $path ) ) { $cache = []; return []; }
+    $data  = json_decode( file_get_contents( $path ), true );
+    $cache = is_array( $data ) ? $data : [];
+    return $cache;
+}
+
+function sc_load_dynasty() {
+    static $cache = null;
+    if ( $cache !== null ) return $cache;
+    $path = sc_get_dynasty_path();
+    if ( ! file_exists( $path ) ) { $cache = []; return []; }
+    $data  = json_decode( file_get_contents( $path ), true );
+    $cache = is_array( $data ) ? $data : [];
+    return $cache;
+}
+
+function sc_load_bye_weeks() {
+    static $cache = null;
+    if ( $cache !== null ) return $cache;
+    $path = sc_get_bye_weeks_path();
+    if ( ! file_exists( $path ) ) { $cache = []; return []; }
+    $data  = json_decode( file_get_contents( $path ), true );
+    $cache = is_array( $data ) ? $data : [];
+    return $cache;
+}
+
+function sc_get_bye_week( $season, $team ) {
+    if ( ! $team ) return null;
+    $byes = sc_load_bye_weeks();
+    $season_byes = isset( $byes[ (string) $season ] ) ? $byes[ (string) $season ] : null;
+    if ( ! $season_byes ) return null;
+    $t = sc_normalize_team( $team );
+    return isset( $season_byes[ $t ] ) ? $season_byes[ $t ] : null;
+}
+
+/* ------------------------------------------------------------------
+ * Participation check (mirrors hasParticipation in routes.ts)
+ * ------------------------------------------------------------------ */
+function sc_has_participation( $stats, $position ) {
+    $s = is_array( $stats ) ? $stats : [];
+    if ( ( isset( $s['off_snp'] ) && (float) $s['off_snp'] > 0 ) ) return true;
+    if ( $position === 'QB' ) {
+        return ( ( isset( $s['pass_att'] ) && (float)$s['pass_att'] > 0 )
+              || ( isset( $s['rush_att'] ) && (float)$s['rush_att'] > 0 ) );
+    }
+    if ( $position === 'K' ) {
+        return ( ( isset( $s['fga'] ) && (float)$s['fga'] > 0 )
+              || ( isset( $s['xpa'] ) && (float)$s['xpa'] > 0 ) );
+    }
+    return ( ( isset( $s['rec_tgt'] )  && (float)$s['rec_tgt']  > 0 )
+          || ( isset( $s['rec'] )      && (float)$s['rec']      > 0 )
+          || ( isset( $s['rush_att'] ) && (float)$s['rush_att'] > 0 )
+          || ( isset( $s['pass_att'] ) && (float)$s['pass_att'] > 0 ) );
+}
+
+/* ------------------------------------------------------------------
+ * Fantasy points (mirrors getEntryPoints in shared/scoring.ts)
+ * ------------------------------------------------------------------ */
+function sc_get_entry_points( $stats, $format = 'ppr' ) {
+    $s   = is_array( $stats ) ? $stats : [];
+    $ppr = isset( $s['pts_ppr'] ) ? (float)$s['pts_ppr'] : 0;
+    if ( $format === 'ppr' ) return $ppr;
+    if ( $format === 'half' ) {
+        if ( isset( $s['pts_half_ppr'] ) && $s['pts_half_ppr'] !== null ) {
+            return (float)$s['pts_half_ppr'];
+        }
+        $rec = isset( $s['rec'] ) ? (float)$s['rec'] : 0;
+        return $ppr - ( $rec * 0.5 );
+    }
+    /* standard */
+    $rec = isset( $s['rec'] ) ? (float)$s['rec'] : 0;
+    return $ppr - $rec;
+}
+
+/* ------------------------------------------------------------------
+ * Fill missing weeks (bye weeks + games not played)
+ * mirrors fillMissingWeeks in routes.ts
+ * ------------------------------------------------------------------ */
+function sc_fill_missing_weeks( $entries, $team, $season ) {
+    if ( empty( $entries ) ) return $entries;
+    $bye_week      = sc_get_bye_week( $season, $team );
+    $existing_weeks = [];
+    foreach ( $entries as $e ) $existing_weeks[ $e['week'] ] = true;
+    $max_week = sc_get_season_max_week( $season );
+    $filled   = $entries;
+
+    for ( $w = 1; $w <= $max_week; $w++ ) {
+        if ( isset( $existing_weeks[ $w ] ) ) continue;
+        $is_bye = ( $bye_week === $w );
+        $filled[] = [
+            'week'        => $w,
+            'opp'         => $is_bye ? 'BYE' : "\u2014",
+            'stats'       => [ 'pts_ppr' => 0 ],
+            'pos_rank'    => null,
+            'opp_rank_vs_pos' => null,
+            'game_status' => $is_bye ? 'bye' : 'out',
+        ];
+    }
+
+    usort( $filled, function( $a, $b ) { return $a['week'] - $b['week']; } );
+
+    foreach ( $filled as &$e ) {
+        if ( isset( $e['game_status'] ) && $e['game_status'] !== '' ) {
+            /* already set (bye/out from the fill above, or active from original) */
+            if ( $e['game_status'] === 'active' && ! isset( $e['score'] ) ) {
+                $score = sc_get_game_score( $season, $team, $e['week'] );
+                if ( $score ) $e['score'] = $score;
+            }
+            continue;
+        }
+        $s = isset( $e['stats'] ) ? $e['stats'] : [];
+        $has = ( isset( $s['off_snp'] ) && (float)$s['off_snp'] > 0 )
+            || ( isset( $s['pass_att'] ) && (float)$s['pass_att'] > 0 )
+            || ( isset( $s['rush_att'] ) && (float)$s['rush_att'] > 0 )
+            || ( isset( $s['rec_tgt'] )  && (float)$s['rec_tgt']  > 0 )
+            || ( isset( $s['rec'] )      && (float)$s['rec']      > 0 );
+        if ( $has ) {
+            $e['game_status'] = 'active';
+            $score = sc_get_game_score( $season, $team, $e['week'] );
+            if ( $score ) $e['score'] = $score;
+        } else {
+            $e['game_status'] = 'out';
+        }
+    }
+    unset( $e );
+
+    return $filled;
+}
+
+/* ====================================================================
+ * ADMIN FETCH FUNCTIONS
+ * ==================================================================== */
+
+/**
+ * Fetch game logs from Sleeper API for the given seasons and save locally.
+ * Returns true on success, WP_Error on failure.
+ */
+function sc_fetch_and_save_game_logs( $seasons = [ 2023, 2024, 2025 ] ) {
+    $players   = sc_get_players();
+    if ( empty( $players ) ) return new WP_Error( 'no_players', 'Player index is empty. Refresh it first.' );
+
+    $player_map = [];
+    foreach ( $players as $p ) {
+        $player_map[ $p['id'] ] = $p;
+    }
+
+    sc_ensure_sc_dir();
+    @set_time_limit( 300 );
+
+    $errors = [];
+    foreach ( $seasons as $season ) {
+        $season_data = [];
+        for ( $week = 1; $week <= 18; $week++ ) {
+            $url = 'https://api.sleeper.com/stats/nfl/' . $season . '/' . $week . '?season_type=regular';
+            $res = wp_remote_get( $url, [ 'timeout' => 15 ] );
+            if ( is_wp_error( $res ) || wp_remote_retrieve_response_code( $res ) !== 200 ) {
+                continue;
+            }
+            $week_data = json_decode( wp_remote_retrieve_body( $res ), true );
+            if ( ! is_array( $week_data ) ) continue;
+
+            foreach ( $week_data as $entry ) {
+                if ( ! is_array( $entry ) ) continue;
+                $pid    = (string) ( isset( $entry['player_id'] ) ? $entry['player_id'] : '' );
+                $player = isset( $player_map[ $pid ] ) ? $player_map[ $pid ] : null;
+                if ( ! $player ) continue;
+                $stats  = isset( $entry['stats'] ) && is_array( $entry['stats'] ) ? $entry['stats'] : [];
+                if ( empty( $stats ) || ! isset( $stats['gp'] ) ) continue;
+                $pos    = isset( $player['position'] ) ? $player['position'] : '';
+                if ( ! in_array( $pos, [ 'QB', 'RB', 'WR', 'TE', 'K' ], true ) ) continue;
+                $opp    = sc_normalize_team( isset( $entry['opponent'] ) ? $entry['opponent'] : '' );
+                if ( ! isset( $season_data[ $pid ] ) ) $season_data[ $pid ] = [];
+                $season_data[ $pid ][] = [
+                    'week'  => $week,
+                    'opp'   => $opp ?: "\u2014",
+                    'stats' => sc_extract_player_stats( $stats, $pos ),
+                ];
+            }
+            usleep( 250000 ); /* 250ms rate limit */
+        }
+
+        $out = sc_get_game_log_dir() . '/' . $season . '.json';
+        file_put_contents( $out, wp_json_encode( $season_data ) );
+    }
+
+    update_option( 'sc_gamelogs_last_fetch', current_time( 'mysql' ) );
+
+    /* Bust rank caches */
+    foreach ( $seasons as $season ) {
+        foreach ( [ 'ppr', 'half', 'standard' ] as $fmt ) {
+            delete_transient( 'sc_wranks_' . $season . '_' . $fmt );
+            delete_transient( 'sc_oranks_' . $season . '_' . $fmt );
+            delete_transient( 'sc_team_agg_' . $season );
+        }
+    }
+
+    return true;
+}
+
+function sc_extract_player_stats( $s, $position ) {
+    $base = [
+        'pts_ppr'      => isset( $s['pts_ppr'] )       ? round( (float)$s['pts_ppr'], 2 )      : 0,
+        'pts_half_ppr' => isset( $s['pts_half_ppr'] )  ? round( (float)$s['pts_half_ppr'], 2 ) : null,
+        'off_snp'      => isset( $s['off_snp'] )        ? (int)$s['off_snp']    : 0,
+        'tm_off_snp'   => isset( $s['tm_off_snp'] )     ? (int)$s['tm_off_snp'] : 0,
+    ];
+    if ( $position === 'QB' ) {
+        return array_merge( $base, [
+            'pass_att' => isset( $s['pass_att'] ) ? (int)$s['pass_att'] : 0,
+            'pass_cmp' => isset( $s['pass_cmp'] ) ? (int)$s['pass_cmp'] : 0,
+            'pass_yd'  => isset( $s['pass_yd']  ) ? (float)$s['pass_yd'] : 0,
+            'pass_td'  => isset( $s['pass_td']  ) ? (int)$s['pass_td'] : 0,
+            'pass_int' => isset( $s['pass_int'] ) ? (int)$s['pass_int'] : 0,
+            'rush_att' => isset( $s['rush_att'] ) ? (int)$s['rush_att'] : 0,
+            'rush_yd'  => isset( $s['rush_yd']  ) ? (float)$s['rush_yd'] : 0,
+            'rush_td'  => isset( $s['rush_td']  ) ? (int)$s['rush_td'] : 0,
+        ]);
+    }
+    if ( $position === 'RB' ) {
+        return array_merge( $base, [
+            'rush_att' => isset( $s['rush_att'] ) ? (int)$s['rush_att'] : 0,
+            'rush_yd'  => isset( $s['rush_yd']  ) ? (float)$s['rush_yd'] : 0,
+            'rush_td'  => isset( $s['rush_td']  ) ? (int)$s['rush_td'] : 0,
+            'rec_tgt'  => isset( $s['rec_tgt']  ) ? (int)$s['rec_tgt'] : 0,
+            'rec'      => isset( $s['rec']       ) ? (int)$s['rec'] : 0,
+            'rec_yd'   => isset( $s['rec_yd']   ) ? (float)$s['rec_yd'] : 0,
+            'rec_td'   => isset( $s['rec_td']   ) ? (int)$s['rec_td'] : 0,
+        ]);
+    }
+    if ( $position === 'WR' || $position === 'TE' ) {
+        return array_merge( $base, [
+            'rec_tgt'  => isset( $s['rec_tgt']  ) ? (int)$s['rec_tgt'] : 0,
+            'rec'      => isset( $s['rec']       ) ? (int)$s['rec'] : 0,
+            'rec_yd'   => isset( $s['rec_yd']   ) ? (float)$s['rec_yd'] : 0,
+            'rec_td'   => isset( $s['rec_td']   ) ? (int)$s['rec_td'] : 0,
+            'rush_att' => isset( $s['rush_att'] ) ? (int)$s['rush_att'] : 0,
+            'rush_yd'  => isset( $s['rush_yd']  ) ? (float)$s['rush_yd'] : 0,
+            'rush_td'  => isset( $s['rush_td']  ) ? (int)$s['rush_td'] : 0,
+        ]);
+    }
+    if ( $position === 'K' ) {
+        return array_merge( $base, [
+            'fgm'     => isset( $s['fgm']     ) ? (int)$s['fgm'] : 0,
+            'fga'     => isset( $s['fga']     ) ? (int)$s['fga'] : 0,
+            'fgm_lng' => isset( $s['fgm_lng'] ) ? (int)$s['fgm_lng'] : 0,
+            'xpm'     => isset( $s['xpm']     ) ? (int)$s['xpm'] : 0,
+            'xpa'     => isset( $s['xpa']     ) ? (int)$s['xpa'] : 0,
+        ]);
+    }
+    return $base;
+}
+
+/**
+ * Download supplemental data (bye_weeks, game_scores, bios, dynasty) from
+ * GitHub Pages and save locally. This only needs to run periodically.
+ */
+function sc_fetch_and_save_supplemental_data() {
+    $base = 'https://statchasersff-bit.github.io/statchasers-player-pages/data/';
+    sc_ensure_sc_dir();
+
+    $files = [
+        'bye_weeks.json'          => sc_get_bye_weeks_path(),
+        'game_scores.json'        => sc_get_game_scores_path(),
+        'bios.json'               => sc_get_bios_path(),
+        'dynasty_rankings.json'   => sc_get_dynasty_path(),
+    ];
+
+    $ok = true;
+    foreach ( $files as $remote_file => $local_path ) {
+        $res = wp_remote_get( $base . $remote_file, [ 'timeout' => 30 ] );
+        if ( is_wp_error( $res ) || wp_remote_retrieve_response_code( $res ) !== 200 ) {
+            error_log( 'StatChasers: Failed to fetch ' . $remote_file );
+            $ok = false;
+            continue;
+        }
+        $body = wp_remote_retrieve_body( $res );
+        if ( empty( $body ) || json_decode( $body ) === null ) {
+            error_log( 'StatChasers: Invalid JSON for ' . $remote_file );
+            $ok = false;
+            continue;
+        }
+        file_put_contents( $local_path, $body );
+    }
+
+    if ( $ok ) {
+        update_option( 'sc_supplemental_last_fetch', current_time( 'mysql' ) );
+        update_option( 'sc_gamescores_last_fetch', current_time( 'mysql' ) );
+    }
+    return $ok;
+}

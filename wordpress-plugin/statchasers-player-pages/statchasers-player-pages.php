@@ -20,6 +20,7 @@ define( 'SC_VERSION', '0.6.3' );
 define( 'SC_CRON_HOOK', 'sc_daily_player_refresh' );
 
 require_once SC_PLUGIN_DIR . 'includes/cache.php';
+require_once SC_PLUGIN_DIR . 'includes/gamelogs.php';
 require_once SC_PLUGIN_DIR . 'includes/rewrite.php';
 require_once SC_PLUGIN_DIR . 'includes/rest.php';
 require_once SC_PLUGIN_DIR . 'includes/seo.php';
@@ -82,35 +83,43 @@ add_action('wp_enqueue_scripts', function () {
 
     wp_enqueue_style('sc-google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap', [], null);
 
-    $remote_base = 'https://statchasersff-bit.github.io/statchasers-player-pages/';
-    $api_base_url = defined('SC_API_BASE_URL') ? SC_API_BASE_URL : '';
-
-    // Pre-load player data server-side on the index page so React renders instantly.
+    /* Preload from local data — no external dependencies needed. */
     $preloaded_indexed = null;
     $preloaded_players = null;
+
     if ( function_exists('sc_is_players_index') && sc_is_players_index() ) {
-        $preloaded_indexed = sc_fetch_remote_json(
-            $remote_base . 'data/indexed-players.json',
-            'sc_preload_indexed_v1',
-            6 * HOUR_IN_SECONDS
-        );
-        $preloaded_players = sc_fetch_remote_json(
-            $remote_base . 'data/players.json',
-            'sc_preload_players_v1',
-            6 * HOUR_IN_SECONDS
-        );
+        /* Indexed data for the directory listing. */
+        $slugs  = function_exists('sc_get_indexed_slugs')   ? sc_get_indexed_slugs()   : [];
+        $byTeam = function_exists('sc_get_indexed_by_team') ? sc_get_indexed_by_team() : [];
+        if ( ! empty( $slugs ) || ! empty( $byTeam ) ) {
+            $preloaded_indexed = [ 'slugs' => $slugs, 'byTeam' => $byTeam ];
+        }
+
+        /* Full player list for instant local search (no API round-trip). */
+        $all_players = function_exists('sc_get_players') ? sc_get_players() : [];
+        if ( ! empty( $all_players ) ) {
+            $preloaded_players = array_values( array_map( function( $p ) {
+                return [
+                    'id'       => $p['id'],
+                    'name'     => $p['name'],
+                    'slug'     => $p['slug'],
+                    'team'     => isset( $p['team'] )     ? $p['team']     : '',
+                    'position' => isset( $p['position'] ) ? $p['position'] : '',
+                ];
+            }, $all_players ) );
+        }
     }
 
     $config = [
         'restUrl'    => rest_url('statchasers/v1/players'),
+        'restBase'   => untrailingslashit( rest_url('statchasers/v1') ),
         'baseUrl'    => home_url('/nfl/players/'),
         'indexedUrl' => rest_url('statchasers/v1/indexed-players'),
-        'apiBaseUrl' => $api_base_url,
+        'apiBaseUrl' => '',
     ];
     if ( $preloaded_indexed !== null ) $config['preloadedIndexed'] = $preloaded_indexed;
     if ( $preloaded_players !== null ) $config['preloadedPlayers'] = $preloaded_players;
 
-    // Always load the bundled local JS/CSS — no remote GitHub Pages dependency for scripts.
     $js_path  = plugin_dir_path(__FILE__) . 'assets/players.js';
     $css_path = plugin_dir_path(__FILE__) . 'assets/players.css';
     $ver      = file_exists($js_path) ? filemtime($js_path) : SC_VERSION;

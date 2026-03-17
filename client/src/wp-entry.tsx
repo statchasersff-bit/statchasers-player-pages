@@ -10,6 +10,7 @@ declare global {
   interface Window {
     scPlayersConfig?: {
       restUrl?: string;
+      restBase?: string;
       baseUrl?: string;
       indexedUrl?: string;
       apiBaseUrl?: string;
@@ -20,42 +21,51 @@ declare global {
 }
 
 const config = window.scPlayersConfig || {};
-const STATIC_BASE = "https://statchasersff-bit.github.io/statchasers-player-pages/data";
+const REST_BASE = (config.restBase || "/wp-json/statchasers/v1").replace(/\/+$/, "");
 
-function mapApiToStatic(url: string): string {
+function mapApiUrl(url: string): string {
   try {
     const parsed = new URL(url, window.location.origin);
     const pathname = parsed.pathname;
     const params = parsed.searchParams;
 
     if (pathname === "/api/players" || pathname === "/api/players/") {
-      return `${STATIC_BASE}/players.json`;
+      const q = params.get("q") || "";
+      return `${REST_BASE}/players?q=${encodeURIComponent(q)}`;
     }
 
     if (pathname === "/api/indexed-players" || pathname === "/api/indexed-players/") {
-      return `${STATIC_BASE}/indexed-players.json`;
+      return `${REST_BASE}/indexed-players`;
     }
 
     const profileMatch = pathname.match(/^\/api\/players\/([^/]+)\/?$/);
     if (profileMatch) {
       const slug = profileMatch[1];
       const format = params.get("format") || "ppr";
-      return `${STATIC_BASE}/players/${slug}/profile-${format}.json`;
+      const season = params.get("season") || "";
+      let apiUrl = `${REST_BASE}/player/${encodeURIComponent(slug)}?format=${format}`;
+      if (season) apiUrl += `&season=${season}`;
+      return apiUrl;
     }
 
     const gameLogMatch = pathname.match(/^\/api\/players\/([^/]+)\/game-log\/?$/);
     if (gameLogMatch) {
       const slug = gameLogMatch[1];
-      const season = params.get("season") || "2025";
+      const season = params.get("season") || "";
       const format = params.get("format") || "ppr";
-      return `${STATIC_BASE}/players/${slug}/game-log-${season}-${format}.json`;
+      let apiUrl = `${REST_BASE}/player/${encodeURIComponent(slug)}/game-log?format=${format}`;
+      if (season) apiUrl += `&season=${season}`;
+      return apiUrl;
     }
 
     const relatedMatch = pathname.match(/^\/api\/players\/([^/]+)\/related\/?$/);
     if (relatedMatch) {
       const slug = relatedMatch[1];
       const format = params.get("format") || "ppr";
-      return `${STATIC_BASE}/players/${slug}/related-${format}.json`;
+      const season = params.get("season") || "";
+      let apiUrl = `${REST_BASE}/player/${encodeURIComponent(slug)}/related?format=${format}`;
+      if (season) apiUrl += `&season=${season}`;
+      return apiUrl;
     }
 
     const newsMatch = pathname.match(/^\/api\/players\/([^/]+)\/news\/?$/);
@@ -64,16 +74,12 @@ function mapApiToStatic(url: string): string {
     }
   } catch {}
 
-  if (config.apiBaseUrl) {
-    const base = config.apiBaseUrl.replace(/\/+$/, "");
-    return base + url;
-  }
   return url;
 }
 
 function rewriteUrl(url: string): string {
   if (url.startsWith("/api/")) {
-    return mapApiToStatic(url);
+    return mapApiUrl(url);
   }
   return url;
 }
@@ -129,7 +135,6 @@ const useWPLocation = (): [string, (to: string) => void] => {
   return [path, (to: string) => { window.location.href = to; }];
 };
 
-// Seed query cache from server-preloaded data so the index page renders instantly.
 if (config.preloadedIndexed) {
   queryClient.setQueryData(["/api/indexed-players"], config.preloadedIndexed);
 }
