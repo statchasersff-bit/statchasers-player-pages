@@ -5159,12 +5159,11 @@ export default function PlayerProfile() {
 
       <div className="sticky top-[53px] z-40 border-b" style={{ background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(8px)', borderColor: 'rgba(11,58,122,0.08)' }}>
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between gap-4">
-            <nav
-              className="flex gap-0.5 overflow-x-auto -mb-px scrollbar-hide flex-1"
-              style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-              data-testid="profile-tabs"
-            >
+          <nav
+            className="flex gap-0.5 overflow-x-auto -mb-px scrollbar-hide"
+            style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            data-testid="profile-tabs"
+          >
             {TAB_CONFIG.map(tab => {
               const isActive = activeTab === tab.key;
               const Icon = tab.icon;
@@ -5203,10 +5202,9 @@ export default function PlayerProfile() {
                 </button>
               );
             })}
-            </nav>
-            <div className="flex-shrink-0 py-2">
-              <ScoringFormatToggle format={scoringFormat} onChange={setScoringFormat} />
-            </div>
+          </nav>
+          <div className="py-2 border-t border-slate-100 dark:border-slate-800">
+            <ScoringFormatToggle format={scoringFormat} onChange={setScoringFormat} />
           </div>
         </div>
       </div>
