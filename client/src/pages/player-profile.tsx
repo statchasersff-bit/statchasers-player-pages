@@ -4285,7 +4285,7 @@ function BioTab({ player }: { player: Player }) {
             <Clock className="w-4 h-4" />
             <h3>Fantasy Career Arc</h3>
           </div>
-          <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '20px', marginTop: '-4px' }}>Key inflection points that shaped this player's fantasy value.</p>
+          <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '20px' }}>Key inflection points that shaped this player's fantasy value.</p>
           <div className="sc-bio__timeline">
             {bio.timeline.map((entry, i) => {
               const cfg = BADGE_CONFIG[entry.badge] || BADGE_CONFIG['Current'];
@@ -4377,7 +4377,7 @@ function BioTab({ player }: { player: Player }) {
             <BookOpen className="w-4 h-4" />
             <h3>Career Development Profile</h3>
           </div>
-          <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '16px', marginTop: '-4px' }}>How this player entered the league, developed their role, and built their current fantasy identity.</p>
+          <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '16px' }}>How this player entered the league, developed their role, and built their current fantasy identity.</p>
           <div className="sc-bio__narrative-card">
             <div className={`sc-bio__narrative-text ${!narrativeExpanded ? 'sc-bio__narrative-text--collapsed' : ''}`}>
               {bio.narrative_paragraphs.map((p, i) => (
