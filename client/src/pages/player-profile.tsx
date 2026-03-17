@@ -5123,7 +5123,7 @@ export default function PlayerProfile() {
 
             {/* Row 2 on mobile / Col 2 on desktop: 2025 Fantasy Season Stats Box */}
             {headerPpg !== null && (
-              <div className="w-full md:w-auto md:flex-shrink-0 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 md:self-center mt-0 md:mt-0">
+              <div className="w-full md:w-80 md:flex-shrink-0 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 md:self-center mt-0 md:mt-0">
                 <div className="px-3 py-1.5 text-white text-[10px] font-bold tracking-widest uppercase" style={{ background: teamColor }}>
                   2025 Fantasy Season
                 </div>
