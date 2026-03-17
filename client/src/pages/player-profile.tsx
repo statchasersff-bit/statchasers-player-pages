@@ -3831,23 +3831,25 @@ type BioData = {
     how_he_wins_tags: string[];
     fantasy_translation: string;
     fantasy_translation_tags: string[];
+    best_case?: string;
+    floor_driver?: string;
   } | null;
-  timeline: { label: string; badge: string; text: string }[];
+  timeline: { label: string; badge: string; text: string; fantasy_note?: string }[];
   career_context_tiles: { title: string; text: string }[];
   narrative_paragraphs: string[];
   last_updated: string;
   sources: { label: string; url: string }[];
 };
 
-const BADGE_STYLES: Record<string, { bg: string; text: string }> = {
-  Drafted: { bg: 'rgba(30,136,229,0.12)', text: '#1565C0' },
-  Breakout: { bg: 'rgba(76,175,80,0.12)', text: '#2E7D32' },
-  Peak: { bg: 'rgba(202,161,74,0.14)', text: '#92400E' },
-  Injury: { bg: 'rgba(229,57,53,0.12)', text: '#C62828' },
-  'Role change': { bg: 'rgba(156,39,176,0.12)', text: '#7B1FA2' },
-  'New team': { bg: 'rgba(255,152,0,0.12)', text: '#E65100' },
-  'Sustained peak': { bg: 'rgba(202,161,74,0.14)', text: '#92400E' },
-  Current: { bg: 'rgba(15,23,42,0.08)', text: '#334155' },
+const BADGE_CONFIG: Record<string, { bg: string; text: string; dot: string; border: string; icon: typeof Activity; fantasyInflection: boolean }> = {
+  Drafted:        { bg: 'rgba(30,136,229,0.10)',  text: '#1565C0', dot: '#1e88e5', border: 'rgba(30,136,229,0.25)',  icon: Trophy,      fantasyInflection: false },
+  Breakout:       { bg: 'rgba(76,175,80,0.12)',   text: '#2E7D32', dot: '#4caf50', border: 'rgba(76,175,80,0.30)',   icon: TrendingUp,  fantasyInflection: true  },
+  Peak:           { bg: 'rgba(202,161,74,0.14)',  text: '#92400E', dot: '#d4af37', border: 'rgba(202,161,74,0.35)', icon: Zap,         fantasyInflection: true  },
+  Injury:         { bg: 'rgba(229,57,53,0.10)',   text: '#C62828', dot: '#ef4444', border: 'rgba(229,57,53,0.30)',  icon: AlertCircle, fantasyInflection: true  },
+  'Role change':  { bg: 'rgba(156,39,176,0.10)',  text: '#7B1FA2', dot: '#a855f7', border: 'rgba(156,39,176,0.30)', icon: ArrowUpRight, fantasyInflection: true  },
+  'New team':     { bg: 'rgba(255,152,0,0.10)',   text: '#E65100', dot: '#f97316', border: 'rgba(255,152,0,0.30)',  icon: ArrowUpRight, fantasyInflection: true  },
+  'Sustained peak': { bg: 'rgba(202,161,74,0.14)', text: '#92400E', dot: '#d4af37', border: 'rgba(202,161,74,0.35)', icon: Zap,        fantasyInflection: false },
+  Current:        { bg: 'rgba(99,102,241,0.08)',  text: '#4f46e5', dot: '#6366f1', border: 'rgba(99,102,241,0.20)', icon: Activity,    fantasyInflection: false },
 };
 
 const CONTEXT_ICONS: Record<string, typeof Activity> = {
@@ -3870,8 +3872,56 @@ function BioTab({ player }: { player: Player }) {
     );
   }
 
+  const ceilingTile = bio.career_context_tiles?.find(t => t.title === 'Ceiling driver');
+  const floorTile   = bio.career_context_tiles?.find(t => t.title === 'Floor driver');
+  const otherTiles  = bio.career_context_tiles?.filter(t => t.title !== 'Ceiling driver' && t.title !== 'Floor driver') ?? [];
+
+  const styleSubCards = bio.style ? [
+    {
+      id: 'on-field',
+      label: 'On-field style',
+      icon: Zap,
+      iconColor: '#6366f1',
+      text: bio.style.how_he_wins,
+      tags: bio.style.how_he_wins_tags,
+      tagClass: 'sc-bio__tag',
+      testId: 'bio-how-he-wins',
+    },
+    {
+      id: 'fantasy-translation',
+      label: 'Fantasy translation',
+      icon: Trophy,
+      iconColor: '#d4af37',
+      text: bio.style.fantasy_translation,
+      tags: bio.style.fantasy_translation_tags,
+      tagClass: 'sc-bio__tag sc-bio__tag--gold',
+      testId: 'bio-fantasy-impact',
+    },
+    {
+      id: 'best-case',
+      label: 'Best-case weekly outcome',
+      icon: TrendingUp,
+      iconColor: '#22c55e',
+      text: bio.style.best_case ?? (ceilingTile ? ceilingTile.text : null),
+      tags: [] as string[],
+      tagClass: 'sc-bio__tag',
+      testId: 'bio-best-case',
+    },
+    {
+      id: 'floor-driver',
+      label: 'Floor driver',
+      icon: ShieldCheck,
+      iconColor: '#64748b',
+      text: bio.style.floor_driver ?? (floorTile ? floorTile.text : null),
+      tags: [] as string[],
+      tagClass: 'sc-bio__tag',
+      testId: 'bio-floor-driver',
+    },
+  ].filter(c => c.text) : [];
+
   return (
     <div className="sc-bio" data-testid="bio-tab">
+
       {bio.snapshot_bullets && bio.snapshot_bullets.length > 0 && (
         <section className="sc-bio__section" data-testid="bio-snapshot">
           <div className="sc-bio__section-header">
@@ -3891,31 +3941,37 @@ function BioTab({ player }: { player: Player }) {
         </section>
       )}
 
-      {bio.style && (
+      {styleSubCards.length > 0 && (
         <section className="sc-bio__section" data-testid="bio-style">
           <div className="sc-bio__section-header">
             <Zap className="w-4 h-4" />
-            <h3>Play Style</h3>
+            <h3>Play Style and Fantasy Translation</h3>
           </div>
-          <div className="sc-bio__style-grid">
-            <div className="sc-bio__style-card" data-testid="bio-how-he-wins">
-              <div className="sc-bio__style-card-label">How he wins</div>
-              <p className="sc-bio__style-card-text">{bio.style.how_he_wins}</p>
-              <div className="sc-bio__tags">
-                {bio.style.how_he_wins_tags.map((tag, i) => (
-                  <span key={i} className="sc-bio__tag" data-testid={`bio-tag-wins-${i}`}>{tag}</span>
-                ))}
-              </div>
-            </div>
-            <div className="sc-bio__style-card" data-testid="bio-fantasy-impact">
-              <div className="sc-bio__style-card-label">Fantasy impact</div>
-              <p className="sc-bio__style-card-text">{bio.style.fantasy_translation}</p>
-              <div className="sc-bio__tags">
-                {bio.style.fantasy_translation_tags.map((tag, i) => (
-                  <span key={i} className="sc-bio__tag sc-bio__tag--gold" data-testid={`bio-tag-fantasy-${i}`}>{tag}</span>
-                ))}
-              </div>
-            </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+            {styleSubCards.map((card) => {
+              const Icon = card.icon;
+              return (
+                <div
+                  key={card.id}
+                  className="sc-bio__style-card"
+                  style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+                  data-testid={card.testId}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                    <Icon className="w-3.5 h-3.5" style={{ color: card.iconColor, flexShrink: 0 }} />
+                    <div className="sc-bio__style-card-label" style={{ marginBottom: 0 }}>{card.label}</div>
+                  </div>
+                  <p className="sc-bio__style-card-text">{card.text}</p>
+                  {card.tags.length > 0 && (
+                    <div className="sc-bio__tags">
+                      {card.tags.map((tag, i) => (
+                        <span key={i} className={card.tagClass} data-testid={`bio-tag-${card.id}-${i}`}>{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </section>
       )}
@@ -3924,28 +3980,61 @@ function BioTab({ player }: { player: Player }) {
         <section className="sc-bio__section" data-testid="bio-timeline">
           <div className="sc-bio__section-header">
             <Clock className="w-4 h-4" />
-            <h3>Career Timeline</h3>
+            <h3>Fantasy Career Arc</h3>
           </div>
+          <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '20px', marginTop: '-4px' }}>Key inflection points that shaped this player's fantasy value.</p>
           <div className="sc-bio__timeline">
             {bio.timeline.map((entry, i) => {
-              const badgeStyle = BADGE_STYLES[entry.badge] || BADGE_STYLES['Current'];
+              const cfg = BADGE_CONFIG[entry.badge] || BADGE_CONFIG['Current'];
+              const Icon = cfg.icon;
+              const isLast = i === bio.timeline.length - 1;
               return (
-                <div key={i} className="sc-bio__timeline-entry" data-testid={`bio-timeline-${i}`}>
+                <div key={i} className="sc-bio__timeline-entry" data-testid={`bio-timeline-${i}`} style={{ position: 'relative' }}>
                   <div className="sc-bio__timeline-line">
-                    <div className="sc-bio__timeline-dot" />
-                    {i < bio.timeline.length - 1 && <div className="sc-bio__timeline-connector" />}
+                    <div
+                      className="sc-bio__timeline-dot"
+                      style={{
+                        background: cfg.dot,
+                        width: cfg.fantasyInflection ? '14px' : '10px',
+                        height: cfg.fantasyInflection ? '14px' : '10px',
+                        boxShadow: cfg.fantasyInflection ? `0 0 0 3px ${cfg.border}` : 'none',
+                        flexShrink: 0,
+                      }}
+                    />
+                    {!isLast && <div className="sc-bio__timeline-connector" />}
                   </div>
-                  <div className="sc-bio__timeline-content">
-                    <div className="sc-bio__timeline-top">
-                      <span className="sc-bio__timeline-label">{entry.label}</span>
+                  <div
+                    className="sc-bio__timeline-content"
+                    style={{
+                      borderLeft: cfg.fantasyInflection ? `2px solid ${cfg.border}` : '2px solid transparent',
+                      paddingLeft: cfg.fantasyInflection ? '12px' : '0',
+                      background: cfg.fantasyInflection ? cfg.bg : 'transparent',
+                      borderRadius: cfg.fantasyInflection ? '6px' : '0',
+                      padding: cfg.fantasyInflection ? '10px 12px' : '0 0 0 0',
+                      marginBottom: cfg.fantasyInflection ? '4px' : '0',
+                    }}
+                  >
+                    <div className="sc-bio__timeline-top" style={{ marginBottom: '4px' }}>
+                      <span className="sc-bio__timeline-label" style={{ fontSize: '13px', fontWeight: 700 }}>{entry.label}</span>
                       <span
                         className="sc-bio__timeline-badge"
-                        style={{ background: badgeStyle.bg, color: badgeStyle.text }}
+                        style={{ background: cfg.bg, color: cfg.text, display: 'flex', alignItems: 'center', gap: '4px' }}
                       >
+                        <Icon className="w-3 h-3" style={{ flexShrink: 0 }} />
                         {entry.badge}
                       </span>
                     </div>
                     <p className="sc-bio__timeline-text">{entry.text}</p>
+                    {entry.fantasy_note && (
+                      <p style={{ fontSize: '11px', color: cfg.text, marginTop: '6px', fontStyle: 'italic', opacity: 0.85 }}>
+                        {entry.fantasy_note}
+                      </p>
+                    )}
+                    {cfg.fantasyInflection && !entry.fantasy_note && (
+                      <p style={{ fontSize: '10px', color: cfg.text, marginTop: '5px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', opacity: 0.7 }}>
+                        Fantasy inflection point
+                      </p>
+                    )}
                   </div>
                 </div>
               );
@@ -3954,14 +4043,14 @@ function BioTab({ player }: { player: Player }) {
         </section>
       )}
 
-      {bio.career_context_tiles && bio.career_context_tiles.length > 0 && (
+      {otherTiles.length > 0 && (
         <section className="sc-bio__section" data-testid="bio-context">
           <div className="sc-bio__section-header">
             <Activity className="w-4 h-4" />
             <h3>Fantasy Career Context</h3>
           </div>
           <div className="sc-bio__context-grid">
-            {bio.career_context_tiles.map((tile, i) => {
+            {otherTiles.map((tile, i) => {
               const Icon = CONTEXT_ICONS[tile.title] || Info;
               return (
                 <div key={i} className="sc-bio__context-tile" data-testid={`bio-context-${i}`}>
@@ -3983,8 +4072,9 @@ function BioTab({ player }: { player: Player }) {
         <section className="sc-bio__section" data-testid="bio-narrative">
           <div className="sc-bio__section-header">
             <BookOpen className="w-4 h-4" />
-            <h3>Player Bio</h3>
+            <h3>Career Development Profile</h3>
           </div>
+          <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '16px', marginTop: '-4px' }}>How this player entered the league, developed their role, and built their current fantasy identity.</p>
           <div className="sc-bio__narrative-card">
             <div className={`sc-bio__narrative-text ${!narrativeExpanded ? 'sc-bio__narrative-text--collapsed' : ''}`}>
               {bio.narrative_paragraphs.map((p, i) => (
