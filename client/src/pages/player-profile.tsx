@@ -5072,10 +5072,10 @@ export default function PlayerProfile() {
             </Link>
           </div>
 
-          <div className="flex items-stretch gap-0 flex-wrap md:flex-nowrap">
+          <div className="flex flex-col md:flex-row md:items-stretch gap-0">
 
-            {/* Column 1: Photo + Name */}
-            <div className="flex items-center gap-4 pr-5 md:border-r border-slate-200 dark:border-slate-700 flex-shrink-0">
+            {/* Row 1 on mobile / Col 1 on desktop: Photo + Name */}
+            <div className="flex items-center gap-4 pb-4 md:pb-0 md:pr-5 md:border-r border-slate-200 dark:border-slate-700 flex-shrink-0">
               <PlayerHeadshot playerId={player.id} name={player.name} teamColor={teamColor} team={player.team || undefined} />
               <div>
                 <p className="text-xs font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase leading-none mb-0.5">{headerFirstName}</p>
@@ -5101,8 +5101,8 @@ export default function PlayerProfile() {
               </div>
             </div>
 
-            {/* Column 2: Scoring toggle + Bio meta */}
-            <div className="flex flex-col justify-center gap-3 px-5 py-2 flex-1 min-w-[200px]">
+            {/* Row 2 on mobile / Col 2 on desktop: Scoring toggle + Bio meta */}
+            <div className="flex flex-col justify-center gap-3 py-3 md:px-5 md:py-2 flex-1 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
               <ScoringFormatToggle format={scoringFormat} onChange={setScoringFormat} />
               <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 flex-wrap" data-testid="text-player-meta">
                 {player.age && (
@@ -5142,9 +5142,9 @@ export default function PlayerProfile() {
               </div>
             </div>
 
-            {/* Column 3: 2025 Fantasy Season Stats Box */}
+            {/* Row 3 on mobile / Col 3 on desktop: 2025 Fantasy Season Stats Box */}
             {headerPpg !== null && (
-              <div className="flex-shrink-0 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 self-center mt-3 md:mt-0 min-w-[200px]">
+              <div className="w-full md:w-auto md:flex-shrink-0 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 md:self-center mt-0 md:mt-0">
                 <div className="px-3 py-1.5 text-white text-[10px] font-bold tracking-widest uppercase" style={{ background: teamColor }}>
                   2025 Fantasy Season
                 </div>
