@@ -739,31 +739,55 @@ function sc_extract_player_stats( $s, $position ) {
  * GitHub Pages and save locally. This only needs to run periodically.
  */
 function sc_fetch_and_save_supplemental_data() {
-    $base = 'https://statchasersff-bit.github.io/statchasers-player-pages/data/';
     sc_ensure_sc_dir();
 
+    $plugin_data_dir = plugin_dir_path( dirname( __FILE__ ) ) . 'data/';
+
     $files = [
-        'bye_weeks.json'          => sc_get_bye_weeks_path(),
-        'game_scores.json'        => sc_get_game_scores_path(),
-        'bios.json'               => sc_get_bios_path(),
-        'dynasty_rankings.json'   => sc_get_dynasty_path(),
+        'bye_weeks.json'        => sc_get_bye_weeks_path(),
+        'game_scores.json'      => sc_get_game_scores_path(),
+        'bios.json'             => sc_get_bios_path(),
+        'dynasty_rankings.json' => sc_get_dynasty_path(),
     ];
 
     $ok = true;
-    foreach ( $files as $remote_file => $local_path ) {
-        $res = wp_remote_get( $base . $remote_file, [ 'timeout' => 30 ] );
-        if ( is_wp_error( $res ) || wp_remote_retrieve_response_code( $res ) !== 200 ) {
-            error_log( 'StatChasers: Failed to fetch ' . $remote_file );
-            $ok = false;
+
+    foreach ( $files as $filename => $local_path ) {
+        $bundled = $plugin_data_dir . $filename;
+
+        if ( file_exists( $bundled ) ) {
+            $copied = copy( $bundled, $local_path );
+            if ( ! $copied ) {
+                error_log( 'StatChasers: Failed to copy bundled ' . $filename );
+                $ok = false;
+            }
             continue;
         }
-        $body = wp_remote_retrieve_body( $res );
-        if ( empty( $body ) || json_decode( $body ) === null ) {
-            error_log( 'StatChasers: Invalid JSON for ' . $remote_file );
-            $ok = false;
-            continue;
+
+        $remote_urls = [
+            'https://raw.githubusercontent.com/statchasersff-bit/statchasers-player-pages/main/data/' . $filename,
+            'https://statchasersff-bit.github.io/statchasers-player-pages/data/' . $filename,
+        ];
+
+        $saved = false;
+        foreach ( $remote_urls as $url ) {
+            $res = wp_remote_get( $url, [ 'timeout' => 30 ] );
+            if ( is_wp_error( $res ) || wp_remote_retrieve_response_code( $res ) !== 200 ) {
+                continue;
+            }
+            $body = wp_remote_retrieve_body( $res );
+            if ( empty( $body ) || json_decode( $body ) === null ) {
+                continue;
+            }
+            file_put_contents( $local_path, $body );
+            $saved = true;
+            break;
         }
-        file_put_contents( $local_path, $body );
+
+        if ( ! $saved ) {
+            error_log( 'StatChasers: Could not obtain ' . $filename . ' from any source.' );
+            $ok = false;
+        }
     }
 
     if ( $ok ) {

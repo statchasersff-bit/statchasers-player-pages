@@ -17428,18 +17428,38 @@ function h_() {
 }
 function m_({ format: n, onChange: r }) {
   const a = ["standard", "half", "ppr"];
-  return /* @__PURE__ */ s.jsxs("div", { className: "flex items-center gap-2", "data-testid": "scoring-format-toggle", children: [
-    /* @__PURE__ */ s.jsx("span", { style: { fontSize: "11px", color: "#94a3b8", fontWeight: 500 }, className: "hidden sm:inline", children: "Scoring:" }),
-    /* @__PURE__ */ s.jsx("div", { className: "sc-gamelog__segmented-control", children: a.map((i) => /* @__PURE__ */ s.jsx(
-      "button",
-      {
-        onClick: () => r(i),
-        className: `sc-gamelog__segment ${n === i ? "sc-gamelog__segment--active" : ""}`,
-        "data-testid": `button-format-${i}`,
-        children: Hb[i]
-      },
-      i
-    )) })
+  return /* @__PURE__ */ s.jsxs("div", { className: "flex items-center gap-2.5", "data-testid": "scoring-format-toggle", children: [
+    /* @__PURE__ */ s.jsx("span", { style: { fontSize: "11px", color: "#475569", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase" }, children: "Scoring:" }),
+    /* @__PURE__ */ s.jsx("div", { style: {
+      display: "inline-flex",
+      borderRadius: "10px",
+      border: "1.5px solid rgba(11,58,122,0.2)",
+      overflow: "hidden",
+      background: "rgba(11,58,122,0.04)"
+    }, children: a.map((i) => {
+      const c = n === i;
+      return /* @__PURE__ */ s.jsx(
+        "button",
+        {
+          onClick: () => r(i),
+          style: {
+            padding: "5px 14px",
+            fontSize: "11px",
+            fontWeight: 700,
+            cursor: "pointer",
+            border: "none",
+            transition: "all 0.15s ease",
+            whiteSpace: "nowrap",
+            background: c ? "linear-gradient(135deg, #d4af37, #e5c95c)" : "transparent",
+            color: c ? "#fff" : "#334155",
+            boxShadow: c ? "0 2px 8px rgba(202,161,74,0.25)" : "none"
+          },
+          "data-testid": `button-format-${i}`,
+          children: Hb[i]
+        },
+        i
+      );
+    }) })
   ] });
 }
 function Fh() {
@@ -17501,7 +17521,7 @@ function Fh() {
               /* @__PURE__ */ s.jsx(eg, { className: "w-4 h-4 mr-1" }),
               "All Players"
             ] }) }) }),
-            /* @__PURE__ */ s.jsxs("div", { className: "flex flex-col md:flex-row md:items-stretch gap-0", children: [
+            /* @__PURE__ */ s.jsxs("div", { className: "flex flex-col md:flex-row md:items-center gap-0", children: [
               /* @__PURE__ */ s.jsxs("div", { className: "flex items-center gap-4 pb-4 md:pb-0 md:pr-5 md:border-r border-slate-200 dark:border-slate-700 flex-shrink-0", children: [
                 /* @__PURE__ */ s.jsx(Mk, { playerId: p.id, name: p.name, teamColor: g, team: p.team || void 0 }),
                 /* @__PURE__ */ s.jsxs("div", { children: [
@@ -17543,7 +17563,8 @@ function Fh() {
                   /* @__PURE__ */ s.jsx("div", { className: "mt-2 h-[2px] w-10 rounded-full", style: { background: g } })
                 ] })
               ] }),
-              C !== null && /* @__PURE__ */ s.jsxs("div", { className: "w-full md:w-auto md:flex-shrink-0 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 md:self-center mt-0 md:mt-0", children: [
+              /* @__PURE__ */ s.jsx("div", { className: "hidden md:block flex-1" }),
+              C !== null && /* @__PURE__ */ s.jsxs("div", { className: "w-full md:w-80 md:flex-shrink-0 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 md:self-center mt-0 md:mt-0", children: [
                 /* @__PURE__ */ s.jsx("div", { className: "px-3 py-1.5 text-white text-[10px] font-bold tracking-widest uppercase", style: { background: g }, children: "2025 Fantasy Season" }),
                 /* @__PURE__ */ s.jsxs("div", { className: "grid grid-cols-2 divide-x divide-y divide-slate-100 dark:divide-slate-700 bg-white dark:bg-slate-900", children: [
                   /* @__PURE__ */ s.jsxs("div", { className: "px-4 py-2.5 text-center", children: [
@@ -17603,7 +17624,7 @@ function Fh() {
                   cursor: "pointer",
                   background: "none",
                   border: "none",
-                  flex: "1 1 0"
+                  flex: "none"
                 },
                 onMouseEnter: (B) => {
                   re || (B.currentTarget.style.color = "#0b3a7a");
