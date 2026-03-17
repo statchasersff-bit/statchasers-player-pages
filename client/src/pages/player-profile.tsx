@@ -134,7 +134,7 @@ function PlayerHeadshot({ playerId, name, teamColor, team }: { playerId: string;
               height: '100%',
               objectFit: 'contain',
               opacity: 0.18,
-              padding: '14%',
+              padding: '6%',
               pointerEvents: 'none',
               userSelect: 'none',
               zIndex: 0,
