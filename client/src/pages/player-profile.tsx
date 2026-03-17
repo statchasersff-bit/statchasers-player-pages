@@ -5189,17 +5189,32 @@ export default function PlayerProfile() {
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className="sc-profile-tab relative whitespace-nowrap"
+                  className="relative"
                   style={{
                     fontWeight: isActive ? 700 : 500,
+                    fontSize: '13px',
+                    lineHeight: '1.2',
+                    padding: '14px 18px',
                     color: isActive ? '#0b3a7a' : '#94a3b8',
                     transition: 'color 0.2s ease',
                     cursor: 'pointer',
                     background: 'none',
+                    backgroundColor: 'transparent',
                     border: 'none',
+                    borderRadius: 0,
+                    boxShadow: 'none',
+                    outline: 'none',
                     flex: 'none',
                     display: 'inline-block',
-                  }}
+                    whiteSpace: 'nowrap',
+                    margin: 0,
+                    verticalAlign: 'bottom',
+                    textTransform: 'none',
+                    letterSpacing: 'normal',
+                    textDecoration: 'none',
+                    appearance: 'none',
+                    WebkitAppearance: 'none',
+                  } as React.CSSProperties}
                   onMouseEnter={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.color = '#0b3a7a'; }}
                   onMouseLeave={(e) => { if (!isActive) (e.currentTarget as HTMLElement).style.color = '#94a3b8'; }}
                   data-testid={`tab-${tab.key}`}
