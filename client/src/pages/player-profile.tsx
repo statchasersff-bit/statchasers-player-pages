@@ -4913,19 +4913,39 @@ function PlayerProfileSkeleton() {
 function ScoringFormatToggle({ format, onChange }: { format: ScoringFormat; onChange: (f: ScoringFormat) => void }) {
   const formats: ScoringFormat[] = ['standard', 'half', 'ppr'];
   return (
-    <div className="flex items-center gap-2" data-testid="scoring-format-toggle">
-      <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 500 }} className="hidden sm:inline">Scoring:</span>
-      <div className="sc-gamelog__segmented-control">
-        {formats.map((f) => (
-          <button
-            key={f}
-            onClick={() => onChange(f)}
-            className={`sc-gamelog__segment ${format === f ? 'sc-gamelog__segment--active' : ''}`}
-            data-testid={`button-format-${f}`}
-          >
-            {SCORING_LABELS[f]}
-          </button>
-        ))}
+    <div className="flex items-center gap-2.5" data-testid="scoring-format-toggle">
+      <span style={{ fontSize: '11px', color: '#475569', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Scoring:</span>
+      <div style={{
+        display: 'inline-flex',
+        borderRadius: '10px',
+        border: '1.5px solid rgba(11,58,122,0.2)',
+        overflow: 'hidden',
+        background: 'rgba(11,58,122,0.04)',
+      }}>
+        {formats.map((f) => {
+          const isActive = format === f;
+          return (
+            <button
+              key={f}
+              onClick={() => onChange(f)}
+              style={{
+                padding: '5px 14px',
+                fontSize: '11px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                border: 'none',
+                transition: 'all 0.15s ease',
+                whiteSpace: 'nowrap',
+                background: isActive ? 'linear-gradient(135deg, #d4af37, #e5c95c)' : 'transparent',
+                color: isActive ? '#fff' : '#334155',
+                boxShadow: isActive ? '0 2px 8px rgba(202,161,74,0.25)' : 'none',
+              }}
+              data-testid={`button-format-${f}`}
+            >
+              {SCORING_LABELS[f]}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
