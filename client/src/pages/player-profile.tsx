@@ -5021,33 +5021,28 @@ export default function PlayerProfile() {
   const playerWithSeasons = player as PlayerWithSeasons;
   const defaultEntries = player.gameLog || [];
 
+  const nameParts = player.name.trim().split(/\s+/);
+  const headerFirstName = nameParts.slice(0, -1).join(' ').toUpperCase();
+  const headerLastName = nameParts.slice(-1)[0].toUpperCase();
+
+  const headerStats = computeGameLogStats(defaultEntries, player.position, scoringFormat);
+  const headerPpg = headerStats && headerStats.gamesPlayed > 0 ? headerStats.ppg : null;
+  const headerGp = headerStats ? headerStats.gamesPlayed : 0;
+  const headerTopRate = headerStats ? headerStats.pos1Pct + headerStats.pos2Pct : 0;
+  const headerBustPct = headerStats ? headerStats.bustPct : 0;
+  const posLabel = player.position || '';
+
   return (
     <div className="min-h-screen bg-background">
       <section
         className="relative overflow-hidden"
         data-testid="section-player-header"
       >
-        <div
-          className="absolute inset-0"
-          style={{ background: `linear-gradient(135deg, rgba(11,58,122,0.06), rgba(11,58,122,0.02), white 70%)` }}
-        />
-        <div
-          className="absolute inset-0 hidden dark:block"
-          style={{ background: `linear-gradient(135deg, #0B1634 0%, #111D42 40%, #0F172A 100%)` }}
-        />
-        <div
-          className="absolute inset-0 opacity-[0.025]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(11,58,122,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(11,58,122,0.3) 1px, transparent 1px)`,
-            backgroundSize: '24px 24px',
-          }}
-        />
-        <div
-          className="absolute bottom-0 left-0 right-0 h-[3px]"
-          style={{ background: `linear-gradient(90deg, transparent 0%, #0b3a7a 20%, #1a4fa0 50%, #0b3a7a 80%, transparent 100%)` }}
-        />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(11,58,122,0.05) 0%, rgba(255,255,255,0) 60%)' }} />
+        <div className="absolute inset-0 hidden dark:block" style={{ background: 'linear-gradient(135deg, #0B1634 0%, #111D42 40%, #0F172A 100%)' }} />
+        <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, transparent 0%, ${teamColor}88 20%, ${teamColor} 50%, ${teamColor}88 80%, transparent 100%)` }} />
 
-        <div className="relative max-w-4xl mx-auto px-4 pt-8 pb-8 md:pt-10 md:pb-10">
+        <div className="relative max-w-4xl mx-auto px-4 pt-5 pb-6">
           <div className="flex items-center justify-between mb-4">
             <Link href="/nfl/players">
               <Button variant="ghost" size="sm" className="-ml-1 text-slate-600 dark:text-slate-300" data-testid="button-back">
@@ -5055,66 +5050,48 @@ export default function PlayerProfile() {
                 All Players
               </Button>
             </Link>
-            <div className="hidden sm:flex items-center gap-2" data-testid="text-engine-marker">
-              <div style={{
-                border: '1px solid rgba(11,58,122,0.25)',
-                borderRadius: '6px',
-                padding: '4px 10px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '1px',
-                background: 'rgba(255,255,255,0.6)',
-                backdropFilter: 'blur(4px)',
-              }}>
-                <p style={{ fontSize: '8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: '#0b3a7a' }}>Player Analytics Engine v2.1</p>
-                <p style={{ fontSize: '7px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.10em', color: '#94a3b8' }}>Powered by StatChasers Models</p>
+          </div>
+
+          <div className="flex items-stretch gap-0 flex-wrap md:flex-nowrap">
+
+            {/* Column 1: Photo + Name */}
+            <div className="flex items-center gap-4 pr-5 md:border-r border-slate-200 dark:border-slate-700 flex-shrink-0">
+              <PlayerHeadshot playerId={player.id} name={player.name} teamColor={teamColor} />
+              <div>
+                <p className="text-xs font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase leading-none mb-0.5">{headerFirstName}</p>
+                <h1
+                  className="font-black uppercase leading-none tracking-tight"
+                  style={{ fontSize: 'clamp(28px, 5vw, 44px)', color: teamColor, letterSpacing: '-0.01em' }}
+                  data-testid="text-player-name"
+                >
+                  {headerLastName}
+                </h1>
+                <div className="flex items-center gap-1.5 mt-1.5 flex-wrap" data-testid="text-team">
+                  <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">{teamName}</span>
+                  {player.number && (
+                    <>
+                      <span className="text-slate-300 dark:text-slate-600 text-xs">&middot;</span>
+                      <span className="text-xs text-slate-500 dark:text-slate-400">#{player.number}</span>
+                    </>
+                  )}
+                  <span className="text-slate-300 dark:text-slate-600 text-xs">&middot;</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">{positionFull}</span>
+                </div>
+                <div className="mt-2 h-[2px] w-10 rounded-full" style={{ background: teamColor }} />
               </div>
             </div>
-          </div>
-          <div className="flex items-center gap-6 md:gap-8 flex-wrap">
-            <PlayerHeadshot playerId={player.id} name={player.name} teamColor={teamColor} />
-            <div className="flex-1 min-w-0">
-              <h1
-                className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight"
-                style={{ letterSpacing: '-0.02em', fontWeight: 800 }}
-                data-testid="text-player-name"
-              >
-                {player.name}
-              </h1>
-              <div className="flex items-center gap-2 mt-1.5 flex-wrap" data-testid="text-team">
-                <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{positionFull}</span>
-                <span className="text-slate-400 dark:text-slate-500">{'\u00B7'}</span>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-1 h-4 rounded-full flex-shrink-0" style={{ backgroundColor: teamColor }} />
-                  <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{teamName}</span>
-                </div>
-                <span className="text-slate-400 dark:text-slate-500">{'\u00B7'}</span>
-                <span className="text-sm text-slate-500 dark:text-slate-400" data-testid="text-player-status">
-                  {player.injury_status ? player.injury_status : (player.status || 'Active')}
-                </span>
-                {player.number && (
-                  <>
-                    <span className="text-slate-400 dark:text-slate-500">{'\u00B7'}</span>
-                    <span className="text-sm text-slate-500 dark:text-slate-400">#{player.number}</span>
-                  </>
-                )}
-              </div>
-              <div
-                className="mt-2.5 mb-3 h-[2px] w-20 rounded-full"
-                style={{ background: 'linear-gradient(90deg, #D4A843, #F5D36E, #D4A843)' }}
-              />
-              <div className="mt-3">
-                <ScoringFormatToggle format={scoringFormat} onChange={setScoringFormat} />
-              </div>
-              <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400 flex-wrap mt-2" data-testid="text-player-meta">
+
+            {/* Column 2: Scoring toggle + Bio meta */}
+            <div className="flex flex-col justify-center gap-3 px-5 py-2 flex-1 min-w-[200px]">
+              <ScoringFormatToggle format={scoringFormat} onChange={setScoringFormat} />
+              <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 flex-wrap" data-testid="text-player-meta">
                 {player.age && (
                   <span>Age <span className="font-semibold text-slate-700 dark:text-slate-300">{player.age}</span></span>
                 )}
                 {player.height && (
                   <>
                     <span className="text-slate-300 dark:text-slate-600">|</span>
-                    <span><span className="font-semibold text-slate-700 dark:text-slate-300">{formatHeight(player.height)}</span></span>
+                    <span className="font-semibold text-slate-700 dark:text-slate-300">{formatHeight(player.height)}</span>
                   </>
                 )}
                 {player.weight && (
@@ -5130,7 +5107,52 @@ export default function PlayerProfile() {
                   </>
                 )}
               </div>
+              <div className="flex items-center gap-1.5" data-testid="text-player-status">
+                {player.injury_status ? (
+                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
+                    {player.injury_status}
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
+                    {player.status || 'Active'}
+                  </span>
+                )}
+              </div>
             </div>
+
+            {/* Column 3: 2025 Fantasy Season Stats Box */}
+            {headerPpg !== null && (
+              <div className="flex-shrink-0 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 self-center mt-3 md:mt-0 min-w-[200px]">
+                <div className="px-3 py-1.5 text-white text-[10px] font-bold tracking-widest uppercase" style={{ background: teamColor }}>
+                  2025 Fantasy Season
+                </div>
+                <div className="grid grid-cols-2 divide-x divide-y divide-slate-100 dark:divide-slate-700 bg-white dark:bg-slate-900">
+                  <div className="px-4 py-2.5 text-center">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">PPG</p>
+                    <p className="text-xl font-black text-slate-800 dark:text-white leading-tight">{headerPpg.toFixed(1)}</p>
+                    {playerWithSeasons.seasonRank && <p className="text-[9px] text-slate-400 dark:text-slate-500 font-semibold">{posLabel}{playerWithSeasons.seasonRank}</p>}
+                  </div>
+                  <div className="px-4 py-2.5 text-center">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Games</p>
+                    <p className="text-xl font-black text-slate-800 dark:text-white leading-tight">{headerGp}</p>
+                    <p className="text-[9px] text-slate-400 dark:text-slate-500 font-semibold">played</p>
+                  </div>
+                  <div className="px-4 py-2.5 text-center">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Starter%</p>
+                    <p className="text-xl font-black text-slate-800 dark:text-white leading-tight">{headerTopRate.toFixed(0)}%</p>
+                    <p className="text-[9px] text-slate-400 dark:text-slate-500 font-semibold">of weeks</p>
+                  </div>
+                  <div className="px-4 py-2.5 text-center">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Bust%</p>
+                    <p className="text-xl font-black text-slate-800 dark:text-white leading-tight">{headerBustPct.toFixed(0)}%</p>
+                    <p className="text-[9px] text-slate-400 dark:text-slate-500 font-semibold">of weeks</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
       </section>
