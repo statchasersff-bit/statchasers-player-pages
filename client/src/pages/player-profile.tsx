@@ -1455,7 +1455,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
             {atAGlance.map((card) => (
               <div key={card.label} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '8px', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <p style={{ fontSize: '10px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{card.label}</p>
-                <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--sc-text, #e2e8f0)' }}>{card.value}</p>
+                <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--foreground)' }}>{card.value}</p>
               </div>
             ))}
           </div>
@@ -2036,7 +2036,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
               <p style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#16a34a', marginBottom: '10px' }}>Strengths</p>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {strengths.map((s, i) => (
-                  <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13px', color: '#cbd5e1', lineHeight: '1.5' }}>
+                  <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13px', color: 'var(--foreground)', lineHeight: '1.5' }}>
                     <span style={{ color: '#16a34a', fontWeight: 700, marginTop: '1px', flexShrink: 0 }}>+</span>
                     {s}
                   </li>
@@ -2047,7 +2047,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
               <p style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#ef4444', marginBottom: '10px' }}>Risk Factors</p>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {risks.map((r, i) => (
-                  <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13px', color: '#cbd5e1', lineHeight: '1.5' }}>
+                  <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13px', color: 'var(--foreground)', lineHeight: '1.5' }}>
                     <span style={{ color: '#ef4444', fontWeight: 700, marginTop: '1px', flexShrink: 0 }}>-</span>
                     {r}
                   </li>
@@ -2259,7 +2259,7 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
               const dotColor = ins.icon === 'up' ? '#22c55e' : ins.icon === 'down' ? '#ef4444' : '#94a3b8';
               const icon = ins.icon === 'up' ? '▲' : ins.icon === 'down' ? '▼' : '●';
               return (
-                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }} data-testid={`insight-pattern-${i}`}>
+                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', color: 'var(--foreground)', lineHeight: '1.6' }} data-testid={`insight-pattern-${i}`}>
                   <span style={{ color: dotColor, fontSize: '9px', fontWeight: 700, marginTop: '4px', flexShrink: 0, letterSpacing: '0' }}>{icon}</span>
                   {ins.text}
                 </li>
@@ -3383,7 +3383,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
           </div>
           <div style={{ background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)', borderRadius: '8px', padding: '12px 14px' }}>
             <p style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6366f1', marginBottom: '6px' }}>Insight</p>
-            <p style={{ fontSize: '13px', color: '#cbd5e1', lineHeight: '1.65' }} data-testid="text-role-stability-insight">{roleStabilityData.insight}</p>
+            <p style={{ fontSize: '13px', color: 'var(--foreground)', lineHeight: '1.65' }} data-testid="text-role-stability-insight">{roleStabilityData.insight}</p>
           </div>
         </div>
       )}
@@ -3803,7 +3803,7 @@ function UsageTrendsTab({ player, entries, format = 'ppr' }: { player: PlayerWit
               return (
                 <li
                   key={i}
-                  style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '10px 12px', background: 'rgba(255,255,255,0.02)', border: `1px solid rgba(255,255,255,0.06)`, borderLeft: `3px solid ${borderColor}`, borderRadius: '6px', fontSize: '13px', color: '#cbd5e1', lineHeight: '1.6' }}
+                  style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '10px 12px', background: 'rgba(255,255,255,0.02)', border: `1px solid rgba(255,255,255,0.06)`, borderLeft: `3px solid ${borderColor}`, borderRadius: '6px', fontSize: '13px', color: 'var(--foreground)', lineHeight: '1.6' }}
                   data-testid={`takeaway-${i}`}
                 >
                   <span style={{ color: iconColor, fontSize: '8px', fontWeight: 700, marginTop: '5px', flexShrink: 0 }}>{icon}</span>
