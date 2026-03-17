@@ -511,18 +511,6 @@ export default function PlayerSearch() {
                 Search, filter, and analyze every fantasy-relevant starter across all 32 NFL teams.
               </p>
             </div>
-            <div className="flex flex-col items-end gap-3">
-              <div
-                className="sc-stat-card"
-                data-testid="badge-player-count"
-              >
-                <Activity className="w-4 h-4 sc-header__gold-icon" />
-                <div>
-                  <p className="sc-stat-card__number">{totalPlayers}</p>
-                  <p className="sc-stat-card__label">Fantasy Starters</p>
-                </div>
-              </div>
-            </div>
           </div>
 
           <div className="mt-6" ref={searchRef}>
@@ -742,10 +730,19 @@ export default function PlayerSearch() {
           ) : (
           <div>
             <Tabs defaultValue="AFC" value={conference} onValueChange={setConference} data-testid="tabs-conference">
-              <TabsList className="mb-6" data-testid="tabs-conference-list">
-                <TabsTrigger value="AFC" data-testid="tab-afc">AFC</TabsTrigger>
-                <TabsTrigger value="NFC" data-testid="tab-nfc">NFC</TabsTrigger>
-              </TabsList>
+              <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
+                <TabsList data-testid="tabs-conference-list">
+                  <TabsTrigger value="AFC" data-testid="tab-afc">AFC</TabsTrigger>
+                  <TabsTrigger value="NFC" data-testid="tab-nfc">NFC</TabsTrigger>
+                </TabsList>
+                <div className="sc-stat-card" data-testid="badge-player-count">
+                  <Activity className="w-4 h-4 sc-header__gold-icon" />
+                  <div>
+                    <p className="sc-stat-card__number">{totalPlayers}</p>
+                    <p className="sc-stat-card__label">Fantasy Starters</p>
+                  </div>
+                </div>
+              </div>
 
               {["AFC", "NFC"].map((conf) => (
                 <TabsContent key={conf} value={conf}>
