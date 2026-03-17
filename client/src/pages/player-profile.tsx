@@ -106,17 +106,36 @@ function getHeadshotUrl(playerId: string): string {
   return `https://sleepercdn.com/content/nfl/players/thumb/${playerId}.jpg`;
 }
 
-function PlayerHeadshot({ playerId, name }: { playerId: string; name: string; teamColor?: string }) {
+function PlayerHeadshot({ playerId, name, team }: { playerId: string; name: string; teamColor?: string; team?: string }) {
   const [imgError, setImgError] = useState(false);
   const headshotUrl = getHeadshotUrl(playerId);
+  const logoUrl = team ? `https://sleepercdn.com/images/team_logos/nfl/${team.toLowerCase()}.png` : null;
 
   return (
     <div className="relative flex-shrink-0" data-testid="img-headshot">
+      {logoUrl && (
+        <img
+          src={logoUrl}
+          alt=""
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            width: '160%',
+            height: '160%',
+            top: '-30%',
+            left: '-30%',
+            opacity: 0.1,
+            objectFit: 'contain',
+            pointerEvents: 'none',
+            userSelect: 'none',
+          }}
+        />
+      )}
       <div
-        className="w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden"
+        className="relative w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden"
         style={{
+          zIndex: 1,
           border: '3px solid #0b3a7a',
-          outline: '0px solid transparent',
           boxShadow: '0 0 0 2px #d4af37 inset, 0 4px 16px rgba(11,58,122,0.18), 0 2px 6px rgba(0,0,0,0.10)',
           background: '#fff',
         }}
@@ -5056,7 +5075,7 @@ export default function PlayerProfile() {
 
             {/* Column 1: Photo + Name */}
             <div className="flex items-center gap-4 pr-5 md:border-r border-slate-200 dark:border-slate-700 flex-shrink-0">
-              <PlayerHeadshot playerId={player.id} name={player.name} teamColor={teamColor} />
+              <PlayerHeadshot playerId={player.id} name={player.name} teamColor={teamColor} team={player.team || undefined} />
               <div>
                 <p className="text-xs font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase leading-none mb-0.5">{headerFirstName}</p>
                 <h1
