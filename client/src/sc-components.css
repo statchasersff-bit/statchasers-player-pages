@@ -2450,27 +2450,6 @@
   box-shadow: 0 2px 8px rgba(245,192,26,0.25) !important;
 }
 
-/* Summary copy (under the subtitle, top-left) */
-.sc-finish2__summary {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 16px;
-}
-.sc-finish2__summary-line {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--sc-body, #475569);
-  margin: 0;
-}
-.sc-finish2__summary-rank {
-  color: var(--sc-blue, #0b3a7a);
-  font-weight: 800;
-}
-.sc-finish2__summary-line--up { color: #16a34a; }
-.sc-finish2__summary-line--down { color: #dc2626; }
-.sc-finish2__summary-line--steady { color: #64748b; }
-
 .sc-finish2__caution {
   font-size: 12px;
   color: #b45309;

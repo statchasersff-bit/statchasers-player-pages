@@ -39,10 +39,27 @@ export interface ScoringLine {
   posFinishPpg: number | null;
 }
 
+/** Season counting-stat totals (same fields as the weekly log, summed over the season). */
+export interface SeasonTotals {
+  passCmp: number;
+  passAtt: number;
+  passYd: number;
+  passTd: number;
+  passInt: number;
+  rushAtt: number;
+  rushYd: number;
+  rushTd: number;
+  tgt: number;
+  rec: number;
+  recYd: number;
+  recTd: number;
+}
+
 export interface ProductionSeason {
   season: number;
   position: string | null;
   gamesPlayed: number;
+  totals: SeasonTotals;
   std: ScoringLine;
   half: ScoringLine;
   ppr: ScoringLine;
@@ -330,6 +347,20 @@ export async function getPlayerProduction(
       season,
       position,
       gamesPlayed,
+      totals: {
+        passCmp: gnum(playerStats, "pass_cmp"),
+        passAtt: gnum(playerStats, "pass_att"),
+        passYd: gnum(playerStats, "pass_yd"),
+        passTd: gnum(playerStats, "pass_td"),
+        passInt: gnum(playerStats, "pass_int"),
+        rushAtt: gnum(playerStats, "rush_att"),
+        rushYd: gnum(playerStats, "rush_yd"),
+        rushTd: gnum(playerStats, "rush_td"),
+        tgt: gnum(playerStats, "rec_tgt"),
+        rec: gnum(playerStats, "rec"),
+        recYd: gnum(playerStats, "rec_yd"),
+        recTd: gnum(playerStats, "rec_td"),
+      },
       std: buildScoringLine(data, meta, position, playerStats, gamesPlayed, "std"),
       half: buildScoringLine(data, meta, position, playerStats, gamesPlayed, "half_ppr"),
       ppr: buildScoringLine(data, meta, position, playerStats, gamesPlayed, "ppr"),

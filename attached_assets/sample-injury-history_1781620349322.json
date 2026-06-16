@@ -1,0 +1,17 @@
+{
+  "_comment": "Sample PlayerInjuryHistory payload — the shape the scraper/normalizer must produce and the API returns under { injuries: ... }. Use it to render the tab without a live data source.",
+  "grade": "C+",
+  "score": 64,
+  "gradeColor": "#f59e0b",
+  "nfl": [
+    { "season": 2024, "week": 12, "type": "Hamstring Strain", "bodyPart": "hamstring", "side": "right", "severity": "moderate", "gamesMissed": 3, "description": "Right hamstring strain suffered in Week 12; missed three games." },
+    { "season": 2024, "week": 3, "type": "Ankle Sprain", "bodyPart": "ankle", "side": "left", "severity": "minor", "gamesMissed": 0, "description": "Tweaked left ankle but did not miss any time." },
+    { "season": 2023, "week": 8, "type": "Concussion", "bodyPart": "head", "side": null, "severity": "moderate", "gamesMissed": 1, "description": "Entered concussion protocol after a Week 8 hit." },
+    { "season": 2022, "week": 14, "type": "ACL Tear", "bodyPart": "knee", "side": "left", "severity": "major", "gamesMissed": 5, "description": "Torn left ACL ended the season in Week 14." },
+    { "season": 2021, "week": 6, "type": "Shoulder Contusion", "bodyPart": "shoulder", "side": "right", "severity": "minor", "gamesMissed": 0, "description": "Played through a shoulder contusion." }
+  ],
+  "college": [
+    { "year": 2020, "significance": "medium", "description": "Missed two games with a high-ankle sprain as a senior." },
+    { "year": 2019, "significance": "low", "description": "Minor wrist injury, no games missed." }
+  ]
+}

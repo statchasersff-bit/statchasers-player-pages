@@ -1,5 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { createInjuryService, createInMemoryStorage } from "./injuryStore";
+import { registerInjuryRoute } from "./injuryRoute";
 import fs from "fs";
 import path from "path";
 import * as cheerio from "cheerio";
@@ -717,6 +719,9 @@ export async function registerRoutes(
 ): Promise<Server> {
   loadPlayers();
   loadIndexedData();
+
+  const _injurySvc = createInjuryService(createInMemoryStorage());
+  registerInjuryRoute(app, _injurySvc.getPlayerInjuryHistory);
 
   app.use("/api", (req, res, next) => {
     const origin = req.headers.origin;

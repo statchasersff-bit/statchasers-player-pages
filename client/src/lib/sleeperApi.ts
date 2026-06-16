@@ -13,10 +13,26 @@ export interface ScoringLine {
   posFinishPpg: number | null;
 }
 
+export interface SeasonTotals {
+  passCmp: number;
+  passAtt: number;
+  passYd: number;
+  passTd: number;
+  passInt: number;
+  rushAtt: number;
+  rushYd: number;
+  rushTd: number;
+  tgt: number;
+  rec: number;
+  recYd: number;
+  recTd: number;
+}
+
 export interface PlayerProductionSeason {
   season: number;
   position: string | null;
   gamesPlayed: number;
+  totals: SeasonTotals;
   std: ScoringLine;
   half: ScoringLine;
   ppr: ScoringLine;

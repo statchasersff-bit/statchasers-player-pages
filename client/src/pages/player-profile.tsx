@@ -41,6 +41,7 @@ import {
   ChevronDown,
   ChevronUp,
   Layers,
+  HeartPulse,
 } from "lucide-react";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Player, GameLogEntry, NewsEntry, GameLogStats, GameScore } from "@shared/playerTypes";
@@ -63,6 +64,8 @@ import {
 import { AdvancedTab } from "@/components/AdvancedTab";
 import { loadPlayerAdvancedStats } from "@/lib/playerAdvancedStats";
 import type { PlayerAdvancedResult } from "@/lib/playerAdvancedStats";
+import { InjuryTab } from "@/components/injury/InjuryTab";
+import { fetchPlayerInjuryHistory, type PlayerInjuryHistory } from "@/components/injury/injuryApi";
 
 type AdvSeason = 2025 | 2024 | 2023 | "all";
 
@@ -102,7 +105,7 @@ const POSITION_COLORS: Record<string, string> = {
   DEF: "sc-pos-pill sc-pos-def",
 };
 
-const TAB_KEYS = ["overview", "gamelog", "usage", "advanced", "rankings", "news"] as const;
+const TAB_KEYS = ["overview", "gamelog", "usage", "advanced", "rankings", "injury", "news"] as const;
 type TabKey = typeof TAB_KEYS[number];
 
 const TAB_CONFIG: { key: TabKey; label: string; icon: typeof Activity }[] = [
@@ -111,6 +114,7 @@ const TAB_CONFIG: { key: TabKey; label: string; icon: typeof Activity }[] = [
   { key: "usage", label: "Usage & Trends", icon: TrendingUp },
   { key: "advanced", label: "Advanced Stats", icon: Layers },
   { key: "rankings", label: "Rankings & Value", icon: Trophy },
+  { key: "injury", label: "Injury & Health", icon: HeartPulse },
 ];
 
 function getHeadshotUrl(playerId: string): string {
@@ -126,7 +130,7 @@ function PlayerHeadshot({ playerId, name, teamColor, team }: { playerId: string;
   return (
     <div className="relative flex-shrink-0 md:h-full md:self-stretch" data-testid="img-headshot">
       <div
-        className="relative w-24 h-24 rounded-full md:rounded-none md:w-auto md:h-full md:aspect-square overflow-hidden"
+        className="relative w-16 h-16 rounded-full md:rounded-none md:w-auto md:h-full md:aspect-square overflow-hidden"
         style={{
           border: `3px solid ${ringColor}`,
           boxShadow: `0 4px 16px ${ringColor}44, 0 2px 6px rgba(0,0,0,0.10)`,
@@ -1863,16 +1867,6 @@ function SeasonFinishTimeline({ seasons, position, format }: { seasons: PlayerPr
       return { s, line, inProgress, rank, smallSample, badge: getFinishBadge(rank, position) };
     });
 
-  const ranked = cards.filter((c) => c.rank != null);
-  const best = ranked.length > 0 ? ranked.reduce((b, c) => (c.rank! < b.rank! ? c : b)) : null;
-
-  let trend: { from: typeof cards[number]; to: typeof cards[number]; delta: number } | null = null;
-  if (ranked.length >= 2) {
-    const to = ranked[ranked.length - 1];
-    const from = ranked[ranked.length - 2];
-    trend = { from, to, delta: to.rank! - from.rank! };
-  }
-
   const completedCount = cards.filter((c) => !c.inProgress).length;
   const currentCard = [...cards].reverse().find((c) => c.inProgress) || null;
   const unstableCurrent = !!currentCard && currentCard.s.gamesPlayed < FINISH_SMALL_SAMPLE;
@@ -1929,27 +1923,6 @@ function SeasonFinishTimeline({ seasons, position, format }: { seasons: PlayerPr
         </div>
       </div>
 
-      {(best || trend) && (
-        <div className="sc-finish2__summary">
-          {best && (
-            <p className="sc-finish2__summary-line" data-testid="text-finish-best">
-              Best finish: <span className="sc-finish2__summary-rank">{posLabel}{best.rank}</span> in {best.s.season} &middot; {best.line.ppg.toFixed(1)} PPG
-            </p>
-          )}
-          {trend && (
-            <p
-              className={`sc-finish2__summary-line ${trend.delta > 0 ? 'sc-finish2__summary-line--down' : trend.delta < 0 ? 'sc-finish2__summary-line--up' : 'sc-finish2__summary-line--steady'}`}
-              data-testid="text-finish-trend"
-            >
-              {trend.delta === 0
-                ? <>&rarr; Held steady at {posLabel}{trend.to.rank} ({trend.from.s.season} to {trend.to.s.season})</>
-                : trend.delta > 0
-                  ? <>&searr; Declined from {posLabel}{trend.from.rank} ({trend.from.s.season}) to {posLabel}{trend.to.rank} ({trend.to.s.season})</>
-                  : <>&nearr; Improved from {posLabel}{trend.from.rank} ({trend.from.s.season}) to {posLabel}{trend.to.rank} ({trend.to.s.season})</>}
-            </p>
-          )}
-        </div>
-      )}
 
       {unstableCurrent && (
         <p className="sc-finish2__caution" data-testid="text-finish-caution">
@@ -2013,6 +1986,30 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
   const cp = player.careerProfile || null;
 
   const filterForTable: 'full' | 'last5' = gameFilter === 'full' ? 'full' : 'last5';
+
+  // Career Stats: prefer the full-career Sleeper production feed (every NFL season),
+  // then merge in any season the feed omits (e.g. the in-progress year) from the
+  // local game-log-derived stats so the current season still appears.
+  const careerStats: CareerSeasonStat[] = (() => {
+    const fromProduction: CareerSeasonStat[] = (finishSeasons || []).map((s) => {
+      const line = format === 'ppr' ? s.ppr : format === 'half' ? s.half : s.std;
+      const t = s.totals;
+      return {
+        season: s.season,
+        gp: s.gamesPlayed,
+        ppg: line.ppg,
+        posRank: line.posFinishPpg,
+        pass_att: t.passAtt, pass_cmp: t.passCmp, pass_yd: t.passYd, pass_td: t.passTd, pass_int: t.passInt,
+        rush_att: t.rushAtt, rush_yd: t.rushYd, rush_td: t.rushTd,
+        targets: t.tgt, receptions: t.rec, rec_yd: t.recYd, rec_td: t.recTd,
+        total_td: t.passTd + t.rushTd + t.recTd,
+        scrimmage_yd: t.rushYd + t.recYd,
+      };
+    });
+    const seen = new Set(fromProduction.map((r) => r.season));
+    const extra = (player.careerSeasonStats || []).filter((r) => !seen.has(r.season));
+    return [...fromProduction, ...extra];
+  })();
 
   return (
     <div className="sc-gamelog" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
@@ -2098,8 +2095,8 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
         </div>
       </div>
 
-      {player.careerSeasonStats && player.careerSeasonStats.length > 0 && (
-        <CareerStatsTable stats={player.careerSeasonStats} position={player.position} format={format} onSeasonClick={(s) => { setSelectedSeason(s); setGameFilter('full'); }} />
+      {careerStats.length > 0 && (
+        <CareerStatsTable stats={careerStats} position={player.position} format={format} onSeasonClick={(s) => { setSelectedSeason(s); setGameFilter('full'); }} />
       )}
     </div>
   );
@@ -4424,6 +4421,11 @@ export default function PlayerProfile() {
     enabled: !!player,
   });
 
+  const [injuryData, setInjuryData] = useState<PlayerInjuryHistory | null>(null);
+  const [injuryLoading, setInjuryLoading] = useState(false);
+  const [injuryError, setInjuryError] = useState(false);
+  const injuryFetchedFor = useRef<string | null>(null);
+
   const [advSeason, setAdvSeason] = useState<AdvSeason>(2025);
   const advPos = player?.position?.toLowerCase();
   const { data: advData, isLoading: advLoading } = useQuery<PlayerAdvancedResult | null>({
@@ -4435,7 +4437,22 @@ export default function PlayerProfile() {
 
   useEffect(() => {
     setActiveTab("overview");
+    setInjuryData(null);
+    setInjuryError(false);
+    injuryFetchedFor.current = null;
   }, [slug]);
+
+  useEffect(() => {
+    if (activeTab !== "injury" || !player?.id || !player?.name) return;
+    const key = player.id;
+    if (injuryFetchedFor.current === key) return;
+    injuryFetchedFor.current = key;
+    setInjuryLoading(true);
+    setInjuryError(false);
+    fetchPlayerInjuryHistory(player.id, player.name)
+      .then((data) => { setInjuryData(data); setInjuryLoading(false); })
+      .catch(() => { setInjuryError(true); setInjuryLoading(false); });
+  }, [activeTab, player?.id, player?.name]);
 
   useEffect(() => {
     if (!player) return;
@@ -4541,31 +4558,31 @@ export default function PlayerProfile() {
         <div className="absolute inset-0 hidden dark:block" style={{ background: 'linear-gradient(135deg, #0B1634 0%, #111D42 40%, #0F172A 100%)' }} />
         <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: `linear-gradient(90deg, transparent 0%, ${teamColor}88 20%, ${teamColor} 50%, ${teamColor}88 80%, transparent 100%)` }} />
 
-        <div className="relative max-w-7xl mx-auto px-4 pt-1 pb-2">
-          <div className="flex items-center justify-between mb-1">
+        <div className="relative max-w-7xl mx-auto px-4 pt-0 pb-1">
+          <div className="flex items-center justify-between mb-0">
             <Link href="/nfl/players">
-              <Button variant="ghost" size="sm" className="-ml-1 text-slate-600 dark:text-slate-300" data-testid="button-back">
-                <ArrowLeft className="w-4 h-4 mr-1" />
+              <Button variant="ghost" size="sm" className="-ml-1 h-6 px-2 text-[11px] text-slate-600 dark:text-slate-300" data-testid="button-back">
+                <ArrowLeft className="w-3.5 h-3.5 mr-1" />
                 All Players
               </Button>
             </Link>
           </div>
 
-          <div className="flex flex-col md:flex-row md:items-stretch md:justify-between gap-4 md:gap-6">
+          <div className="flex flex-col md:flex-row md:items-stretch md:justify-between gap-2 md:gap-6">
 
             {/* Left: Photo + Name */}
-            <div className="flex items-center md:items-stretch gap-4 pb-4 md:pb-0 flex-shrink-0">
+            <div className="flex items-center md:items-stretch gap-4 pb-1 md:pb-0 flex-shrink-0">
               <PlayerHeadshot playerId={player.id} name={player.name} teamColor={teamColor} team={player.team || undefined} />
               <div className="flex flex-col justify-center">
-                <p className="text-xs font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase leading-none mb-0.5">{headerFirstName}</p>
+                <p className="text-[11px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase leading-none mb-0">{headerFirstName}</p>
                 <h1
                   className="font-black uppercase leading-none tracking-tight"
-                  style={{ fontSize: 'clamp(28px, 5vw, 44px)', color: teamColor, letterSpacing: '-0.01em' }}
+                  style={{ fontSize: 'clamp(16px, 2.8vw, 22px)', color: teamColor, letterSpacing: '-0.01em' }}
                   data-testid="text-player-name"
                 >
                   {headerLastName}
                 </h1>
-                <div className="flex items-center gap-1.5 mt-1 flex-wrap" data-testid="text-team">
+                <div className="flex items-center gap-1.5 mt-0.5 flex-wrap" data-testid="text-team">
                   <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">{teamName}</span>
                   {player.number && (
                     <>
@@ -4576,12 +4593,12 @@ export default function PlayerProfile() {
                   <span className="text-slate-300 dark:text-slate-600 text-xs">&middot;</span>
                   <span className="text-xs text-slate-500 dark:text-slate-400">{positionFull}</span>
                 </div>
-                <div className="mt-1.5 h-[2px] w-10 rounded-full" style={{ background: teamColor }} />
+                <div className="mt-1 h-[2px] w-10 rounded-full" style={{ background: teamColor }} />
               </div>
             </div>
 
             {/* Right: bio meta + status (fills the width to the far edge) */}
-            <div className="flex flex-col justify-center gap-2 md:items-end md:text-right pb-4 md:pb-0 md:pl-5 md:border-l border-slate-200 dark:border-slate-700">
+            <div className="flex flex-col justify-center gap-1 md:items-end md:text-right pb-2 md:pb-0 md:pl-5 md:border-l border-slate-200 dark:border-slate-700">
               <p className="text-sm text-slate-600 dark:text-slate-300" data-testid="text-player-meta">
                 {[
                   player.age ? `Age ${player.age}` : null,
@@ -4718,6 +4735,15 @@ export default function PlayerProfile() {
           )}
           {activeTab === "rankings" && (
             <RankingsTab player={player} />
+          )}
+          {activeTab === "injury" && (
+            <InjuryTab
+              injury={injuryData}
+              loading={injuryLoading}
+              error={injuryError}
+              playerName={player.name}
+              knownSeasons={player.availableSeasons ?? []}
+            />
           )}
           {activeTab === "news" && (
             <NewsTab player={player} />

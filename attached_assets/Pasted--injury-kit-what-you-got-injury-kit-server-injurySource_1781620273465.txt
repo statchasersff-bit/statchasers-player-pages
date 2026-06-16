@@ -1,0 +1,49 @@
+ injury-kit/ — what you got
+
+  injury-kit/
+  ├── server/
+  │   ├── injurySource.ts   ← THE only source-specific file
+  (scrape + normalize → PlayerInjuryHistory)
+  │   ├── injuryStore.ts    ← read-through cache: freshness +
+  single-flight + lazy + last-known-good
+  │   └── injuryRoute.ts    ← Express route factory
+  ├── client/
+  │   ├── injuryApi.ts      ← data contract (types) + fetch
+  │   ├── injuryDerivations.ts ← pure helpers (summary, risk
+  bars, narratives, region classify)
+  │   ├── InjuryAvailabilityTimeline.tsx ← week-grid timeline
+  + the severity model
+  │   ├── InjuryBodyMap.tsx ← SVG silhouette with region
+  markers
+  │   ├── InjuryTab.tsx     ← composes the four cards
+  │   └── ui.tsx            ← Card / SkeletonLines /
+  ComingSoon / SectionTitle / Tooltip / cn
+  ├── data/sample-injury-history.json
+  └── README.md
+
+  Decisions I made to keep it portable:
+
+  - No DB dependency. The store logic (the part worth copying
+  — single-flight, freshness, last-known-good) is abstracted
+  behind an InjuryStorage interface with an in-memory default;
+  a Drizzle sketch is in comments for when you want
+  persistence.
+  - No shadcn/Radix dependency. ui.tsx bundles a lightweight
+  CSS hover/focus tooltip and a minimal Card, so the two
+  visual components are drop-in. The README notes you can swap
+  in Radix for collision-aware positioning.
+  - Decoupled from your player types. InjuryTab takes
+  knownSeasons: number[] and weeklyPlayed?: Record<number, 
+  number[]> directly instead of this project's ProductionRow —
+  so there's nothing to refactor on the other side.
+  - The route/store/components are verbatim ports; only
+  imports changed (@/... → relative ./ui,
+  ./InjuryAvailabilityTimeline).
+
+  To use it: server side,
+  createInjuryService(createInMemoryStorage()) +
+  registerInjuryRoute(app, svc.getPlayerInjuryHistory); client
+  side, lazy-fetch on tab open and render <InjuryTab .../>.
+  The README has copy-paste wiring and a smoke test against
+  the sample JSON (grade C+/64 → "Moderate Injury Risk", 2022
+  ACL renders season-ending-red, etc.).
