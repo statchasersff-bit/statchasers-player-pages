@@ -666,10 +666,12 @@ function sc_fetch_and_save_game_logs( $seasons = null ) {
                 $pos    = isset( $player['position'] ) ? $player['position'] : '';
                 if ( ! in_array( $pos, [ 'QB', 'RB', 'WR', 'TE', 'K' ], true ) ) continue;
                 $opp    = sc_normalize_team( isset( $entry['opponent'] ) ? $entry['opponent'] : '' );
+                $team_w = sc_normalize_team( isset( $entry['team'] ) ? $entry['team'] : '' );
                 if ( ! isset( $season_data[ $pid ] ) ) $season_data[ $pid ] = [];
                 $season_data[ $pid ][] = [
                     'week'  => $week,
                     'opp'   => $opp ?: "\u2014",
+                    'team'  => $team_w ?: null,
                     'stats' => sc_extract_player_stats( $stats, $pos ),
                 ];
             }

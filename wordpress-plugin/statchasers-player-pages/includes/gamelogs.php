@@ -52,10 +52,36 @@ function sc_build_team_aggregates( $season, $logs, $all_players ) {
 }
 
 /* ------------------------------------------------------------------
+ * Derive the team a player actually played for during a given season.
+ * Prefers per-entry team in game logs (most common value); falls back
+ * to the supplied current team. Use for historical season copy.
+ * ------------------------------------------------------------------ */
+function sc_derive_season_team( $entries, $fallback_team ) {
+    $counts = [];
+    if ( is_array( $entries ) ) {
+        foreach ( $entries as $e ) {
+            if ( empty( $e['team'] ) ) continue;
+            $t = sc_normalize_team( $e['team'] );
+            if ( ! $t || $t === 'FA' ) continue;
+            if ( ! isset( $counts[ $t ] ) ) $counts[ $t ] = 0;
+            $counts[ $t ]++;
+        }
+    }
+    if ( empty( $counts ) ) {
+        return ( $fallback_team && $fallback_team !== 'FA' ) ? sc_normalize_team( $fallback_team ) : null;
+    }
+    arsort( $counts );
+    $best = array_key_first( $counts );
+    return $best ?: ( ( $fallback_team && $fallback_team !== 'FA' ) ? sc_normalize_team( $fallback_team ) : null );
+}
+
+/* ------------------------------------------------------------------
  * Enrich entries with target share and team pass rate
  * ------------------------------------------------------------------ */
 function sc_enrich_with_team_metrics( $entries, $player_team, $season, $all_logs, $all_players ) {
-    $team = ( $player_team && $player_team !== 'FA' ) ? sc_normalize_team( $player_team ) : null;
+    /* Prefer team derived from the entries themselves (correct for
+     * completed seasons when current team has changed in offseason). */
+    $team = sc_derive_season_team( $entries, $player_team );
     if ( ! $team ) return $entries;
 
     $agg = sc_build_team_aggregates( $season, $all_logs, $all_players );
@@ -478,10 +504,14 @@ function sc_compute_player_profile( $player, $all_players, $seasons, $format = '
     $bios = sc_load_bios();
     $bio  = ( $bios && isset( $bios[ $player['slug'] ] ) ) ? $bios[ $player['slug'] ] : null;
 
+    /* --- Season team (team during the active/completed season, not current) --- */
+    $season_team = sc_derive_season_team( $player_logs, $team );
+
     return [
         'activeSeason'      => $active_season,
         'seasonLabel'       => $season_label,
         'seasonRank'        => $season_rank,
+        'seasonTeam'        => $season_team,
         'trends'            => $trends,
         'gameLog'           => $player_logs,
         'availableSeasons'  => $seasons,

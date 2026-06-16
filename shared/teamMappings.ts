@@ -71,3 +71,39 @@ export function normalizeTeamAbbr(abbr: string): string {
   const upper = abbr.toUpperCase().trim();
   return TEAM_ALIAS_MAP[upper] || upper;
 }
+
+/**
+ * Derive the team a player actually played for during a given season.
+ * Prefers the per-entry `team` field on game logs (most common value across
+ * active weeks). Falls back to the player's current `team` if logs have no
+ * team data.
+ *
+ * Use this for any historical/completed-season copy (e.g., "played for the
+ * Miami Dolphins in 2025"). Use `currentTeam` for forward-looking copy.
+ */
+export function deriveSeasonTeam(
+  entries: Array<{ team?: string | null; opp?: string }> | null | undefined,
+  fallbackTeam: string | null | undefined
+): string | null {
+  if (!entries || entries.length === 0) {
+    return fallbackTeam ? normalizeTeamAbbr(fallbackTeam) : null;
+  }
+  const counts: Record<string, number> = {};
+  for (const e of entries) {
+    if (!e || !e.team) continue;
+    const t = normalizeTeamAbbr(e.team);
+    if (!t || t === 'FA') continue;
+    counts[t] = (counts[t] || 0) + 1;
+  }
+  const keys = Object.keys(counts);
+  if (keys.length === 0) {
+    return fallbackTeam ? normalizeTeamAbbr(fallbackTeam) : null;
+  }
+  let best = '';
+  let bestN = 0;
+  for (const t of keys) {
+    const n = counts[t];
+    if (n > bestN) { best = t; bestN = n; }
+  }
+  return best || (fallbackTeam ? normalizeTeamAbbr(fallbackTeam) : null);
+}

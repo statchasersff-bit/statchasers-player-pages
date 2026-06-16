@@ -29,6 +29,7 @@ export interface GameScore {
 export interface GameLogEntry {
   week: number;
   opp: string;
+  team?: string | null;
   stats: GameLogStats;
   pos_rank?: number | null;
   opp_rank_vs_pos?: number | null;
@@ -80,7 +81,21 @@ export interface Player {
   name: string;
   slug: string;
   position: string | null;
+  /**
+   * Current team (post-offseason roster). Sourced from data/players.json (Sleeper).
+   * Use for: header, current-roster badge, 2026+ outlook, news/injury feeds.
+   * NEVER use for completed-season recap copy.
+   */
   team: string | null;
+  /**
+   * Team the player actually played for during the active stat season.
+   * Derived from per-week game log `team` field (most common value).
+   * Use for: 2025 fantasy recap, season summary, "played for the X" copy.
+   * NEVER use for forward-looking copy.
+   */
+  seasonTeam?: string | null;
+  /** Alias of `seasonTeam` (same value); reserved for explicit historical contexts. */
+  historicalSeasonTeam?: string | null;
   status: string | null;
   injury_status: string | null;
   age: number | null;

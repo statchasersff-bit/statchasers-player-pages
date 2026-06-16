@@ -499,10 +499,6 @@ export default function PlayerSearch() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <Zap className="w-5 h-5 sc-header__gold-icon" />
-                <span className="sc-header__kicker">Player Intelligence</span>
-              </div>
               <h1 className="sc-hero-title" data-testid="text-page-title">
                 Fantasy Football Player Stats &amp; Analytics
               </h1>
@@ -549,7 +545,7 @@ export default function PlayerSearch() {
                   id="autocomplete-list"
                   ref={listRef}
                   role="listbox"
-                  className="absolute top-full left-0 right-0 mt-1 bg-white border border-[rgba(15,23,42,0.12)] rounded-xl shadow-lg z-50 overflow-hidden max-h-80 overflow-y-auto"
+                  className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-xl shadow-lg z-50 overflow-hidden max-h-80 overflow-y-auto"
                   data-testid="autocomplete-dropdown"
                 >
                   {autocompleteResults.map((player, i) => (
@@ -560,28 +556,28 @@ export default function PlayerSearch() {
                         aria-selected={i === activeIndex}
                         className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors ${
                           i === activeIndex
-                            ? "bg-[rgba(15,23,42,0.04)]"
-                            : "hover:bg-[rgba(15,23,42,0.02)]"
+                            ? "bg-muted"
+                            : "hover:bg-muted/50"
                         }`}
                         onMouseEnter={() => setActiveIndex(i)}
                         onClick={() => setShowAutocomplete(false)}
                         data-testid={`autocomplete-item-${player.slug}`}
                       >
-                        <div className="flex-shrink-0 w-8 h-8 rounded-md bg-[rgba(15,23,42,0.04)] flex items-center justify-center">
-                          <span className="text-[10px] font-bold text-[#64748b]">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-md bg-muted flex items-center justify-center">
+                          <span className="text-[10px] font-bold text-muted-foreground">
                             {player.position || "?"}
                           </span>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <span className="font-medium text-sm text-[#0f172a] truncate block">
+                          <span className="font-medium text-sm text-foreground truncate block">
                             {player.name}
                           </span>
                           <div className="flex items-center gap-1.5 mt-0.5">
                             <span className={POSITION_COLORS[player.position || ""] || ""}>{player.position}</span>
-                            <span className="text-xs text-[#64748b]">{player.team}</span>
+                            <span className="text-xs text-muted-foreground">{player.team}</span>
                           </div>
                         </div>
-                        <TrendingUp className="w-3.5 h-3.5 text-[#64748b] flex-shrink-0" />
+                        <TrendingUp className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
                       </div>
                     </Link>
                   ))}
@@ -606,7 +602,7 @@ export default function PlayerSearch() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-[#64748b] hover:text-[#0f172a]"
+                  className="text-muted-foreground hover:text-foreground"
                   onClick={() => setPosFilter("ALL")}
                   data-testid="button-clear-filter"
                 >

@@ -4,8 +4,14 @@ import fs from "fs";
 import path from "path";
 import * as cheerio from "cheerio";
 import type { Player, GameLogEntry, DynastyData } from "@shared/playerTypes";
-import { normalizeTeamAbbr, TEAM_ALIAS_MAP } from "@shared/teamMappings";
+import { normalizeTeamAbbr, TEAM_ALIAS_MAP, deriveSeasonTeam } from "@shared/teamMappings";
 import { type ScoringFormat, getEntryPoints } from "@shared/scoring";
+import {
+  getPlayerProduction,
+  getPlayerGameLogs,
+  type SleeperScoring,
+  type SleeperSeasonType,
+} from "./sleeperPlayerProfile";
 
 let playersCache: Player[] | null = null;
 let playersBySlug: Map<string, Player> | null = null;
@@ -175,7 +181,16 @@ function buildTeamAggregates(season: number, logs: Record<string, GameLogEntry[]
 }
 
 function resolvePlayerTeam(playerTeam: string | null, entries: GameLogEntry[], season: number, logs: Record<string, GameLogEntry[]>, players: Player[]): string | null {
+  // 1) Prefer per-entry team from the game logs themselves (most accurate for
+  //    completed seasons — won't be overridden by an offseason team change).
+  const fromEntries = deriveSeasonTeam(entries, null);
+  if (fromEntries) return fromEntries;
+
+  // 2) Fall back to the player's current team if it isn't FA.
   if (playerTeam && playerTeam !== 'FA') return normalizeTeamAbbr(playerTeam);
+
+  // 3) Last-resort: infer team from opponent matchups using other players'
+  //    weekly logs (legacy heuristic for game logs missing per-entry team).
   if (entries.length === 0) return null;
   const weekOppToTeam = new Map<string, string>();
   for (const p of players) {
@@ -981,12 +996,16 @@ export async function registerRoutes(
     const biosData = loadBios();
     const bio = biosData[player.slug] || null;
 
+    const seasonTeam = deriveSeasonTeam(playerLogs, player.team);
+
     const enriched = {
       ...player,
       headshotUrl: player.headshotUrl ?? null,
       season: activeSeason,
       seasonLabel,
       seasonRank,
+      seasonTeam,
+      historicalSeasonTeam: seasonTeam,
       trends,
       gameLog: playerLogs,
       news: player.news ?? [],
@@ -1032,6 +1051,44 @@ export async function registerRoutes(
     playerLogs = fillMissingWeeks(playerLogs, season, player.team);
     res.set("Cache-Control", "public, max-age=3600");
     res.json(playerLogs);
+  });
+
+  // --- Game Log 2 (live Sleeper-backed) ------------------------------------
+  // These are keyed by Sleeper player id (Player.id), not slug.
+
+  function parseSleeperScoring(v: unknown): SleeperScoring {
+    if (v === "std" || v === "half_ppr" || v === "ppr") return v;
+    return "ppr";
+  }
+
+  app.get("/api/players/:playerId/production", async (req, res) => {
+    const playerId = req.params.playerId;
+    const scoring = parseSleeperScoring(req.query.scoring);
+    try {
+      const seasons = await getPlayerProduction(playerId, scoring);
+      res.set("Cache-Control", "public, max-age=3600");
+      res.json({ playerId, scoring, seasons });
+    } catch (err) {
+      console.error("production fetch failed", playerId, err);
+      res.status(502).json({ error: "upstream_unavailable" });
+    }
+  });
+
+  app.get("/api/players/:playerId/game-logs", async (req, res) => {
+    const playerId = req.params.playerId;
+    const season = parseInt(req.query.season as string, 10);
+    if (isNaN(season)) {
+      return res.status(400).json({ error: "invalid_season" });
+    }
+    const seasonType: SleeperSeasonType = req.query.type === "post" ? "post" : "regular";
+    try {
+      const logs = await getPlayerGameLogs(playerId, season, seasonType);
+      res.set("Cache-Control", "public, max-age=900");
+      res.json({ playerId, season, seasonType, logs });
+    } catch (err) {
+      console.error("game-logs fetch failed", playerId, season, seasonType, err);
+      res.status(502).json({ error: "upstream_unavailable" });
+    }
   });
 
   app.get("/api/players/:slug/related", (req, res) => {

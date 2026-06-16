@@ -159,6 +159,7 @@ async function main() {
         if (!['QB', 'RB', 'WR', 'TE', 'K'].includes(position)) continue;
 
         const opp = normalizeTeam(entry.opponent);
+        const team = normalizeTeam(entry.team);
         const extracted = extractPlayerStats(stats, position);
 
         if (!seasonData[playerId]) {
@@ -167,6 +168,7 @@ async function main() {
         seasonData[playerId].push({
           week,
           opp: opp || '—',
+          team: team || null,
           stats: extracted,
         });
         playerCount++;

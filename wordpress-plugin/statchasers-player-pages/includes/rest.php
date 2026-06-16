@@ -139,6 +139,8 @@ function sc_rest_player_profile( $request ) {
         'season'                 => $profile['activeSeason'],
         'seasonLabel'            => $profile['seasonLabel'],
         'seasonRank'             => $profile['seasonRank'],
+        'seasonTeam'             => isset( $profile['seasonTeam'] ) ? $profile['seasonTeam'] : null,
+        'historicalSeasonTeam'   => isset( $profile['seasonTeam'] ) ? $profile['seasonTeam'] : null,
         'trends'                 => $profile['trends'],
         'gameLog'                => $profile['gameLog'],
         'news'                   => isset( $player['news'] ) ? $player['news'] : [],
