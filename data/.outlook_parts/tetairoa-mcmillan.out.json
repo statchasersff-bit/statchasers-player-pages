@@ -1,0 +1,19 @@
+{
+  "slug": "tetairoa-mcmillan",
+  "name": "Tetairoa McMillan",
+  "position": "WR",
+  "team": "CAR",
+  "season": 2026,
+  "headline": "Volume monster ready to crash the WR1 tier",
+  "body": "McMillan's rookie résumé screams alpha. He commanded a 25.4% target share and a staggering 40.9% air-yards share on 122 looks, posting 70 grabs for 1,014 yards and seven scores across all 17 games. The underlying numbers back the workload: 0.236 targets per route, a 0.667 WOPR, 1.96 yards per route run, and a plus-0.207 EPA per play with a 50% success rate. That production landed him at WR14 despite an offense that gave him little margin.\n\nThe path to a true breakout is paved by sheer opportunity. Fifteen red-zone targets and an 11.6-yard average depth signal a complete, every-down role with year-two upside. The catch rate (57.4%) and eight drops leave obvious room to climb, and any quarterback stability lifts his ceiling further. An ankle issue bears monitoring, but a healthy camp keeps him squarely in the early-Round-3 conversation as a high-floor WR1 bet.",
+  "keyStats": {"rank":14,"playerId":"12526","playerName":"Tetairoa McMillan","position":"WR","team":"CAR","age":22,"season":2025,"games":17,"snapPct":87.2,"routes":517,"routePct":94.3,"targets":122,"targetsPerRouteRun":0.236,"targetSharePct":25.4,"airYardsPerTarget":11.56,"airYardsPerReception":20.14,"airYardsSharePct":40.9,"wopr":0.667,"receptions":70,"redZoneTargets":15,"endZoneTargets":6,"catchPct":57.4,"receivingYards":1014,"totalYards":1014,"yardsPerReception":14.49,"yardsBeforeCatchPerReception":10.64,"yardsAfterCatchPerReception":3.84,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.96,"receivingTouchdowns":7,"epaPerPlay":0.207,"successRate":50,"contestedCatchRate":null,"fantasyPoints":143.4,"avoidedTackleRate":2.9,"brokenTackles":2,"drops":8,"catchableTargets":78,"dropPct":6.6,"interceptionsWhenTargeted":6,"fumbles":0,"receptions10Plus":47,"receptions20Plus":17,"receptions30Plus":4,"receptions40Plus":3,"receptions50Plus":0,"longestReception":43},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/tetairoa-mcmillan.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-tetairoa-mcmillan/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "12526",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

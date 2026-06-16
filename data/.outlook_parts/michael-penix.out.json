@@ -1,0 +1,19 @@
+{
+  "slug": "michael-penix",
+  "name": "Michael Penix",
+  "position": "QB",
+  "team": "ATL",
+  "season": 2026,
+  "headline": "Arm Talent Is Real, Efficiency Has to Catch Up",
+  "body": "Penix enters his first full season as Atlanta's starter carrying a thin but loud nine-game sample. He finished QB29 in 2025 with 1,982 yards, nine touchdowns and just three picks across nine starts, posting a modest 0.016 EPA per play and a 44.8% success rate. The accuracy still lags: a 60.1% completion rate, minus-3.6 CPOE and a 24% bad-throw rate say his deep-shot profile (12.1% of attempts) outran his ball placement.\n\nThe upside lives in the arm. He stacked 26 throws of 20-plus yards and a 69-yard long despite the truncated workload, and his sturdier 2024 cameo flashed a 0.131 EPA per play. With 13 sacks and four fumbles, ball security and protection are the swing factors. Project a full 17, and the volume alone lifts him into low-end QB2 territory with weekly ceiling games baked in. A leap in efficiency is the difference between streamer and starter.",
+  "keyStats": {"rank":29,"playerId":"11559","playerName":"Michael Penix Jr.","position":"QB","team":"ATL","age":25,"season":2025,"games":9,"attempts":276,"completions":166,"completionPct":60.1,"passingYards":1982,"yardsPerCatch":7.18,"passingTouchdowns":9,"interceptions":3,"fantasyPoints":120.3,"airYards":2300,"completedAirYards":1094,"completedAirYardsPerCompletion":6.6,"deepAttemptPct":12.1,"epaPerPlay":0.016,"successRate":44.8,"cpoe":-3.6,"throwaways":14,"battedPasses":3,"poorThrows":63,"badThrowPct":24,"onTargetPct":72.9,"passesDropped":10,"passes10Plus":87,"passes20Plus":26,"passes30Plus":9,"passes40Plus":5,"passes50Plus":2,"longestPass":69,"rushAttempts":21,"rushYards":70,"rushTouchdowns":1,"redZoneAttempts":32,"scrambleRate":4.3,"yardsPerScramble":5.9,"fumbles":4,"sacks":13,"sackYardsLost":101,"pocketTime":2.4,"timeToThrow":2.79,"blitzes":70,"hurries":19,"knockdowns":18,"pressurePct":16.6},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/michael-penix.php","used":false},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-michael-penix/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11559",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "tyler-allgeier",
+  "name": "Tyler Allgeier",
+  "position": "RB",
+  "team": "ARI",
+  "season": 2026,
+  "headline": "Touchdown vulture chasing carries in a crowded Arizona backfield",
+  "body": "Allgeier's 2025 line tells the story of a goal-line specialist, not a featured back. He punched in eight rushing scores on just 143 carries while averaging a modest 3.59 yards per attempt, and his EPA per play sat underwater at -0.055. The volume was concentrated near the stripe: 33 red-zone opportunities and 10 goal-line carries propped up a profile that managed only a 30.2% snap share and a 3.1% target share. That formula finished RB44 with 109 points, and the 1.61 yards after contact per attempt confirms the efficiency ceiling is low.\n\nThe move to Arizona muddies things further. He now sits behind James Conner, rookie Jeremiyah Love, and Trey Benson, with passing downs spoken for. Drafters are treating him as a late dart at RB48 ADP. Bank on touchdown poaching and injury-contingent upside rather than steady weekly snaps, and keep him on the bench until the depth chart clears.",
+  "keyStats": {"rank":44,"playerId":"8132","playerName":"Tyler Allgeier","position":"RB","team":"ATL","age":25,"season":2025,"games":17,"snapPct":30.2,"routes":136,"rushAttempts":143,"redZoneOpportunities":33,"goalLineCarries":10,"targets":16,"receptions":14,"redZoneTargets":1,"endZoneTargets":0,"rushYards":514,"yardsPerCarry":3.59,"rushTouchdowns":8,"targetSharePct":3.1,"receivingYards":96,"yardsPerReception":6.86,"yardsPerRouteRun":0.71,"receivingTouchdowns":0,"epaPerPlay":-0.055,"fantasyPoints":109,"rushes10Plus":14,"rushes20Plus":1,"rushes30Plus":0,"rushes40Plus":0,"rushes50Plus":0,"explosiveRunPct":9.79,"breakawayRunPct":3.5,"longestRush":21,"longestRushTouchdown":21,"brokenTackles":9,"rushAttemptsPerBrokenTackle":15.89,"yardsAfterContactPerAttempt":1.61,"yardsBeforeContactPerAttempt":1.99,"receivingYardsAfterCatch":120,"tackleEludedRate":5.7,"fumbles":0,"tacklesForLoss":20,"tacklesForLossYards":36,"rushAttForNegativeYards":20},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/tyler-allgeier.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-tyler-allgeier/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "8132",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

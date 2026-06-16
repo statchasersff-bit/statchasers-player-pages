@@ -1,0 +1,20 @@
+{
+  "slug": "jimmy-horn",
+  "name": "Jimmy Horn",
+  "position": "WR",
+  "team": "CAR",
+  "season": 2026,
+  "headline": "Efficient rookie flashes await a bigger Year 2 route share",
+  "body": "Horn closed his rookie year ranked 143rd among receivers, but the underlying work hinted at more than the box score showed. Across 10 games he ran routes on just 13.5% of snaps, yet still posted 0.203 targets per route run and a tidy 1.46 yards per route run. A 73.3% catch rate, 0.231 EPA per play and a 46.7% success rate all point to a runner who delivered when the ball found him, even with a microscopic 3.1% target share.\n\nThe problem was volume, not production: 15 targets and zero touchdowns leave plenty of runway. At age 22 with an 18.2% avoided-tackle rate and yards-after-catch chops, Horn profiles as a Year 2 breakout candidate the moment the snap count climbs. If the route rate doubles, his per-route efficiency suggests a real flex ceiling. For now, treat him as a cheap upside dart with the underlying metrics on his side."
+,
+  "keyStats": {"rank":143,"playerId":"12523","playerName":"Jimmy Horn Jr.","position":"WR","team":"CAR","age":22,"season":2025,"games":10,"snapPct":19.2,"routes":74,"routePct":13.5,"targets":15,"targetsPerRouteRun":0.203,"targetSharePct":3.1,"airYardsPerTarget":6,"airYardsPerReception":8.18,"airYardsSharePct":2.6,"wopr":0.065,"receptions":11,"redZoneTargets":3,"endZoneTargets":0,"catchPct":73.3,"receivingYards":108,"totalYards":177,"yardsPerReception":9.82,"yardsBeforeCatchPerReception":3.36,"yardsAfterCatchPerReception":6.45,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.46,"receivingTouchdowns":0,"epaPerPlay":0.231,"successRate":46.7,"contestedCatchRate":null,"fantasyPoints":17.7,"avoidedTackleRate":18.2,"brokenTackles":2,"drops":1,"catchableTargets":12,"dropPct":6.7,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":4,"receptions20Plus":1,"receptions30Plus":1,"receptions40Plus":0,"receptions50Plus":0,"longestReception":34},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/jimmy-horn.php","used":false},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-jimmy-horn/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "12523",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

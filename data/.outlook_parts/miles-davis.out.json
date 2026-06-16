@@ -1,0 +1,19 @@
+{
+  "slug": "miles-davis",
+  "name": "Miles Davis",
+  "position": "RB",
+  "team": "CAR",
+  "season": 2026,
+  "headline": "Undrafted Long Shot Fighting For Panthers Backfield Snaps",
+  "body": "Davis arrives in Carolina as an undrafted free agent, and the early reality is sobering: he heads into OTAs scrapping for a depth role behind an established rotation rather than walking into carries. Expert consensus pegs him around the 150th running back and roughly 492nd overall, the kind of placement reserved for camp bodies who need an injury or a standout summer to crack the radar. He is currently on essentially zero percent of rosters.\n\nThe path forward is narrow but not closed. Carolina's backfield offers reps to whoever earns them in pads, and a strong preseason could vault him onto the practical-squad bubble. Just temper the timeline: the Panthers face the league's toughest projected schedule for backs in 2026, so even an opportunity would come against unforgiving fronts. For now, this is a watch-list dart, not a draftable asset.",
+  "keyStats": null,
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/miles-davis.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-miles-davis/","used":false},
+    {"name":"Statchasers advanced stats","used":false}
+  ],
+  "id": "14044",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

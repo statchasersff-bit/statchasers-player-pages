@@ -1,0 +1,19 @@
+{
+  "slug": "dandre-swift",
+  "name": "D'Andre Swift",
+  "position": "RB",
+  "team": "CHI",
+  "season": 2026,
+  "headline": "Swift's efficiency turnaround keeps him a sturdy RB2",
+  "body": "Swift answered a rough 2024 with the best efficiency season of his career, pushing his yards per carry to 4.87 across 223 totes for 1,087 yards and nine scores, plus 34 grabs on a 9% target share. The jump shows up in the underlying numbers: his EPA per play flipped from minus-0.122 to a positive 0.051, his explosive-run rate nearly doubled to 13.45%, and he finished as our RB13 with 194.6 fantasy points. He also commanded the goal-line work, logging 14 inside carries and 41 red-zone opportunities.\n\nThe one drag is the backfield split. Swift owns the passing downs and two-minute snaps, but Chicago leaned harder on Kyle Monangai down the stretch, and the committee threatens to settle into a 1A/1B arrangement. Still, drafting near RB22 inside Ben Johnson's projected top-10 offense buys a high-floor back with weekly upside whenever the volume tilts his way.",
+  "keyStats": {"rank":13,"playerId":"6790","playerName":"D'Andre Swift","position":"RB","team":"CHI","age":26,"season":2025,"games":16,"snapPct":57.9,"routes":320,"rushAttempts":223,"redZoneOpportunities":41,"goalLineCarries":14,"targets":48,"receptions":34,"redZoneTargets":1,"endZoneTargets":0,"rushYards":1087,"yardsPerCarry":4.87,"rushTouchdowns":9,"targetSharePct":9,"receivingYards":299,"yardsPerReception":8.79,"yardsPerRouteRun":0.93,"receivingTouchdowns":1,"epaPerPlay":0.051,"fantasyPoints":194.6,"rushes10Plus":30,"rushes20Plus":5,"rushes30Plus":0,"rushes40Plus":0,"rushes50Plus":0,"explosiveRunPct":13.45,"breakawayRunPct":5.38,"longestRush":25,"longestRushTouchdown":22,"brokenTackles":10,"rushAttemptsPerBrokenTackle":22.3,"yardsAfterContactPerAttempt":1.66,"yardsBeforeContactPerAttempt":3.21,"receivingYardsAfterCatch":357,"tackleEludedRate":3.9,"fumbles":2,"tacklesForLoss":14,"tacklesForLossYards":32,"rushAttForNegativeYards":14},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/dandre-swift.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-dandre-swift/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "6790",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

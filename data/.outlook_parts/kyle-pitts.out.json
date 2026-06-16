@@ -1,0 +1,19 @@
+{
+  "slug": "kyle-pitts",
+  "name": "Kyle Pitts",
+  "position": "TE",
+  "team": "ATL",
+  "season": 2026,
+  "headline": "Pitts Reclaims TE2 Status As Atlanta's Clear No. 2",
+  "body": "The breakout finally arrived. Pitts ranked second among our tight ends in 2025, posting 88 grabs on 118 targets for 928 yards and five scores across all 17 games. His 22.7% target share and 0.217 targets per route run dwarfed the 13.7% and 0.161 marks from a year prior, and the efficiency followed: a 0.216 EPA per play, 55.9% success rate, 1.71 yards per route run, and a 0.487 WOPR that screams featured weapon. He ran a route on 95.8% of dropbacks, so the volume is locked in.\n\nWith thin receiver depth behind Drake London, Pitts profiles as the clear second option, and a new tight-end-friendly scheme should funnel even more short, efficient looks his way. The only red flags are touchdown ceiling, where five remains a career best, and lingering trade chatter after the franchise tender. At a Round 6 to 7 cost and a TE8 consensus, the value is plain.",
+  "keyStats": {"rank":2,"playerId":"7553","playerName":"Kyle Pitts","position":"TE","team":"ATL","age":24,"season":2025,"games":17,"snapPct":88,"routes":544,"routePct":95.8,"targets":118,"targetsPerRouteRun":0.217,"targetSharePct":22.7,"airYardsPerTarget":7.36,"airYardsPerReception":9.88,"airYardsSharePct":20.8,"wopr":0.487,"receptions":88,"redZoneTargets":12,"endZoneTargets":6,"catchPct":74.6,"receivingYards":928,"totalYards":928,"yardsPerReception":10.55,"yardsBeforeCatchPerReception":6,"yardsAfterCatchPerReception":4.55,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.71,"receivingTouchdowns":5,"epaPerPlay":0.216,"successRate":55.9,"contestedCatchRate":null,"fantasyPoints":122.8,"avoidedTackleRate":2.3,"brokenTackles":2,"drops":2,"catchableTargets":90,"dropPct":1.7,"interceptionsWhenTargeted":3,"fumbles":0,"receptions10Plus":43,"receptions20Plus":12,"receptions30Plus":2,"receptions40Plus":0,"receptions50Plus":0,"longestReception":36},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/kyle-pitts.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-kyle-pitts/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "7553",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

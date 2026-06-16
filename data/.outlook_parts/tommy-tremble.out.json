@@ -1,0 +1,19 @@
+{
+  "slug": "tommy-tremble",
+  "name": "Tommy Tremble",
+  "position": "TE",
+  "team": "CAR",
+  "season": 2026,
+  "headline": "Efficient on a sliver of the targets",
+  "body": "Tremble finished as our TE47 in 2025, and the profile reads like a part-time tight end who does the little he gets well. Across 15 games he ran 283 routes but drew just 37 targets, a 7.7% share and a thin 0.131 targets per route run, turning that volume into 27 grabs for 249 yards, 2 scores and 36.9 fantasy points. The efficiency is real: a 0.223 EPA per play, a 56.8% success rate and a 73% catch rate all rank well, but at 0.88 yards per route run the ceiling is capped.\n\nThe blocking-first usage hasn't budged in three seasons, with route rates stuck near 50% and target shares hovering around 6 to 8%. Carolina splits tight end snaps, so meaningful volume only arrives if the room thins out. Draft him as a deep-league dart, not a weekly starter.",
+  "keyStats": {"rank":47,"playerId":"7694","playerName":"Tommy Tremble","position":"TE","team":"CAR","age":25,"season":2025,"games":15,"snapPct":60.1,"routes":283,"routePct":51.6,"targets":37,"targetsPerRouteRun":0.131,"targetSharePct":7.7,"airYardsPerTarget":4.41,"airYardsPerReception":6.04,"airYardsSharePct":4.7,"wopr":0.149,"receptions":27,"redZoneTargets":5,"endZoneTargets":3,"catchPct":73,"receivingYards":249,"totalYards":249,"yardsPerReception":9.22,"yardsBeforeCatchPerReception":3.15,"yardsAfterCatchPerReception":6.07,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.88,"receivingTouchdowns":2,"epaPerPlay":0.223,"successRate":56.8,"contestedCatchRate":null,"fantasyPoints":36.9,"avoidedTackleRate":0,"brokenTackles":0,"drops":2,"catchableTargets":29,"dropPct":5.4,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":6,"receptions20Plus":1,"receptions30Plus":1,"receptions40Plus":1,"receptions50Plus":1,"longestReception":54},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/tommy-tremble.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-tommy-tremble/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "7694",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

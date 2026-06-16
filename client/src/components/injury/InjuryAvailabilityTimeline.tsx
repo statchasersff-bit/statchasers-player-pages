@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { CalendarClock } from "lucide-react";
 import { Card, Tooltip, TooltipTrigger, TooltipContent, cn } from "./ui";
 
 const REGULAR_SEASON_WEEKS = 18;
@@ -703,7 +702,6 @@ export function InjuryAvailabilityTimeline({
       <div>
         <div className="flex items-center justify-between gap-3">
           <h3 className="sc-sectitle">
-            <CalendarClock className="h-4 w-4 text-[#d4af37]" />
             Availability Timeline
           </h3>
           <div className="inline-flex flex-shrink-0 items-center rounded-md border border-border p-0.5">

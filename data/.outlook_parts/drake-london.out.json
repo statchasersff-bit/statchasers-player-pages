@@ -1,0 +1,19 @@
+{
+  "slug": "drake-london",
+  "name": "Drake London",
+  "position": "WR",
+  "team": "ATL",
+  "season": 2026,
+  "headline": "London's Target Hog Profile Survives Any Quarterback",
+  "body": "Even in an injury-shortened 2025, London soaked up a 21.6% target share and ran 0.294 targets per route, posting a 0.212 EPA per play and a 53.6% success rate across 12 games. The fuller picture is the 2024 ceiling: 158 looks, a 29.3% target share, 0.71 WOPR and nine scores while finishing the WR4 in advanced rank. He buys you 15 red-zone targets in a partial season and barely drops anything, with a 0.9% drop rate on 69 catchable balls.\n\nThe volume travels regardless of who lines up under center, with Tagovailoa now pushing Penix and London entrenched as the unquestioned focal point. Drafters are paying up around the WR7 range and a top-20 overall slot, which is fair for a player carrying a near-30% air-yards share. Health is the only real variable; the usage and efficiency are already WR1-caliber when he's on the field.",
+  "keyStats": {"rank":21,"playerId":"8112","playerName":"Drake London","position":"WR","team":"ATL","age":24,"season":2025,"games":12,"snapPct":90.7,"routes":381,"routePct":67.1,"targets":112,"targetsPerRouteRun":0.294,"targetSharePct":21.6,"airYardsPerTarget":10.9,"airYardsPerReception":17.96,"airYardsSharePct":29.3,"wopr":0.529,"receptions":68,"redZoneTargets":15,"endZoneTargets":8,"catchPct":60.7,"receivingYards":919,"totalYards":919,"yardsPerReception":13.51,"yardsBeforeCatchPerReception":10.15,"yardsAfterCatchPerReception":3.37,"yardsAfterContactPerReception":null,"yardsPerRouteRun":2.41,"receivingTouchdowns":7,"epaPerPlay":0.212,"successRate":53.6,"contestedCatchRate":null,"fantasyPoints":133.9,"avoidedTackleRate":0,"brokenTackles":0,"drops":1,"catchableTargets":69,"dropPct":0.9,"interceptionsWhenTargeted":2,"fumbles":1,"receptions10Plus":40,"receptions20Plus":13,"receptions30Plus":7,"receptions40Plus":3,"receptions50Plus":0,"longestReception":43},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/drake-london.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-drake-london/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "8112",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

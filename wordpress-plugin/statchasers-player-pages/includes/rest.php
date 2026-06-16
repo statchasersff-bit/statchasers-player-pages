@@ -133,6 +133,10 @@ function sc_rest_player_profile( $request ) {
 
     $profile = sc_compute_player_profile( $player, $all_players, $seasons_for_profile, $format );
 
+    /* Precomputed, source-blended 2026 outlook (preferred over render-time generation) */
+    $outlook_all = sc_load_fantasy_outlook_2026();
+    $fantasy_outlook_2026 = isset( $outlook_all[ $player['id'] ] ) ? $outlook_all[ $player['id'] ] : null;
+
     /* Merge player fields + computed profile (matches Express flat response) */
     $response = array_merge( $player, [
         'headshotUrl'            => isset( $player['headshotUrl'] ) ? $player['headshotUrl'] : null,
@@ -151,6 +155,7 @@ function sc_rest_player_profile( $request ) {
         'dynasty'                => $profile['dynasty'],
         'productionRiskBenchmarks' => null,
         'bio'                    => $profile['bio'],
+        'fantasyOutlook2026'     => $fantasy_outlook_2026,
     ]);
 
     return new WP_REST_Response( $response, 200 );

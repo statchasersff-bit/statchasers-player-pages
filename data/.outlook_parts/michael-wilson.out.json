@@ -1,0 +1,19 @@
+{
+  "slug": "michael-wilson",
+  "name": "Michael Wilson",
+  "position": "WR",
+  "team": "ARI",
+  "season": 2026,
+  "headline": "Wilson's 2025 leap leans hard on Harrison's absences",
+  "body": "Wilson's 2025 was a genuine ascension on paper: 17 games, 126 targets, a 20.4% target share and a 0.532 WOPR that vaulted him to WR17 with 142.6 fantasy points. The efficiency backs it up, with 1,006 yards, a 1.68 yards-per-route-run mark, 0.212 EPA per play and a 50.8% success rate. He commanded volume too, drawing a 32.2% air-yards share and 16 red-zone looks while converting seven scores and dropping just one of 79 catchable balls.\n\nThe catch is context. Much of that production stacked up when Arizona's top option was sidelined, and across 2023-2024 his target shares sat at 10.7% and 13.6% with far thinner output. A healthy pecking order, plus McBride and a new ground-game investment, caps his ceiling. The 11.92 air yards per target and downfield role keep him relevant, but treat the WR17 finish as a soft projection, not a floor, and draft accordingly.",
+  "keyStats": {"rank":17,"playerId":"10232","playerName":"Michael Wilson","position":"WR","team":"ARI","age":25,"season":2025,"games":17,"snapPct":81.4,"routes":599,"routePct":84.7,"targets":126,"targetsPerRouteRun":0.21,"targetSharePct":20.4,"airYardsPerTarget":11.92,"airYardsPerReception":19.26,"airYardsSharePct":32.2,"wopr":0.532,"receptions":78,"redZoneTargets":16,"endZoneTargets":4,"catchPct":61.9,"receivingYards":1006,"totalYards":1006,"yardsPerReception":12.9,"yardsBeforeCatchPerReception":9.4,"yardsAfterCatchPerReception":3.5,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.68,"receivingTouchdowns":7,"epaPerPlay":0.212,"successRate":50.8,"contestedCatchRate":null,"fantasyPoints":142.6,"avoidedTackleRate":3.8,"brokenTackles":3,"drops":1,"catchableTargets":79,"dropPct":0.8,"interceptionsWhenTargeted":5,"fumbles":0,"receptions10Plus":43,"receptions20Plus":14,"receptions30Plus":8,"receptions40Plus":2,"receptions50Plus":1,"longestReception":50},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/michael-wilson.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-michael-wilson/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "10232",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

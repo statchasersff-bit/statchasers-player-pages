@@ -1,0 +1,19 @@
+{
+  "slug": "tua-tagovailoa",
+  "name": "Tua Tagovailoa",
+  "position": "QB",
+  "team": "ATL",
+  "season": 2026,
+  "headline": "Tua's Falcons Reset Is A Stay-Away Until He Wins The Job",
+  "body": "The arrow is pointing the wrong way. After ranking as the QB1 in 2023 (4,624 yards, 29 scores, 270.4 fantasy points), Tagovailoa cratered to QB22 last year, throwing for just 2,660 yards with a 20-to-15 touchdown-to-interception split across 14 games. His efficiency collapsed too: EPA per play fell from 0.195 in 2024 to a near-flat 0.004, and his success rate slid to 43.8%. That is not a quarterback you draft on reputation.\n\nNow in Atlanta on a one-year deal, he steps into an open competition with Michael Penix Jr. and is no lock to start, even with Penix rehabbing a knee. The schedule is soft and Drake London plus Kyle Pitts give him real weapons, but the QB31-range price tag tells the story. Leave him on waivers in single-quarterback formats and treat him as a late dart only in superflex.",
+  "keyStats": {"rank":22,"playerId":"6768","playerName":"Tua Tagovailoa","position":"QB","team":"MIA","age":27,"season":2025,"games":14,"attempts":384,"completions":260,"completionPct":67.7,"passingYards":2660,"yardsPerCatch":6.93,"passingTouchdowns":20,"interceptions":15,"fantasyPoints":160.7,"airYards":2613,"completedAirYards":1243,"completedAirYardsPerCompletion":4.8,"deepAttemptPct":8,"epaPerPlay":0.004,"successRate":43.8,"cpoe":2,"throwaways":12,"battedPasses":5,"poorThrows":59,"badThrowPct":15.9,"onTargetPct":77,"passesDropped":17,"passes10Plus":113,"passes20Plus":33,"passes30Plus":8,"passes40Plus":4,"passes50Plus":0,"longestPass":47,"rushAttempts":20,"rushYards":43,"rushTouchdowns":0,"redZoneAttempts":59,"scrambleRate":2.6,"yardsPerScramble":4,"fumbles":6,"sacks":30,"sackYardsLost":195,"pocketTime":2.3,"timeToThrow":2.65,"blitzes":85,"hurries":48,"knockdowns":15,"pressurePct":21.9},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/tua-tagovailoa.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-tua-tagovailoa/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "6768",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

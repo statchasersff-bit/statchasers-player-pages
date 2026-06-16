@@ -1,0 +1,19 @@
+{
+  "slug": "rashod-bateman",
+  "name": "Rashod Bateman",
+  "position": "WR",
+  "team": "BAL",
+  "season": 2026,
+  "headline": "Bateman's 2025 Cratered, And The Numbers Are Brutal",
+  "body": "The advanced profile fell off a cliff in 2025. Bateman managed just 224 yards and two scores across 13 games, his target share collapsing to 9.3% on 38 looks while his catch rate dropped to a dismal 50%. His efficiency cratered alongside the volume: a minus-0.072 EPA per play, a 44.7% success rate, and a meager 0.76 yards per route run that ranked him WR110. That is a near-total erosion of the WR38 form he flashed in 2024.\n\nThe 2024 baseline is the reason to keep watching: 756 yards, nine touchdowns, a 1.83 YPRR, and a 0.625 EPA per play on a 15.8% target share. But that ceiling now sits behind Zay Flowers, with rookies pushing for snaps and the role looking like a downfield complement rather than a featured target. He is a deep-league dart throw until the volume returns.",
+  "keyStats": {"rank":110,"playerId":"7571","playerName":"Rashod Bateman","position":"WR","team":"BAL","age":25,"season":2025,"games":13,"snapPct":69.3,"routes":293,"routePct":63.1,"targets":38,"targetsPerRouteRun":0.13,"targetSharePct":9.3,"airYardsPerTarget":12.32,"airYardsPerReception":24.63,"airYardsSharePct":13.7,"wopr":0.236,"receptions":19,"redZoneTargets":8,"endZoneTargets":3,"catchPct":50,"receivingYards":224,"totalYards":224,"yardsPerReception":11.79,"yardsBeforeCatchPerReception":9.74,"yardsAfterCatchPerReception":2.05,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.76,"receivingTouchdowns":2,"epaPerPlay":-0.072,"successRate":44.7,"contestedCatchRate":null,"fantasyPoints":36.4,"avoidedTackleRate":0,"brokenTackles":0,"drops":3,"catchableTargets":22,"dropPct":7.9,"interceptionsWhenTargeted":1,"fumbles":0,"receptions10Plus":10,"receptions20Plus":3,"receptions30Plus":1,"receptions40Plus":0,"receptions50Plus":0,"longestReception":36},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/rashod-bateman.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-rashod-bateman/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "7571",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

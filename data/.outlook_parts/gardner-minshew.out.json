@@ -1,0 +1,19 @@
+{
+  "slug": "gardner-minshew",
+  "name": "Gardner Minshew",
+  "position": "QB",
+  "team": "ARI",
+  "season": 2026,
+  "headline": "A backup arm chasing one more cameo as a starter",
+  "body": "The trend line is unkind. Minshew's last meaningful stretch came in 2023, when he started all 16 for Indianapolis and finished QB17 on 3,305 yards and a 15-to-9 touchdown-to-pick split. Since then it has cratered: a 2024 split in Las Vegas produced a 9-to-10 ratio, a 43.8% success rate and minus-0.154 EPA per play across 10 games, then 2025 brought just 13 attempts of replacement-level noise, a minus-0.368 EPA mark and a brutal minus-20.5 CPOE in four appearances.\n\nNow he lands in Arizona as insurance behind Jacoby Brissett, with a rookie also angling for the No. 2 job. Projections peg him near 9.7 points per game and a QB46-ish draft slot, which is to say undraftable in standard formats. Stash him only in deep superflex builds, and only if Brissett falters and the snaps actually open up.",
+  "keyStats": {"rank":70,"playerId":"6011","playerName":"Gardner Minshew","position":"QB","team":"KC","age":29,"season":2025,"games":4,"attempts":13,"completions":6,"completionPct":46.2,"passingYards":37,"yardsPerCatch":2.85,"passingTouchdowns":0,"interceptions":1,"fantasyPoints":-0.3,"airYards":68,"completedAirYards":6,"completedAirYardsPerCompletion":1,"deepAttemptPct":15.4,"epaPerPlay":-0.368,"successRate":15.8,"cpoe":-20.5,"throwaways":2,"battedPasses":2,"poorThrows":3,"badThrowPct":27.3,"onTargetPct":63.6,"passesDropped":0,"passes10Plus":2,"passes20Plus":0,"passes30Plus":0,"passes40Plus":0,"passes50Plus":0,"longestPass":12,"rushAttempts":6,"rushYards":2,"rushTouchdowns":0,"redZoneAttempts":0,"scrambleRate":7.1,"yardsPerScramble":8,"fumbles":0,"sacks":0,"sackYardsLost":0,"pocketTime":2.1,"timeToThrow":null,"blitzes":3,"hurries":1,"knockdowns":1,"pressurePct":14.3},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/gardner-minshew.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-gardner-minshew/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "6011",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

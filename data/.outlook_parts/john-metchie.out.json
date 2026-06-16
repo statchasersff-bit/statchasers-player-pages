@@ -1,0 +1,19 @@
+{
+  "slug": "john-metchie",
+  "name": "John Metchie",
+  "position": "WR",
+  "team": "CAR",
+  "season": 2026,
+  "headline": "Metchie's Carolina move can't outrun his career ceiling",
+  "body": "Four years in, Metchie still hasn't cleared the role-player tier, and 2025 confirmed it: 13 games, a 46.1% snap share, 48 targets on a 10.3% target share, and just 274 yards on 33 catches. The efficiency markers are the bigger red flag. His 8.3 yards per reception and 1.16 yards per route run are replacement-level, his minus-0.049 EPA per play dipped back below water after a brief 2024 uptick, and a 43.8% success rate offers nothing to dream on. Two touchdowns and 38.9 fantasy points across a full slate is the production floor of fantasy irrelevance.\n\nCarolina signed him to a one-year deal, and the depth-chart math is unforgiving behind the established top of their receiver room. A WR125 consensus rank and an ADP outside the top 150 receivers price him correctly. Without a target-share leap he has never shown, Metchie is a late-camp watch, not a draftable asset.",
+  "keyStats": {"rank":100,"playerId":"8147","playerName":"John Metchie III","position":"WR","team":"NYJ","age":25,"season":2025,"games":13,"snapPct":46.1,"routes":236,"routePct":42.8,"targets":48,"targetsPerRouteRun":0.203,"targetSharePct":10.3,"airYardsPerTarget":5.58,"airYardsPerReception":8.12,"airYardsSharePct":6,"wopr":0.197,"receptions":33,"redZoneTargets":5,"endZoneTargets":2,"catchPct":68.8,"receivingYards":274,"totalYards":269,"yardsPerReception":8.3,"yardsBeforeCatchPerReception":4.06,"yardsAfterCatchPerReception":4.24,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.16,"receivingTouchdowns":2,"epaPerPlay":-0.049,"successRate":43.8,"contestedCatchRate":null,"fantasyPoints":38.9,"avoidedTackleRate":3,"brokenTackles":1,"drops":3,"catchableTargets":36,"dropPct":6.2,"interceptionsWhenTargeted":2,"fumbles":0,"receptions10Plus":13,"receptions20Plus":1,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":22},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/john-metchie.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-john-metchie/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "8147",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

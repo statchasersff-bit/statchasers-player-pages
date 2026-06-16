@@ -1,0 +1,19 @@
+{
+  "slug": "james-cook",
+  "name": "James Cook",
+  "position": "RB",
+  "team": "BUF",
+  "season": 2026,
+  "headline": "Cook's career-best volume makes him a locked-in RB1",
+  "body": "Cook took a leap in 2025, finishing as our RB4 on 269.2 fantasy points while leading the league with 1,621 rushing yards on 309 carries at a punishing 5.25 per tote. His efficiency held under that heavy workload: a 12.62% explosive-run rate, nine carries of 20-plus yards, 21 broken tackles and 2.22 yards after contact per attempt. He also tucked away 12 rushing scores plus 16 goal-line carries, so the touchdown equity is real even if 2024's gaudy 16 TDs was always going to settle down.\n\nThe lone soft spot is the passing game. A 1.17 YPRR, 8.4% target share and just 33 catches leave value on the table for a back this dynamic in space. If Buffalo finally leans into him on third downs, his ceiling climbs. With no new competition in the backfield and elite rushing volume guaranteed, Cook is a safe early-round anchor.",
+  "keyStats": {"rank":4,"playerId":"8138","playerName":"James Cook","position":"RB","team":"BUF","age":25,"season":2025,"games":17,"snapPct":57.2,"routes":248,"rushAttempts":309,"redZoneOpportunities":59,"goalLineCarries":16,"targets":40,"receptions":33,"redZoneTargets":3,"endZoneTargets":1,"rushYards":1621,"yardsPerCarry":5.25,"rushTouchdowns":12,"targetSharePct":8.4,"receivingYards":291,"yardsPerReception":8.82,"yardsPerRouteRun":1.17,"receivingTouchdowns":2,"epaPerPlay":0.041,"fantasyPoints":269.2,"rushes10Plus":39,"rushes20Plus":9,"rushes30Plus":5,"rushes40Plus":4,"rushes50Plus":1,"explosiveRunPct":12.62,"breakawayRunPct":5.18,"longestRush":64,"longestRushTouchdown":64,"brokenTackles":21,"rushAttemptsPerBrokenTackle":14.71,"yardsAfterContactPerAttempt":2.22,"yardsBeforeContactPerAttempt":3.03,"receivingYardsAfterCatch":272,"tackleEludedRate":6.1,"fumbles":6,"tacklesForLoss":14,"tacklesForLossYards":35,"rushAttForNegativeYards":14},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/james-cook.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-james-cook/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "8138",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

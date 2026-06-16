@@ -1,0 +1,19 @@
+{
+  "slug": "charlie-woerner",
+  "name": "Charlie Woerner",
+  "position": "TE",
+  "team": "ATL",
+  "season": 2026,
+  "headline": "Blocking Specialist, Not A Fantasy Asset",
+  "body": "Woerner's 2025 line tells the whole story: 8 catches on 9 targets for 48 yards across 7 games, a 1.7% target share that ranked him 84th among tight ends. His 50.8% snap rate looks respectable until you see it came mostly as a blocker, and a 35.9% route participation that produced just 0.24 yards per route run. The -0.022 EPA per play and 33.3% success rate confirm he moves the needle on the ground, not through the air.\n\nNothing about the profile points to a 2026 breakout. The 88.9% catch rate is empty efficiency on near-zero volume, with 1.33 air yards per target signaling a checkdown and short-area role. Atlanta values him as an in-line run blocker, and that ceiling caps any fantasy upside. Projections in the 14-reception, one-touchdown neighborhood say it plainly: leave him on the wire in every format.",
+  "keyStats": {"rank":84,"playerId":"7075","playerName":"Charlie Woerner","position":"TE","team":"ATL","age":27,"season":2025,"games":7,"snapPct":50.8,"routes":204,"routePct":35.9,"targets":9,"targetsPerRouteRun":0.044,"targetSharePct":1.7,"airYardsPerTarget":1.33,"airYardsPerReception":1.5,"airYardsSharePct":0.3,"wopr":0.028,"receptions":8,"redZoneTargets":1,"endZoneTargets":0,"catchPct":88.9,"receivingYards":48,"totalYards":48,"yardsPerReception":6,"yardsBeforeCatchPerReception":1.62,"yardsAfterCatchPerReception":4.38,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.24,"receivingTouchdowns":0,"epaPerPlay":-0.022,"successRate":33.3,"contestedCatchRate":null,"fantasyPoints":4.8,"avoidedTackleRate":25,"brokenTackles":2,"drops":0,"catchableTargets":8,"dropPct":0,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":2,"receptions20Plus":0,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":18},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/charlie-woerner.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-charlie-woerner/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "7075",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

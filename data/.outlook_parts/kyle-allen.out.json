@@ -1,0 +1,19 @@
+{
+  "slug": "kyle-allen",
+  "name": "Kyle Allen",
+  "position": "QB",
+  "team": "BUF",
+  "season": 2026,
+  "headline": "Allen joins Buffalo's QB room strictly as insurance",
+  "body": "The advanced profile underscores how marginal Allen's recent footprint has been. He logged two games in 2025 and went 0-for-2 with a -0.271 EPA per play and a -63.7 CPOE, posting -0.3 fantasy points on the season. The 2024 sample was equally tiny: one attempt, one completion for 19 yards. There simply isn't enough volume to project anything meaningful, and his career arc points squarely toward a clipboard role.\n\nNow in Buffalo on a modest two-year deal, Allen sits buried on the depth chart behind an entrenched starter. Expert consensus pegs him outside the top 70 quarterbacks with no ADP and roughly zero rostership, and that ranking is generous given his path to snaps. Treat him as pure emergency insurance: unless an injury thrusts him into starts, there is no scenario where he belongs on a fantasy roster in 2026.",
+  "keyStats": {"rank":75,"playerId":"5127","playerName":"Kyle Allen","position":"QB","team":"DET","age":29,"season":2025,"games":2,"attempts":2,"completions":0,"completionPct":0,"passingYards":0,"yardsPerCatch":0,"passingTouchdowns":0,"interceptions":0,"fantasyPoints":-0.3,"airYards":10,"completedAirYards":0,"completedAirYardsPerCompletion":null,"deepAttemptPct":0,"epaPerPlay":-0.271,"successRate":0,"cpoe":-63.7,"throwaways":0,"battedPasses":0,"poorThrows":0,"badThrowPct":0,"onTargetPct":100,"passesDropped":1,"passes10Plus":0,"passes20Plus":0,"passes30Plus":0,"passes40Plus":0,"passes50Plus":0,"longestPass":null,"rushAttempts":3,"rushYards":-3,"rushTouchdowns":0,"redZoneAttempts":0,"scrambleRate":null,"yardsPerScramble":null,"fumbles":0,"sacks":0,"sackYardsLost":0,"pocketTime":2.2,"timeToThrow":null,"blitzes":0,"hurries":0,"knockdowns":0,"pressurePct":0},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/kyle-allen.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-kyle-allen/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "5127",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

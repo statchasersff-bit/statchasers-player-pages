@@ -1,0 +1,19 @@
+{
+  "slug": "durham-smythe",
+  "name": "Durham Smythe",
+  "position": "TE",
+  "team": "BAL",
+  "season": 2026,
+  "headline": "A Blocking Specialist Without a Fantasy Pulse",
+  "body": "Smythe's 2025 line tells the whole story: 7 games, a 25.4% snap share, and just 6 targets on 101 routes for a 1.1% target share and 0.059 targets per route run. He turned that into 4 catches, 25 yards, no scores, and a microscopic 2.5 fantasy points, while his -0.042 EPA per play and 33.3% success rate confirmed there was no efficiency hiding underneath the volume. That is a steep slide from the 28th-ranked TE finish he posted back in 2023.\n\nNow in Baltimore, he profiles purely as an in-line blocker behind a featured starter, which only narrows an already empty passing-game footprint. With a TE78 valuation and effectively zero roster relevance, there is no realistic path to weekly points. He stays off fantasy radars in every format and should be left on the wire outside of deep two-TE dynasty rosters needing snaps.",
+  "keyStats": {"rank":97,"playerId":"5008","playerName":"Durham Smythe","position":"TE","team":"CHI","age":30,"season":2025,"games":7,"snapPct":25.4,"routes":101,"routePct":16.9,"targets":6,"targetsPerRouteRun":0.059,"targetSharePct":1.1,"airYardsPerTarget":4,"airYardsPerReception":6,"airYardsSharePct":0.5,"wopr":0.02,"receptions":4,"redZoneTargets":0,"endZoneTargets":0,"catchPct":66.7,"receivingYards":25,"totalYards":25,"yardsPerReception":6.25,"yardsBeforeCatchPerReception":2.5,"yardsAfterCatchPerReception":3.75,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.25,"receivingTouchdowns":0,"epaPerPlay":-0.042,"successRate":33.3,"contestedCatchRate":null,"fantasyPoints":2.5,"avoidedTackleRate":0,"brokenTackles":0,"drops":1,"catchableTargets":5,"dropPct":16.7,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":1,"receptions20Plus":0,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":11},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/durham-smythe.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-durham-smythe/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "5008",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

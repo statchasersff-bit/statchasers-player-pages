@@ -1,0 +1,19 @@
+{
+  "slug": "trevor-etienne",
+  "name": "Trevor Etienne",
+  "position": "RB",
+  "team": "CAR",
+  "season": 2026,
+  "headline": "Buried in Carolina's backfield, but the burst is real",
+  "body": "Etienne barely cracked the rotation as a rookie, logging a 5.6% snap share across 17 games and finishing 90th at the position with just 10.7 fantasy points. The volume was minuscule, 20 carries and three targets, yet the efficiency flashed: 4.7 yards per attempt, a 15% explosive-run rate, a 22-yard long, and 2.3 yards after contact per carry on a roster that simply never fed him. The -0.094 EPA per play and 0.72 yards per route run reflect the tiny sample more than the talent.\n\nThe problem is the depth chart, not the player. He sits behind Chuba Hubbard and Jonathon Brooks, a logjam that keeps him off redraft radars at an ADP near 341 overall. Still just 21, he profiles as a worthwhile dynasty stash. Brooks' injury history offers a believable path to real touches, and the contact balance suggests he'd hold up if that door opens.",
+  "keyStats": {"rank":90,"playerId":"12531","playerName":"Trevor Etienne","position":"RB","team":"CAR","age":21,"season":2025,"games":17,"snapPct":5.6,"routes":18,"rushAttempts":20,"redZoneOpportunities":4,"goalLineCarries":1,"targets":3,"receptions":3,"redZoneTargets":0,"endZoneTargets":0,"rushYards":94,"yardsPerCarry":4.7,"rushTouchdowns":0,"targetSharePct":0.6,"receivingYards":13,"yardsPerReception":4.33,"yardsPerRouteRun":0.72,"receivingTouchdowns":0,"epaPerPlay":-0.094,"fantasyPoints":10.7,"rushes10Plus":3,"rushes20Plus":1,"rushes30Plus":0,"rushes40Plus":0,"rushes50Plus":0,"explosiveRunPct":15,"breakawayRunPct":5,"longestRush":22,"longestRushTouchdown":null,"brokenTackles":1,"rushAttemptsPerBrokenTackle":20,"yardsAfterContactPerAttempt":2.3,"yardsBeforeContactPerAttempt":2.4,"receivingYardsAfterCatch":11,"tackleEludedRate":4.3,"fumbles":0,"tacklesForLoss":2,"tacklesForLossYards":2,"rushAttForNegativeYards":2},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/trevor-etienne.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-trevor-etienne/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "12531",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

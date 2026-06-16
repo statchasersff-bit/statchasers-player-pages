@@ -1,0 +1,19 @@
+{
+  "slug": "kendrick-bourne",
+  "name": "Kendrick Bourne",
+  "position": "WR",
+  "team": "ARI",
+  "season": 2026,
+  "headline": "Efficient on a Shoestring, Buried in a Crowded Room",
+  "body": "Bourne's 2025 tape was quietly excellent on volume nobody handed him. Across 14 games he turned just 53 targets into 37 grabs for 551 yards at 14.9 per catch, and the efficiency markers pop: a 0.388 EPA per play, a 64.2% success rate, and 1.62 yards per route run. The catch is the workload. A 9.6% target share, 0.155 targets per route, and a 0.24 WOPR are backup-receiver inputs, and the zero touchdowns capped a WR52 finish despite the strong per-rep production.\n\nArizona doesn't fix the volume problem. Bourne slots third or fourth behind Marvin Harrison Jr., Michael Wilson, and target magnet Trey McBride, projecting as a slot complement rather than a featured piece. The efficiency is real and the hands are dependable, but until injuries clear a path, this is a deep-bench dart and a bye-week patch, not a weekly starter.",
+  "keyStats": {"rank":52,"playerId":"4454","playerName":"Kendrick Bourne","position":"WR","team":"SF","age":30,"season":2025,"games":14,"snapPct":56.7,"routes":341,"routePct":57,"targets":53,"targetsPerRouteRun":0.155,"targetSharePct":9.6,"airYardsPerTarget":11.02,"airYardsPerReception":15.78,"airYardsSharePct":13.6,"wopr":0.24,"receptions":37,"redZoneTargets":2,"endZoneTargets":1,"catchPct":69.8,"receivingYards":551,"totalYards":551,"yardsPerReception":14.89,"yardsBeforeCatchPerReception":10.43,"yardsAfterCatchPerReception":4.46,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.62,"receivingTouchdowns":0,"epaPerPlay":0.388,"successRate":64.2,"contestedCatchRate":null,"fantasyPoints":55.1,"avoidedTackleRate":2.7,"brokenTackles":1,"drops":6,"catchableTargets":43,"dropPct":11.3,"interceptionsWhenTargeted":2,"fumbles":0,"receptions10Plus":27,"receptions20Plus":5,"receptions30Plus":3,"receptions40Plus":2,"receptions50Plus":1,"longestReception":56},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/kendrick-bourne.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-kendrick-bourne/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "4454",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

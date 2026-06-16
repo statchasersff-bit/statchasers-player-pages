@@ -1,0 +1,19 @@
+{
+  "slug": "mitchell-evans",
+  "name": "Mitchell Evans",
+  "position": "TE",
+  "team": "CAR",
+  "season": 2026,
+  "headline": "Touchdown Lottery Ticket Waiting On A Real Role",
+  "body": "Evans graded out as the TE57 last season, and the underlying numbers explain why: 14 games, a 37.4% snap rate, and just 142 routes that produced 25 targets and a 5.2% target share. The volume is thin, but the efficiency flickers. He posted a 68% success rate, 0.128 EPA per play, a 76% catch rate, and 1.2 yards per route run, turning limited looks into 19 grabs for 171 yards and two scores. Four red-zone targets, three of them inside the ten, hint at where his value lives.\n\nThat scoring upside is the entire case right now. With a 0.176 targets-per-route mark and a sub-0.10 WOPR, he is a touchdown-dependent flier rather than a weekly play. Carried at roughly TE60 in early drafts, Evans is purely a deep-league dart. If the snaps and route volume climb in Carolina's pecking order, the red-zone profile gives him a real path; until then, hold the pick.",
+  "keyStats": {"rank":57,"playerId":"12473","playerName":"Mitchell Evans","position":"TE","team":"CAR","age":22,"season":2025,"games":14,"snapPct":37.4,"routes":142,"routePct":25.9,"targets":25,"targetsPerRouteRun":0.176,"targetSharePct":5.2,"airYardsPerTarget":3.64,"airYardsPerReception":4.79,"airYardsSharePct":2.6,"wopr":0.097,"receptions":19,"redZoneTargets":4,"endZoneTargets":3,"catchPct":76,"receivingYards":171,"totalYards":172,"yardsPerReception":9,"yardsBeforeCatchPerReception":3.32,"yardsAfterCatchPerReception":5.68,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.2,"receivingTouchdowns":2,"epaPerPlay":0.128,"successRate":68,"contestedCatchRate":null,"fantasyPoints":29.2,"avoidedTackleRate":0,"brokenTackles":0,"drops":1,"catchableTargets":20,"dropPct":4,"interceptionsWhenTargeted":1,"fumbles":0,"receptions10Plus":6,"receptions20Plus":2,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":25},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/mitchell-evans.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-mitchell-evans/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "12473",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

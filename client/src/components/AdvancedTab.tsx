@@ -1,8 +1,5 @@
 import { useMemo, useState, type ReactNode } from "react";
-import {
-  Activity, AlertTriangle, BarChart3, ChevronDown, Layers, Sparkles,
-  Target, TrendingUp, Zap, type LucideIcon,
-} from "lucide-react";
+import { ChevronDown, Layers, type LucideIcon } from "lucide-react";
 import {
   type ColDef, type StatPosition,
   groupColumns, formatVal,
@@ -110,7 +107,7 @@ function PlayerRankSnapshot({ cards, pos }: { cards: RankCard[]; pos: string }) 
     <Card>
       <div className="mb-3">
         <h3 className="sc-sectitle">
-          <BarChart3 className="w-4 h-4" style={{ color: "#d4af37" }} /> Player Rank Snapshot
+          Player Rank Snapshot
         </h3>
         <p className="text-[11px] text-muted-foreground mt-1">
           How this {pos} ranks among qualifying {pos}s.
@@ -150,7 +147,7 @@ function MetricScores({ composites, pos }: { composites: PlayerAdvancedResult["c
     <Card>
       <div className="mb-3">
         <h3 className="sc-sectitle">
-          <Layers className="w-4 h-4" style={{ color: "#d4af37" }} /> Metric Scores
+          Metric Scores
         </h3>
         <p className="text-[11px] text-muted-foreground mt-1">
           Where this {pos} ranks on each role-based composite metric.
@@ -189,24 +186,6 @@ function MetricScores({ composites, pos }: { composites: PlayerAdvancedResult["c
 
 // ── Stat Sections ─────────────────────────────────────────────────────────────
 
-const SECTION_ICONS: Record<string, LucideIcon> = {
-  "Usage / Workload": Activity,
-  "Usage / Role":     Activity,
-  "Usage/Role":       Activity,
-  "Volume / Usage":   Activity,
-  Production:         TrendingUp,
-  Scoring:            TrendingUp,
-  Efficiency:         Target,
-  Hands:              Target,
-  Aggressiveness:     Sparkles,
-  Elusiveness:        Sparkles,
-  "Explosive Play Ability": Zap,
-  Explosiveness:      Zap,
-  "Pressure & Pocket":           AlertTriangle,
-  "Contact & Tackle Breaking":   Activity,
-  "Ball Security":               AlertTriangle,
-};
-
 const SKIP_SECTIONS = new Set(["Other", "Composite Grades", "Player Info"]);
 
 function AdvancedStatSection({ section, latest, pos, statRanks }: {
@@ -216,7 +195,6 @@ function AdvancedStatSection({ section, latest, pos, statRanks }: {
   statRanks: Record<string, StatRank>;
 }) {
   const [open, setOpen] = useState(false);
-  const Icon = SECTION_ICONS[section.label] ?? BarChart3;
   return (
     <Card>
       <button
@@ -227,7 +205,7 @@ function AdvancedStatSection({ section, latest, pos, statRanks }: {
         className="w-full flex items-center justify-between gap-2 text-left"
       >
         <h3 className="sc-sectitle">
-          <Icon className="w-4 h-4" style={{ color: section.accent }} /> {section.label}
+          {section.label}
         </h3>
         <ChevronDown className={cn("w-4 h-4 text-muted-foreground transition-transform duration-200 flex-shrink-0", open && "rotate-180")} />
       </button>

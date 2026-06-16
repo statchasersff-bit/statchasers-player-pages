@@ -1,0 +1,20 @@
+{
+  "slug": "tip-reiman",
+  "name": "Tip Reiman",
+  "position": "TE",
+  "team": "ARI",
+  "season": 2026,
+  "headline": "Blocking Tight End Stuck Behind McBride's Shadow",
+  "body": "Reiman's profile is a blocker's profile, and the numbers leave no ambiguity. Across three games in 2025 he saw just five targets on a 0.8% target share, turning 40 routes into 18 yards and 1.8 fantasy points before an ankle issue ended the year. His 0.45 yards per route run and 0.125 targets per route run confirm he is rarely a read in the passing game, and a 0.001 EPA per play means he added essentially nothing when the ball came his way.\n\n2024 told the same story: 41.2% snaps but a 1.3% target share and 0.24 yards per route run over eight games. The role is in-line muscle, not receiving volume. With Trey McBride entrenched and Elijah Higgins competing for the No. 2 job, there is no realistic path to fantasy relevance. Leave him on the wire in every format until the depth chart changes."
+,
+  "keyStats": {"rank":103,"playerId":"11716","playerName":"Tip Reiman","position":"TE","team":"ARI","age":23,"season":2025,"games":3,"snapPct":37,"routes":40,"routePct":5.7,"targets":5,"targetsPerRouteRun":0.125,"targetSharePct":0.8,"airYardsPerTarget":5.2,"airYardsPerReception":8.67,"airYardsSharePct":0.6,"wopr":0.016,"receptions":3,"redZoneTargets":0,"endZoneTargets":0,"catchPct":60,"receivingYards":18,"totalYards":18,"yardsPerReception":6,"yardsBeforeCatchPerReception":3.67,"yardsAfterCatchPerReception":2.33,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.45,"receivingTouchdowns":0,"epaPerPlay":0.001,"successRate":40,"contestedCatchRate":null,"fantasyPoints":1.8,"avoidedTackleRate":33.3,"brokenTackles":1,"drops":0,"catchableTargets":3,"dropPct":0,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":1,"receptions20Plus":0,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":10},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/tip-reiman.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-tip-reiman/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11716",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

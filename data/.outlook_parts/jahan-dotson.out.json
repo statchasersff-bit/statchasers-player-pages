@@ -1,0 +1,20 @@
+{
+  "slug": "jahan-dotson",
+  "name": "Jahan Dotson",
+  "position": "WR",
+  "team": "ATL",
+  "season": 2026,
+  "headline": "Dotson lands in Atlanta hunting a real target share",
+  "body": "Two years buried behind A.J. Brown and DeVonta Smith left almost nothing on Dotson's profile. In 2025 he ran 376 routes for just 36 targets, a 7.8% share, and 18 catches for 262 yards and a single score. The efficiency was brutal: 0.7 yards per route run, a 33.3% success rate, and minus-0.418 EPA per play, ranking him 104th. He stayed on the field for 15 games but the role never materialized.\n\nThe upside lives in 2023, when Washington gave him 83 targets, a 13.8% share, and 49 grabs for 518 yards and four touchdowns. A two-year Atlanta deal reopens that door, but he is one of several bodies brought in to replace Darnell Mooney inside a run-leaning offense. Until he separates from that committee, treat him as a late-round dart and bench depth, not a weekly starter. ADP near WR125 reflects exactly that."
+,
+  "keyStats": {"rank":104,"playerId":"8119","playerName":"Jahan Dotson","position":"WR","team":"PHI","age":25,"season":2025,"games":15,"snapPct":56.9,"routes":376,"routePct":70.9,"targets":36,"targetsPerRouteRun":0.096,"targetSharePct":7.8,"airYardsPerTarget":15.42,"airYardsPerReception":30.83,"airYardsSharePct":12.4,"wopr":0.203,"receptions":18,"redZoneTargets":5,"endZoneTargets":0,"catchPct":50,"receivingYards":262,"totalYards":262,"yardsPerReception":14.56,"yardsBeforeCatchPerReception":11.78,"yardsAfterCatchPerReception":2.78,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.7,"receivingTouchdowns":1,"epaPerPlay":-0.418,"successRate":33.3,"contestedCatchRate":null,"fantasyPoints":32.2,"avoidedTackleRate":5.6,"brokenTackles":1,"drops":0,"catchableTargets":18,"dropPct":0,"interceptionsWhenTargeted":3,"fumbles":0,"receptions10Plus":8,"receptions20Plus":4,"receptions30Plus":3,"receptions40Plus":2,"receptions50Plus":1,"longestReception":51},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/jahan-dotson.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-jahan-dotson/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "8119",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

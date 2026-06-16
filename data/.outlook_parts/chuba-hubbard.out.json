@@ -1,0 +1,19 @@
+{
+  "slug": "chuba-hubbard",
+  "name": "Chuba Hubbard",
+  "position": "RB",
+  "team": "CAR",
+  "season": 2026,
+  "headline": "The 2024 breakout cratered; can Hubbard rebuild value?",
+  "body": "The 2025 tape is hard to defend. Hubbard slid to RB41 on 95.4 fantasy points across 15 games, with his yards per carry collapsing from 4.78 to 3.81 and his snap share falling from 77.3% to just 45.8%. He managed one rushing touchdown after scoring 10 the year prior, broke a single tackle on 134 carries, and posted zero breakaway runs while his EPA per play stayed underwater at -0.059. Yards after contact dipped to 1.81, and red-zone work dried up to 24 opportunities from 56.\n\nThere is a path back. The 2024 baseline showed a genuine bell-cow capable of 26 carries of 10-plus yards and double-digit scores, and the receiving role held steady at 30 grabs and three touchdowns. But job security is the real question, with younger backs pushing for snaps. Treat him as a mid-round dart throw whose ceiling depends entirely on reclaiming volume.",
+  "keyStats": {"rank":41,"playerId":"7594","playerName":"Chuba Hubbard","position":"RB","team":"CAR","age":26,"season":2025,"games":15,"snapPct":45.8,"routes":247,"rushAttempts":134,"redZoneOpportunities":24,"goalLineCarries":1,"targets":39,"receptions":30,"redZoneTargets":6,"endZoneTargets":4,"rushYards":511,"yardsPerCarry":3.81,"rushTouchdowns":1,"targetSharePct":8.1,"receivingYards":223,"yardsPerReception":7.43,"yardsPerRouteRun":0.9,"receivingTouchdowns":3,"epaPerPlay":-0.059,"fantasyPoints":95.4,"rushes10Plus":8,"rushes20Plus":0,"rushes30Plus":0,"rushes40Plus":0,"rushes50Plus":0,"explosiveRunPct":5.97,"breakawayRunPct":0,"longestRush":14,"longestRushTouchdown":3,"brokenTackles":1,"rushAttemptsPerBrokenTackle":134,"yardsAfterContactPerAttempt":1.81,"yardsBeforeContactPerAttempt":2.01,"receivingYardsAfterCatch":291,"tackleEludedRate":0.6,"fumbles":1,"tacklesForLoss":7,"tacklesForLossYards":14,"rushAttForNegativeYards":7},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/chuba-hubbard.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-chuba-hubbard/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "7594",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

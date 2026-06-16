@@ -1,0 +1,19 @@
+{
+  "slug": "jakobi-lane",
+  "name": "Ja'Kobi Lane",
+  "position": "WR",
+  "team": "BAL",
+  "season": 2026,
+  "headline": "Ravens rookie is a red-zone bet for patient dynasty rosters",
+  "body": "A third-round pick out of USC, Ja'Kobi Lane lands in Baltimore as a 6-4, 200-pound vertical threat whose combine measurables jump off the page, headlined by 10.5-inch hands and one of the longest wingspans in the class. The athletic profile fits exactly what Baltimore wants near the goal line, and the coaching staff has openly signaled it intends to weaponize his size in scoring situations. The route nuance and ball-tracking are real, even if an 8.6 percent college drop rate and thin yards-after-catch chops flag a developmental runway.\n\nThe path to volume is the sticking point. Rashod Bateman is locked in through 2029, and Lane must climb past Elijah Sarratt for steady snaps, which keeps his Year 1 ceiling capped. Drafting near pick 233 overall, he is a stash, not a starter. Treat him as a dynasty target in the late-second to early-third tier and let the redraft case build itself before committing a bench spot.",
+  "keyStats": null,
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/jakobi-lane.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-jakobi-lane/","used":true},
+    {"name":"Statchasers advanced stats","used":false}
+  ],
+  "id": "13293",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

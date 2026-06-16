@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { PersonStanding } from "lucide-react";
 import { Card, Tooltip, TooltipTrigger, TooltipContent, cn } from "./ui";
 import {
   normalizeInjuryEvent,
@@ -358,7 +357,6 @@ export function InjuryBodyMap({ injuries, className }: { injuries: RawInjuryInpu
     <Card className={cn("p-5", className)}>
       <div>
         <h3 className="sc-sectitle">
-          <PersonStanding className="h-4 w-4 text-[#d4af37]" />
           Body Map
         </h3>
         <p className="mt-0.5 text-[11px] text-muted-foreground">Career injury locations by body region</p>

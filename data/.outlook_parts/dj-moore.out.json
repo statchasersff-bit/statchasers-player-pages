@@ -1,0 +1,19 @@
+{
+  "slug": "dj-moore",
+  "name": "DJ Moore",
+  "position": "WR",
+  "team": "BUF",
+  "season": 2026,
+  "headline": "Allen's new toy buys back Moore's WR1 ceiling",
+  "body": "Moore's 2025 was a study in collapse: a WR39 finish on just 682 yards, a 16% target share, and a career-low 1.30 yards per route as Chicago funneled work to Rome Odunze and Colston Loveland. His 0.162 targets per route and 45.9% success rate were both shadows of the 0.252 and 57.4% he posted in 2023, when he ranked sixth at the position with 1,364 yards and a sterling 0.487 EPA per play.\n\nBuffalo flips the variable that mattered most. Pairing with Josh Allen reopens the explosive ceiling Moore showed at peak, even if a run-leaning attack and a crowded room cap his volume near the double-digit-target range he saw last year. The red-zone usage is thin and the floor is volatile, but the talent and quarterback upgrade make him a defensible Round 5 swing on rebound equity.",
+  "keyStats": {"rank":39,"playerId":"4983","playerName":"DJ Moore","position":"WR","team":"CHI","age":28,"season":2025,"games":17,"snapPct":84.8,"routes":525,"routePct":88.1,"targets":85,"targetsPerRouteRun":0.162,"targetSharePct":16,"airYardsPerTarget":11.62,"airYardsPerReception":19.76,"airYardsSharePct":20,"wopr":0.38,"receptions":50,"redZoneTargets":11,"endZoneTargets":6,"catchPct":58.8,"receivingYards":682,"totalYards":761,"yardsPerReception":13.64,"yardsBeforeCatchPerReception":9.2,"yardsAfterCatchPerReception":4.44,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.3,"receivingTouchdowns":6,"epaPerPlay":0.16,"successRate":45.9,"contestedCatchRate":null,"fantasyPoints":122.2,"avoidedTackleRate":8,"brokenTackles":4,"drops":4,"catchableTargets":54,"dropPct":4.7,"interceptionsWhenTargeted":1,"fumbles":0,"receptions10Plus":30,"receptions20Plus":12,"receptions30Plus":3,"receptions40Plus":2,"receptions50Plus":0,"longestReception":46},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/dj-moore.php","used":false},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-dj-moore/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "4983",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

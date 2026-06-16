@@ -1,0 +1,20 @@
+{
+  "slug": "elijah-higgins",
+  "name": "Elijah Higgins",
+  "position": "TE",
+  "team": "ARI",
+  "season": 2026,
+  "headline": "McBride's Shadow Keeps Higgins A Deep-League Lottery Ticket",
+  "body": "Higgins quietly logged his most productive season in 2025, suiting up for all 17 games and turning 37 targets into 30 grabs for 301 yards while securing 81.1% of his looks and posting a clean zero-drop sheet. The volume stayed thin, though: a 6% target share, 0.128 targets per route, and 1.04 yards per route run dragged his EPA per play to a flat 0.039 and capped him as the TE38 in fantasy scoring. The encouraging wrinkle is his 6.97 yards after the catch per reception and a 16.7% avoided-tackle rate, signaling he can create when fed.\n\nThe ceiling problem is the man in front of him. Higgins remains the clear backup behind Trey McBride, and as long as the starter stays upright there simply aren't enough routes to matter. He's a touchdown-light, low-floor name buried near the end of draft boards. Stash him only in the deepest formats as injury insurance."
+,
+  "keyStats": {"rank":38,"playerId":"10231","playerName":"Elijah Higgins","position":"TE","team":"ARI","age":24,"season":2025,"games":17,"snapPct":42.5,"routes":289,"routePct":40.9,"targets":37,"targetsPerRouteRun":0.128,"targetSharePct":6,"airYardsPerTarget":4,"airYardsPerReception":4.93,"airYardsSharePct":3.2,"wopr":0.112,"receptions":30,"redZoneTargets":5,"endZoneTargets":3,"catchPct":81.1,"receivingYards":301,"totalYards":301,"yardsPerReception":10.03,"yardsBeforeCatchPerReception":3.07,"yardsAfterCatchPerReception":6.97,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.04,"receivingTouchdowns":0,"epaPerPlay":0.039,"successRate":51.4,"contestedCatchRate":null,"fantasyPoints":28.1,"avoidedTackleRate":16.7,"brokenTackles":5,"drops":0,"catchableTargets":30,"dropPct":0,"interceptionsWhenTargeted":1,"fumbles":1,"receptions10Plus":12,"receptions20Plus":4,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":27},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/elijah-higgins.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-elijah-higgins/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "10231",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

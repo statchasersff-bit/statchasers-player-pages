@@ -1,0 +1,19 @@
+{
+  "slug": "dylan-drummond",
+  "name": "Dylan Drummond",
+  "position": "WR",
+  "team": "ATL",
+  "season": 2026,
+  "headline": "Deep on the depth chart, off the radar",
+  "body": "Drummond's 2025 rookie sample reads like a developmental redshirt. Across six games he ran just 71 routes for a 12.5% route share, drawing 11 targets and a 2.1% target share while playing only 21% of snaps. The efficiency underneath was alarming: a minus-0.556 EPA per play, a 36.4% success rate, and a brutal 0.59 yards per route run. He turned seven catches into 42 yards, never finding the end zone despite three red-zone looks.\n\nThe path forward is opportunity, not production. Atlanta's receiver room dealt with injuries, yet Drummond still couldn't carve out a defined role, and he projects as a back-end depth piece entering 2026. With essentially no ADP and zero roster relevance, he's a watch-list name at best. Until he earns real snaps and route volume, there's nothing here to draft in any format.",
+  "keyStats": {"rank":182,"playerId":"11474","playerName":"Dylan Drummond","position":"WR","team":"ATL","age":25,"season":2025,"games":6,"snapPct":21.1,"routes":71,"routePct":12.5,"targets":11,"targetsPerRouteRun":0.155,"targetSharePct":2.1,"airYardsPerTarget":7.73,"airYardsPerReception":12.14,"airYardsSharePct":2,"wopr":0.046,"receptions":7,"redZoneTargets":3,"endZoneTargets":1,"catchPct":63.6,"receivingYards":42,"totalYards":42,"yardsPerReception":6,"yardsBeforeCatchPerReception":4,"yardsAfterCatchPerReception":2,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.59,"receivingTouchdowns":0,"epaPerPlay":-0.556,"successRate":36.4,"contestedCatchRate":null,"fantasyPoints":4.2,"avoidedTackleRate":0,"brokenTackles":0,"drops":0,"catchableTargets":7,"dropPct":0,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":1,"receptions20Plus":0,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":15},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/dylan-drummond.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-dylan-drummond/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11474",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

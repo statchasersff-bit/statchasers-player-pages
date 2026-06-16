@@ -1,0 +1,19 @@
+{
+  "slug": "bryce-young",
+  "name": "Bryce Young",
+  "position": "QB",
+  "team": "CAR",
+  "season": 2026,
+  "headline": "Career highs, but the efficiency still says backup",
+  "body": "Young set personal bests in 2025 with 23 touchdowns, 3,011 yards and a 63.6% completion rate across 16 games, yet the underlying profile barely budged. His EPA per play sat at -0.03 for the second straight year, his success rate ticked up only to 42.6%, and a finish as our QB21 tells you the volume never arrived. A 7.7% deep-attempt rate and 4.8 completed air yards per completion confirm an offense that lived underneath, and 11 picks against modest production cap the ceiling.\n\nThere are flickers of growth: CPOE climbed to +1.0, the bad-throw rate fell to 16.4%, and on-target percentage rose to 77.9%. But 216 rushing yards and two scores add little, and the half-season of sub-25-attempt games signals a coaching staff still managing him. Treat Young as a superflex-only stash with real bust risk, not a one-quarterback option.",
+  "keyStats": {"rank":21,"playerId":"9228","playerName":"Bryce Young","position":"QB","team":"CAR","age":24,"season":2025,"games":16,"attempts":478,"completions":304,"completionPct":63.6,"passingYards":3011,"yardsPerCatch":6.3,"passingTouchdowns":23,"interceptions":11,"fantasyPoints":218,"airYards":3102,"completedAirYards":1466,"completedAirYardsPerCompletion":4.8,"deepAttemptPct":7.7,"epaPerPlay":-0.03,"successRate":42.6,"cpoe":1,"throwaways":32,"battedPasses":9,"poorThrows":73,"badThrowPct":16.4,"onTargetPct":77.9,"passesDropped":18,"passes10Plus":114,"passes20Plus":39,"passes30Plus":13,"passes40Plus":4,"passes50Plus":1,"longestPass":54,"rushAttempts":54,"rushYards":216,"rushTouchdowns":2,"redZoneAttempts":72,"scrambleRate":6.1,"yardsPerScramble":6.7,"fumbles":6,"sacks":27,"sackYardsLost":202,"pocketTime":2.4,"timeToThrow":2.83,"blitzes":127,"hurries":54,"knockdowns":48,"pressurePct":24},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/bryce-young.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-bryce-young/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "9228",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

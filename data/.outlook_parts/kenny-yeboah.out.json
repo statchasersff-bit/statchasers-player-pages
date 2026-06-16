@@ -1,0 +1,19 @@
+{
+  "slug": "kenny-yeboah",
+  "name": "Kenny Yeboah",
+  "position": "TE",
+  "team": "ARI",
+  "season": 2026,
+  "headline": "Yeboah's Cardinals Audition Starts From The Bottom",
+  "body": "Yeboah has barely cracked the field across his career, logging just 19% of snaps over seven games in 2024 and running only 41 routes. The flashes exist when he plays: a 0.34 EPA per play, a 50% success rate, and 1.15 yards per route run all hint at a competent role player when targeted. But the sample is microscopic, anchored by a 1.4% target share, five receptions, 47 yards, and one touchdown. A 25% drop rate on his limited looks is the glaring red flag, and his 0.195 targets per route run can't be trusted at that volume.\n\nNow in Arizona, he arrives as a tryout signing fighting for a reserve job in a crowded tight end room. There's no defined path to snaps, no ADP, and effectively zero roster relevance. Treat him as a deep-league dart throw only if camp news points toward a real special-teams or blocking role.",
+  "keyStats": {"rank":80,"playerId":"7597","playerName":"Kenny Yeboah","position":"TE","team":"NYJ","age":25,"season":2024,"games":7,"snapPct":19,"routes":41,"routePct":6.3,"targets":8,"targetsPerRouteRun":0.195,"targetSharePct":1.4,"airYardsPerTarget":4.62,"airYardsPerReception":7.4,"airYardsSharePct":0.9,"wopr":0.027,"receptions":5,"redZoneTargets":1,"endZoneTargets":0,"catchPct":62.5,"receivingYards":47,"totalYards":47,"yardsPerReception":9.4,"yardsBeforeCatchPerReception":2.6,"yardsAfterCatchPerReception":6.8,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.15,"receivingTouchdowns":1,"epaPerPlay":0.34,"successRate":50,"contestedCatchRate":null,"fantasyPoints":10.7,"avoidedTackleRate":0,"brokenTackles":0,"drops":2,"catchableTargets":7,"dropPct":25,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":3,"receptions20Plus":0,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":13},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/kenny-yeboah.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-kenny-yeboah/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "7597",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

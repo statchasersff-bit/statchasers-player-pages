@@ -1,4 +1,8 @@
-import { type ReactNode } from "react";
+import {
+  createContext, useContext, useRef, useState,
+  type CSSProperties, type ReactNode,
+} from "react";
+import { createPortal } from "react-dom";
 import { type LucideIcon } from "lucide-react";
 
 export function cn(...parts: Array<string | false | null | undefined>): string {
@@ -33,17 +37,45 @@ export function ComingSoon({ icon: Icon, title, body }: { icon: LucideIcon; titl
   );
 }
 
-export function SectionTitle({ icon: Icon, title, noMargin }: { icon: LucideIcon; title: string; noMargin?: boolean }) {
+export function SectionTitle({ title, noMargin }: { title: string; noMargin?: boolean }) {
   return (
     <div className={cn("sc-sectitle", noMargin && "!mb-0")}>
-      <Icon className="w-4 h-4 text-[#d4af37]" />
       <h3>{title}</h3>
     </div>
   );
 }
 
+// Portaled tooltip — content renders in a fixed-position layer on document.body so
+// it is never clipped by an ancestor's overflow (e.g. the timeline's horizontal scroll).
+
+type TooltipCtx = { open: boolean; rect: DOMRect | null };
+const TooltipContext = createContext<TooltipCtx>({ open: false, rect: null });
+
 export function Tooltip({ children }: { children: ReactNode }) {
-  return <span className="relative inline-flex group/tt">{children}</span>;
+  const ref = useRef<HTMLSpanElement>(null);
+  const [open, setOpen] = useState(false);
+  const [rect, setRect] = useState<DOMRect | null>(null);
+
+  const show = () => {
+    if (ref.current) setRect(ref.current.getBoundingClientRect());
+    setOpen(true);
+  };
+  const hide = () => setOpen(false);
+
+  return (
+    <TooltipContext.Provider value={{ open, rect }}>
+      <span
+        ref={ref}
+        className="relative inline-flex"
+        onMouseEnter={show}
+        onMouseLeave={hide}
+        onFocus={show}
+        onBlur={hide}
+      >
+        {children}
+      </span>
+    </TooltipContext.Provider>
+  );
 }
 
 export function TooltipTrigger({ children }: { children: ReactNode; asChild?: boolean }) {
@@ -53,22 +85,44 @@ export function TooltipTrigger({ children }: { children: ReactNode; asChild?: bo
 export function TooltipContent({
   children,
   className,
+  side = "top",
+  collisionPadding = 8,
 }: {
   children: ReactNode;
   className?: string;
   side?: "top" | "bottom" | "left" | "right";
   collisionPadding?: number;
 }) {
-  return (
+  const { open, rect } = useContext(TooltipContext);
+  if (!open || !rect || typeof document === "undefined") return null;
+
+  const gap = 8;
+  const below = side === "bottom";
+  // Keep the horizontally-centered tooltip inside the viewport.
+  const half = 130; // ~half of the max tooltip width
+  const centerX = Math.min(
+    Math.max(rect.left + rect.width / 2, collisionPadding + half),
+    window.innerWidth - collisionPadding - half,
+  );
+  const style: CSSProperties = {
+    position: "fixed",
+    left: centerX,
+    top: below ? rect.bottom + gap : rect.top - gap,
+    transform: below ? "translate(-50%, 0)" : "translate(-50%, -100%)",
+    zIndex: 60,
+  };
+
+  return createPortal(
     <span
       role="tooltip"
+      style={style}
       className={cn(
-        "pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 hidden -translate-x-1/2 whitespace-normal rounded-lg border border-border bg-popover text-popover-foreground shadow-md",
-        "group-hover/tt:block group-focus-within/tt:block",
+        "pointer-events-none whitespace-normal rounded-lg border border-border bg-popover text-popover-foreground shadow-md",
         className,
       )}
     >
       {children}
-    </span>
+    </span>,
+    document.body,
   );
 }

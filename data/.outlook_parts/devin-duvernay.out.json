@@ -1,0 +1,19 @@
+{
+  "slug": "devin-duvernay",
+  "name": "Devin Duvernay",
+  "position": "WR",
+  "team": "ARI",
+  "season": 2026,
+  "headline": "Return Specialist, Not a Fantasy Asset",
+  "body": "Duvernay's offensive footprint has all but vanished. Across 17 games in 2025 he logged just a 3.5% snap rate and 4.2% route share, drawing five targets for a 0.9% target share and turning two catches into 26 yards. His marks sat firmly underwater: a minus-0.062 EPA per play, a 40% success rate, and 1.04 yards per route run, all good for just 2.6 fantasy points and a WR192 finish. That follows a 2024 in Jacksonville where 16 targets yielded 79 yards, confirming the trend rather than bucking it.\n\nNow in Arizona on a modest one-year deal, he profiles as a kick-returner and special-teams piece rather than a rotational receiver. With no real path to offensive volume, he carries no standalone value, slotting near WR249 in dynasty and going undrafted in redraft. Leave him on the wire unless an injury forces a snap-count shift that simply isn't projected.",
+  "keyStats": {"rank":192,"playerId":"6847","playerName":"Devin Duvernay","position":"WR","team":"CHI","age":27,"season":2025,"games":17,"snapPct":3.5,"routes":25,"routePct":4.2,"targets":5,"targetsPerRouteRun":0.2,"targetSharePct":0.9,"airYardsPerTarget":15,"airYardsPerReception":37.5,"airYardsSharePct":1.5,"wopr":0.025,"receptions":2,"redZoneTargets":1,"endZoneTargets":1,"catchPct":40,"receivingYards":26,"totalYards":26,"yardsPerReception":13,"yardsBeforeCatchPerReception":13,"yardsAfterCatchPerReception":0,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.04,"receivingTouchdowns":0,"epaPerPlay":-0.062,"successRate":40,"contestedCatchRate":null,"fantasyPoints":2.6,"avoidedTackleRate":0,"brokenTackles":0,"drops":0,"catchableTargets":2,"dropPct":0,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":1,"receptions20Plus":1,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":24},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/devin-duvernay.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-devin-duvernay/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "6847",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

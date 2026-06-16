@@ -1,0 +1,19 @@
+{
+  "slug": "jeremiyah-love",
+  "name": "Jeremiyah Love",
+  "position": "RB",
+  "team": "ARI",
+  "season": 2026,
+  "headline": "Love's draft capital screams workhorse — if Arizona lets him cook",
+  "body": "Arizona spent the third overall pick on Love, and a team doesn't burn that kind of capital to hand a back a timeshare. The Notre Dame product arrives with a monster resume — roughly 2,497 rushing yards and 35 scores on 362 carries across his final two seasons, plus 55 grabs — and steps into a featured role at just 21. Drafters are buying in, pushing his ADP up around 23rd overall and inside the top 13 at the position.\n\nThe only thing between Love and a top-12 finish is the depth chart. James Conner and Tyler Allgeier loom as touchdown vultures, and a shaky quarterback room caps the scoring environment. But the talent gap is real, and the logic is obvious: this backfield consolidates around Love sooner than later. Treat him as a high-end RB2 with legitimate top-10 upside once the workload tilts his way.",
+  "keyStats": null,
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/jeremiyah-love.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-jeremiyah-love/","used":true},
+    {"name":"Statchasers advanced stats","used":false}
+  ],
+  "id": "13287",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

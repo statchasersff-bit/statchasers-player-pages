@@ -1,0 +1,19 @@
+{
+  "slug": "khalil-shakir",
+  "name": "Khalil Shakir",
+  "position": "WR",
+  "team": "BUF",
+  "season": 2026,
+  "headline": "Reliable Floor, Capped Ceiling as Moore Crowds the Room",
+  "body": "Shakir's 2025 line tells a clear story: 72 catches on 95 targets for 719 yards and four scores across 16 games, a 75.8% catch rate, and a tidy 2.1% drop rate. The underlying marks softened from his 2024 peak, with EPA per play falling from 0.442 to 0.099 and success rate sliding from 57% to 44.2%. His 19.8% target share and 0.27 targets per route held steady, but a 3.67 air-yards-per-target number confirms a short-area role doing most of its damage at 7.51 yards after the catch.\n\nThat profile screams dependable possession option, not breakout. D.J. Moore's arrival threatens Shakir's standing as Buffalo's target leader and likely trims his volume closer to five looks a game. With limited downfield and red-zone equity, the ceiling stays modest. Treat him as a steady WR4 with a high floor, drafted around the WR53-54 range, rather than chasing untapped upside.",
+  "keyStats": {"rank":34,"playerId":"8134","playerName":"Khalil Shakir","position":"WR","team":"BUF","age":25,"season":2025,"games":16,"snapPct":59.8,"routes":352,"routePct":65.9,"targets":95,"targetsPerRouteRun":0.27,"targetSharePct":19.8,"airYardsPerTarget":3.67,"airYardsPerReception":4.85,"airYardsSharePct":9.7,"wopr":0.365,"receptions":72,"redZoneTargets":13,"endZoneTargets":4,"catchPct":75.8,"receivingYards":719,"totalYards":724,"yardsPerReception":9.99,"yardsBeforeCatchPerReception":2.47,"yardsAfterCatchPerReception":7.51,"yardsAfterContactPerReception":null,"yardsPerRouteRun":2.04,"receivingTouchdowns":4,"epaPerPlay":0.099,"successRate":44.2,"contestedCatchRate":null,"fantasyPoints":94.4,"avoidedTackleRate":9.7,"brokenTackles":7,"drops":2,"catchableTargets":74,"dropPct":2.1,"interceptionsWhenTargeted":2,"fumbles":1,"receptions10Plus":23,"receptions20Plus":7,"receptions30Plus":4,"receptions40Plus":3,"receptions50Plus":1,"longestReception":54},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/khalil-shakir.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-khalil-shakir/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "8134",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

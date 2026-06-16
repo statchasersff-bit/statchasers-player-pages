@@ -1,0 +1,19 @@
+{
+  "slug": "austin-hooper",
+  "name": "Austin Hooper",
+  "position": "TE",
+  "team": "ATL",
+  "season": 2026,
+  "headline": "Hooper Returns to Atlanta as a Touch-Limited Afterthought",
+  "body": "Hooper's 2025 line tells the story of a fading complementary piece: 13 games, a 5.4% target share on just 26 looks, and 263 yards with two scores good for TE45. He ran routes on only 37.6% of dropbacks and posted a 0.126 target-per-route-run rate, both well off his 2024 marks of 47% and 0.217. The efficiency flashes are real but empty calories for fantasy, a 0.646 EPA per play, a 73.1% success rate, and an 80.8% catch rate on tiny volume.\n\nNow back in Atlanta, he slides in behind Kyle Pitts as the clear second tight end on a one-year deal. His ranking sits around TE59 with an ADP outside pick 440, and the math backs the gloom: five red-zone targets and a 1.27 yards-per-route-run figure won't move the needle. Until injury opens a path to snaps, treat him as a deep-league name to monitor rather than draft.",
+  "keyStats": {"rank":45,"playerId":"3202","playerName":"Austin Hooper","position":"TE","team":"NE","age":30,"season":2025,"games":13,"snapPct":50,"routes":207,"routePct":37.6,"targets":26,"targetsPerRouteRun":0.126,"targetSharePct":5.4,"airYardsPerTarget":9,"airYardsPerReception":11.14,"airYardsSharePct":5.1,"wopr":0.116,"receptions":21,"redZoneTargets":5,"endZoneTargets":3,"catchPct":80.8,"receivingYards":263,"totalYards":263,"yardsPerReception":12.52,"yardsBeforeCatchPerReception":8.43,"yardsAfterCatchPerReception":4.1,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.27,"receivingTouchdowns":2,"epaPerPlay":0.646,"successRate":73.1,"contestedCatchRate":null,"fantasyPoints":38.3,"avoidedTackleRate":0,"brokenTackles":0,"drops":0,"catchableTargets":21,"dropPct":0,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":10,"receptions20Plus":6,"receptions30Plus":1,"receptions40Plus":0,"receptions50Plus":0,"longestReception":31},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/austin-hooper.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-austin-hooper/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "3202",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

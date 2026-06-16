@@ -1,0 +1,19 @@
+{
+  "slug": "kenny-pickett",
+  "name": "Kenny Pickett",
+  "position": "QB",
+  "team": "CAR",
+  "season": 2026,
+  "headline": "A Veteran Insurance Policy Behind Bryce Young",
+  "body": "Pickett's 2025 cameo in Las Vegas confirmed what his profile keeps suggesting: a steady hand who doesn't move the needle. Across six appearances he completed 62.2% of his throws for just 188 yards, one touchdown against two picks, and a brutal -0.552 EPA per play with a 29.3% success rate. That finished him 61st among quarterbacks at 7.7 fantasy points, a far cry from the QB29 ranking and 39.8% success rate he posted as Pittsburgh's starter in 2023.\n\nNow on his third team in three years, Pickett lands in Carolina as the clear backup behind Bryce Young on a roster trending upward. The one-year deal is depth insurance, nothing more. There's no draftable path here outside Superflex or two-quarterback formats, and even then only as a contingency stash should Young miss time. Leave him on the waiver wire and monitor the situation.",
+  "keyStats": {"rank":61,"playerId":"8160","playerName":"Kenny Pickett","position":"QB","team":"LV","age":27,"season":2025,"games":6,"attempts":45,"completions":28,"completionPct":62.2,"passingYards":188,"yardsPerCatch":4.18,"passingTouchdowns":1,"interceptions":2,"fantasyPoints":7.7,"airYards":262,"completedAirYards":126,"completedAirYardsPerCompletion":4.5,"deepAttemptPct":7.5,"epaPerPlay":-0.552,"successRate":29.3,"cpoe":-6.5,"throwaways":0,"battedPasses":2,"poorThrows":6,"badThrowPct":13.6,"onTargetPct":81.8,"passesDropped":3,"passes10Plus":7,"passes20Plus":2,"passes30Plus":0,"passes40Plus":0,"passes50Plus":0,"longestPass":26,"rushAttempts":5,"rushYards":22,"rushTouchdowns":0,"redZoneAttempts":2,"scrambleRate":5.4,"yardsPerScramble":7.7,"fumbles":1,"sacks":8,"sackYardsLost":54,"pocketTime":2.5,"timeToThrow":null,"blitzes":3,"hurries":1,"knockdowns":5,"pressurePct":25},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/kenny-pickett.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-kenny-pickett/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "8160",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "tyler-huntley",
+  "name": "Tyler Huntley",
+  "position": "QB",
+  "team": "BAL",
+  "season": 2026,
+  "headline": "Efficient In Relief, But Buried Behind Lamar",
+  "body": "Huntley's 2025 sample back in Baltimore was sharp even if tiny: across five games he completed 77.6% of his throws with a 12.9 CPOE, posted a 49.5% success rate and a positive 0.132 EPA per play, and protected the ball with two touchdowns against zero picks for 40.1 points and a QB49 finish. That marked a clean reversal from his messy 2024 Miami stint, where he managed a minus-0.127 EPA, a 39.7% success rate, three interceptions, and five fumbles.\n\nThe efficiency is real, yet the opportunity is not. He sits firmly behind Lamar Jackson on a two-year Baltimore deal and projects for minimal snaps in an offense built around its franchise quarterback. With an ADP near pick 329 and roughly zero rostership, he is a non-factor in standard formats. Stash him only in deep two-quarterback leagues as injury insurance, because any standalone value hinges entirely on Jackson missing time.",
+  "keyStats": {"rank":49,"playerId":"7083","playerName":"Tyler Huntley","position":"QB","team":"BAL","age":27,"season":2025,"games":5,"attempts":67,"completions":52,"completionPct":77.6,"passingYards":426,"yardsPerCatch":6.36,"passingTouchdowns":2,"interceptions":0,"fantasyPoints":40.1,"airYards":429,"completedAirYards":278,"completedAirYardsPerCompletion":5.3,"deepAttemptPct":4,"epaPerPlay":0.132,"successRate":49.5,"cpoe":12.9,"throwaways":0,"battedPasses":0,"poorThrows":7,"badThrowPct":10.6,"onTargetPct":87.9,"passesDropped":4,"passes10Plus":15,"passes20Plus":3,"passes30Plus":1,"passes40Plus":0,"passes50Plus":0,"longestPass":36,"rushAttempts":24,"rushYards":151,"rushTouchdowns":0,"redZoneAttempts":16,"scrambleRate":9.6,"yardsPerScramble":11.8,"fumbles":0,"sacks":8,"sackYardsLost":38,"pocketTime":2.3,"timeToThrow":null,"blitzes":21,"hurries":1,"knockdowns":10,"pressurePct":22.9},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/tyler-huntley.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-tyler-huntley/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "7083",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

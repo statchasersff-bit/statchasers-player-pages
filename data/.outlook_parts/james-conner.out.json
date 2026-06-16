@@ -1,0 +1,20 @@
+{
+  "slug": "james-conner",
+  "name": "James Conner",
+  "position": "RB",
+  "team": "ARI",
+  "season": 2026,
+  "headline": "A torn 2025 leaves Conner fighting for relevance",
+  "body": "Conner's 2025 evaporated after three games, and the tape was ugly: 2.97 yards per carry, a -0.013 EPA per play, and just a 3.12 percent explosive-run rate as the foot injury sapped his burst. That cratered him to RB87 with only 25.3 fantasy points. The contrast with his prior form is stark. In 2024 he finished RB9 across 16 games on 1,094 rushing yards, 4.64 per carry, eight scores, and a 14.41 percent explosive-run rate, while 2023 paired 5.0 per carry with a strong 0.075 EPA per play.\n\nThe efficiency is real when he's upright, but the path narrowed. Arizona spent a premium pick on a back and added depth, threatening to push the 31-year-old into a committee or worse. Treat him as a late-round dart with clear standalone upside only if the rookie stumbles or a trade reopens the lead role he commanded for four years."
+,
+  "keyStats": {"rank":87,"playerId":"4137","playerName":"James Conner","position":"RB","team":"ARI","age":30,"season":2025,"games":3,"snapPct":50,"routes":42,"rushAttempts":32,"redZoneOpportunities":6,"goalLineCarries":3,"targets":9,"receptions":8,"redZoneTargets":1,"endZoneTargets":1,"rushYards":95,"yardsPerCarry":2.97,"rushTouchdowns":1,"targetSharePct":1.5,"receivingYards":38,"yardsPerReception":4.75,"yardsPerRouteRun":0.9,"receivingTouchdowns":1,"epaPerPlay":-0.013,"fantasyPoints":25.3,"rushes10Plus":1,"rushes20Plus":0,"rushes30Plus":0,"rushes40Plus":0,"rushes50Plus":0,"explosiveRunPct":3.12,"breakawayRunPct":0,"longestRush":12,"longestRushTouchdown":2,"brokenTackles":3,"rushAttemptsPerBrokenTackle":10.67,"yardsAfterContactPerAttempt":1.75,"yardsBeforeContactPerAttempt":1.22,"receivingYardsAfterCatch":68,"tackleEludedRate":7.5,"fumbles":1,"tacklesForLoss":2,"tacklesForLossYards":5,"rushAttForNegativeYards":2},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/james-conner.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-james-conner/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "4137",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

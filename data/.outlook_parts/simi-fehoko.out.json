@@ -1,0 +1,20 @@
+{
+  "slug": "simi-fehoko",
+  "name": "Simi Fehoko",
+  "position": "WR",
+  "team": "ARI",
+  "season": 2026,
+  "headline": "Blocking Specialist With No Path To Targets",
+  "body": "Fehoko's 2024 profile screams deep-roster afterthought: 16 targets across six games for a 3.3% target share, a 0.132 rate per route run, and just six catches on 37.5% efficiency. The 106 yards came on a vertical diet, 14.75 air yards per look, yet only 0.88 yards per route run and a WOPR under 0.09 confirm he never commanded volume. A 0.168 EPA per play and 37.5% success rate read fine in a tiny sample, but two of his eight catchable balls hit the ground.\n\nNow in Arizona on a one-year deal, the 6-foot-4 Stanford product profiles as a blocker and special-teams body rather than a rotational pass-catcher. He logged zero scores in 2024 after his lone 2023 receiving touchdown, and carries no meaningful ADP or ranking. Until injuries clear a path, treat him as roster filler with negligible fantasy upside in any format."
+,
+  "keyStats": {"rank":136,"playerId":"7812","playerName":"Simi Fehoko","position":"WR","team":"LAC","age":26,"season":2024,"games":6,"snapPct":48.5,"routes":121,"routePct":22,"targets":16,"targetsPerRouteRun":0.132,"targetSharePct":3.3,"airYardsPerTarget":14.75,"airYardsPerReception":39.33,"airYardsSharePct":5.4,"wopr":0.087,"receptions":6,"redZoneTargets":2,"endZoneTargets":1,"catchPct":37.5,"receivingYards":106,"totalYards":106,"yardsPerReception":17.67,"yardsBeforeCatchPerReception":15,"yardsAfterCatchPerReception":2.67,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.88,"receivingTouchdowns":0,"epaPerPlay":0.168,"successRate":37.5,"contestedCatchRate":null,"fantasyPoints":10.6,"avoidedTackleRate":0,"brokenTackles":0,"drops":2,"catchableTargets":8,"dropPct":12.5,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":5,"receptions20Plus":2,"receptions30Plus":1,"receptions40Plus":0,"receptions50Plus":0,"longestReception":30},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/simi-fehoko.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-simi-fehoko/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "7812",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

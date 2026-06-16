@@ -1,0 +1,19 @@
+{
+  "slug": "zay-flowers",
+  "name": "Zay Flowers",
+  "position": "WR",
+  "team": "BAL",
+  "season": 2026,
+  "headline": "Flowers Blooms Into a Locked-In WR1 Target",
+  "body": "Flowers graded out as our WR6 in 2025, and the workload backs it up: a 29% target share, a 0.681 WOPR, and 118 looks across all 17 games. He converted that into 86 grabs for 1,211 yards on a 72.9% catch rate, while his 2.75 yards per route run and 0.401 EPA per play put him among the most efficient receivers in football. His 57.6% success rate confirms this wasn't volume noise.\n\nThe one cap is the end zone. Just 11 red zone targets and 5 end zone looks held him to five scores, and he's never topped that mark. That keeps the ceiling tethered to Baltimore's run-leaning script and Lamar Jackson's touchdown rate. But the route volume, the air-yards share north of 35%, and a third straight rising target tree make him a steady early-round WR2 with genuine WR1 weeks baked in.",
+  "keyStats": {"rank":6,"playerId":"9997","playerName":"Zay Flowers","position":"WR","team":"BAL","age":24,"season":2025,"games":17,"snapPct":86.5,"routes":441,"routePct":95,"targets":118,"targetsPerRouteRun":0.268,"targetSharePct":29,"airYardsPerTarget":10.2,"airYardsPerReception":14,"airYardsSharePct":35.2,"wopr":0.681,"receptions":86,"redZoneTargets":11,"endZoneTargets":5,"catchPct":72.9,"receivingYards":1211,"totalYards":1273,"yardsPerReception":14.08,"yardsBeforeCatchPerReception":8.76,"yardsAfterCatchPerReception":5.33,"yardsAfterContactPerReception":null,"yardsPerRouteRun":2.75,"receivingTouchdowns":5,"epaPerPlay":0.401,"successRate":57.6,"contestedCatchRate":null,"fantasyPoints":157.3,"avoidedTackleRate":10.5,"brokenTackles":9,"drops":7,"catchableTargets":93,"dropPct":5.9,"interceptionsWhenTargeted":2,"fumbles":3,"receptions10Plus":43,"receptions20Plus":19,"receptions30Plus":10,"receptions40Plus":4,"receptions50Plus":3,"longestReception":64},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/zay-flowers.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-zay-flowers/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "9997",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

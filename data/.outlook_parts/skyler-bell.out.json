@@ -1,0 +1,19 @@
+{
+  "slug": "skyler-bell",
+  "name": "Skyler Bell",
+  "position": "WR",
+  "team": "BUF",
+  "season": 2026,
+  "headline": "A twitchy UConn flier buried in Buffalo's committee",
+  "body": "Bell arrives as a fourth-round rookie out of UConn, and the appeal is mostly about traits: a 192-pound frame, sudden acceleration, and standout work after the catch, where he forced 26 missed tackles across his final two college seasons and averaged better than eight yards after every reception. The downside is just as clear. His release work and route polish are unfinished, he struggled with drops and body catches in college, and roughly four of every five targets came on shorter routes, so the deep-field upside isn't there yet.\n\nThe bigger problem is opportunity. Buffalo runs a true receiver-by-committee, and Bell has to climb past Joshua Palmer, Keon Coleman, and Khalil Shakir just to sniff regular volume behind DJ Moore. That caps him as a speculative late-round dart in deep redraft formats and a mid-round rookie swing in dynasty, where the athletic ceiling tied to Josh Allen makes him worth a cheap bet.",
+  "keyStats": null,
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/skyler-bell.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-skyler-bell/","used":true},
+    {"name":"Statchasers advanced stats","used":false}
+  ],
+  "id": "13402",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

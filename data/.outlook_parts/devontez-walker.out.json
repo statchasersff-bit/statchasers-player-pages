@@ -1,0 +1,20 @@
+{
+  "slug": "devontez-walker",
+  "name": "Devontez Walker",
+  "position": "WR",
+  "team": "BAL",
+  "season": 2026,
+  "headline": "Big-play flashes, but the runway just got crowded",
+  "body": "Walker's 2025 line is a study in efficiency without volume: six grabs on eight looks across eight games, a 75% catch rate, 136 yards, and three touchdowns on just a 2% target share. The per-route work pops at 2.43 yards per route run and a 0.143 target-per-route rate, while a 2.242 EPA per play and 75% success rate confirm that nearly every touch turned into a win. With a 24.5-yard average depth of target, he is purely a field-stretcher, not a chain-mover.\n\nThat profile is the problem and the promise. Baltimore added a pair of rookie receivers this offseason, pushing Walker's path behind Zay Flowers and Rashod Bateman to a situational deep role he must re-earn. He carries an ADP near pick 295 and belongs only in the deepest formats. Bank the explosiveness, but the snaps and consistency simply are not there yet to chase him sooner."
+,
+  "keyStats": {"rank":134,"playerId":"11629","playerName":"Devontez Walker","position":"WR","team":"BAL","age":24,"season":2025,"games":8,"snapPct":24.7,"routes":56,"routePct":12.1,"targets":8,"targetsPerRouteRun":0.143,"targetSharePct":2,"airYardsPerTarget":24.5,"airYardsPerReception":32.67,"airYardsSharePct":5.7,"wopr":0.07,"receptions":6,"redZoneTargets":1,"endZoneTargets":1,"catchPct":75,"receivingYards":136,"totalYards":136,"yardsPerReception":22.67,"yardsBeforeCatchPerReception":18.83,"yardsAfterCatchPerReception":3.83,"yardsAfterContactPerReception":null,"yardsPerRouteRun":2.43,"receivingTouchdowns":3,"epaPerPlay":2.242,"successRate":75,"contestedCatchRate":null,"fantasyPoints":31.6,"avoidedTackleRate":0,"brokenTackles":0,"drops":0,"catchableTargets":6,"dropPct":0,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":4,"receptions20Plus":4,"receptions30Plus":3,"receptions40Plus":0,"receptions50Plus":0,"longestReception":38},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/devontez-walker.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-devontez-walker/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11629",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "mecole-hardman",
+  "name": "Mecole Hardman",
+  "position": "WR",
+  "team": "BUF",
+  "season": 2026,
+  "headline": "Buried in Buffalo with no path to snaps",
+  "body": "The trend line is brutal. After landing in Buffalo, Hardman logged just two games in 2025 on a 3.5% snap share, ran two routes, drew one target and caught nothing, posting a ghastly minus-0.508 EPA per play. That followed a 2024 in Kansas City where he salvaged 12 grabs for 90 yards across 12 games (1.32 yards per route run, 0.308 EPA) but a 2.4% target share and zero touchdowns. His last semblance of a role came in 2023: 24 targets, 15 catches, 124 yards over seven games.\n\nHe re-upped with the Bills off the practice squad, which tells you all you need to know about his standing. There is no projectable target volume here and no clear lane on a crowded depth chart. Ranked outside the top 500 and rostered in essentially no leagues, Hardman is a deep dynasty afterthought until he forces meaningful snaps that have not arrived.",
+  "keyStats": {"rank":220,"playerId":"5917","playerName":"Mecole Hardman","position":"WR","team":"BUF","age":27,"season":2025,"games":2,"snapPct":3.5,"routes":2,"routePct":0.4,"targets":1,"targetsPerRouteRun":0.5,"targetSharePct":0.2,"airYardsPerTarget":46,"airYardsPerReception":null,"airYardsSharePct":1.3,"wopr":0.012,"receptions":0,"redZoneTargets":0,"endZoneTargets":0,"catchPct":0,"receivingYards":0,"totalYards":0,"yardsPerReception":null,"yardsBeforeCatchPerReception":null,"yardsAfterCatchPerReception":null,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0,"receivingTouchdowns":0,"epaPerPlay":-0.508,"successRate":0,"contestedCatchRate":null,"fantasyPoints":0,"avoidedTackleRate":null,"brokenTackles":0,"drops":0,"catchableTargets":0,"dropPct":0,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":0,"receptions20Plus":0,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":null},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/mecole-hardman.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-mecole-hardman/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "5917",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

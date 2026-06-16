@@ -1,0 +1,20 @@
+{
+  "slug": "patrick-mahomes",
+  "name": "Patrick Mahomes",
+  "position": "QB",
+  "team": "KC",
+  "season": 2026,
+  "headline": "Mahomes returns from ACL with legs and value in question",
+  "body": "Before the Week 15 knee injury, Mahomes was building his most efficient season in years: a career-best 0.16 EPA per play across 14 games, a 49% success rate, and 284.7 fantasy points despite a modest 22 passing touchdowns against 11 picks. The real engine was his rushing, where he posted career highs of 422 yards and five scores on 64 carries. That mobility, not the 62.7% completion rate or middling 7.15 yards per attempt, carried his QB12 finish and separated him from a passing line that has quietly cooled three straight years.\n\nThe problem for 2026 is that the legs are exactly what a torn ACL and LCL threaten. He is targeting Week 1 but still limited to 7-on-7 work in June, and Kansas City answered by importing Kenneth Walker III to lighten his load. With no new receiving help around Kelce and a healthy Rice, expect a more pocket-bound passer. He profiles as a low-end QB1 worth a mid-round flier, not an every-week anchor."
+,
+  "keyStats": {"rank":12,"playerId":"4046","playerName":"Patrick Mahomes","position":"QB","team":"KC","age":29,"season":2025,"games":14,"attempts":502,"completions":315,"completionPct":62.7,"passingYards":3587,"yardsPerCatch":7.15,"passingTouchdowns":22,"interceptions":11,"fantasyPoints":284.7,"airYards":4050,"completedAirYards":1692,"completedAirYardsPerCompletion":5.4,"deepAttemptPct":12.3,"epaPerPlay":0.16,"successRate":49,"cpoe":0.3,"throwaways":26,"battedPasses":9,"poorThrows":85,"badThrowPct":17.9,"onTargetPct":74.3,"passesDropped":27,"passes10Plus":146,"passes20Plus":49,"passes30Plus":21,"passes40Plus":8,"passes50Plus":1,"longestPass":61,"rushAttempts":64,"rushYards":422,"rushTouchdowns":5,"redZoneAttempts":90,"scrambleRate":8.8,"yardsPerScramble":8.1,"fumbles":3,"sacks":34,"sackYardsLost":193,"pocketTime":2.2,"timeToThrow":2.79,"blitzes":96,"hurries":38,"knockdowns":69,"pressurePct":24},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/patrick-mahomes.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-patrick-mahomes/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "4046",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

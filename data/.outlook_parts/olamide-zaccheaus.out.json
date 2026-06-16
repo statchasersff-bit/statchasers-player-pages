@@ -1,0 +1,19 @@
+{
+  "slug": "olamide-zaccheaus",
+  "name": "Olamide Zaccheaus",
+  "position": "WR",
+  "team": "ATL",
+  "season": 2026,
+  "headline": "Falcons reunion can't outrun a sliding profile",
+  "body": "Zaccheaus took a clear step back in 2025, finishing WR89 on 65 targets and a 12.2% share across 14 games in Chicago. His efficiency cratered: a minus-0.044 EPA per play, a 44.6% success rate, and just 1.0 yards per route run after posting 1.9 the year prior. The 8.0-yard average per catch and 313 receiving yards tell the story of a low-leverage role, even with 12 red-zone looks producing only two scores. The juice he flashed in 2024 (0.392 EPA, 56.2% success) simply didn't carry over.\n\nNow back in Atlanta, he profiles as depth behind Drake London with rookie competition pushing for the same slot snaps. Mooney's exit opens a sliver of volume, but a 0.207 target-per-route rate and shrinking air-yards share cap the ceiling. He's a late-round dart and waiver watch, nothing more, until the route share actually expands.",
+  "keyStats": {"rank":89,"playerId":"6271","playerName":"Olamide Zaccheaus","position":"WR","team":"CHI","age":28,"season":2025,"games":14,"snapPct":53.6,"routes":314,"routePct":52.7,"targets":65,"targetsPerRouteRun":0.207,"targetSharePct":12.2,"airYardsPerTarget":7.11,"airYardsPerReception":11.85,"airYardsSharePct":9.3,"wopr":0.249,"receptions":39,"redZoneTargets":12,"endZoneTargets":3,"catchPct":60,"receivingYards":313,"totalYards":338,"yardsPerReception":8.03,"yardsBeforeCatchPerReception":4.49,"yardsAfterCatchPerReception":3.54,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1,"receivingTouchdowns":2,"epaPerPlay":-0.044,"successRate":44.6,"contestedCatchRate":null,"fantasyPoints":45.8,"avoidedTackleRate":2.6,"brokenTackles":1,"drops":5,"catchableTargets":44,"dropPct":7.7,"interceptionsWhenTargeted":1,"fumbles":0,"receptions10Plus":12,"receptions20Plus":1,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":27},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/olamide-zaccheaus.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-olamide-zaccheaus/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "6271",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

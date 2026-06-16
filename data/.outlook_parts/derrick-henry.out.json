@@ -1,0 +1,19 @@
+{
+  "slug": "derrick-henry",
+  "name": "Derrick Henry",
+  "position": "RB",
+  "team": "BAL",
+  "season": 2026,
+  "headline": "Still A Workhorse, But The Tape Is Slipping",
+  "body": "Henry banked 264.5 fantasy points and an RB7 finish in 2025 on 307 carries, 1,595 yards, a 5.2 average and 16 rushing scores across all 17 games. Volume and the goal line stay locked in: 65 red-zone opportunities and 27 goal-line carries kept the touchdown floor sky-high even at age 31. That's the bankable part of the profile heading into his age-32 campaign.\n\nThe efficiency trend, though, demands attention. EPA per play collapsed from 0.143 to 0.019 year over year, yards after contact dipped to 2.25, and broken tackles cratered from 42 to just 12. Explosive-run rate slid to 11.7 percent as the bursts that defined 2024 thinned out. With Baltimore's interior line in flux, draft him as a touchdown-dependent RB1 in the back half of round one, not the dominant force he was a season ago.",
+  "keyStats": {"rank":7,"playerId":"3198","playerName":"Derrick Henry","position":"RB","team":"BAL","age":31,"season":2025,"games":17,"snapPct":54.5,"routes":182,"rushAttempts":307,"redZoneOpportunities":65,"goalLineCarries":27,"targets":21,"receptions":15,"redZoneTargets":2,"endZoneTargets":0,"rushYards":1595,"yardsPerCarry":5.2,"rushTouchdowns":16,"targetSharePct":5.2,"receivingYards":150,"yardsPerReception":10,"yardsPerRouteRun":0.82,"receivingTouchdowns":0,"epaPerPlay":0.019,"fantasyPoints":264.5,"rushes10Plus":36,"rushes20Plus":17,"rushes30Plus":7,"rushes40Plus":4,"rushes50Plus":1,"explosiveRunPct":11.73,"breakawayRunPct":6.84,"longestRush":59,"longestRushTouchdown":46,"brokenTackles":12,"rushAttemptsPerBrokenTackle":25.58,"yardsAfterContactPerAttempt":2.25,"yardsBeforeContactPerAttempt":2.94,"receivingYardsAfterCatch":135,"tackleEludedRate":3.7,"fumbles":4,"tacklesForLoss":22,"tacklesForLossYards":49,"rushAttForNegativeYards":22},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/derrick-henry.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-derrick-henry/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "3198",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

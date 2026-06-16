@@ -28,6 +28,7 @@ const BYE_WEEKS_FILE = path.resolve(process.cwd(), "data", "bye_weeks.json");
 const GAME_SCORES_FILE = path.resolve(process.cwd(), "data", "game_scores.json");
 const DYNASTY_FILE = path.resolve(process.cwd(), "data", "dynasty_rankings.json");
 const BIOS_FILE = path.resolve(process.cwd(), "data", "bios.json");
+const FANTASY_OUTLOOK_2026_FILE = path.resolve(process.cwd(), "data", "fantasy_outlook_2026.json");
 const ADVANCED_STATS_DIR = path.resolve(process.cwd(), "data", "advanced_stats");
 
 const advancedStatsCache: Map<string, unknown> = new Map();
@@ -55,6 +56,17 @@ function loadBios(): Record<string, any> {
     biosCache = {};
   }
   return biosCache!;
+}
+
+let fantasyOutlook2026Cache: Record<string, any> | null = null;
+function loadFantasyOutlook2026(): Record<string, any> {
+  if (fantasyOutlook2026Cache) return fantasyOutlook2026Cache;
+  try {
+    fantasyOutlook2026Cache = JSON.parse(fs.readFileSync(FANTASY_OUTLOOK_2026_FILE, "utf-8"));
+  } catch {
+    fantasyOutlook2026Cache = {};
+  }
+  return fantasyOutlook2026Cache!;
 }
 
 let gameScoresData: Record<string, Record<string, { tm: number; opp: number; r: string }>> | null = null;
@@ -1026,6 +1038,7 @@ export async function registerRoutes(
       dynasty,
       productionRiskBenchmarks,
       bio,
+      fantasyOutlook2026: loadFantasyOutlook2026()[player.id] ?? null,
     };
     res.set("Cache-Control", "public, max-age=3600");
     res.json(enriched);

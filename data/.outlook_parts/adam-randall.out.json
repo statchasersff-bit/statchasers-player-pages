@@ -1,0 +1,19 @@
+{
+  "slug": "adam-randall",
+  "name": "Adam Randall",
+  "position": "RB",
+  "team": "BAL",
+  "season": 2026,
+  "headline": "Raw Ravens convert buried behind Henry's workload",
+  "body": "Randall arrives in Baltimore as a fifth-round developmental swing, a 6-foot-3, 232-pound former Clemson receiver with a single season of college running back reps under his belt. That thin resume shows up in the draft data: an overall ADP near 259 and an expert consensus rank closer to 294, which is a polite way of saying he is essentially undrafted in standard redraft formats. He profiles as a project, not a contributor, sitting third or fourth in a Derrick Henry backfield that already houses Justice Hill and Rasheen Ali.\n\nProjections of roughly 55 carries, 280 rushing yards and a handful of catches confirm there is no standalone path to relevance while Henry stays upright. The realistic case is a deep-dynasty stash: monitor training-camp depth-chart chatter, and let someone else absorb the upside-free volume until his receiver-to-back transition shows tangible burst. For 2026, leave him on the wire.",
+  "keyStats": null,
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/adam-randall.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-adam-randall/","used":true},
+    {"name":"Statchasers advanced stats","used":false}
+  ],
+  "id": "13302",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

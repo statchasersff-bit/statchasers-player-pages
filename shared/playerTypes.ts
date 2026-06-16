@@ -110,4 +110,11 @@ export interface Player {
   gameLog: GameLogEntry[];
   news: NewsEntry[];
   dynasty?: DynastyData | null;
+  /** Precomputed, source-blended 2026 outlook (data/fantasy_outlook_2026.json). Preferred over render-time generation when present. */
+  fantasyOutlook2026?: FantasyOutlook2026 | null;
+}
+
+export interface FantasyOutlook2026 {
+  headline: string;
+  body: string;
 }

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { HeartPulse, Shield, AlertTriangle, ScrollText, ChevronDown, GraduationCap } from "lucide-react";
+import { HeartPulse, ChevronDown } from "lucide-react";
 import { Card, SkeletonLines, ComingSoon, SectionTitle, cn } from "./ui";
 import type { PlayerInjuryHistory, CollegeInjuryEntry } from "./injuryApi";
 import {
@@ -123,7 +123,6 @@ function CollegeLogGroup({ college, openKeys, onToggle }: {
   return (
     <div>
       <div className="flex items-center gap-1.5 px-2 pb-1 pt-2">
-        <GraduationCap className="h-3.5 w-3.5 text-muted-foreground" />
         <span className="text-[11px] font-black uppercase tracking-wider text-muted-foreground">College &amp; Pre-NFL</span>
       </div>
       <div className="overflow-hidden rounded-lg border border-border/60">
@@ -208,7 +207,6 @@ function FullInjuryLogCard({ injury }: { injury: PlayerInjuryHistory }) {
         aria-expanded={open}
         className="flex w-full items-center gap-1.5 text-left"
       >
-        <ScrollText className="w-4 h-4 text-[#d4af37]" />
         <h3 className="text-sm font-bold" style={{ color: 'var(--sc-blue, #0b3a7a)' }}>Full Injury Log</h3>
         <span className="text-[11px] font-semibold text-muted-foreground tabular-nums">({total})</span>
         <ChevronDown className={cn("ml-auto w-4 h-4 text-muted-foreground transition-transform", open && "rotate-180")} />
@@ -291,7 +289,7 @@ export function InjuryTab({ injury, loading, error, playerName, knownSeasons = [
     <div className="space-y-5">
       {injury.grade && (
         <Card className="p-4">
-          <SectionTitle icon={Shield} title="Injury Risk Profile" />
+          <SectionTitle title="Injury Risk Profile" />
           <div className="flex gap-3.5">
             <div
               className="flex flex-col items-center justify-center rounded-2xl border-2 w-[68px] h-[68px] flex-shrink-0"
@@ -330,7 +328,7 @@ export function InjuryTab({ injury, loading, error, playerName, knownSeasons = [
           {injury.nfl.length > 0 && <InjuryBodyMap injuries={injury.nfl} />}
           {breakdown.length > 0 && (
             <Card className="p-5">
-              <SectionTitle icon={AlertTriangle} title="Risk Breakdown" />
+              <SectionTitle title="Risk Breakdown" />
               <div className="space-y-3.5">
                 {breakdown.map((r) => <RiskBar key={r.label} label={r.label} level={r.level} />)}
               </div>

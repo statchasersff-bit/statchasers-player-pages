@@ -1,0 +1,19 @@
+{
+  "slug": "elijah-sarratt",
+  "name": "Elijah Sarratt",
+  "position": "WR",
+  "team": "BAL",
+  "season": 2026,
+  "headline": "Deep-league sleeper buried on a crowded Ravens depth chart",
+  "body": "A fourth-round rookie out of Indiana, Sarratt lands in a Baltimore receiver room with little room to breathe. Zay Flowers owns the top job, and fellow rookie Ja'Kobi Lane is slotted for outside snaps, pushing the 6-foot-2, 210-pound Sarratt inside despite a college profile built on perimeter work. Expert consensus parks him around WR96 with an ADP near 204, and projections of roughly 20 grabs, 295 yards, and under two scores tell you how thin the Year 1 path looks.\n\nThe appeal is purely upside. Sarratt wins contested balls and earns targets at a level that hints at relevance if an injury opens snaps ahead of him. Realistically, the target volume in this offense isn't there yet, so treat him as a dynasty stash or last-pick dart in very deep redraft formats rather than a roster lock.",
+  "keyStats": null,
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/elijah-sarratt.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-elijah-sarratt/","used":true},
+    {"name":"Statchasers advanced stats","used":false}
+  ],
+  "id": "13268",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

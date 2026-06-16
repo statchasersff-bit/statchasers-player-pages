@@ -1,0 +1,19 @@
+{
+  "slug": "keon-coleman",
+  "name": "Keon Coleman",
+  "position": "WR",
+  "team": "BUF",
+  "season": 2026,
+  "headline": "Make-or-break year for a stalled Bills receiver",
+  "body": "Year two went sideways. Across 12 games Coleman commanded just a 12.3% target share on a 0.205 targets-per-route mark, turning 59 looks into 38 grabs for 404 yards and four scores. His 1.4 yards per route run slipped from 1.84 as a rookie, and the explosive element vanished: after notching five catches of 50-plus yards in 2024, he managed zero last season with a 17.3 air-yards-per-reception drop. The efficiency wasn't all bad (a 59.3% success rate, 0.224 EPA per play), but a 64.4% catch rate and 1.4 WOPR scream complementary role.\n\nNow the runway shrinks further. Buffalo imported a proven veteran to occupy the same intermediate areas Coleman lived in, squeezing an already thin target tree. He's drifting toward pick 228 with WR4/WR5 projections, and nothing in the usage suggests a leap. Treat him as a late-round dart only if the depth chart clears.",
+  "keyStats": {"rank":69,"playerId":"11637","playerName":"Keon Coleman","position":"WR","team":"BUF","age":22,"season":2025,"games":12,"snapPct":65.2,"routes":288,"routePct":53.9,"targets":59,"targetsPerRouteRun":0.205,"targetSharePct":12.3,"airYardsPerTarget":11.17,"airYardsPerReception":17.34,"airYardsSharePct":18.2,"wopr":0.312,"receptions":38,"redZoneTargets":9,"endZoneTargets":6,"catchPct":64.4,"receivingYards":404,"totalYards":404,"yardsPerReception":10.63,"yardsBeforeCatchPerReception":8.32,"yardsAfterCatchPerReception":2.32,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.4,"receivingTouchdowns":4,"epaPerPlay":0.224,"successRate":59.3,"contestedCatchRate":null,"fantasyPoints":64.4,"avoidedTackleRate":2.6,"brokenTackles":1,"drops":3,"catchableTargets":41,"dropPct":5.1,"interceptionsWhenTargeted":2,"fumbles":1,"receptions10Plus":15,"receptions20Plus":5,"receptions30Plus":2,"receptions40Plus":0,"receptions50Plus":0,"longestReception":37},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/keon-coleman.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-keon-coleman/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11637",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "tyler-goodson",
+  "name": "Tyler Goodson",
+  "position": "RB",
+  "team": "ATL",
+  "season": 2026,
+  "headline": "Deep handcuff with no path to volume",
+  "body": "Goodson's profile screams emergency depth, not draftable asset. In 2025 he logged just 10 games on a 5% snap share, turning nine carries into 24 yards at 2.67 per rush with a brutal -0.327 EPA per play and only 3.2 fantasy points. Even his stronger 2024 line, 153 rushing yards on 4.78 a pop with a positive 0.085 EPA across 14 games, came with a 12.6% snap rate and a 3% target share, the ceiling of a clear backup.\n\nThe 2026 setup does nothing to change that math. He sits behind Jonathan Taylor with a role projected to stay minimal, an ECR around 456 overall and an RB rank near 119, and he is rostered in roughly zero leagues. A groin issue has trended the right way, but there is no realistic standalone value here. Goodson is purely a contingency stash, only relevant if the workhorse ahead of him misses extended time.",
+  "keyStats": {"rank":119,"playerId":"8207","playerName":"Tyler Goodson","position":"RB","team":"IND","age":24,"season":2025,"games":10,"snapPct":5,"routes":22,"rushAttempts":9,"redZoneOpportunities":1,"goalLineCarries":0,"targets":3,"receptions":2,"redZoneTargets":1,"endZoneTargets":1,"rushYards":24,"yardsPerCarry":2.67,"rushTouchdowns":0,"targetSharePct":0.6,"receivingYards":8,"yardsPerReception":4,"yardsPerRouteRun":0.36,"receivingTouchdowns":0,"epaPerPlay":-0.327,"fantasyPoints":3.2,"rushes10Plus":0,"rushes20Plus":0,"rushes30Plus":0,"rushes40Plus":0,"rushes50Plus":0,"explosiveRunPct":0,"breakawayRunPct":0,"longestRush":6,"longestRushTouchdown":null,"brokenTackles":0,"rushAttemptsPerBrokenTackle":null,"yardsAfterContactPerAttempt":1.11,"yardsBeforeContactPerAttempt":1.56,"receivingYardsAfterCatch":10,"tackleEludedRate":0,"fumbles":0,"tacklesForLoss":0,"tacklesForLossYards":0,"rushAttForNegativeYards":0},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/tyler-goodson.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-tyler-goodson/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "8207",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

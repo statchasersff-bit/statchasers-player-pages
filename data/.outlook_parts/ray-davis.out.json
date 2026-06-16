@@ -1,0 +1,19 @@
+{
+  "slug": "ray-davis",
+  "name": "Ray Davis",
+  "position": "RB",
+  "team": "BUF",
+  "season": 2026,
+  "headline": "Cook's Handcuff With Quiet Efficiency Under The Hood",
+  "body": "Davis spent 2025 buried behind James Cook, drawing just a 14.3% snap share and 58 carries, yet the underlying work held up. He averaged 4.74 yards per attempt, posted a 0.099 EPA per play, and forced enough missed tackles to keep his explosive-run rate north of 15%. The receiving role is real too: 13 targets, 10 grabs, 1.34 yards per route run, and two scores through the air despite a microscopic 2.7% target share. The touchdown variance is the catch, as he reached the end zone only via receptions across a 17-game slate.\n\nHis 2024 ceiling, 99.1 fantasy points on 113 carries with three rushing touchdowns, shows what a workload bump unlocks. As the primary backup, Davis is a pure contingency play, going around RB60 at pick 198. He is worth a final-round dart only for Cook managers buying insurance, with standalone value tethered entirely to the starter's health.",
+  "keyStats": {"rank":63,"playerId":"11575","playerName":"Ray Davis","position":"RB","team":"BUF","age":25,"season":2025,"games":17,"snapPct":14.3,"routes":64,"rushAttempts":58,"redZoneOpportunities":11,"goalLineCarries":2,"targets":13,"receptions":10,"redZoneTargets":4,"endZoneTargets":2,"rushYards":275,"yardsPerCarry":4.74,"rushTouchdowns":0,"targetSharePct":2.7,"receivingYards":86,"yardsPerReception":8.6,"yardsPerRouteRun":1.34,"receivingTouchdowns":2,"epaPerPlay":0.099,"fantasyPoints":54.1,"rushes10Plus":9,"rushes20Plus":1,"rushes30Plus":0,"rushes40Plus":0,"rushes50Plus":0,"explosiveRunPct":15.52,"breakawayRunPct":5.17,"longestRush":23,"longestRushTouchdown":null,"brokenTackles":3,"rushAttemptsPerBrokenTackle":19.33,"yardsAfterContactPerAttempt":2.24,"yardsBeforeContactPerAttempt":2.5,"receivingYardsAfterCatch":99,"tackleEludedRate":4.4,"fumbles":0,"tacklesForLoss":6,"tacklesForLossYards":11,"rushAttForNegativeYards":6},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/ray-davis.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-ray-davis/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11575",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

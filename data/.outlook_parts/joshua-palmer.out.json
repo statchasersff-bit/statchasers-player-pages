@@ -1,0 +1,19 @@
+{
+  "slug": "joshua-palmer",
+  "name": "Joshua Palmer",
+  "position": "WR",
+  "team": "BUF",
+  "season": 2026,
+  "headline": "Buffalo's Field-Stretcher Hunts a Bigger 2026 Slice",
+  "body": "Palmer's first Buffalo season was a quiet one on paper, but the underlying work hints at upside. Across 12 games he ran routes on just 39.7% of dropbacks, drew a 7.7% target share, and turned 37 looks into 22 grabs for 303 yards. The downfield role survived the move: 11.46 air yards per target and a 19.3 air-yards-per-reception mark rank among the deepest on the roster, and he posted a healthy 0.182 EPA per play with a 43.2% success rate despite zero touchdowns.\n\nThe story is opportunity, not ability. His 2024 baseline in Los Angeles, a 13.2% target share, 0.388 EPA per play, and 52.3% success rate, shows what fuller usage unlocks. With six red-zone targets already and consistent vertical separation, even a modest snap bump pushes him into flex relevance. He is a cheap late-round dart with real spike-week equity in a high-volume passing attack.",
+  "keyStats": {"rank":91,"playerId":"7670","playerName":"Josh Palmer","position":"WR","team":"BUF","age":25,"season":2025,"games":12,"snapPct":48.3,"routes":212,"routePct":39.7,"targets":37,"targetsPerRouteRun":0.175,"targetSharePct":7.7,"airYardsPerTarget":11.46,"airYardsPerReception":19.27,"airYardsSharePct":11.7,"wopr":0.198,"receptions":22,"redZoneTargets":6,"endZoneTargets":2,"catchPct":59.5,"receivingYards":303,"totalYards":303,"yardsPerReception":13.77,"yardsBeforeCatchPerReception":11.32,"yardsAfterCatchPerReception":2.45,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.43,"receivingTouchdowns":0,"epaPerPlay":0.182,"successRate":43.2,"contestedCatchRate":null,"fantasyPoints":30.3,"avoidedTackleRate":0,"brokenTackles":0,"drops":0,"catchableTargets":22,"dropPct":0,"interceptionsWhenTargeted":2,"fumbles":0,"receptions10Plus":14,"receptions20Plus":5,"receptions30Plus":4,"receptions40Plus":2,"receptions50Plus":0,"longestReception":45},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/joshua-palmer.php","used":false},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-joshua-palmer/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "7670",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

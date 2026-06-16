@@ -1,0 +1,19 @@
+{
+  "slug": "rivaldo-fairweather",
+  "name": "Rivaldo Fairweather",
+  "position": "TE",
+  "team": "ARI",
+  "season": 2026,
+  "headline": "Camp body buried at the bottom of Arizona's depth chart",
+  "body": "Fairweather lands as pure roster filler in Arizona after the Cardinals plucked him off the Cowboys practice squad late last year. At 23, the 6-3, 249-pound Auburn product profiles as a developmental depth piece rather than a target earner, and the expert board reflects that reality: he sits at TE170 in consensus rankings, essentially undraftable in standard formats and rostered in almost no leagues.\n\nThe projection math is brutal for fantasy purposes, with the field forecasting roughly a dozen catches, a little over 100 yards, and a single score across the full season. A 28th-ranked strength of schedule only deepens the hole. Until injuries clear a path or he wins a real role in the tight end room, there is no startable case here. Leave him on the wire and revisit only if the depth chart collapses in front of him.",
+  "keyStats": null,
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/rivaldo-fairweather.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-rivaldo-fairweather/","used":false},
+    {"name":"Statchasers advanced stats","used":false}
+  ],
+  "id": "12851",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

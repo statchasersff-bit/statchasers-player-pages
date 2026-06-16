@@ -3,11 +3,11 @@ import { Link, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import {
   ArrowLeft,
+  ArrowDownAZ,
   Search,
   TrendingUp,
   Keyboard,
@@ -73,6 +73,20 @@ const TEAM_FULL_NAMES: Record<string, string> = {
   SF: "49ers", TB: "Buccaneers", TEN: "Titans", WAS: "Commanders",
 };
 
+const TEAM_CITY: Record<string, string> = {
+  ARI: "Arizona", ATL: "Atlanta", BAL: "Baltimore", BUF: "Buffalo",
+  CAR: "Carolina", CHI: "Chicago", CIN: "Cincinnati", CLE: "Cleveland",
+  DAL: "Dallas", DEN: "Denver", DET: "Detroit", GB: "Green Bay",
+  HOU: "Houston", IND: "Indianapolis", JAX: "Jacksonville", KC: "Kansas City",
+  LAC: "Los Angeles", LAR: "Los Angeles", LV: "Las Vegas", MIA: "Miami",
+  MIN: "Minnesota", NE: "New England", NO: "New Orleans", NYG: "New York",
+  NYJ: "New York", PHI: "Philadelphia", PIT: "Pittsburgh", SEA: "Seattle",
+  SF: "San Francisco", TB: "Tampa Bay", TEN: "Tennessee", WAS: "Washington",
+};
+
+// The fantasy season the roster board reflects.
+const BOARD_SEASON = 2025;
+
 const NFL_DIVISIONS: Record<string, Record<string, string[]>> = {
   AFC: {
     East: ["BUF", "MIA", "NE", "NYJ"],
@@ -90,10 +104,39 @@ const NFL_DIVISIONS: Record<string, Record<string, string[]>> = {
 
 const POSITION_ORDER = ["QB", "RB", "WR", "TE"];
 
+const POSITION_PLURAL: Record<string, string> = {
+  QB: "Quarterbacks", RB: "Running Backs", WR: "Wide Receivers", TE: "Tight Ends",
+};
+
 
 const POS_DISPLAY_LIMITS: Record<string, number> = {
   QB: 2, RB: 4, WR: 6, TE: 3,
 };
+
+// "AFC East" style label for a team, derived from the division map.
+function getTeamDivision(team: string): string {
+  for (const [conf, divs] of Object.entries(NFL_DIVISIONS)) {
+    for (const [div, teams] of Object.entries(divs)) {
+      if (teams.includes(team)) return `${conf} ${div}`;
+    }
+  }
+  return "";
+}
+
+type RosterRole = "Starter" | "Backup" | "Depth" | "IR";
+
+// Roster role for a player: injury status takes precedence, otherwise the
+// depth-chart rank (1 = Starter, 2 = Backup, 3+ = Depth).
+function deriveRole(player: IndexedPlayer, depthLabel: string): RosterRole {
+  const status = (player.status || "").toLowerCase();
+  if (/injured reserve|\bir\b|\bpup\b|out|suspend|non[- ]football|did not|inactive|reserve/.test(status)) {
+    return "IR";
+  }
+  const labelNum = parseInt(depthLabel.replace(/[^0-9]/g, "") || "1", 10);
+  if (labelNum <= 1) return "Starter";
+  if (labelNum === 2) return "Backup";
+  return "Depth";
+}
 
 function getTeamLogoUrl(team: string) {
   return `https://sleepercdn.com/images/team_logos/nfl/${team.toLowerCase()}.png`;
@@ -149,12 +192,13 @@ function PlayerCard({
   depthLabel: string;
   onClick: () => void;
 }) {
-  const labelNum = parseInt(depthLabel.replace(/[^0-9]/g, '') || '1', 10);
-  const tier = labelNum <= 1 ? 'Starter' : (labelNum === 2 ? 'Backup' : 'Depth');
+  const role = deriveRole(player, depthLabel);
+  const roleClass = role.toLowerCase();
+  const isRookie = player.years_exp === 0;
 
   return (
     <div
-      className={`sc-card sc-card--${pos.toLowerCase()}`}
+      className={`sc-card sc-card--${pos.toLowerCase()} sc-card--role-${roleClass}`}
       onClick={onClick}
       data-testid={`card-player-${player.slug}`}
     >
@@ -171,7 +215,7 @@ function PlayerCard({
           }}
           data-testid={`img-headshot-${player.slug}`}
         />
-        <div className="sc-card__pos" data-testid={`card-pos-${player.slug}`}>{pos}</div>
+        <div className={`sc-card__role sc-card__role--${roleClass}`} data-testid={`card-role-${player.slug}`}>{role}</div>
         <div className="sc-card__fallback-initials">
           {player.name.split(' ').map(n => n[0]).join('')}
         </div>
@@ -183,7 +227,8 @@ function PlayerCard({
         </div>
         <div className="sc-card__meta">
           <span className={POSITION_COLORS[pos] || ""} data-testid={`card-depth-${player.slug}`}>{depthLabel}</span>
-          <span className="sc-card__tier" data-testid={`card-tier-${player.slug}`}>{tier}</span>
+          <span className="sc-card__tier" data-testid={`card-tier-${player.slug}`}>{role}</span>
+          {isRookie && <span className="sc-card__rookie" data-testid={`card-rookie-${player.slug}`}>Rookie</span>}
         </div>
       </div>
     </div>
@@ -202,7 +247,10 @@ function TeamBoard({
   const [, navigate] = useLocation();
   const [showBench, setShowBench] = useState(false);
   const teamColor = TEAM_COLORS[team] || "#666";
-  const teamName = TEAM_FULL_NAMES[team] || team;
+  const teamNick = TEAM_FULL_NAMES[team] || team;
+  const teamCity = TEAM_CITY[team] || "";
+  const teamFullName = `${teamCity} ${teamNick}`.trim();
+  const division = getTeamDivision(team);
 
   const sections = useMemo(() => {
     return POSITION_ORDER.map(pos => {
@@ -210,47 +258,78 @@ function TeamBoard({
       const limit = POS_DISPLAY_LIMITS[pos] || 1;
       const starters = players.slice(0, limit);
       const bench = players.slice(limit);
-      return { pos, starters, bench };
+      const roleCounts = starters.reduce((acc, p) => {
+        const r = deriveRole(p, p.rank_label);
+        acc[r] = (acc[r] || 0) + 1;
+        return acc;
+      }, {} as Record<RosterRole, number>);
+      return { pos, starters, bench, roleCounts };
     });
   }, [positions]);
 
   const totalBench = sections.reduce((s, sec) => s + sec.bench.length, 0);
+  const totalRelevant = sections.reduce((s, sec) => s + sec.starters.length, 0);
 
   return (
     <div className="sc-board sc-directory" data-testid="team-board-view">
       <div className="sc-board__header">
         <div className="sc-board__header-inner">
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              className="sc-board__back"
-              onClick={onBack}
-              data-testid="button-back-league"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              League View
-            </button>
-            <div className="sc-board__team-badge" style={{ '--team-color': teamColor } as React.CSSProperties}>
-              <img src={getTeamLogoUrl(team)} alt="" className="sc-board__team-logo" />
-              <h2 className="sc-board__team-name" data-testid="text-team-board-name">
-                {team} {teamName}
-              </h2>
+          <button
+            type="button"
+            className="sc-board__back"
+            onClick={onBack}
+            data-testid="button-back-league"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            League View
+          </button>
+
+          <div
+            className="sc-teamstrip"
+            style={{ '--team-color': teamColor } as React.CSSProperties}
+            data-testid="team-context-bar"
+          >
+            <img src={getTeamLogoUrl(team)} alt="" className="sc-teamstrip__watermark" aria-hidden="true" />
+            <div className="sc-teamstrip__main">
+              <img src={getTeamLogoUrl(team)} alt="" className="sc-teamstrip__logo" />
+              <div className="sc-teamstrip__id">
+                <h2 className="sc-teamstrip__name" data-testid="text-team-board-name">{teamFullName}</h2>
+                <div className="sc-teamstrip__sub" data-testid="text-board-subtitle">
+                  <span className="sc-teamstrip__board"><Zap className="w-3.5 h-3.5" />Fantasy Roster Board</span>
+                  {division && <><span className="sc-teamstrip__dot" />{division}</>}
+                  <span className="sc-teamstrip__dot" />{BOARD_SEASON} Season
+                  <span className="sc-teamstrip__dot" />{totalRelevant} Fantasy-Relevant Players
+                </div>
+              </div>
             </div>
-            <div className="sc-board__label" data-testid="text-board-subtitle">
-              <Zap className="w-3.5 h-3.5" />
-              Fantasy Roster Board
+            <div className="sc-teamstrip__summary" data-testid="roster-summary">
+              {sections.map(({ pos, starters }) => (
+                starters.length > 0 && (
+                  <span key={pos} className={`sc-teamstrip__chip sc-teamstrip__chip--${pos.toLowerCase()}`}>
+                    <strong>{starters.length}</strong> {pos}
+                  </span>
+                )
+              ))}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="sc-board__divider" />
-
       <div className="sc-board__wall" data-testid="board-grid">
-        {sections.map(({ pos, starters }) => (
+        {sections.map(({ pos, starters, roleCounts }) => (
           starters.length > 0 && (
             <div key={pos} className="sc-board__section" data-testid={`board-section-${pos}`}>
-              <h3 className="sc-board__section-title">{pos}</h3>
+              <h3 className="sc-board__section-title">
+                <span className={`sc-board__section-pos sc-board__section-pos--${pos.toLowerCase()}`}>{pos}</span>
+                <span className="sc-board__section-count">{starters.length} {starters.length === 1 ? 'Player' : 'Players'}</span>
+                {(["Starter", "Backup", "Depth", "IR"] as RosterRole[])
+                  .filter((r) => roleCounts[r])
+                  .map((r) => (
+                    <span key={r} className="sc-board__section-role">
+                      <span className="sc-board__section-roledot" />{roleCounts[r]} {r}
+                    </span>
+                  ))}
+              </h3>
               <div className="sc-board__cards">
                 {starters.map((player) => (
                   <PlayerCard
@@ -303,10 +382,16 @@ function TeamBoard({
 
 export default function PlayerSearch() {
   const [search, setSearch] = useState("");
-  const [posFilter, setPosFilter] = useState("ALL");
+  const [posFilter, setPosFilter] = useState(() => {
+    const p = new URLSearchParams(window.location.search).get("pos");
+    return p && POSITION_ORDER.includes(p) ? p : "ALL";
+  });
   const [showAutocomplete, setShowAutocomplete] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
-  const [conference, setConference] = useState("AFC");
+  const [conference, setConference] = useState(() => {
+    const c = new URLSearchParams(window.location.search).get("conf");
+    return c === "NFC" || c === "AFC" ? c : "AFC";
+  });
   const [stickyVisible, setStickyVisible] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -453,6 +538,14 @@ export default function PlayerSearch() {
 
   const totalPlayers = indexedData?.slugs?.length || 352;
 
+  const resultNoun = posFilter !== "ALL" ? (POSITION_PLURAL[posFilter] || "Players") : "Players";
+  const resultsCapped = filtered.length === 100;
+  const resultContext = search.trim()
+    ? `Matching “${search.trim()}”${posFilter !== "ALL" ? ` · ${resultNoun}` : ""}`
+    : posFilter !== "ALL"
+      ? `Showing ${resultNoun.toLowerCase()} only`
+      : "All fantasy-relevant players";
+
   return (
     <div className="min-h-screen bg-background">
 
@@ -497,118 +590,145 @@ export default function PlayerSearch() {
         data-testid="hero-section"
       >
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div>
-              <h1 className="sc-hero-title" data-testid="text-page-title">
-                Fantasy Football Player Stats &amp; Analytics
-              </h1>
-              <div className="sc-hero-underline" />
-              <p className="sc-header__sub mt-3">
-                Search, filter, and analyze every fantasy-relevant starter across all 32 NFL teams.
-              </p>
-            </div>
-          </div>
+          <div className="sc-controlbar" ref={searchRef}>
+            {/* Top row — search anchor + summary metric */}
+            <div className="sc-controlbar__top">
+              <div className="sc-controlbar__search relative group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 sc-search__icon z-10" />
+                <Input
+                  ref={inputRef}
+                  type="search"
+                  placeholder="Search any player, team, or position..."
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setShowAutocomplete(true);
+                  }}
+                  onFocus={() => {
+                    if (search.trim()) setShowAutocomplete(true);
+                  }}
+                  onKeyDown={handleKeyDown}
+                  className="sc-search"
+                  autoComplete="off"
+                  role="combobox"
+                  aria-expanded={showAutocomplete && autocompleteResults.length > 0}
+                  aria-controls="autocomplete-list"
+                  aria-activedescendant={activeIndex >= 0 ? `autocomplete-item-${activeIndex}` : undefined}
+                  data-testid="input-player-search"
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+                  <kbd className="sc-search__kbd">
+                    <Keyboard className="w-2.5 h-2.5" />
+                    /
+                  </kbd>
+                </div>
 
-          <div className="mt-6" ref={searchRef}>
-            <div className="relative max-w-2xl group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 sc-search__icon z-10" />
-              <Input
-                ref={inputRef}
-                type="search"
-                placeholder="Search any player, team, or position..."
-                value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  setShowAutocomplete(true);
-                }}
-                onFocus={() => {
-                  if (search.trim()) setShowAutocomplete(true);
-                }}
-                onKeyDown={handleKeyDown}
-                className="sc-search"
-                autoComplete="off"
-                role="combobox"
-                aria-expanded={showAutocomplete && autocompleteResults.length > 0}
-                aria-controls="autocomplete-list"
-                aria-activedescendant={activeIndex >= 0 ? `autocomplete-item-${activeIndex}` : undefined}
-                data-testid="input-player-search"
-              />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
-                <kbd className="sc-search__kbd">
-                  <Keyboard className="w-2.5 h-2.5" />
-                  /
-                </kbd>
+                {showAutocomplete && search.trim() && autocompleteResults.length > 0 && (
+                  <div
+                    id="autocomplete-list"
+                    ref={listRef}
+                    role="listbox"
+                    className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-xl shadow-lg z-50 overflow-hidden max-h-80 overflow-y-auto"
+                    data-testid="autocomplete-dropdown"
+                  >
+                    {autocompleteResults.map((player, i) => (
+                      <Link key={player.id} href={`/nfl/players/${player.slug}/`}>
+                        <div
+                          id={`autocomplete-item-${i}`}
+                          role="option"
+                          aria-selected={i === activeIndex}
+                          className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors ${
+                            i === activeIndex
+                              ? "bg-muted"
+                              : "hover:bg-muted/50"
+                          }`}
+                          onMouseEnter={() => setActiveIndex(i)}
+                          onClick={() => setShowAutocomplete(false)}
+                          data-testid={`autocomplete-item-${player.slug}`}
+                        >
+                          <div className="flex-shrink-0 w-8 h-8 rounded-md bg-muted flex items-center justify-center">
+                            <span className="text-[10px] font-bold text-muted-foreground">
+                              {player.position || "?"}
+                            </span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="font-medium text-sm text-foreground truncate block">
+                              {player.name}
+                            </span>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <span className={POSITION_COLORS[player.position || ""] || ""}>{player.position}</span>
+                              <span className="text-xs text-muted-foreground">{player.team}</span>
+                            </div>
+                          </div>
+                          <TrendingUp className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {showAutocomplete && search.trim() && autocompleteResults.length > 0 && (
-                <div
-                  id="autocomplete-list"
-                  ref={listRef}
-                  role="listbox"
-                  className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-xl shadow-lg z-50 overflow-hidden max-h-80 overflow-y-auto"
-                  data-testid="autocomplete-dropdown"
-                >
-                  {autocompleteResults.map((player, i) => (
-                    <Link key={player.id} href={`/nfl/players/${player.slug}/`}>
-                      <div
-                        id={`autocomplete-item-${i}`}
-                        role="option"
-                        aria-selected={i === activeIndex}
-                        className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors ${
-                          i === activeIndex
-                            ? "bg-muted"
-                            : "hover:bg-muted/50"
-                        }`}
-                        onMouseEnter={() => setActiveIndex(i)}
-                        onClick={() => setShowAutocomplete(false)}
-                        data-testid={`autocomplete-item-${player.slug}`}
-                      >
-                        <div className="flex-shrink-0 w-8 h-8 rounded-md bg-muted flex items-center justify-center">
-                          <span className="text-[10px] font-bold text-muted-foreground">
-                            {player.position || "?"}
-                          </span>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <span className="font-medium text-sm text-foreground truncate block">
-                            {player.name}
-                          </span>
-                          <div className="flex items-center gap-1.5 mt-0.5">
-                            <span className={POSITION_COLORS[player.position || ""] || ""}>{player.position}</span>
-                            <span className="text-xs text-muted-foreground">{player.team}</span>
-                          </div>
-                        </div>
-                        <TrendingUp className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
-                      </div>
-                    </Link>
-                  ))}
+              {indexedData?.byTeam && (
+                <div className="sc-stat-card" data-testid="badge-player-count">
+                  <Activity className="w-4 h-4 sc-header__gold-icon" />
+                  <div>
+                    <p className="sc-stat-card__number">{totalPlayers}</p>
+                    <p className="sc-stat-card__label">Fantasy Starters</p>
+                  </div>
                 </div>
               )}
             </div>
 
-            <div className="flex items-center gap-2 mt-4 flex-wrap">
-              {POSITION_ORDER.map((pos) => (
-                <button
-                  key={pos}
-                  type="button"
-                  className={`sc-filter-pill ${posFilter === pos ? 'sc-filter-pill--active' : ''}`}
-                  onClick={() => setPosFilter(posFilter === pos ? "ALL" : pos)}
-                  data-testid={`button-filter-${pos}`}
-                >
-                  {pos}
-                  {posCounts[pos] ? <span className="sc-filter-pill__count">{posCounts[pos]}</span> : null}
-                </button>
-              ))}
-              {posFilter !== "ALL" && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-muted-foreground hover:text-foreground"
-                  onClick={() => setPosFilter("ALL")}
-                  data-testid="button-clear-filter"
-                >
-                  <X className="w-3 h-3 mr-1" />
-                  Clear
-                </Button>
+            {/* Bottom row — position filters + conference toggle, one system */}
+            <div className="sc-controlbar__bottom">
+              <div className="sc-controlbar__filters">
+                {POSITION_ORDER.map((pos) => (
+                  <button
+                    key={pos}
+                    type="button"
+                    className={`sc-filter-pill ${posFilter === pos ? 'sc-filter-pill--active' : ''}`}
+                    onClick={() => setPosFilter(posFilter === pos ? "ALL" : pos)}
+                    data-testid={`button-filter-${pos}`}
+                  >
+                    {pos}
+                    {posCounts[pos] ? <span className="sc-filter-pill__count">{posCounts[pos]}</span> : null}
+                  </button>
+                ))}
+                {(posFilter !== "ALL" || search.trim()) && (
+                  <button
+                    type="button"
+                    className="sc-clear-btn"
+                    onClick={() => { setPosFilter("ALL"); setSearch(""); }}
+                    data-testid="button-clear-filter"
+                  >
+                    <X className="w-3 h-3" />
+                    Clear Filters
+                  </button>
+                )}
+              </div>
+
+              {indexedData?.byTeam && (
+                <div className="sc-segment" role="group" aria-label="Conference filter" data-testid="tabs-conference">
+                  {(["AFC", "NFC"] as const).map((conf) => (
+                    <button
+                      key={conf}
+                      type="button"
+                      className={`sc-segment__btn ${conference === conf ? 'sc-segment__btn--active' : ''}`}
+                      onClick={() => {
+                        // Conference is the team-directory selector — clicking it always
+                        // returns to that conference's directory, clearing any active
+                        // team/position/search drill-down so the control is never inert.
+                        setConference(conf);
+                        setSelectedTeam(null);
+                        setPosFilter("ALL");
+                        setSearch("");
+                      }}
+                      data-testid={`tab-${conf.toLowerCase()}`}
+                    >
+                      {conf}
+                    </button>
+                  ))}
+                </div>
               )}
             </div>
           </div>
@@ -635,10 +755,25 @@ export default function PlayerSearch() {
             </div>
           ) : (
             <>
-              <p className="text-sm text-muted-foreground mb-5" data-testid="text-results-count">
-                {filtered.length === 100 ? "Showing first 100 results" : `${filtered.length} player${filtered.length !== 1 ? "s" : ""} found`}
-                {search.trim() && ` for "${search}"`}
-              </p>
+              {filtered.length > 0 && (
+                <div className="sc-results-toolbar" data-testid="results-toolbar">
+                  <div className="min-w-0">
+                    <div className="sc-results-toolbar__count" data-testid="text-results-count">
+                      {filtered.length}{resultsCapped ? "+" : ""}{" "}
+                      <span className="sc-results-toolbar__noun">{resultNoun}</span>
+                    </div>
+                    <div className="sc-results-toolbar__sub">
+                      {resultContext}{resultsCapped ? " · top 100 shown" : ""}
+                    </div>
+                  </div>
+                  <div className="sc-results-toolbar__right">
+                    <span className="sc-results-sort" data-testid="results-sort">
+                      <ArrowDownAZ className="w-3.5 h-3.5" />
+                      Sorted A–Z
+                    </span>
+                  </div>
+                </div>
+              )}
 
               {filtered.length === 0 ? (
                 <Card>
@@ -653,10 +788,15 @@ export default function PlayerSearch() {
                   {filtered.map((player) => {
                     const pos = player.position || "";
                     const rankLabel = 'rank_label' in player ? (player as IndexedPlayer).rank_label : pos;
+                    const teamColor = TEAM_COLORS[player.team] || "#64748b";
+                    const teamName = TEAM_FULL_NAMES[player.team] || player.team;
+                    const rankNum = parseInt(rankLabel.replace(/[^0-9]/g, "") || "0", 10);
+                    const tier = rankNum === 1 ? "t1" : rankNum === 2 ? "t2" : rankNum >= 3 ? "t3" : "t0";
                     return (
                       <Link key={player.id} href={`/nfl/players/${player.slug}/`}>
                         <div
                           className={`sc-result-card sc-result-card--${pos.toLowerCase()}`}
+                          style={{ '--team-color': teamColor } as React.CSSProperties}
                           data-testid={`card-player-${player.slug}`}
                         >
                           <div className="sc-result-card__img">
@@ -674,15 +814,23 @@ export default function PlayerSearch() {
                             <div className="sc-result-card__initials">
                               {player.name.split(' ').map(n => n[0]).join('')}
                             </div>
+                            {rankLabel && (
+                              <span className={`sc-rank-badge sc-rank-badge--${tier}`} data-testid={`badge-rank-${player.slug}`}>
+                                {rankLabel}
+                              </span>
+                            )}
                           </div>
-                          <div className="sc-result-card__gold" />
+                          <div className="sc-result-card__accent" />
                           <div className="sc-result-card__body">
                             <div className="sc-result-card__name" data-testid={`text-player-name-${player.slug}`}>
                               {player.name}
                             </div>
                             <div className="sc-result-card__meta">
-                              <span className={POSITION_COLORS[pos] || ""}>{rankLabel}</span>
-                              <span className="sc-result-card__team">{player.team}</span>
+                              <span className="sc-result-card__team">
+                                <span className="sc-team-dot" />
+                                <span className="sc-result-card__team-abbr">{player.team}</span>
+                                <span className="sc-result-card__team-name">{teamName}</span>
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -725,21 +873,7 @@ export default function PlayerSearch() {
             />
           ) : (
           <div>
-            <Tabs defaultValue="AFC" value={conference} onValueChange={setConference} data-testid="tabs-conference">
-              <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
-                <TabsList data-testid="tabs-conference-list">
-                  <TabsTrigger value="AFC" data-testid="tab-afc">AFC</TabsTrigger>
-                  <TabsTrigger value="NFC" data-testid="tab-nfc">NFC</TabsTrigger>
-                </TabsList>
-                <div className="sc-stat-card" data-testid="badge-player-count">
-                  <Activity className="w-4 h-4 sc-header__gold-icon" />
-                  <div>
-                    <p className="sc-stat-card__number">{totalPlayers}</p>
-                    <p className="sc-stat-card__label">Fantasy Starters</p>
-                  </div>
-                </div>
-              </div>
-
+            <Tabs defaultValue="AFC" value={conference} onValueChange={setConference}>
               {["AFC", "NFC"].map((conf) => (
                 <TabsContent key={conf} value={conf}>
                   <div className="space-y-8">

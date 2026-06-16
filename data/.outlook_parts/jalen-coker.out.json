@@ -1,0 +1,19 @@
+{
+  "slug": "jalen-coker",
+  "name": "Jalen Coker",
+  "position": "WR",
+  "team": "CAR",
+  "season": 2026,
+  "headline": "Efficiency Says Coker Earns The No. 2 Job",
+  "body": "The underlying numbers love Coker even when the box score stays quiet. Across 11 games in 2025 he posted a 0.506 EPA per play and a 62.8% success rate, catching 33 of 43 targets at a 76.7% clip with zero drops. The volume cap is real, though: a 9% target share, 0.16 targets per route, and just 1.47 yards per route mean he needs more routes to matter weekly. His 2024 tape was sharper still, with 1.85 yards per route and a 0.632 EPA, signaling the talent is there once snaps climb.\n\nBehind Tetairoa McMillan, Coker profiles as Carolina's clear second receiver, but he must fend off rookie Chris Brazzell for the 80%-plus snap rate that unlocks his value. Health has been the recurring obstacle. With a fresh extension and an ascending finish, he is a late-round flier worth the dart if Bryce Young takes a step.",
+  "keyStats": {"rank":72,"playerId":"11646","playerName":"Jalen Coker","position":"WR","team":"CAR","age":23,"season":2025,"games":11,"snapPct":69.4,"routes":268,"routePct":48.9,"targets":43,"targetsPerRouteRun":0.16,"targetSharePct":9,"airYardsPerTarget":10.12,"airYardsPerReception":13.18,"airYardsSharePct":12.6,"wopr":0.223,"receptions":33,"redZoneTargets":3,"endZoneTargets":2,"catchPct":76.7,"receivingYards":394,"totalYards":394,"yardsPerReception":11.94,"yardsBeforeCatchPerReception":8.85,"yardsAfterCatchPerReception":3.09,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.47,"receivingTouchdowns":3,"epaPerPlay":0.506,"successRate":62.8,"contestedCatchRate":null,"fantasyPoints":57.4,"avoidedTackleRate":3,"brokenTackles":1,"drops":0,"catchableTargets":33,"dropPct":0,"interceptionsWhenTargeted":1,"fumbles":1,"receptions10Plus":16,"receptions20Plus":6,"receptions30Plus":3,"receptions40Plus":0,"receptions50Plus":0,"longestReception":34},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/jalen-coker.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-jalen-coker/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11646",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

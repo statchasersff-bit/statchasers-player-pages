@@ -1,0 +1,19 @@
+{
+  "slug": "reggie-virgil",
+  "name": "Reggie Virgil",
+  "position": "WR",
+  "team": "ARI",
+  "season": 2026,
+  "headline": "Big-bodied rookie buried on a crowded depth chart",
+  "body": "A fifth-round pick (143rd overall) out of college, Virgil arrives in Arizona with a prototypical 6'3\", 187-pound frame but lands behind an established trio. Marvin Harrison Jr. and Michael Wilson lock down the top two roles, leaving the rookie to scrap with Kendrick Bourne for snaps on the back end. His final college campaign produced 57 grabs for 705 yards and six scores, useful tape but not the kind of profile that forces early targets.\n\nThe scouting read is a possession-style receiver: ordinary speed, modest yards after the catch, and a route tree that still needs work, though he reads zone coverage well. Projections peg him near 3-4 catches and roughly 39 yards a game, which translates to fringe relevance at best. Leave him on the waiver wire in redraft and treat him as a late-round dart only in deep rookie dynasty formats.",
+  "keyStats": null,
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/reggie-virgil.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-reggie-virgil/","used":true},
+    {"name":"Statchasers advanced stats","used":false}
+  ],
+  "id": "13297",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

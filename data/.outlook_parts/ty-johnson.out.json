@@ -1,0 +1,20 @@
+{
+  "slug": "ty-johnson",
+  "name": "Ty Johnson",
+  "position": "RB",
+  "team": "BUF",
+  "season": 2026,
+  "headline": "Efficient Bills passing-down back with little volume to mine",
+  "body": "Johnson's profile is built on efficiency, not volume. Across all 17 games in 2025 he posted a positive 0.171 EPA per play on just a 29.6% snap share, turning 50 carries into 200 yards (4.0 per pop) and three scores while chipping in 24 catches on 33 targets for 263 yards and two more touchdowns. A 6.9% target share and 1.16 yards per route run confirm he's a complementary piece, and the 76.3 fantasy points reflect a five-touchdown ceiling that requires red-zone luck to repeat.\n\nThe underlying quality is real: his 0.365 EPA per play and 5.2 yards per carry in 2024 rank among the league's best for his usage tier. But that efficiency rarely converts to startable weeks behind Buffalo's depth chart. As a passing-downs specialist projected for roughly 71 points and an ADP outside the top 250, he's a deep-bench handcuff and bye-week dart, not a draft-day priority."
+,
+  "keyStats": {"rank":53,"playerId":"6039","playerName":"Ty Johnson","position":"RB","team":"BUF","age":27,"season":2025,"games":17,"snapPct":29.6,"routes":227,"rushAttempts":50,"redZoneOpportunities":23,"goalLineCarries":6,"targets":33,"receptions":24,"redZoneTargets":4,"endZoneTargets":1,"rushYards":200,"yardsPerCarry":4,"rushTouchdowns":3,"targetSharePct":6.9,"receivingYards":263,"yardsPerReception":10.96,"yardsPerRouteRun":1.16,"receivingTouchdowns":2,"epaPerPlay":0.171,"fantasyPoints":76.3,"rushes10Plus":2,"rushes20Plus":1,"rushes30Plus":0,"rushes40Plus":0,"rushes50Plus":0,"explosiveRunPct":4,"breakawayRunPct":4,"longestRush":23,"longestRushTouchdown":6,"brokenTackles":2,"rushAttemptsPerBrokenTackle":25,"yardsAfterContactPerAttempt":1.42,"yardsBeforeContactPerAttempt":2.58,"receivingYardsAfterCatch":301,"tackleEludedRate":2.7,"fumbles":1,"tacklesForLoss":3,"tacklesForLossYards":5,"rushAttForNegativeYards":3},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/ty-johnson.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-ty-johnson/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "6039",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

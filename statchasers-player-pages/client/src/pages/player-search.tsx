@@ -1,5 +1,7 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { Link, useLocation } from "wouter";
+import { type ScoringFormat, SCORING_LABELS } from "@shared/scoring";
+import { useScoringFormat } from "@/lib/scoringFormat";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -296,6 +298,7 @@ export default function PlayerSearch() {
   const [showAutocomplete, setShowAutocomplete] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [conference, setConference] = useState("AFC");
+  const { format: scoringFormat, setFormat: setScoringFormat } = useScoringFormat();
   const [startersOnly, setStartersOnly] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<IndexedPlayer | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -514,6 +517,25 @@ export default function PlayerSearch() {
                 <div>
                   <p className="text-xl font-bold text-white font-mono leading-none">{totalPlayers}</p>
                   <p className="text-[10px] text-gray-400 uppercase tracking-wider">Fantasy Starters</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5" data-testid="scoring-format-toggle">
+                <span className="text-[10px] text-gray-500 uppercase tracking-wider mr-1">Scoring</span>
+                <div className="flex rounded-md overflow-hidden border border-white/15">
+                  {(['standard', 'half', 'ppr'] as ScoringFormat[]).map((f) => (
+                    <button
+                      key={f}
+                      onClick={() => setScoringFormat(f)}
+                      className={`px-2.5 py-1 text-xs font-medium transition-colors whitespace-nowrap ${
+                        scoringFormat === f
+                          ? 'bg-amber-400 text-slate-900'
+                          : 'bg-white/5 text-gray-300 hover:text-white'
+                      }`}
+                      data-testid={`button-format-${f}`}
+                    >
+                      {SCORING_LABELS[f]}
+                    </button>
+                  ))}
                 </div>
               </div>
               <div className="flex items-center gap-1.5 flex-wrap" data-testid="tools-button-group">

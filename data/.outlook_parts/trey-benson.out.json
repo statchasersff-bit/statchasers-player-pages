@@ -1,0 +1,19 @@
+{
+  "slug": "trey-benson",
+  "name": "Trey Benson",
+  "position": "RB",
+  "team": "ARI",
+  "season": 2026,
+  "headline": "Explosive on tape, buried on the depth chart",
+  "body": "Benson's 2025 was a four-game tease: 5.52 yards per carry on just 29 totes, a 52-yard burst, and a 13.79% explosive-run rate that flashed real juice. The problem was efficiency under the hood and volume on top of it. His -0.184 EPA per play and a meager 2.6% target share (0.9 yards per route run) signal a back who hasn't earned passing-down trust, and his snap share never translated into goal-line work. The 2024 baseline (4.62 YPC, one touchdown over 12 games) tells the same story: bursty, but boom-or-bust and light on scoring equity.\n\nNow the runway has vanished. Arizona reshaped the room this offseason, pushing Benson toward the back of the rotation behind fresher additions. An ankle issue limiting his spring work only deepens the hole. The talent flashes are real, but without injuries ahead of him, he's a deep-stash dart throw, not a draftable asset in standard formats.",
+  "keyStats": {"rank":73,"playerId":"11589","playerName":"Trey Benson","position":"RB","team":"ARI","age":23,"season":2025,"games":4,"snapPct":48.3,"routes":71,"rushAttempts":29,"redZoneOpportunities":5,"goalLineCarries":1,"targets":16,"receptions":13,"redZoneTargets":2,"endZoneTargets":0,"rushYards":160,"yardsPerCarry":5.52,"rushTouchdowns":0,"targetSharePct":2.6,"receivingYards":64,"yardsPerReception":4.92,"yardsPerRouteRun":0.9,"receivingTouchdowns":0,"epaPerPlay":-0.184,"fantasyPoints":22.4,"rushes10Plus":4,"rushes20Plus":2,"rushes30Plus":1,"rushes40Plus":1,"rushes50Plus":1,"explosiveRunPct":13.79,"breakawayRunPct":6.9,"longestRush":52,"longestRushTouchdown":null,"brokenTackles":2,"rushAttemptsPerBrokenTackle":14.5,"yardsAfterContactPerAttempt":2.48,"yardsBeforeContactPerAttempt":3.03,"receivingYardsAfterCatch":73,"tackleEludedRate":4.8,"fumbles":0,"tacklesForLoss":3,"tacklesForLossYards":4,"rushAttForNegativeYards":3},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/trey-benson.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-trey-benson/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11589",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

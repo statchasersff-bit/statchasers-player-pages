@@ -405,6 +405,11 @@ function sc_get_dynasty_path() {
     return $upload_dir['basedir'] . '/statchasers/dynasty_rankings.json';
 }
 
+function sc_get_fantasy_outlook_2026_path() {
+    $upload_dir = wp_upload_dir();
+    return $upload_dir['basedir'] . '/statchasers/fantasy_outlook_2026.json';
+}
+
 function sc_get_bye_weeks_path() {
     $upload_dir = wp_upload_dir();
     return $upload_dir['basedir'] . '/statchasers/bye_weeks.json';
@@ -492,6 +497,16 @@ function sc_load_dynasty() {
     static $cache = null;
     if ( $cache !== null ) return $cache;
     $path = sc_get_dynasty_path();
+    if ( ! file_exists( $path ) ) { $cache = []; return []; }
+    $data  = json_decode( file_get_contents( $path ), true );
+    $cache = is_array( $data ) ? $data : [];
+    return $cache;
+}
+
+function sc_load_fantasy_outlook_2026() {
+    static $cache = null;
+    if ( $cache !== null ) return $cache;
+    $path = sc_get_fantasy_outlook_2026_path();
     if ( ! file_exists( $path ) ) { $cache = []; return []; }
     $data  = json_decode( file_get_contents( $path ), true );
     $cache = is_array( $data ) ? $data : [];
@@ -763,6 +778,7 @@ function sc_fetch_and_save_supplemental_data() {
         'game_scores.json'      => sc_get_game_scores_path(),
         'bios.json'             => sc_get_bios_path(),
         'dynasty_rankings.json' => sc_get_dynasty_path(),
+        'fantasy_outlook_2026.json' => sc_get_fantasy_outlook_2026_path(),
     ];
 
     $ok = true;

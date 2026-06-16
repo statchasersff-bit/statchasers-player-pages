@@ -1,0 +1,19 @@
+{
+  "slug": "christian-mccaffrey",
+  "name": "Christian McCaffrey",
+  "position": "RB",
+  "team": "SF",
+  "season": 2026,
+  "headline": "Bounce-back RB2 finish proves the engine still runs",
+  "body": "Last year erased any doubt the 2024 layoff created: McCaffrey posted 314.6 fantasy points and graded out as our RB2 over 17 games, pairing a 23.5% target share with 102 catches for 924 yards. The receiving floor is the separator. He turned 531 routes into seven scores and stacked 100 red-zone opportunities with 20 goal-line carries, the kind of every-down, every-zone deployment that almost no back commands. An 0.041 EPA per play with 83.1% snaps confirms the volume was earned, not gifted.\n\nThe caution is age and tread, not talent. At 29 turning 30, his 3.86 yards per carry and 1.52 yards after contact have softened from the 5.36 and 2.01 he ran in 2023, and only 8.68% of carries went explosive. San Francisco is already managing his workload through camp. Draft him as a back-end first-rounder, lean on the pass-game usage as insurance, and stash Jordan James as the handcuff.",
+  "keyStats": {"rank":2,"playerId":"4034","playerName":"Christian McCaffrey","position":"RB","team":"SF","age":29,"season":2025,"games":17,"snapPct":83.1,"routes":531,"rushAttempts":311,"redZoneOpportunities":100,"goalLineCarries":20,"targets":129,"receptions":102,"redZoneTargets":25,"endZoneTargets":13,"rushYards":1202,"yardsPerCarry":3.86,"rushTouchdowns":10,"targetSharePct":23.5,"receivingYards":924,"yardsPerReception":9.06,"yardsPerRouteRun":1.74,"receivingTouchdowns":7,"epaPerPlay":0.041,"fantasyPoints":314.6,"rushes10Plus":27,"rushes20Plus":3,"rushes30Plus":1,"rushes40Plus":1,"rushes50Plus":0,"explosiveRunPct":8.68,"breakawayRunPct":3.54,"longestRush":41,"longestRushTouchdown":12,"brokenTackles":10,"rushAttemptsPerBrokenTackle":31.1,"yardsAfterContactPerAttempt":1.52,"yardsBeforeContactPerAttempt":2.34,"receivingYardsAfterCatch":720,"tackleEludedRate":2.4,"fumbles":2,"tacklesForLoss":30,"tacklesForLossYards":73,"rushAttForNegativeYards":30},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/christian-mccaffrey.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-christian-mccaffrey/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "4034",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

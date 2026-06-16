@@ -1,0 +1,19 @@
+{
+  "slug": "jatavion-sanders",
+  "name": "Ja'Tavion Sanders",
+  "position": "TE",
+  "team": "CAR",
+  "season": 2026,
+  "headline": "Sanders stuck in a committee that caps his ceiling",
+  "body": "Sanders went the wrong way in 2025, slipping to TE52 after a TE34 finish the year prior. His efficiency cratered alongside the workload: yards per route run fell from 1.09 to 0.85, EPA per play sagged from 0.271 to 0.13, and his target share dipped to 7.1% across just 12 games before a December ankle break ended things. He did catch 85.3% of his looks and saw 10 red-zone targets, but with one touchdown and 190 yards, the volume simply isn't there.\n\nThe deeper problem is the timeshare with Tommy Tremble, who has matched him snap for snap and kept both from carrying weekly value. Sanders is moving well in his ankle rehab and projects for a healthy training camp, yet a TE39 ADP near pick 252 reflects the reality. He owns the better long-term profile, but until Carolina commits to him, he's a bench-stash dart throw, not a startable tight end.",
+  "keyStats": {"rank":52,"playerId":"11600","playerName":"Ja'Tavion Sanders","position":"TE","team":"CAR","age":22,"season":2025,"games":12,"snapPct":48.3,"routes":224,"routePct":40.9,"targets":34,"targetsPerRouteRun":0.152,"targetSharePct":7.1,"airYardsPerTarget":4.82,"airYardsPerReception":5.66,"airYardsSharePct":4.8,"wopr":0.14,"receptions":29,"redZoneTargets":10,"endZoneTargets":2,"catchPct":85.3,"receivingYards":190,"totalYards":190,"yardsPerReception":6.55,"yardsBeforeCatchPerReception":3.59,"yardsAfterCatchPerReception":2.97,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.85,"receivingTouchdowns":1,"epaPerPlay":0.13,"successRate":47.1,"contestedCatchRate":null,"fantasyPoints":25,"avoidedTackleRate":3.4,"brokenTackles":1,"drops":1,"catchableTargets":30,"dropPct":2.9,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":5,"receptions20Plus":0,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":18},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/jatavion-sanders.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-jatavion-sanders/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11600",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

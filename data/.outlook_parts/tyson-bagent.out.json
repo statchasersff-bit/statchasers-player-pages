@@ -1,0 +1,19 @@
+{
+  "slug": "tyson-bagent",
+  "name": "Tyson Bagent",
+  "position": "QB",
+  "team": "CHI",
+  "season": 2026,
+  "headline": "Bagent stays a clipboard handcuff behind Caleb Williams",
+  "body": "Bagent's 2025 line is pure garbage time: two appearances, four attempts, 47 yards and 2.6 fantasy points. The peripherals flatter him in that tiny sample, a 0.322 EPA per play with a plus-9.6 CPOE, but four throws tell you nothing actionable. You have to rewind to his 2023 rookie spot start run for real volume, and that stretch was rough, 143 attempts at a minus-0.119 EPA per play with six picks against three scores while finishing the QB44 in points.\n\nWith Caleb Williams entrenched as the starter, Bagent stays glued to the bench, going essentially unrostered with no draft cost attached. The only path to relevance is a Williams injury, which could unlock back-end QB2 value, maybe a flash of QB1 upside, inside Ben Johnson's offense. Until then he is a pure contingency stash, not a draftable asset in any standard format.",
+  "keyStats": {"rank":68,"playerId":"11256","playerName":"Tyson Bagent","position":"QB","team":"CHI","age":25,"season":2025,"games":2,"attempts":4,"completions":3,"completionPct":75,"passingYards":47,"yardsPerCatch":11.75,"passingTouchdowns":0,"interceptions":0,"fantasyPoints":2.6,"airYards":30,"completedAirYards":8,"completedAirYardsPerCompletion":2.7,"deepAttemptPct":25,"epaPerPlay":0.322,"successRate":50,"cpoe":9.6,"throwaways":0,"battedPasses":0,"poorThrows":1,"badThrowPct":25,"onTargetPct":75,"passesDropped":0,"passes10Plus":2,"passes20Plus":2,"passes30Plus":0,"passes40Plus":0,"passes50Plus":0,"longestPass":22,"rushAttempts":2,"rushYards":7,"rushTouchdowns":0,"redZoneAttempts":0,"scrambleRate":20,"yardsPerScramble":7,"fumbles":1,"sacks":0,"sackYardsLost":0,"pocketTime":2.5,"timeToThrow":null,"blitzes":0,"hurries":0,"knockdowns":1,"pressurePct":20},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/tyson-bagent.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-tyson-bagent/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11256",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "dawson-knox",
+  "name": "Dawson Knox",
+  "position": "TE",
+  "team": "BUF",
+  "season": 2026,
+  "headline": "Knox is touchdown-dependent insurance in a crowded Buffalo room",
+  "body": "Knox quietly turned in his most efficient season in 2025, finishing as TE28 with 36 grabs on 49 looks for 417 yards and four scores across 16 games. The underlying work backs it up: a 0.335 EPA per play, a 63.3% success rate, and 1.45 yards per route run, all firmly up from his 2024 line. He cleared 12 red-zone targets and seven end-zone looks, which is where his fantasy juice still lives, and his 73.5% catch rate with only two drops showed reliable hands.\n\nThe ceiling stays capped because the numbers come on a thin diet. A 10.2% target share and 53.9% route rate confirm a true time-share with Dalton Kincaid, leaving Knox as a touchdown-or-bust streamer. Drafted near the back of the position, he is best treated as a Kincaid handcuff who only earns standalone weeks if injury opens the room. Hold him for the scores, not the volume.",
+  "keyStats": {"rank":28,"playerId":"5906","playerName":"Dawson Knox","position":"TE","team":"BUF","age":28,"season":2025,"games":16,"snapPct":58.3,"routes":288,"routePct":53.9,"targets":49,"targetsPerRouteRun":0.17,"targetSharePct":10.2,"airYardsPerTarget":6.71,"airYardsPerReception":9.14,"airYardsSharePct":9.1,"wopr":0.217,"receptions":36,"redZoneTargets":12,"endZoneTargets":7,"catchPct":73.5,"receivingYards":417,"totalYards":417,"yardsPerReception":11.58,"yardsBeforeCatchPerReception":6.5,"yardsAfterCatchPerReception":5.08,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.45,"receivingTouchdowns":4,"epaPerPlay":0.335,"successRate":63.3,"contestedCatchRate":null,"fantasyPoints":67.7,"avoidedTackleRate":0,"brokenTackles":0,"drops":2,"catchableTargets":38,"dropPct":4.1,"interceptionsWhenTargeted":2,"fumbles":0,"receptions10Plus":18,"receptions20Plus":5,"receptions30Plus":3,"receptions40Plus":0,"receptions50Plus":0,"longestReception":32},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/dawson-knox.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-dawson-knox/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "5906",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

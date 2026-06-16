@@ -1,0 +1,19 @@
+{
+  "slug": "marvin-harrison",
+  "name": "Marvin Harrison",
+  "position": "WR",
+  "team": "ARI",
+  "season": 2026,
+  "headline": "The Talent Is Loud, The Usage Went Quiet",
+  "body": "Don't let a noisy 2025 fool you: when Harrison ran routes, the efficiency was elite. He posted 0.412 EPA per play and a 54.8% success rate, both jumps over his rookie marks, and that points to a player whose per-snap impact never cratered. The problem was volume. Across only 12 games he drew just 73 targets and an 11.8% target share, well off the 22.2% and 116 looks he commanded as a rookie, and his WOPR collapsed from 0.629 to 0.32.\n\nThe profile screams positive regression if the opportunity returns. He still averaged nearly 13 air yards per target and stayed a red-zone presence with 10 red-zone and five end-zone targets, finishing with four scores on a thin 41 catches. Restore a full route share and the downfield usage, and the WR45 finish becomes a floor, not a forecast. Buy the dip with conviction.",
+  "keyStats": {"rank":45,"playerId":"11628","playerName":"Marvin Harrison Jr.","position":"WR","team":"ARI","age":23,"season":2025,"games":12,"snapPct":71.2,"routes":357,"routePct":50.5,"targets":73,"targetsPerRouteRun":0.204,"targetSharePct":11.8,"airYardsPerTarget":12.96,"airYardsPerReception":23.07,"airYardsSharePct":20.3,"wopr":0.32,"receptions":41,"redZoneTargets":10,"endZoneTargets":5,"catchPct":56.2,"receivingYards":608,"totalYards":608,"yardsPerReception":14.83,"yardsBeforeCatchPerReception":11.93,"yardsAfterCatchPerReception":2.9,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.7,"receivingTouchdowns":4,"epaPerPlay":0.412,"successRate":54.8,"contestedCatchRate":null,"fantasyPoints":86.8,"avoidedTackleRate":7.3,"brokenTackles":3,"drops":4,"catchableTargets":45,"dropPct":5.5,"interceptionsWhenTargeted":2,"fumbles":0,"receptions10Plus":28,"receptions20Plus":9,"receptions30Plus":4,"receptions40Plus":2,"receptions50Plus":0,"longestReception":45},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/marvin-harrison.php","used":false},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-marvin-harrison/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11628",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

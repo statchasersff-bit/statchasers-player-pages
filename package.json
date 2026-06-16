@@ -9,7 +9,8 @@
     "start": "NODE_ENV=production node dist/index.cjs",
     "check": "tsc",
     "db:push": "drizzle-kit push",
-    "build:players": "node scripts/buildPlayersIndex.js"
+    "build:players": "node scripts/buildPlayersIndex.js",
+    "build:outlook": "node scripts/buildFantasyOutlook2026.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
