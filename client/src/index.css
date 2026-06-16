@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Scale the whole tool down slightly (everything was a touch oversized).
+   zoom reflows layout, so widths/scroll stay correct. */
+#root {
+  zoom: 0.92;
+}
+
 @keyframes fadeSlideIn {
   from {
     opacity: 0;
@@ -3378,3 +3384,198 @@
 .sc-table__accent--great { border-left-color: #3B82F6; }
 .sc-table__accent--good  { border-left-color: #10B981; }
 .sc-table__accent--deep  { border-left-color: #9ca3af; }
+
+/* ==========================================================================
+   Unified section title — blue title + gold underline bar, matching the
+   "2026 Fantasy Outlook" SectionHeader. Applied to the Advanced / Injury kit
+   tabs (whose headings used near-black bold text) so every tab reads the same.
+   ========================================================================== */
+.sc-sectitle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px 0;
+  padding-bottom: 10px;
+  color: var(--sc-blue, #0b3a7a) !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.2 !important;
+  text-transform: none !important;
+}
+.sc-sectitle h3 {
+  margin: 0;
+  color: var(--sc-blue, #0b3a7a) !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.2 !important;
+}
+.sc-sectitle::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 48px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--sc-gold, #F5C01A), var(--sc-gold-light, #FFD166));
+}
+
+/* Season-End Finishes title — add the same gold underline bar. */
+.sc-finish2__title { position: relative; padding-bottom: 10px; }
+.sc-finish2__title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 48px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--sc-gold, #F5C01A), var(--sc-gold-light, #FFD166));
+}
+
+/* ==========================================================================
+   Player profile hero — two-column identity header (photo | info).
+   Team accent comes from --team-color / --team-rgb set inline per player.
+   ========================================================================== */
+.player-hero {
+  position: relative;
+  /* Scale the whole hero down to 60% (a 40% reduction). zoom reflows layout. */
+  zoom: 0.6;
+  display: grid;
+  grid-template-columns: 460px minmax(0, 1fr);
+  align-items: center;
+  gap: 44px;
+  padding: 20px 8px 34px;
+  overflow: hidden;
+}
+.player-photo-card {
+  position: relative;
+  width: 460px;
+  height: 380px;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--team-rgb, 11,58,122), 0.45);
+  box-shadow: 0 18px 40px rgba(var(--team-rgb, 11,58,122), 0.14);
+  background: #f8fafc;
+  z-index: 1;
+}
+.player-photo-card__logo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.10;
+  padding: 14%;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+.player-photo-card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  z-index: 1;
+}
+.player-photo-card__fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.player-identity {
+  position: relative;
+  z-index: 2;
+  max-width: 640px;
+}
+.player-first-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: #8a98ad;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.scpp-root .player-last-name,
+.player-last-name {
+  margin: 4px 0 0;
+  font-size: clamp(56px, 7vw, 88px);
+  line-height: 0.9;
+  font-weight: 900;
+  color: var(--team-color, #0b3a7a);
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+.player-team-line {
+  margin: 12px 0 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #26364d;
+}
+.player-meta-line {
+  margin: 12px 0 0;
+  font-size: 16px;
+  color: #52627a;
+}
+.player-draft-line {
+  margin: 6px 0 0;
+  font-size: 15px;
+  color: #6b7890;
+}
+.player-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 16px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 800;
+}
+.player-status--active { background: rgba(16,185,129,0.10); color: #059669; }
+.player-status--warn   { background: rgba(245,158,11,0.12); color: #b45309; }
+.player-status-dot { width: 7px; height: 7px; border-radius: 999px; flex-shrink: 0; }
+
+.team-watermark {
+  position: absolute;
+  right: 24px;
+  bottom: -28px;
+  width: 270px;
+  height: 270px;
+  object-fit: contain;
+  opacity: 0.07;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+/* Dark-mode readability for the identity text (team color stays as-is). */
+.dark .player-first-name { color: #94a3b8; }
+.dark .player-team-line  { color: #e2e8f0; }
+.dark .player-meta-line  { color: #cbd5e1; }
+.dark .player-draft-line { color: #94a3b8; }
+
+@media (max-width: 768px) {
+  .player-hero {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 18px;
+    padding: 12px 8px 26px;
+  }
+  .player-photo-card { width: 300px; height: 220px; border-radius: 18px; }
+  .player-identity { max-width: 100%; }
+  .player-last-name { font-size: clamp(40px, 13vw, 64px); }
+  .player-status { margin-left: auto; margin-right: auto; }
+  .team-watermark { display: none; }
+}

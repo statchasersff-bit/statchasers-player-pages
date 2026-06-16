@@ -209,7 +209,7 @@ function FullInjuryLogCard({ injury }: { injury: PlayerInjuryHistory }) {
         className="flex w-full items-center gap-1.5 text-left"
       >
         <ScrollText className="w-4 h-4 text-[#d4af37]" />
-        <h3 className="text-sm font-bold text-foreground">Full Injury Log</h3>
+        <h3 className="text-sm font-bold" style={{ color: 'var(--sc-blue, #0b3a7a)' }}>Full Injury Log</h3>
         <span className="text-[11px] font-semibold text-muted-foreground tabular-nums">({total})</span>
         <ChevronDown className={cn("ml-auto w-4 h-4 text-muted-foreground transition-transform", open && "rotate-180")} />
       </button>

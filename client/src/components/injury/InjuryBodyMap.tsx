@@ -357,7 +357,7 @@ export function InjuryBodyMap({ injuries, className }: { injuries: RawInjuryInpu
   return (
     <Card className={cn("p-5", className)}>
       <div>
-        <h3 className="flex items-center gap-2 text-sm font-black text-foreground">
+        <h3 className="sc-sectitle">
           <PersonStanding className="h-4 w-4 text-[#d4af37]" />
           Body Map
         </h3>

@@ -109,7 +109,7 @@ function PlayerRankSnapshot({ cards, pos }: { cards: RankCard[]; pos: string }) 
   return (
     <Card>
       <div className="mb-3">
-        <h3 className="text-base font-black text-foreground flex items-center gap-2">
+        <h3 className="sc-sectitle">
           <BarChart3 className="w-4 h-4" style={{ color: "#d4af37" }} /> Player Rank Snapshot
         </h3>
         <p className="text-[11px] text-muted-foreground mt-1">
@@ -149,7 +149,7 @@ function MetricScores({ composites, pos }: { composites: PlayerAdvancedResult["c
   return (
     <Card>
       <div className="mb-3">
-        <h3 className="text-base font-black text-foreground flex items-center gap-2">
+        <h3 className="sc-sectitle">
           <Layers className="w-4 h-4" style={{ color: "#d4af37" }} /> Metric Scores
         </h3>
         <p className="text-[11px] text-muted-foreground mt-1">
@@ -226,7 +226,7 @@ function AdvancedStatSection({ section, latest, pos, statRanks }: {
         data-testid={`adv-section-toggle-${section.label}`}
         className="w-full flex items-center justify-between gap-2 text-left"
       >
-        <h3 className="text-base font-black text-foreground flex items-center gap-2">
+        <h3 className="sc-sectitle">
           <Icon className="w-4 h-4" style={{ color: section.accent }} /> {section.label}
         </h3>
         <ChevronDown className={cn("w-4 h-4 text-muted-foreground transition-transform duration-200 flex-shrink-0", open && "rotate-180")} />

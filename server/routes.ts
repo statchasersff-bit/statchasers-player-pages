@@ -886,13 +886,14 @@ export async function registerRoutes(
       smallSample: boolean;
     } | null = null;
 
-    const threeYearSeasons = [activeSeason, activeSeason - 1, activeSeason - 2];
-    const threeYearStats = multiSeasonStats.filter(m => threeYearSeasons.includes(m.season));
-    const threeYearPtsFiltered = (() => {
+    // Career Snapshot covers EVERY season the player has logged stats for
+    // (multiSeasonStats already spans the full career), not a rolling window.
+    const careerStatsAll = multiSeasonStats;
+    const careerSeasonsAll = careerStatsAll.map(m => m.season);
+    const careerPtsFiltered = (() => {
       const pts: number[] = [];
       let p1 = 0, p2 = 0, p3 = 0, bust = 0;
-      for (const s of threeYearSeasons) {
-        if (!multiSeasonStats.find(m => m.season === s)) continue;
+      for (const s of careerSeasonsAll) {
         const sLogs = loadGameLogs(s);
         const pLogs = sLogs[player.id] || [];
         const played = pLogs.filter(e => hasParticipation(e.stats, player.position));
@@ -912,14 +913,15 @@ export async function registerRoutes(
       return { pts, p1, p2, p3, bust };
     })();
 
-    if (threeYearStats.length > 1) {
-      const totalGp = threeYearPtsFiltered.pts.length;
-      const maxGames = threeYearStats.length * 17;
-      const totalPts = threeYearPtsFiltered.pts.reduce((a, b) => a + b, 0);
+    if (careerStatsAll.length > 1) {
+      const totalGp = careerPtsFiltered.pts.length;
+      // 17-game seasons from 2021 on, 16 before.
+      const maxGames = careerSeasonsAll.reduce((sum, s) => sum + (s >= 2021 ? 17 : 16), 0);
+      const totalPts = careerPtsFiltered.pts.reduce((a, b) => a + b, 0);
       const ppg = totalGp > 0 ? totalPts / totalGp : 0;
       const mean = ppg;
       const variance = totalGp > 1
-        ? threeYearPtsFiltered.pts.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / (totalGp - 1)
+        ? careerPtsFiltered.pts.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / (totalGp - 1)
         : 0;
       const vol = Math.sqrt(variance);
       const volLabel = vol < 6 ? 'Low' : vol < 9 ? 'Moderate' : 'High';
@@ -929,14 +931,14 @@ export async function registerRoutes(
         gamesPlayed: totalGp,
         maxGames,
         durabilityPct: maxGames > 0 ? (totalGp / maxGames) * 100 : 0,
-        pos1Pct: totalGp > 0 ? (threeYearPtsFiltered.p1 / totalGp) * 100 : 0,
-        pos2Pct: totalGp > 0 ? (threeYearPtsFiltered.p2 / totalGp) * 100 : 0,
-        pos3Pct: totalGp > 0 ? (threeYearPtsFiltered.p3 / totalGp) * 100 : 0,
-        bustPct: totalGp > 0 ? (threeYearPtsFiltered.bust / totalGp) * 100 : 0,
+        pos1Pct: totalGp > 0 ? (careerPtsFiltered.p1 / totalGp) * 100 : 0,
+        pos2Pct: totalGp > 0 ? (careerPtsFiltered.p2 / totalGp) * 100 : 0,
+        pos3Pct: totalGp > 0 ? (careerPtsFiltered.p3 / totalGp) * 100 : 0,
+        bustPct: totalGp > 0 ? (careerPtsFiltered.bust / totalGp) * 100 : 0,
         volatility: vol,
         volatilityLabel: volLabel,
-        seasons: threeYearStats.length,
-        seasonPpgs: threeYearStats.map(m => ({ season: m.season, ppg: m.ppg })),
+        seasons: careerStatsAll.length,
+        seasonPpgs: careerStatsAll.map(m => ({ season: m.season, ppg: m.ppg })),
         smallSample: totalGp < 8,
       };
     }

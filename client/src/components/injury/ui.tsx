@@ -35,9 +35,9 @@ export function ComingSoon({ icon: Icon, title, body }: { icon: LucideIcon; titl
 
 export function SectionTitle({ icon: Icon, title, noMargin }: { icon: LucideIcon; title: string; noMargin?: boolean }) {
   return (
-    <div className={cn("flex items-center gap-1.5", noMargin ? "" : "mb-3")}>
+    <div className={cn("sc-sectitle", noMargin && "!mb-0")}>
       <Icon className="w-4 h-4 text-[#d4af37]" />
-      <h3 className="text-sm font-bold text-foreground">{title}</h3>
+      <h3>{title}</h3>
     </div>
   );
 }

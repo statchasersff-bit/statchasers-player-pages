@@ -702,7 +702,7 @@ export function InjuryAvailabilityTimeline({
     <Card className={cn("p-5", className)}>
       <div>
         <div className="flex items-center justify-between gap-3">
-          <h3 className="flex items-center gap-2 text-sm font-black text-foreground">
+          <h3 className="sc-sectitle">
             <CalendarClock className="h-4 w-4 text-[#d4af37]" />
             Availability Timeline
           </h3>

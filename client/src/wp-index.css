@@ -15,6 +15,9 @@
 }
 
 .scpp-root {
+  /* Scale the whole embedded tool down slightly (everything was a touch
+     oversized). zoom reflows layout, so widths/scroll stay correct. */
+  zoom: 0.92;
   --button-outline: rgba(0,0,0, .10);
   --badge-outline: rgba(0,0,0, .05);
   --opaque-button-border-intensity: -8;
