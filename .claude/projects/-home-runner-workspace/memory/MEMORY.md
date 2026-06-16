@@ -1,0 +1,1 @@
+- [Dual stylesheets](dual-stylesheets.md) — player-profile CSS must be added to both index.css and sc-components.css
