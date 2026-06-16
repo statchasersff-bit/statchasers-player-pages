@@ -102,14 +102,12 @@ const POSITION_COLORS: Record<string, string> = {
   DEF: "sc-pos-pill sc-pos-def",
 };
 
-const TAB_KEYS = ["overview", "overview2", "gamelog", "gamelog2", "usage", "advanced", "rankings", "news"] as const;
+const TAB_KEYS = ["overview", "gamelog", "usage", "advanced", "rankings", "news"] as const;
 type TabKey = typeof TAB_KEYS[number];
 
 const TAB_CONFIG: { key: TabKey; label: string; icon: typeof Activity }[] = [
   { key: "overview", label: "Overview", icon: Activity },
-  { key: "overview2", label: "Overview2", icon: Sparkles },
   { key: "gamelog", label: "Game Log", icon: Table },
-  { key: "gamelog2", label: "Game Log 2", icon: Table },
   { key: "usage", label: "Usage & Trends", icon: TrendingUp },
   { key: "advanced", label: "Advanced Stats", icon: Layers },
   { key: "rankings", label: "Rankings & Value", icon: Trophy },
@@ -1352,6 +1350,8 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
   // Bio-driven narrative (Career Snapshot + Play Style). Moved here from the
   // "Overview 2" tab so the season story sits alongside the outlook summary.
   const bio: BioData | null = (player as any).bio ?? null;
+  // The "Drafted ..." bullet now lives in the player header, so drop it here.
+  const snapshotBullets = (bio?.snapshot_bullets ?? []).filter(b => !/^Drafted\b/.test(b));
   const bioCeilingTile = bio?.career_context_tiles?.find(t => t.title === 'Ceiling driver');
   const bioFloorTile   = bio?.career_context_tiles?.find(t => t.title === 'Floor driver');
   const bioStyleSubCards = bio?.style ? [
@@ -1409,10 +1409,10 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
         </div>
       )}
 
-      {bio && (bio.snapshot_bullets?.length || bioStyleSubCards.length) ? (
+      {bio && (snapshotBullets.length || bioStyleSubCards.length) ? (
         <div className="sc-bio">
 
-          {bio.snapshot_bullets && bio.snapshot_bullets.length > 0 && (
+          {snapshotBullets.length > 0 && (
             <section className="sc-bio__section" data-testid="bio-snapshot">
               <div className="sc-bio__section-header">
                 <FileText className="w-4 h-4" />
@@ -1420,7 +1420,7 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
               </div>
               <div className="sc-bio__snapshot-card">
                 <ul className="sc-bio__bullets">
-                  {bio.snapshot_bullets.map((bullet, i) => (
+                  {snapshotBullets.map((bullet, i) => (
                     <li key={i} data-testid={`bio-bullet-${i}`}>
                       <span className="sc-bio__bullet-dot" />
                       {bullet}
@@ -1657,133 +1657,6 @@ function ov2TierPcts(stats: ReturnType<typeof computeGameLogStats>) {
   };
 }
 
-function ov2PosAvgPpg(pos: string | null): number {
-  const b: Record<string, number> = { QB: 16.5, RB: 11.5, WR: 10.5, TE: 8.0 };
-  return b[pos || ''] ?? 10;
-}
-
-function ov2HeroBadges(player: PlayerWithSeasons, stats: ReturnType<typeof computeGameLogStats>): { tier: string; profile: string; upside: string; risk: string } {
-  if (!stats || stats.gamesPlayed === 0) {
-    return { tier: 'Insufficient data', profile: 'TBD', upside: 'TBD', risk: 'TBD' };
-  }
-  const pos = player.position || '';
-  const topRate = stats.pos1Pct + stats.pos2Pct;
-  const tierLabels = ov2TierLabels(pos);
-  const tier = topRate >= 60 ? `${tierLabels.top}/Reliable Starter`
-    : topRate >= 35 ? `${tierLabels.mid}/Flex`
-    : `${tierLabels.flex}`;
-
-  const highFloor = stats.bustPct < 20;
-  const highCeiling = stats.pos1Pct >= 35;
-  const profile = highFloor && highCeiling ? 'High Floor + Ceiling'
-    : highFloor ? 'Safe Floor'
-    : highCeiling ? 'Boom-Bust'
-    : 'Volatile';
-
-  const ppgDelta = stats.ppg > 0 ? ((stats.last4Ppg - stats.ppg) / stats.ppg) * 100 : 0;
-  const cvRatio = stats.ppg > 0 ? stats.volatility / stats.ppg : 2;
-  const teamChanged = !!(player.seasonTeam && player.team && player.seasonTeam !== player.team && player.team !== 'FA');
-
-  let upside = 'Volume-driven scoring';
-  if (teamChanged) upside = 'Offensive Upgrade';
-  else if (ppgDelta > 12) upside = 'Late-Season Surge';
-  else if (stats.pos1Pct >= 40) upside = 'Weekly Ceiling';
-  else if (pos === 'WR' || pos === 'TE') upside = 'Target Volume';
-  else if (pos === 'RB') upside = 'Goal-Line Role';
-  else if (pos === 'QB') upside = 'Dual-Threat Production';
-
-  let risk = 'Weekly Volatility';
-  if (stats.bustPct >= 30) risk = 'Bust-Game Frequency';
-  else if (cvRatio >= 0.7) risk = 'Weekly Volatility';
-  else if (ppgDelta < -12) risk = 'Cooling Production';
-  else if (stats.pos1Pct < 20) risk = 'Limited Ceiling';
-  else risk = 'Role Dependence';
-
-  return { tier, profile, upside, risk };
-}
-
-function ov2HeroSummary(player: PlayerWithSeasons, stats: ReturnType<typeof computeGameLogStats>): string[] {
-  if (!stats || stats.gamesPlayed === 0) {
-    return [`${player.name || 'This player'}'s ${player.season || 2025} sample is too small to project with confidence.`];
-  }
-  const name = player.name || 'This player';
-  const pos = player.position || '';
-  const season = player.season || 2025;
-  const nextSeason = season + 1;
-  const ppg = stats.ppg.toFixed(1);
-  const gp = stats.gamesPlayed;
-  const topRate = stats.pos1Pct + stats.pos2Pct;
-  const cvRatio = stats.ppg > 0 ? stats.volatility / stats.ppg : 2;
-  const profile = topRate >= 60 ? `a reliable weekly starter`
-    : topRate >= 35 ? `a volatile flex/depth ${pos}`
-    : `a streaming-grade ${pos}`;
-  const reliability = cvRatio < 0.4 ? 'consistent week to week'
-    : cvRatio < 0.7 ? 'moderately consistent'
-    : 'inconsistent';
-  const teamChanged = !!(player.seasonTeam && player.team && player.seasonTeam !== player.team && player.team !== 'FA');
-  const newTeamFull = player.team ? (TEAM_FULL_NAMES[player.team] || player.team) : '';
-
-  const p1 = `${name} profiles as ${profile} entering ${nextSeason}. He averaged ${ppg} fantasy points per game across ${gp} games in ${season}, with weekly reliability that was ${reliability}.`;
-
-  let p2: string;
-  if (teamChanged && newTeamFull) {
-    p2 = `The move to ${newTeamFull} creates a potential value swing if the role stabilizes in the new offense — watch how target share and snap rate trend through camp.`;
-  } else if (stats.pos1Pct >= 40) {
-    p2 = `Ceiling weeks were frequent, which keeps him in starter range as long as the offensive role holds heading into ${nextSeason}.`;
-  } else if (stats.bustPct >= 30) {
-    p2 = `The bust-game frequency is the central concern for ${nextSeason} — without a usage bump, the floor stays exposed in tight matchup weeks.`;
-  } else {
-    p2 = `The profile heading into ${nextSeason} is defined more by role consistency than by elite ceiling, which favors steadier deployment than tournament-style chasing.`;
-  }
-  return [p1, p2];
-}
-
-function ov2RecentTrendTakeaway(player: PlayerWithSeasons, entries: GameLogEntry[], stats: ReturnType<typeof computeGameLogStats>, format: ScoringFormat): { production: 'up' | 'down' | 'flat'; usage: 'up' | 'down' | 'flat'; efficiency: 'up' | 'down' | 'flat'; takeaway: string } {
-  if (!stats || stats.gamesPlayed < 4) {
-    return { production: 'flat', usage: 'flat', efficiency: 'flat', takeaway: 'Sample size is too small for a meaningful recent-trend read.' };
-  }
-  const ppgDelta = stats.ppg > 0 ? ((stats.last4Ppg - stats.ppg) / stats.ppg) * 100 : 0;
-  const production: 'up' | 'down' | 'flat' = ppgDelta > 8 ? 'up' : ppgDelta < -8 ? 'down' : 'flat';
-
-  const played = entries.filter(e => hasParticipation(e.stats, player.position));
-  const last3 = played.slice(-3);
-  const pos = player.position || '';
-  const key = (pos === 'QB') ? 'pass_att' : (pos === 'RB') ? 'rush_att' : 'rec_tgt';
-  const seasonAvg = played.length > 0
-    ? played.reduce((s, e) => s + (((e.stats as unknown as Record<string, number>)[key]) || 0), 0) / played.length
-    : 0;
-  const recentAvg = last3.length > 0
-    ? last3.reduce((s, e) => s + (((e.stats as unknown as Record<string, number>)[key]) || 0), 0) / last3.length
-    : 0;
-  const usageDelta = seasonAvg > 0 ? ((recentAvg - seasonAvg) / seasonAvg) * 100 : 0;
-  const usage: 'up' | 'down' | 'flat' = usageDelta > 10 ? 'up' : usageDelta < -10 ? 'down' : 'flat';
-
-  // Efficiency: PPG/usage (points per attempt or per target)
-  const seasonEff = seasonAvg > 0 ? stats.ppg / seasonAvg : 0;
-  const recentEff = recentAvg > 0 ? stats.last4Ppg / recentAvg : 0;
-  const effDelta = seasonEff > 0 ? ((recentEff - seasonEff) / seasonEff) * 100 : 0;
-  const efficiency: 'up' | 'down' | 'flat' = effDelta > 10 ? 'up' : effDelta < -10 ? 'down' : 'flat';
-
-  const name = player.name || 'This player';
-  let takeaway = '';
-  if (production === 'down' && usage === 'flat' && efficiency === 'down') {
-    takeaway = `${name}'s late-season decline was driven more by efficiency regression than a major role reduction.`;
-  } else if (production === 'down' && usage === 'down') {
-    takeaway = `Both volume and scoring trended down late, pointing to a narrowing role rather than a short-term cold streak.`;
-  } else if (production === 'up' && usage === 'up') {
-    takeaway = `Expanding usage and rising scoring late in the year is a positive leading indicator heading into next season.`;
-  } else if (production === 'up' && efficiency === 'up') {
-    takeaway = `Efficiency gains carried late-season production even without a major usage bump.`;
-  } else if (production === 'down' && efficiency === 'flat') {
-    takeaway = `Scoring slipped late while efficiency held steady — game script and matchup difficulty likely played a role.`;
-  } else if (production === 'flat') {
-    takeaway = `Production held near season averages through the final stretch, suggesting a stable baseline rather than a directional shift.`;
-  } else {
-    takeaway = `Recent trends are mixed; watch how usage and efficiency settle over the next sample before committing to a new baseline.`;
-  }
-  return { production, usage, efficiency, takeaway };
-}
-
 function ov2UsageRows(entries: GameLogEntry[], position: string | null, format: ScoringFormat): { label: string; seasonAvg: number; recentAvg: number; deltaPct: number; isPct?: boolean; precision?: number }[] {
   const played = entries.filter(e => hasParticipation(e.stats, position));
   if (played.length === 0) return [];
@@ -1848,49 +1721,6 @@ function ov2UsageRows(entries: GameLogEntry[], position: string | null, format: 
   }
 
   return rows;
-}
-
-function ov2BottomLine(player: PlayerWithSeasons, stats: ReturnType<typeof computeGameLogStats>): { paragraph: string; dynasty: string; redraft: string } {
-  if (!stats || stats.gamesPlayed === 0) {
-    return { paragraph: 'Insufficient sample for a forward-looking call.', dynasty: 'Wait', redraft: 'Avoid' };
-  }
-  const name = player.name || 'This player';
-  const pos = player.position || '';
-  const nextSeason = (player.season || 2025) + 1;
-  const teamChanged = !!(player.seasonTeam && player.team && player.seasonTeam !== player.team && player.team !== 'FA');
-  const newTeamFull = player.team ? (TEAM_FULL_NAMES[player.team] || player.team) : '';
-  const topRate = stats.pos1Pct + stats.pos2Pct;
-  const cvRatio = stats.ppg > 0 ? stats.volatility / stats.ppg : 2;
-
-  let body = '';
-  if (topRate >= 60 && cvRatio < 0.55) {
-    body = `${name} profiles as a high-confidence weekly starter heading into ${nextSeason}, with both a strong floor and reliable ceiling.`;
-  } else if (topRate >= 40) {
-    body = `${name} is best viewed as a matchup-based flex option entering ${nextSeason}.`;
-  } else {
-    body = `${name} fits a depth or streaming role heading into ${nextSeason}, with usage upside required before he can be trusted as a weekly starter.`;
-  }
-  if (teamChanged && newTeamFull) {
-    body += ` The move to ${newTeamFull} introduces both opportunity and uncertainty, and his weekly inconsistency still makes him difficult to lock in as a starter.`;
-  } else if (cvRatio >= 0.7) {
-    body += ` Weekly volatility remains the central drag on the profile and limits start-it-and-forget-it usage.`;
-  } else if (stats.pos1Pct >= 40) {
-    body += ` Ceiling games are frequent enough to justify exposure in tournament formats and as a weekly starter when usage holds.`;
-  }
-
-  let dynasty: string;
-  if (topRate >= 55 && (player.age ?? 30) <= 26) dynasty = 'Buy / Hold';
-  else if (topRate >= 40) dynasty = 'Hold / Buy-Low';
-  else if (topRate >= 25) dynasty = 'Hold';
-  else dynasty = 'Sell / Move On';
-
-  let redraft: string;
-  if (topRate >= 55) redraft = `${pos}1 / Starter`;
-  else if (topRate >= 40) redraft = `Flex / Matchup Start`;
-  else if (topRate >= 25) redraft = 'Bench Flex Depth';
-  else redraft = 'Waiver / Streaming';
-
-  return { paragraph: body, dynasty, redraft };
 }
 
 function Ov2Card({ children, className = '', as: As = 'div' }: { children: React.ReactNode; className?: string; as?: 'div' | 'section' }) {
@@ -1977,335 +1807,17 @@ function Ov2TrendIcon({ dir }: { dir: 'up' | 'down' | 'flat' }) {
   return <Minus size={14} />;
 }
 
-function OverviewTab2({ player, entries, format = 'ppr' }: { player: PlayerWithSeasons; entries: GameLogEntry[]; format?: ScoringFormat }) {
-  const stats = computeGameLogStats(entries, player.position, format);
-  const season = player.season || 2025;
-  const pos = player.position || '';
-  const posLabel = pos || 'FLEX';
-
-  // Team-context (strict separation between historical and current)
-  const currentTeam = player.team || '';
-  const seasonTeamAbbr = player.seasonTeam || player.historicalSeasonTeam || deriveSeasonTeam(entries, currentTeam) || currentTeam;
-  const currentTeamFull = currentTeam ? (TEAM_FULL_NAMES[currentTeam] || currentTeam) : '';
-  const teamChanged = !!(seasonTeamAbbr && currentTeam && seasonTeamAbbr !== currentTeam && currentTeam !== 'FA');
-
-  const tierLabels = ov2TierLabels(pos);
-  const trend = ov2RecentTrendTakeaway(player, entries, stats, format);
-  const ov2Played = entries.filter(e => hasParticipation(e.stats, pos));
-  const ppgSparkline = (() => {
-    const vals = ov2Played.map(e => fpts(e, format));
-    const out: number[] = [];
-    for (let i = 0; i < vals.length; i++) {
-      const start = Math.max(0, i - 2);
-      const slice = vals.slice(start, i + 1);
-      out.push(slice.reduce((a, b) => a + b, 0) / slice.length);
-    }
-    return out;
-  })();
-  const tgtKey = pos === 'QB' ? 'pass_att' : pos === 'RB' ? 'rush_att' : 'rec_tgt';
-  const usageSparkline = getRollingAverage(ov2Played, tgtKey, 3);
-  const { strengths, risks } = generateStrengthsAndRisks(player, stats);
-  const bottomLine = ov2BottomLine(player, stats);
-  const cp = player.careerProfile || null;
-  const posAvgPpg = ov2PosAvgPpg(pos);
-  const ppgVsPosAvg = stats ? stats.ppg - posAvgPpg : 0;
-
-  // Fantasy Career Arc timeline (Career Snapshot + Play Style now live on the Overview tab).
-  const bio: BioData | null = (player as any).bio ?? null;
-
-  if (!stats || stats.gamesPlayed === 0) {
-    return (
-      <div className="ov2-root">
-        <Ov2Card>
-          <p className="ov2-body--muted">No {season} game data available yet for this player.</p>
-        </Ov2Card>
-      </div>
-    );
-  }
-
-  const trendDirLabel = (dir: 'up' | 'down' | 'flat') => dir === 'flat' ? 'Steady' : dir === 'up' ? 'Rising' : 'Cooling';
-
-  return (
-    <div className="ov2-root">
-
-      {/* SECTION 2 — Quick Fantasy Snapshot */}
-      <Ov2Card>
-        <Ov2SectionTitle>Quick Snapshot</Ov2SectionTitle>
-        <div className="ov2-grid-snapshot">
-          {[
-            { label: `${season} PPG`, value: stats.ppg.toFixed(1), sub: `${ppgVsPosAvg >= 0 ? '+' : ''}${ppgVsPosAvg.toFixed(1)} vs ${posLabel} Avg` },
-            { label: 'Games Played', value: String(stats.gamesPlayed), sub: cp ? `${cp.durabilityPct.toFixed(0)}% career availability` : `${season} season` },
-            { label: 'Positional Finish', value: player.seasonRank ? `${posLabel}${player.seasonRank}` : '—', sub: `${stats.gamesPlayed} GP` },
-            { label: 'Bust Rate', value: `${stats.bustPct.toFixed(0)}%`, sub: `${stats.bustGames} bust ${stats.bustGames === 1 ? 'game' : 'games'}` },
-            { label: `${tierLabels.top} Rate`, value: `${stats.pos1Pct.toFixed(0)}%`, sub: `${stats.pos1Games} of ${stats.gamesPlayed} games` },
-            { label: 'Volatility', value: stats.volatility.toFixed(1), sub: stats.volatility < 6 ? 'Stable week-to-week' : stats.volatility < 9 ? 'Moderate swings' : 'High swings' },
-            ...(cp ? [{ label: 'Durability', value: `${cp.durabilityPct.toFixed(0)}%`, sub: `${cp.gamesPlayed}/${cp.maxGames} possible games` }] : []),
-          ].map(card => (
-            <div key={card.label} className="ov2-stat">
-              <p className="ov2-stat__label">{card.label}</p>
-              <p className="ov2-stat__value">{card.value}</p>
-              <p className="ov2-stat__sub">{card.sub}</p>
-            </div>
-          ))}
-        </div>
-      </Ov2Card>
-
-      {/* SECTION 4 — Trend & Momentum */}
-      <Ov2Card>
-        <Ov2SectionTitle>Recent Trend</Ov2SectionTitle>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '12px', marginBottom: '16px' }}>
-          {([
-            { label: 'Production', dir: trend.production },
-            { label: 'Usage', dir: trend.usage },
-            { label: 'Efficiency', dir: trend.efficiency },
-          ] as const).map(item => (
-            <div key={item.label} className="ov2-trend-row">
-              <span className="ov2-trend-row__label">{item.label}</span>
-              <span className={`ov2-trend-row__value ov2-trend-row__value--${item.dir}`}>
-                <Ov2TrendIcon dir={item.dir} />
-                {trendDirLabel(item.dir)}
-              </span>
-            </div>
-          ))}
-        </div>
-        <p className="ov2-body" style={{ marginBottom: '16px' }}>{trend.takeaway}</p>
-        {(ppgSparkline.length >= 3 || usageSparkline.length >= 3) && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
-            {ppgSparkline.length >= 3 && (
-              <div className="ov2-spark-card">
-                <p className="ov2-spark-card__label">Rolling Fantasy PPG</p>
-                <Ov2Sparkline data={ppgSparkline} color="#F5C01A" />
-              </div>
-            )}
-            {usageSparkline.length >= 3 && (
-              <div className="ov2-spark-card">
-                <p className="ov2-spark-card__label">
-                  Rolling {pos === 'QB' ? 'Pass Att' : pos === 'RB' ? 'Rush Att' : 'Targets'} / G
-                </p>
-                <Ov2Sparkline data={usageSparkline} color="#0b3a7a" />
-              </div>
-            )}
-          </div>
-        )}
-      </Ov2Card>
-
-    </div>
-  );
-}
-
 type GameFilterType = 'full' | 'last8' | 'last5';
 
 // ===========================================================================
-// Game Log 2 — live Sleeper-backed season production + expandable weekly logs.
+// Season-End Finishes — live Sleeper-backed season production, shown on the
+// Game Log tab.
 // ===========================================================================
 
 function toSleeperScoring(format: ScoringFormat): SleeperScoring {
   if (format === 'ppr') return 'ppr';
   if (format === 'half') return 'half_ppr';
   return 'std';
-}
-
-function finishLabel(position: string | null, n: number | null): string {
-  if (n == null) return '—';
-  return `${(position || '').toUpperCase()}${n}`;
-}
-
-function playoffWeekLabel(week: number): string {
-  return (['WC', 'DIV', 'CONF', 'SB'] as const)[week - 1] || `P${week}`;
-}
-
-function gameLog2Columns(pos: string | null): { key: string; label: string; get: (r: PlayerGameLogRow) => string }[] {
-  const p = (pos || '').toUpperCase();
-  if (p === 'QB') {
-    return [
-      { key: 'ca', label: 'C/A', get: (r) => `${r.passCmp}/${r.passAtt}` },
-      { key: 'paYd', label: 'Pa Yd', get: (r) => String(r.passYd) },
-      { key: 'paTd', label: 'Pa TD', get: (r) => String(r.passTd) },
-      { key: 'int', label: 'INT', get: (r) => String(r.passInt) },
-      { key: 'ruYd', label: 'Ru Yd', get: (r) => String(r.rushYd) },
-      { key: 'ruTd', label: 'Ru TD', get: (r) => String(r.rushTd) },
-    ];
-  }
-  if (p === 'RB') {
-    return [
-      { key: 'att', label: 'Att', get: (r) => String(r.rushAtt) },
-      { key: 'ruYd', label: 'Ru Yd', get: (r) => String(r.rushYd) },
-      { key: 'ruTd', label: 'Ru TD', get: (r) => String(r.rushTd) },
-      { key: 'tgt', label: 'Tgt', get: (r) => String(r.tgt) },
-      { key: 'rec', label: 'Rec', get: (r) => String(r.rec) },
-      { key: 'reYd', label: 'Re Yd', get: (r) => String(r.recYd) },
-    ];
-  }
-  // WR / TE (default)
-  return [
-    { key: 'tgt', label: 'Tgt', get: (r) => String(r.tgt) },
-    { key: 'rec', label: 'Rec', get: (r) => String(r.rec) },
-    { key: 'reYd', label: 'Re Yd', get: (r) => String(r.recYd) },
-    { key: 'reTd', label: 'Re TD', get: (r) => String(r.recTd) },
-  ];
-}
-
-function WeeklyGameLogTable({
-  rows,
-  position,
-  scoring,
-}: {
-  rows: PlayerGameLogRow[];
-  position: string | null;
-  scoring: SleeperScoring;
-}) {
-  const columns = gameLog2Columns(position);
-  const firstPostIdx = rows.findIndex((r) => r.seasonType === 'post');
-  const fpFor = (r: PlayerGameLogRow) =>
-    scoring === 'ppr' ? r.ptsPpr : scoring === 'half_ppr' ? r.ptsHalf : r.ptsStd;
-  const colCount = 4 + columns.length;
-
-  if (rows.length === 0) {
-    return (
-      <div className="py-6 text-center" style={{ fontSize: '13px', color: '#94a3b8' }}>
-        No games played this season.
-      </div>
-    );
-  }
-
-  return (
-    <div className="sc-gamelog__table-wrap">
-      <table className="sc-gamelog__table" data-testid="table-game-log2">
-        <thead>
-          <tr className="sc-gamelog__thead-row">
-            <th className="sc-gamelog__th">Wk</th>
-            <th className="sc-gamelog__th">Opp</th>
-            <th className="sc-gamelog__th text-right">Snap%</th>
-            {columns.map((c) => (
-              <th key={c.key} className="sc-gamelog__th text-right sc-gamelog__th--secondary">{c.label}</th>
-            ))}
-            <th className="sc-gamelog__th text-right sc-gamelog__th--primary">FP</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r, idx) => (
-            <Fragment key={`${r.seasonType}-${r.week}`}>
-              {idx === firstPostIdx && firstPostIdx >= 0 && (
-                <tr data-testid="row-gamelog2-playoff-divider">
-                  <td
-                    className="sc-gamelog__td"
-                    colSpan={colCount}
-                    style={{ background: 'rgba(220,38,38,0.06)', fontSize: '10px', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#dc2626', padding: '6px 8px' }}
-                  >
-                    Playoffs
-                  </td>
-                </tr>
-              )}
-              <tr
-                className="sc-gamelog__row"
-                style={r.seasonType === 'post' ? { background: 'rgba(220,38,38,0.03)' } : undefined}
-                data-testid={`row-gamelog2-${r.seasonType}-${r.week}`}
-              >
-                <td className="sc-gamelog__td" style={{ fontWeight: 600 }}>
-                  {r.seasonType === 'post' ? playoffWeekLabel(r.week) : r.week}
-                </td>
-                <td className="sc-gamelog__td" style={{ whiteSpace: 'nowrap' }}>{r.opp || '—'}</td>
-                <td className="sc-gamelog__td text-right">{r.snapPct != null ? `${Math.round(r.snapPct)}%` : '—'}</td>
-                {columns.map((c) => (
-                  <td key={c.key} className="sc-gamelog__td sc-gamelog__td--secondary text-right">{c.get(r)}</td>
-                ))}
-                <td className="sc-gamelog__td sc-gamelog__td--primary text-right" style={{ fontWeight: 700 }}>
-                  {fpFor(r).toFixed(1)}
-                </td>
-              </tr>
-            </Fragment>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-function ProductionSeasonRow({
-  playerId,
-  season,
-  position,
-  scoring,
-}: {
-  playerId: string;
-  season: PlayerProductionSeason;
-  position: string | null;
-  scoring: SleeperScoring;
-}) {
-  const [expanded, setExpanded] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [rows, setRows] = useState<PlayerGameLogRow[]>([]);
-  const fetched = useRef(false);
-
-  const line = scoring === 'ppr' ? season.ppr : scoring === 'half_ppr' ? season.half : season.std;
-
-  const handleToggle = async () => {
-    const next = !expanded;
-    setExpanded(next);
-    if (!next || fetched.current) return;
-    fetched.current = true;
-    setLoading(true);
-    setError(false);
-    const [reg, post] = await Promise.allSettled([
-      fetchPlayerGameLogs(playerId, season.season, 'regular'),
-      fetchPlayerGameLogs(playerId, season.season, 'post'),
-    ]);
-    const merged: PlayerGameLogRow[] = [];
-    if (reg.status === 'fulfilled') merged.push(...reg.value);
-    if (post.status === 'fulfilled') merged.push(...post.value);
-    // Only an error if BOTH requests failed; a missing playoff run is fine.
-    if (reg.status === 'rejected' && post.status === 'rejected') {
-      setError(true);
-      fetched.current = false; // allow retry on next open
-    }
-    setRows(merged);
-    setLoading(false);
-  };
-
-  const colSpan = 9;
-
-  return (
-    <Fragment>
-      <tr
-        className={`sc-gamelog__row cursor-pointer ${expanded ? 'sc-gamelog__row--expanded' : ''}`}
-        onClick={handleToggle}
-        data-testid={`row-production-${season.season}`}
-      >
-        <td className="sc-gamelog__td" style={{ fontWeight: 700 }}>{season.season}</td>
-        <td className="sc-gamelog__td text-right">{season.gamesPlayed}</td>
-        <td className="sc-gamelog__td text-right">{season.std.ppg.toFixed(1)}</td>
-        <td className="sc-gamelog__td text-right" title={`PPG finish ${finishLabel(position, season.std.posFinishPpg)}`}>{finishLabel(position, season.std.posFinishTotal)}</td>
-        <td className="sc-gamelog__td text-right">{season.half.ppg.toFixed(1)}</td>
-        <td className="sc-gamelog__td text-right" title={`PPG finish ${finishLabel(position, season.half.posFinishPpg)}`}>{finishLabel(position, season.half.posFinishTotal)}</td>
-        <td className="sc-gamelog__td text-right">{season.ppr.ppg.toFixed(1)}</td>
-        <td className="sc-gamelog__td text-right" title={`PPG finish ${finishLabel(position, season.ppr.posFinishPpg)}`}>{finishLabel(position, season.ppr.posFinishTotal)}</td>
-        <td className="sc-gamelog__td text-center" style={{ width: '24px' }}>
-          {expanded ? <ChevronUp className="w-4 h-4 inline" /> : <ChevronDown className="w-4 h-4 inline" />}
-        </td>
-      </tr>
-      {expanded && (
-        <tr data-testid={`row-production-detail-${season.season}`}>
-          <td colSpan={colSpan} style={{ padding: 0, background: 'rgba(15,23,42,0.02)' }}>
-            <div style={{ padding: '8px 12px' }}>
-              {loading ? (
-                <div className="py-4">
-                  <Skeleton className="h-4 w-40 mb-2" />
-                  <Skeleton className="h-4 w-28" />
-                </div>
-              ) : error ? (
-                <div className="py-4 text-center" style={{ fontSize: '13px', color: '#dc2626' }}>
-                  Weekly logs are temporarily unavailable.
-                </div>
-              ) : (
-                <WeeklyGameLogTable rows={rows} position={position} scoring={scoring} />
-              )}
-            </div>
-          </td>
-        </tr>
-      )}
-    </Fragment>
-  );
 }
 
 type FinishMetric = 'ppg' | 'total';
@@ -2466,72 +1978,6 @@ function SeasonFinishTimeline({ seasons, position, format }: { seasons: PlayerPr
   );
 }
 
-function Gamelog2Tab({ playerId, position, format = 'ppr' }: { playerId: string; position: string | null; format?: ScoringFormat }) {
-  const scoring = toSleeperScoring(format);
-  const { data: seasons, isLoading, isError } = useQuery<PlayerProductionSeason[]>({
-    queryKey: ['/api/players', playerId, 'production', scoring],
-    queryFn: () => fetchPlayerProduction(playerId, scoring),
-  });
-
-  return (
-    <div className="sc-gamelog" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <SectionHeader title="Career Production" subtitle="Season-by-season PPG and positional finish. Click a season to expand the weekly log." />
-
-      <div className="sc-gamelog__table-card">
-        <div style={{ padding: '16px 20px' }}>
-          {isLoading ? (
-            <div className="py-8">
-              <Skeleton className="h-5 w-full mb-3" />
-              <Skeleton className="h-5 w-full mb-3" />
-              <Skeleton className="h-5 w-full" />
-            </div>
-          ) : isError ? (
-            <div className="py-8 text-center" style={{ fontSize: '13px', color: '#dc2626' }}>
-              Production data is temporarily unavailable.
-            </div>
-          ) : !seasons || seasons.length === 0 ? (
-            <div className="py-12 text-center">
-              <Table className="w-8 h-8 text-muted-foreground/30 mx-auto mb-3" />
-              <p style={{ fontSize: '13px', color: '#94a3b8' }}>No season production found for this player.</p>
-            </div>
-          ) : (
-            <div className="sc-gamelog__table-wrap">
-              <table className="sc-gamelog__table" data-testid="table-production">
-                <thead>
-                  <tr className="sc-gamelog__thead-row">
-                    <th className="sc-gamelog__th">Season</th>
-                    <th className="sc-gamelog__th text-right">G</th>
-                    <th className="sc-gamelog__th text-right" colSpan={2} style={{ textAlign: 'center' }}>Standard</th>
-                    <th className="sc-gamelog__th text-right" colSpan={2} style={{ textAlign: 'center' }}>Half-PPR</th>
-                    <th className="sc-gamelog__th text-right" colSpan={2} style={{ textAlign: 'center' }}>PPR</th>
-                    <th className="sc-gamelog__th" style={{ width: '24px' }}></th>
-                  </tr>
-                  <tr className="sc-gamelog__thead-row">
-                    <th className="sc-gamelog__th"></th>
-                    <th className="sc-gamelog__th"></th>
-                    <th className="sc-gamelog__th text-right sc-gamelog__th--secondary">PPG</th>
-                    <th className="sc-gamelog__th text-right sc-gamelog__th--secondary">Fin</th>
-                    <th className="sc-gamelog__th text-right sc-gamelog__th--secondary">PPG</th>
-                    <th className="sc-gamelog__th text-right sc-gamelog__th--secondary">Fin</th>
-                    <th className="sc-gamelog__th text-right sc-gamelog__th--secondary">PPG</th>
-                    <th className="sc-gamelog__th text-right sc-gamelog__th--secondary">Fin</th>
-                    <th className="sc-gamelog__th"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {seasons.map((s) => (
-                    <ProductionSeasonRow key={s.season} playerId={playerId} season={s} position={position} scoring={scoring} />
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; format?: ScoringFormat }) {
   const availableSeasons = player.availableSeasons || (player.season ? [player.season] : []);
   const [selectedSeason, setSelectedSeason] = useState<number>(availableSeasons[0] || new Date().getFullYear());
@@ -2559,8 +2005,6 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
 
   const entries = isDefaultSeason ? (player.gameLog || []) : (seasonGameLog || []);
   const stats = computeGameLogStats(entries, player.position, format);
-  const posLabel = player.position || '';
-  const played = entries.filter(e => hasParticipation(e.stats, player.position));
 
   const posAvgPpg = (() => {
     const benchmarks: Record<string, number> = { QB: 16.5, RB: 11.5, WR: 10.5, TE: 8.0 };
@@ -2568,96 +2012,13 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
   })();
   const cp = player.careerProfile || null;
 
-  const bestWeek = played.length > 0 ? played.reduce((best, e) => fpts(e, format) > fpts(best, format) ? e : best, played[0]) : null;
-  const worstWeek = played.length > 0 ? played.reduce((worst, e) => fpts(e, format) < fpts(worst, format) ? e : worst, played[0]) : null;
-  const bestTier = bestWeek ? getTierBadge(bestWeek.pos_rank, player.position) : null;
-  const worstTier = worstWeek ? getTierBadge(worstWeek.pos_rank, player.position) : null;
-
   const filterForTable: 'full' | 'last5' = gameFilter === 'full' ? 'full' : 'last5';
 
   return (
     <div className="sc-gamelog" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
 
-      <div className="flex items-center justify-between gap-2 flex-wrap">
-        <SectionHeader title="Game Log" subtitle="Performance distribution and finish outcomes" />
-        <div className="flex items-center gap-2 flex-wrap">
-          <div className="sc-gamelog__segmented-control" data-testid="filter-game-range">
-            {(['full', 'last8', 'last5'] as GameFilterType[]).map((f) => (
-              <button
-                key={f}
-                className={`sc-gamelog__segment ${gameFilter === f ? 'sc-gamelog__segment--active' : ''}`}
-                onClick={() => setGameFilter(f)}
-                data-testid={`button-filter-${f}`}
-              >
-                {f === 'full' ? 'Full Season' : f === 'last8' ? 'Last 8' : 'Last 5'}
-              </button>
-            ))}
-          </div>
-          {availableSeasons.length > 1 && (
-            <Select value={String(selectedSeason)} onValueChange={(v) => setSelectedSeason(Number(v))}>
-              <SelectTrigger className="w-28" data-testid="select-season">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {availableSeasons.map((s) => (
-                  <SelectItem key={s} value={String(s)} data-testid={`option-season-${s}`}>
-                    {s}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-          {availableSeasons.length === 1 && (
-            <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: 600 }}>{selectedSeason}</span>
-          )}
-        </div>
-      </div>
-
-      {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3" data-testid="gamelog-summary-bar">
-          <StatBox label="Games Played" value={stats.gamesPlayed} />
-          <StatBox label="Season PPG" value={stats.ppg.toFixed(1)} tintClass="sc-gamelog__stat-box--blue">
-            {player.seasonRank && (
-              <p className="sc-gamelog__stat-sub" style={{ fontWeight: 700, color: '#475569' }}>
-                {posLabel}{player.seasonRank} Equivalent
-              </p>
-            )}
-            {(() => {
-              const delta = stats.ppg - posAvgPpg;
-              return (
-                <p className="sc-gamelog__stat-sub" style={{ fontWeight: 700, color: delta >= 0 ? '#16a34a' : '#dc2626' }} data-testid="text-ppg-vs-avg">
-                  {delta >= 0 ? '+' : ''}{delta.toFixed(1)} vs Pos Avg
-                </p>
-              );
-            })()}
-          </StatBox>
-          <StatBox label="Best Week" value={bestWeek ? fpts(bestWeek, format).toFixed(1) : '\u2014'} tintClass="sc-gamelog__stat-box--green">
-            {bestWeek && bestTier && (
-              <div className="flex items-center gap-1 flex-wrap" style={{ marginTop: '2px' }}>
-                <span style={{ fontSize: '10px', color: '#94a3b8' }}>Wk {bestWeek.week}</span>
-                <Badge variant="secondary" className={`text-[8px] px-1 py-0 ${bestTier.className}`}>{bestTier.label}</Badge>
-              </div>
-            )}
-            {bestWeek && !bestTier && bestWeek.pos_rank && (
-              <span style={{ fontSize: '10px', color: '#94a3b8', display: 'block', marginTop: '2px' }}>Wk {bestWeek.week} ({posLabel}{bestWeek.pos_rank})</span>
-            )}
-          </StatBox>
-          <StatBox label="Worst Week" value={worstWeek ? fpts(worstWeek, format).toFixed(1) : '\u2014'} tintClass="sc-gamelog__stat-box--red">
-            {worstWeek && worstTier && (
-              <div className="flex items-center gap-1 flex-wrap" style={{ marginTop: '2px' }}>
-                <span style={{ fontSize: '10px', color: '#94a3b8' }}>Wk {worstWeek.week}</span>
-                <Badge variant="secondary" className={`text-[8px] px-1 py-0 ${worstTier.className}`}>{worstTier.label}</Badge>
-              </div>
-            )}
-            {worstWeek && !worstTier && worstWeek.pos_rank && (
-              <span style={{ fontSize: '10px', color: '#94a3b8', display: 'block', marginTop: '2px' }}>Wk {worstWeek.week} ({posLabel}{worstWeek.pos_rank})</span>
-            )}
-          </StatBox>
-        </div>
-      )}
-
-      {stats && gameFilter === 'full' && (
-        <GameDistributionBar entries={entries} position={player.position} activeTier={tierFilter} onTierClick={setTierFilter} format={format} />
+      {finishSeasons && finishSeasons.length > 0 && (
+        <SeasonFinishTimeline seasons={finishSeasons} position={player.position} format={format} />
       )}
 
       {stats && stats.gamesPlayed > 0 && (
@@ -5167,6 +4528,9 @@ export default function PlayerProfile() {
 
   const posLabel = player.position || '';
 
+  // Pull the "Drafted ..." line out of the bio snapshot bullets to show in the header.
+  const headerDraftedLine = ((player as any).bio?.snapshot_bullets ?? []).find((b: string) => /^Drafted\b/.test(b)) ?? null;
+
   return (
     <div className="min-h-screen bg-background">
       <section
@@ -5226,6 +4590,11 @@ export default function PlayerProfile() {
                   player.years_exp != null ? `Exp ${player.years_exp} yr${player.years_exp !== 1 ? 's' : ''}` : null,
                 ].filter(Boolean).join('  |  ')}
               </p>
+              {headerDraftedLine && (
+                <p className="text-xs text-slate-500 dark:text-slate-400" data-testid="text-player-drafted">
+                  {headerDraftedLine}
+                </p>
+              )}
               <div className="flex items-center gap-1.5" data-testid="text-player-status">
                 {player.injury_status ? (
                   <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
@@ -5332,14 +4701,8 @@ export default function PlayerProfile() {
           {activeTab === "overview" && (
             <OverviewTab player={playerWithSeasons} entries={defaultEntries} format={scoringFormat} />
           )}
-          {activeTab === "overview2" && (
-            <OverviewTab2 player={playerWithSeasons} entries={defaultEntries} format={scoringFormat} />
-          )}
           {activeTab === "gamelog" && (
             <GameLogTab player={playerWithSeasons} format={scoringFormat} />
-          )}
-          {activeTab === "gamelog2" && (
-            <Gamelog2Tab playerId={player.id} position={player.position} format={scoringFormat} />
           )}
           {activeTab === "usage" && (
             <UsageTrendsTab player={playerWithSeasons} entries={defaultEntries} format={scoringFormat} />

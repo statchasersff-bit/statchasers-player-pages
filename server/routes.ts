@@ -1111,7 +1111,7 @@ export async function registerRoutes(
       res.set("Cache-Control", "public, max-age=3600");
       return res.json(cached);
     }
-    const file = path.join(ADVANCED_STATS_DIR, `${pos}_advanced_stats_${season}.json`);
+    const file = path.join(ADVANCED_STATS_DIR, `${pos}_${season}.json`);
     if (!fs.existsSync(file)) {
       return res.status(404).json({ error: "not_found" });
     }
