@@ -26,6 +26,9 @@ const BYE_WEEKS_FILE = path.resolve(process.cwd(), "data", "bye_weeks.json");
 const GAME_SCORES_FILE = path.resolve(process.cwd(), "data", "game_scores.json");
 const DYNASTY_FILE = path.resolve(process.cwd(), "data", "dynasty_rankings.json");
 const BIOS_FILE = path.resolve(process.cwd(), "data", "bios.json");
+const ADVANCED_STATS_DIR = path.resolve(process.cwd(), "data", "advanced_stats");
+
+const advancedStatsCache: Map<string, unknown> = new Map();
 
 const gameLogsCache: Map<number, Record<string, GameLogEntry[]>> = new Map();
 const weeklyRanksCache: Map<string, Map<string, Map<number, number>>> = new Map();
@@ -1091,6 +1094,38 @@ export async function registerRoutes(
     }
   });
 
+  // Advanced Stats — bundled per-position/per-season files consumed by the
+  // Advanced Stats tab. season is a year (2023-2025) or "all" (career totals).
+  app.get("/api/advanced-stats/:pos/:season", (req, res) => {
+    const pos = String(req.params.pos || "").toLowerCase();
+    const season = String(req.params.season || "").toLowerCase();
+    if (!["qb", "rb", "wr", "te"].includes(pos)) {
+      return res.status(400).json({ error: "invalid_position" });
+    }
+    if (!/^(all|20\d{2})$/.test(season)) {
+      return res.status(400).json({ error: "invalid_season" });
+    }
+    const cacheKey = `${pos}_${season}`;
+    const cached = advancedStatsCache.get(cacheKey);
+    if (cached) {
+      res.set("Cache-Control", "public, max-age=3600");
+      return res.json(cached);
+    }
+    const file = path.join(ADVANCED_STATS_DIR, `${pos}_advanced_stats_${season}.json`);
+    if (!fs.existsSync(file)) {
+      return res.status(404).json({ error: "not_found" });
+    }
+    try {
+      const data = JSON.parse(fs.readFileSync(file, "utf-8"));
+      advancedStatsCache.set(cacheKey, data);
+      res.set("Cache-Control", "public, max-age=3600");
+      res.json(data);
+    } catch (err) {
+      console.error("advanced-stats read failed", cacheKey, err);
+      res.status(500).json({ error: "read_failed" });
+    }
+  });
+
   app.get("/api/players/:slug/related", (req, res) => {
     const allPlayers = loadPlayers();
     const player = getPlayerBySlug(req.params.slug);
@@ -1380,6 +1415,26 @@ export async function registerRoutes(
     const likelyPlay = end === "FP";
     return `${opts.player_name} is dealing with ${injLabel}${opts.week_label ? ` heading into ${opts.week_label}` : ""}. ${ps ? `${capitalize(ps)} and` : ""} is not listed with a game designation${likelyPlay ? " \u2014 expected to play." : "."}`.replace(/\s+/g, " ").trim();
   }
+
+  app.get("/api/advanced-stats/:pos/:season", (req, res) => {
+    const { pos, season } = req.params;
+    const validPos = ["qb", "rb", "wr", "te"];
+    const validSeasons = ["2023", "2024", "2025", "all"];
+    if (!validPos.includes(pos) || !validSeasons.includes(season)) {
+      return res.status(400).json({ error: "Invalid position or season" });
+    }
+    const filePath = path.join(process.cwd(), "data", "advanced_stats", `${pos}_${season}.json`);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: "Not found" });
+    }
+    try {
+      const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+      res.set("Cache-Control", "public, max-age=3600");
+      res.json(data);
+    } catch {
+      res.status(500).json({ error: "Failed to read data" });
+    }
+  });
 
   app.get("/api/team/news", async (req, res) => {
     try {

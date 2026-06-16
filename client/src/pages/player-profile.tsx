@@ -40,6 +40,7 @@ import {
   AlertCircle,
   ChevronDown,
   ChevronUp,
+  Layers,
 } from "lucide-react";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Player, GameLogEntry, NewsEntry, GameLogStats, GameScore } from "@shared/playerTypes";
@@ -59,6 +60,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { AdvancedTab } from "@/components/AdvancedTab";
+import { loadPlayerAdvancedStats } from "@/lib/playerAdvancedStats";
+import type { PlayerAdvancedResult } from "@/lib/playerAdvancedStats";
+
+type AdvSeason = 2025 | 2024 | 2023 | "all";
 
 type LightPlayer = {
   id: string;
@@ -96,7 +102,7 @@ const POSITION_COLORS: Record<string, string> = {
   DEF: "sc-pos-pill sc-pos-def",
 };
 
-const TAB_KEYS = ["overview", "overview2", "gamelog", "gamelog2", "usage", "rankings", "news"] as const;
+const TAB_KEYS = ["overview", "overview2", "gamelog", "gamelog2", "usage", "advanced", "rankings", "news"] as const;
 type TabKey = typeof TAB_KEYS[number];
 
 const TAB_CONFIG: { key: TabKey; label: string; icon: typeof Activity }[] = [
@@ -105,6 +111,7 @@ const TAB_CONFIG: { key: TabKey; label: string; icon: typeof Activity }[] = [
   { key: "gamelog", label: "Game Log", icon: Table },
   { key: "gamelog2", label: "Game Log 2", icon: Table },
   { key: "usage", label: "Usage & Trends", icon: TrendingUp },
+  { key: "advanced", label: "Advanced Stats", icon: Layers },
   { key: "rankings", label: "Rankings & Value", icon: Trophy },
 ];
 
@@ -2465,21 +2472,18 @@ function SeasonFinishTimeline({ seasons, position, format }: { seasons: PlayerPr
 
       <div className="sc-finish2__timeline" data-testid="season-finish-cards">
         <div className="sc-finish2__track">
-          {cards.map((c, i) => (
-            <Fragment key={c.s.season}>
-              {i > 0 && <span className="sc-finish2__arrow" aria-hidden="true">&rarr;</span>}
-              <div className={`sc-finish2__card ${c.inProgress ? 'sc-finish2__card--now' : ''}`} data-testid={`card-finish-${c.s.season}`}>
-                <div className="sc-finish2__card-top">
-                  <span className="sc-finish2__card-season">{c.s.season}</span>
-                  {c.inProgress && <span className="sc-finish2__now">NOW</span>}
-                </div>
-                <p className="sc-finish2__card-rank">{c.rank != null ? `${posLabel}${c.rank}` : '—'}</p>
-                <p className="sc-finish2__card-ppg">{c.line.ppg.toFixed(1)} PPG</p>
-                {c.badge && (
-                  <span className={`sc-finish2__status ${c.badge.className}`}>{c.badge.label}</span>
-                )}
+          {cards.map((c) => (
+            <div key={c.s.season} className={`sc-finish2__card ${c.inProgress ? 'sc-finish2__card--now' : ''}`} data-testid={`card-finish-${c.s.season}`}>
+              <div className="sc-finish2__card-top">
+                <span className="sc-finish2__card-season">{c.s.season}</span>
+                {c.inProgress && <span className="sc-finish2__now">NOW</span>}
               </div>
-            </Fragment>
+              <p className="sc-finish2__card-rank">{c.rank != null ? `${posLabel}${c.rank}` : '—'}</p>
+              <p className="sc-finish2__card-ppg">{c.line.ppg.toFixed(1)} PPG</p>
+              {c.badge && (
+                <span className={`sc-finish2__status ${c.badge.className}`}>{c.badge.label}</span>
+              )}
+            </div>
           ))}
         </div>
       </div>
@@ -5056,6 +5060,15 @@ export default function PlayerProfile() {
     enabled: !!player,
   });
 
+  const [advSeason, setAdvSeason] = useState<AdvSeason>(2025);
+  const advPos = player?.position?.toLowerCase();
+  const { data: advData, isLoading: advLoading } = useQuery<PlayerAdvancedResult | null>({
+    queryKey: ["/api/advanced-stats", advPos, advSeason, player?.id],
+    queryFn: () => loadPlayerAdvancedStats(player!.id, player!.position || "", advSeason),
+    enabled: activeTab === "advanced" && !!player?.id && !!player?.position && ["QB","RB","WR","TE"].includes(player.position || ""),
+    staleTime: 1000 * 60 * 60,
+  });
+
   useEffect(() => {
     setActiveTab("overview");
   }, [slug]);
@@ -5171,10 +5184,10 @@ export default function PlayerProfile() {
             </Link>
           </div>
 
-          <div className="flex flex-col md:flex-row md:items-stretch gap-0">
+          <div className="flex flex-col md:flex-row md:items-stretch md:justify-between gap-4 md:gap-6">
 
-            {/* Row 1 on mobile / Col 1 on desktop: Photo + Name */}
-            <div className="flex items-center md:items-stretch gap-4 pb-4 md:pb-0 md:pr-5 md:border-r border-slate-200 dark:border-slate-700 flex-shrink-0">
+            {/* Left: Photo + Name */}
+            <div className="flex items-center md:items-stretch gap-4 pb-4 md:pb-0 flex-shrink-0">
               <PlayerHeadshot playerId={player.id} name={player.name} teamColor={teamColor} team={player.team || undefined} />
               <div className="flex flex-col justify-center">
                 <p className="text-xs font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase leading-none mb-0.5">{headerFirstName}</p>
@@ -5196,28 +5209,32 @@ export default function PlayerProfile() {
                   <span className="text-slate-300 dark:text-slate-600 text-xs">&middot;</span>
                   <span className="text-xs text-slate-500 dark:text-slate-400">{positionFull}</span>
                 </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 whitespace-nowrap" data-testid="text-player-meta">
-                  {[
-                    player.age ? `Age ${player.age}` : null,
-                    player.height ? formatHeight(player.height) : null,
-                    player.weight ? `${player.weight} lbs` : null,
-                    player.years_exp != null ? `Exp ${player.years_exp} yr${player.years_exp !== 1 ? 's' : ''}` : null,
-                  ].filter(Boolean).join('  |  ')}
-                </p>
-                <div className="flex items-center gap-1.5 mt-1" data-testid="text-player-status">
-                  {player.injury_status ? (
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
-                      {player.injury_status}
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
-                      {player.status || 'Active'}
-                    </span>
-                  )}
-                </div>
-                <div className="mt-1 h-[2px] w-10 rounded-full" style={{ background: teamColor }} />
+                <div className="mt-1.5 h-[2px] w-10 rounded-full" style={{ background: teamColor }} />
+              </div>
+            </div>
+
+            {/* Right: bio meta + status (fills the width to the far edge) */}
+            <div className="flex flex-col justify-center gap-2 md:items-end md:text-right pb-4 md:pb-0 md:pl-5 md:border-l border-slate-200 dark:border-slate-700">
+              <p className="text-sm text-slate-600 dark:text-slate-300" data-testid="text-player-meta">
+                {[
+                  player.age ? `Age ${player.age}` : null,
+                  player.height ? formatHeight(player.height) : null,
+                  player.weight ? `${player.weight} lbs` : null,
+                  player.years_exp != null ? `Exp ${player.years_exp} yr${player.years_exp !== 1 ? 's' : ''}` : null,
+                ].filter(Boolean).join('  |  ')}
+              </p>
+              <div className="flex items-center gap-1.5" data-testid="text-player-status">
+                {player.injury_status ? (
+                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
+                    {player.injury_status}
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
+                    {player.status || 'Active'}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -5323,6 +5340,15 @@ export default function PlayerProfile() {
           )}
           {activeTab === "usage" && (
             <UsageTrendsTab player={playerWithSeasons} entries={defaultEntries} format={scoringFormat} />
+          )}
+          {activeTab === "advanced" && (
+            <AdvancedTab
+              adv={advData ?? null}
+              advLoading={advLoading}
+              pos={player.position || ""}
+              season={advSeason}
+              onSeasonChange={setAdvSeason}
+            />
           )}
           {activeTab === "rankings" && (
             <RankingsTab player={player} />
