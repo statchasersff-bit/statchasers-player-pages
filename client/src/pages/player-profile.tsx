@@ -4425,6 +4425,10 @@ export default function PlayerProfile() {
   const [injuryLoading, setInjuryLoading] = useState(false);
   const [injuryError, setInjuryError] = useState(false);
   const injuryFetchedFor = useRef<string | null>(null);
+  // Layer 6 — real weeks played per season (season -> week numbers), used by the
+  // availability timeline as the authoritative source of missed weeks.
+  const [weeklyPlayed, setWeeklyPlayed] = useState<Record<number, number[]>>({});
+  const weeklyPlayedFor = useRef<string | null>(null);
 
   const [advSeason, setAdvSeason] = useState<AdvSeason>(2025);
   const advPos = player?.position?.toLowerCase();
@@ -4440,6 +4444,8 @@ export default function PlayerProfile() {
     setInjuryData(null);
     setInjuryError(false);
     injuryFetchedFor.current = null;
+    setWeeklyPlayed({});
+    weeklyPlayedFor.current = null;
   }, [slug]);
 
   useEffect(() => {
@@ -4453,6 +4459,50 @@ export default function PlayerProfile() {
       .then((data) => { setInjuryData(data); setInjuryLoading(false); })
       .catch(() => { setInjuryError(true); setInjuryLoading(false); });
   }, [activeTab, player?.id, player?.name]);
+
+  // Layer 6 — once injury history loads, fetch real weekly game logs for every
+  // relevant season in parallel and treat recorded production as authoritative
+  // for which weeks were played. Runs once per player+season-set.
+  useEffect(() => {
+    if (activeTab !== "injury" || !player?.id || !injuryData) return;
+    const seasons = Array.from(
+      new Set<number>([
+        ...injuryData.nfl.map((e) => e.season),
+        ...((player as PlayerWithSeasons).availableSeasons ?? []),
+      ]),
+    ).filter((s) => Number.isFinite(s));
+    if (seasons.length === 0) return;
+    const key = `${player.id}|${seasons.slice().sort().join(",")}`;
+    if (weeklyPlayedFor.current === key) return;
+    weeklyPlayedFor.current = key;
+
+    const pid = player.id;
+    let cancelled = false;
+    Promise.all(
+      seasons.map((season) =>
+        fetchPlayerGameLogs(pid, season, "regular")
+          .then((rows) => {
+            // A week counts as played only if the player recorded real
+            // production — the feed returns rostered-but-inactive rows too.
+            const weeks = rows
+              .filter(
+                (r) =>
+                  (r.passAtt || 0) + (r.rushAtt || 0) + (r.tgt || 0) + (r.rec || 0) +
+                    (r.passYd || 0) + (r.rushYd || 0) + (r.recYd || 0) > 0,
+              )
+              .map((r) => r.week);
+            return [season, weeks] as const;
+          })
+          .catch(() => [season, [] as number[]] as const),
+      ),
+    ).then((pairs) => {
+      if (cancelled) return;
+      const next: Record<number, number[]> = {};
+      for (const [season, weeks] of pairs) if (weeks.length) next[season] = weeks;
+      setWeeklyPlayed(next);
+    });
+    return () => { cancelled = true; };
+  }, [activeTab, player?.id, injuryData, (player as PlayerWithSeasons | undefined)?.availableSeasons]);
 
   useEffect(() => {
     if (!player) return;
@@ -4743,6 +4793,7 @@ export default function PlayerProfile() {
               error={injuryError}
               playerName={player.name}
               knownSeasons={player.availableSeasons ?? []}
+              weeklyPlayed={weeklyPlayed}
             />
           )}
           {activeTab === "news" && (
