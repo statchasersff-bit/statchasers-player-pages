@@ -2089,31 +2089,6 @@ function OverviewTab2({ player, entries, format = 'ppr' }: { player: PlayerWithS
         )}
       </Ov2Card>
 
-      {/* SECTION 6 — Career Snapshot */}
-      {cp && (
-        <Ov2Card>
-          <Ov2SectionTitle>Career Snapshot</Ov2SectionTitle>
-          <div className="ov2-grid-snapshot" style={{ marginBottom: '16px' }}>
-            {[
-              { label: `${cp.seasons}-Year PPG`, value: cp.ppg.toFixed(1) },
-              { label: 'Durability', value: `${cp.durabilityPct.toFixed(0)}%` },
-              { label: 'Games Played', value: `${cp.gamesPlayed}/${cp.maxGames}` },
-              { label: 'Volatility', value: cp.volatilityLabel },
-              { label: 'Career Arc', value: cp.smallSample ? 'Small Sample' : cp.ppg >= posAvgPpg * 1.15 ? 'Above Average' : cp.ppg >= posAvgPpg * 0.9 ? 'Average' : 'Below Average' },
-            ].map(card => (
-              <div key={card.label} className="ov2-stat">
-                <p className="ov2-stat__label">{card.label}</p>
-                <p className="ov2-stat__value">{card.value}</p>
-              </div>
-            ))}
-          </div>
-          <Ov2StackedFinishBar
-            pcts={{ top: cp.pos1Pct, mid: cp.pos2Pct, flex: cp.pos3Pct, bust: cp.bustPct }}
-            labels={tierLabels}
-          />
-        </Ov2Card>
-      )}
-
     </div>
   );
 }
@@ -2500,10 +2475,6 @@ function Gamelog2Tab({ playerId, position, format = 'ppr' }: { playerId: string;
 
   return (
     <div className="sc-gamelog" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {!isLoading && !isError && seasons && seasons.length > 0 && (
-        <SeasonFinishTimeline seasons={seasons} position={position} format={format} />
-      )}
-
       <SectionHeader title="Career Production" subtitle="Season-by-season PPG and positional finish. Click a season to expand the weekly log." />
 
       <div className="sc-gamelog__table-card">
@@ -2579,6 +2550,13 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
     enabled: !isDefaultSeason,
   });
 
+  // Season-End Finishes data (Sleeper-backed season production), shown at the top of this tab.
+  const finishScoring = toSleeperScoring(format);
+  const { data: finishSeasons } = useQuery<PlayerProductionSeason[]>({
+    queryKey: ['/api/players', player.id, 'production', finishScoring],
+    queryFn: () => fetchPlayerProduction(player.id, finishScoring),
+  });
+
   const entries = isDefaultSeason ? (player.gameLog || []) : (seasonGameLog || []);
   const stats = computeGameLogStats(entries, player.position, format);
   const posLabel = player.position || '';
@@ -2588,6 +2566,7 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
     const benchmarks: Record<string, number> = { QB: 16.5, RB: 11.5, WR: 10.5, TE: 8.0 };
     return benchmarks[player.position || ''] ?? 10;
   })();
+  const cp = player.careerProfile || null;
 
   const bestWeek = played.length > 0 ? played.reduce((best, e) => fpts(e, format) > fpts(best, format) ? e : best, played[0]) : null;
   const worstWeek = played.length > 0 ? played.reduce((worst, e) => fpts(e, format) < fpts(worst, format) ? e : worst, played[0]) : null;
@@ -2698,6 +2677,30 @@ function GameLogTab({ player, format = 'ppr' }: { player: PlayerWithSeasons; for
               return `Only ${topPlus.toFixed(0)}% of ${lastName}'s games finished inside the top-${ov2GetTierThresholds(player.position).flexEnd} ${finishPosLabel} range.`;
             })()}
           </p>
+        </Ov2Card>
+      )}
+
+      {cp && (
+        <Ov2Card>
+          <Ov2SectionTitle>Career Snapshot</Ov2SectionTitle>
+          <div className="ov2-grid-snapshot" style={{ marginBottom: '16px' }}>
+            {[
+              { label: `${cp.seasons}-Year PPG`, value: cp.ppg.toFixed(1) },
+              { label: 'Durability', value: `${cp.durabilityPct.toFixed(0)}%` },
+              { label: 'Games Played', value: `${cp.gamesPlayed}/${cp.maxGames}` },
+              { label: 'Volatility', value: cp.volatilityLabel },
+              { label: 'Career Arc', value: cp.smallSample ? 'Small Sample' : cp.ppg >= posAvgPpg * 1.15 ? 'Above Average' : cp.ppg >= posAvgPpg * 0.9 ? 'Average' : 'Below Average' },
+            ].map(card => (
+              <div key={card.label} className="ov2-stat">
+                <p className="ov2-stat__label">{card.label}</p>
+                <p className="ov2-stat__value">{card.value}</p>
+              </div>
+            ))}
+          </div>
+          <Ov2StackedFinishBar
+            pcts={{ top: cp.pos1Pct, mid: cp.pos2Pct, flex: cp.pos3Pct, bust: cp.bustPct }}
+            labels={ov2TierLabels(player.position)}
+          />
         </Ov2Card>
       )}
 
