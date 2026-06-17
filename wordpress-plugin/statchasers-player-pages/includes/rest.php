@@ -262,39 +262,58 @@ function sc_rest_player_related( $request ) {
     $format      = sc_parse_scoring_format( $request->get_param( 'format' ) );
     $seasons     = sc_get_available_seasons();
     $season_req  = (int) $request->get_param( 'season' );
-    $season      = ( $season_req > 0 && in_array( $season_req, $seasons, true ) )
-        ? $season_req : ( ! empty( $seasons ) ? $seasons[0] : (int) date( 'Y' ) );
 
     $position = isset( $player['position'] ) ? $player['position'] : '';
     if ( ! $position ) return new WP_REST_Response( [], 200 );
 
-    $all_logs    = sc_load_game_logs( $season );
+    // Index players by id once (avoids an O(n^2) lookup per game-log row).
+    $player_map = [];
+    foreach ( $all_players as $ap ) { $player_map[ $ap['id'] ] = $ap; }
+
+    // Candidate seasons: a specific requested one, else newest→oldest. Fall
+    // through to an earlier season when the newest has no usable logs (e.g. the
+    // offseason, or an empty cached game-log file) so the rail still renders.
+    $candidates = ( $season_req > 0 && in_array( $season_req, $seasons, true ) )
+        ? [ $season_req ]
+        : ( ! empty( $seasons ) ? $seasons : [ (int) date( 'Y' ) ] );
+
+    $season        = $candidates[0];
     $ppg_by_player = [];
+    $current_idx   = -1;
 
-    foreach ( $all_logs as $pid => $p_logs ) {
-        $p = null;
-        foreach ( $all_players as $ap ) {
-            if ( $ap['id'] === $pid ) { $p = $ap; break; }
+    foreach ( $candidates as $try_season ) {
+        $all_logs = sc_load_game_logs( $try_season );
+        if ( empty( $all_logs ) ) continue;
+
+        $list = [];
+        foreach ( $all_logs as $pid => $p_logs ) {
+            $p = isset( $player_map[ $pid ] ) ? $player_map[ $pid ] : null;
+            if ( ! $p || ( isset( $p['position'] ) ? $p['position'] : '' ) !== $position ) continue;
+            $played = array_filter( $p_logs, function( $e ) use ( $position ) {
+                return sc_has_participation( isset( $e['stats'] ) ? $e['stats'] : [], $position );
+            });
+            if ( count( $played ) < 4 ) continue;
+            $total = 0;
+            foreach ( $played as $e ) $total += sc_get_entry_points( isset( $e['stats'] ) ? $e['stats'] : [], $format );
+            $list[] = [ 'id' => $pid, 'ppg' => $total / count( $played ), 'gp' => count( $played ), 'total' => $total ];
         }
-        if ( ! $p || ( isset( $p['position'] ) ? $p['position'] : '' ) !== $position ) continue;
-        $played = array_filter( $p_logs, function( $e ) use ( $position ) {
-            return sc_has_participation( isset( $e['stats'] ) ? $e['stats'] : [], $position );
+
+        usort( $list, function( $a, $b ) {
+            if ( $b['ppg'] == $a['ppg'] ) return 0;
+            return $b['ppg'] > $a['ppg'] ? 1 : -1;
         });
-        if ( count( $played ) < 4 ) continue;
-        $total = 0;
-        foreach ( $played as $e ) $total += sc_get_entry_points( isset( $e['stats'] ) ? $e['stats'] : [], $format );
-        $ppg_by_player[] = [ 'id' => $pid, 'ppg' => $total / count( $played ), 'gp' => count( $played ), 'total' => $total ];
+
+        $idx = -1;
+        foreach ( $list as $i => $item ) {
+            if ( $item['id'] === $player['id'] ) { $idx = $i; break; }
+        }
+
+        // Use the first season that actually contains this player; otherwise
+        // remember the first non-empty season so we still report something.
+        if ( $idx >= 0 ) { $season = $try_season; $ppg_by_player = $list; $current_idx = $idx; break; }
+        if ( empty( $ppg_by_player ) && ! empty( $list ) ) { $season = $try_season; $ppg_by_player = $list; }
     }
 
-    usort( $ppg_by_player, function( $a, $b ) {
-        if ( $b['ppg'] == $a['ppg'] ) return 0;
-        return $b['ppg'] > $a['ppg'] ? 1 : -1;
-    });
-
-    $current_idx = -1;
-    foreach ( $ppg_by_player as $idx => $item ) {
-        if ( $item['id'] === $player['id'] ) { $current_idx = $idx; break; }
-    }
     if ( $current_idx < 0 ) return new WP_REST_Response( [ 'neighbors' => [], 'currentRank' => null, 'season' => $season, 'format' => $format, 'position' => $position ], 200 );
 
     $radius    = 3;

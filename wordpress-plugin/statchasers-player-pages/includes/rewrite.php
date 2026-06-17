@@ -127,10 +127,11 @@ function sc_parse_request( $wp ) {
 
 /**
  * True when the request is the Divi front-end Visual Builder, backend builder,
- * or a builder preview. In those contexts the plugin must NOT hijack the main
- * query or replace the_content, otherwise the builder shows the injected tool
- * markup instead of the real, editable page — so you can't add modules (e.g. a
- * page header) above the tool.
+ * or a builder preview. In those contexts the plugin must NOT *replace* the
+ * page content with the tool — otherwise the builder shows the injected tool
+ * markup instead of the real, editable page, so you can't add modules (e.g. a
+ * page header). Note: the query is still pointed at the container page (so the
+ * builder edits the right page); only content injection is skipped.
  */
 function sc_is_builder_request() {
     if ( isset( $_GET['et_fb'] ) || isset( $_GET['et_bfb'] ) || isset( $_GET['et_pb_preview'] ) ) {
@@ -146,11 +147,6 @@ function sc_is_builder_request() {
 /* ─── Route Detection Helper ─── */
 
 function sc_detect_route() {
-    // Stand down inside any page builder so Divi can edit the container page.
-    if ( sc_is_builder_request() ) {
-        return null;
-    }
-
     $slug     = get_query_var( 'sc_player_slug', '' );
     $is_index = get_query_var( 'sc_players_index', '' );
 
@@ -268,6 +264,11 @@ function sc_force_container_posts( $posts, $query ) {
 /* ─── Content Injection ─── */
 
 function sc_inject_content( $content ) {
+    // In a page builder, leave the page's real content intact so Divi can edit
+    // the container page. The query still loads the container page (the hijack
+    // is NOT skipped) — we only avoid replacing its content with the tool.
+    if ( sc_is_builder_request() ) return $content;
+
     $r = sc_detect_route();
     if ( ! $r ) return $content;
 
