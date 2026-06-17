@@ -7,3 +7,6 @@ vite.config.ts.*
 # Sleeper Game Log 2 disk cache
 .cache/sleeper-stats
 .cache/sleeper-gamelogs
+
+# Local-only: GitHub deploy workflow (push needs 'workflow' OAuth scope)
+.github/workflows/
