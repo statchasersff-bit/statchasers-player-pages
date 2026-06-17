@@ -1,0 +1,19 @@
+{
+  "slug": "brevyn-spann-ford",
+  "name": "Brevyn Spann-Ford",
+  "position": "TE",
+  "team": "DAL",
+  "season": 2026,
+  "headline": "Blocking Tight End With No Path To Targets",
+  "body": "The advanced profile screams afterthought. Across 16 games in 2025, Spann-Ford ran a route on just 14.7% of dropbacks and saw a 2.1% target share, turning 13 looks into 9 grabs for 90 yards and one score. His 0.94 yards per route run and -0.049 EPA per play landed him 74th among tight ends, and a 24.9% snap rate confirms a blocking specialist rather than a pass-catcher.\n\nThere's no growth signal underneath. His route share actually shrank from 19.5% in 2024, and across two seasons he has never cleared 14 targets or topped 90 receiving yards. With Dallas already set ahead of him on the depth chart, his volume stays capped barring injuries. He sits outside the top 110 at the position in early rankings for good reason. Leave him on the wire in every format until usage meaningfully changes.",
+  "keyStats": {"rank":74,"playerId":"11593","playerName":"Brevyn Spann-Ford","position":"TE","team":"DAL","age":25,"season":2025,"games":16,"snapPct":24.9,"routes":96,"routePct":14.7,"targets":13,"targetsPerRouteRun":0.135,"targetSharePct":2.1,"airYardsPerTarget":8.23,"airYardsPerReception":11.89,"airYardsSharePct":2.1,"wopr":0.047,"receptions":9,"redZoneTargets":2,"endZoneTargets":2,"catchPct":69.2,"receivingYards":90,"totalYards":90,"yardsPerReception":10,"yardsBeforeCatchPerReception":6.33,"yardsAfterCatchPerReception":3.67,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.94,"receivingTouchdowns":1,"epaPerPlay":-0.049,"successRate":53.8,"contestedCatchRate":null,"fantasyPoints":15,"avoidedTackleRate":0,"brokenTackles":0,"drops":0,"catchableTargets":9,"dropPct":0,"interceptionsWhenTargeted":1,"fumbles":0,"receptions10Plus":2,"receptions20Plus":2,"receptions30Plus":1,"receptions40Plus":0,"receptions50Plus":0,"longestReception":31},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/brevyn-spann-ford.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-brevyn-spann-ford/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11593",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

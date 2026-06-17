@@ -1,0 +1,19 @@
+{
+  "slug": "luke-schoonmaker",
+  "name": "Luke Schoonmaker",
+  "position": "TE",
+  "team": "DAL",
+  "season": 2026,
+  "headline": "Buried Behind Ferguson, Schoonmaker Stays Off The Radar",
+  "body": "Schoonmaker's 2025 line tells the whole story: 14 games, a 32.9% snap rate, and just 23 targets for a 3.8% share that left him 62nd at the position. He ran only 167 routes, turning them into 14 catches for 132 yards and zero touchdowns at a thin 0.79 yards per route. The 0.158 EPA per play and 43.5% success rate were a clear step back from 2024, when his 0.186 targets per route, 1.24 YPRR, and 5.8% share hinted at more.\n\nThe efficiency dip matters because the volume isn't coming. As long as Jake Ferguson owns the position, Schoonmaker is a blocking-tier afterthought drafted around TE67, well outside startable range. He's a Ferguson-injury handcuff and nothing more right now. Until a real route share materializes, there's no reason to roster him in any standard format heading into 2026.",
+  "keyStats": {"rank":62,"playerId":"10871","playerName":"Luke Schoonmaker","position":"TE","team":"DAL","age":26,"season":2025,"games":14,"snapPct":32.9,"routes":167,"routePct":25.6,"targets":23,"targetsPerRouteRun":0.138,"targetSharePct":3.8,"airYardsPerTarget":7.17,"airYardsPerReception":11.79,"airYardsSharePct":3.3,"wopr":0.08,"receptions":14,"redZoneTargets":2,"endZoneTargets":0,"catchPct":60.9,"receivingYards":132,"totalYards":132,"yardsPerReception":9.43,"yardsBeforeCatchPerReception":3.57,"yardsAfterCatchPerReception":5.86,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.79,"receivingTouchdowns":0,"epaPerPlay":0.158,"successRate":43.5,"contestedCatchRate":null,"fantasyPoints":13.2,"avoidedTackleRate":7.1,"brokenTackles":1,"drops":1,"catchableTargets":15,"dropPct":4.3,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":7,"receptions20Plus":1,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":29},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/luke-schoonmaker.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-luke-schoonmaker/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "10871",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

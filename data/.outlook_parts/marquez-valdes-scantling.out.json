@@ -1,0 +1,19 @@
+{
+  "slug": "marquez-valdes-scantling",
+  "name": "Marquez Valdes-Scantling",
+  "position": "WR",
+  "team": "DAL",
+  "season": 2026,
+  "headline": "A deep-shot specialist running out of runway",
+  "body": "The arrow points down for Valdes-Scantling, and the numbers explain why. His 2025 stint in Pittsburgh cratered to a 5.3% target share across nine games, with a minus-0.105 EPA per play, a 41.4% success rate, and just 0.53 yards per route run on 226 routes. He caught 48.3% of his looks for 120 yards and a single score, landing 139th at the position. That is a far cry from his 2024 ceiling in New Orleans, where 411 yards and four touchdowns rode a 1.51 YPRR and a 17.9% air-yards share.\n\nNow 31 and in Dallas, his fantasy case lives entirely on volume he hasn't earned in a year. He remains a true vertical threat, but route counts and target rate have eroded each season. Unless the depth chart hands him meaningful snaps, treat him as a late-round dart at best and a waiver-wire afterthought in most formats.",
+  "keyStats": {"rank":139,"playerId":"5086","playerName":"Marquez Valdes-Scantling","position":"WR","team":"PIT","age":30,"season":2025,"games":9,"snapPct":48,"routes":226,"routePct":39,"targets":29,"targetsPerRouteRun":0.128,"targetSharePct":5.3,"airYardsPerTarget":12.21,"airYardsPerReception":25.29,"airYardsSharePct":8.2,"wopr":0.137,"receptions":14,"redZoneTargets":5,"endZoneTargets":3,"catchPct":48.3,"receivingYards":120,"totalYards":120,"yardsPerReception":8.57,"yardsBeforeCatchPerReception":6.57,"yardsAfterCatchPerReception":2,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.53,"receivingTouchdowns":1,"epaPerPlay":-0.105,"successRate":41.4,"contestedCatchRate":null,"fantasyPoints":18,"avoidedTackleRate":0,"brokenTackles":0,"drops":0,"catchableTargets":14,"dropPct":0,"interceptionsWhenTargeted":0,"fumbles":1,"receptions10Plus":3,"receptions20Plus":0,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":19},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/marquez-valdes-scantling.php","used":false},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-marquez-valdes-scantling/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "5086",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

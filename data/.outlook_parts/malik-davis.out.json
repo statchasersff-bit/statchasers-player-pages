@@ -1,0 +1,19 @@
+{
+  "slug": "malik-davis",
+  "name": "Malik Davis",
+  "position": "RB",
+  "team": "DAL",
+  "season": 2026,
+  "headline": "Deep-bench flier whose efficiency outran his volume",
+  "body": "Davis touched the ball just 52 times on the ground across 10 games in 2025, yet he made those carries count: 250 rushing yards at 4.81 per tote, two scores, and a 43-yard breakaway that doubled as his longest touchdown. Roughly 8 percent of his runs went for explosive or breakaway gains, and his 2.96 yards before contact hints the blocking, not the back, capped his ceiling. The drag was a 20.7 percent snap share, a 0.8 percent target share, and a minus-0.07 EPA per play that pulled his fantasy total to 38.6.\n\nThe 2026 path is opportunity, not talent. Behind Javonte Williams, Davis is fighting for backup reps that could vanish to younger legs, and a late-season calf and eye injury didn't help his standing. He's a final-round dart in deep leagues, worth a flier only if camp anoints him the clear handcuff.",
+  "keyStats": {"rank":69,"playerId":"8800","playerName":"Malik Davis","position":"RB","team":"DAL","age":26,"season":2025,"games":10,"snapPct":20.7,"routes":82,"rushAttempts":52,"redZoneOpportunities":8,"goalLineCarries":2,"targets":5,"receptions":2,"redZoneTargets":0,"endZoneTargets":0,"rushYards":250,"yardsPerCarry":4.81,"rushTouchdowns":2,"targetSharePct":0.8,"receivingYards":16,"yardsPerReception":8,"yardsPerRouteRun":0.2,"receivingTouchdowns":0,"epaPerPlay":-0.07,"fantasyPoints":38.6,"rushes10Plus":4,"rushes20Plus":3,"rushes30Plus":1,"rushes40Plus":1,"rushes50Plus":0,"explosiveRunPct":7.69,"breakawayRunPct":7.69,"longestRush":43,"longestRushTouchdown":43,"brokenTackles":0,"rushAttemptsPerBrokenTackle":null,"yardsAfterContactPerAttempt":1.85,"yardsBeforeContactPerAttempt":2.96,"receivingYardsAfterCatch":6,"tackleEludedRate":0,"fumbles":0,"tacklesForLoss":0,"tacklesForLossYards":0,"rushAttForNegativeYards":0},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/malik-davis.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-malik-davis/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "8800",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "andrei-iosivas",
+  "name": "Andrei Iosivas",
+  "position": "WR",
+  "team": "CIN",
+  "season": 2026,
+  "headline": "Steady WR3 snaps, but the touchdowns dried up",
+  "body": "Iosivas locked down the No. 3 role in 2025, playing 76.2% of snaps across 15 games and running a route on nearly 80% of dropbacks. The volume was real but capped: a 9.5% target share, 58 looks, 0.81 yards per route, and a 13.18 average produced just 33-435-2. His 0.201 EPA per play and 50% success rate flag an efficient complementary piece, yet that WR66 finish reflects a clear ceiling behind Cincinnati's top two.\n\nThe alarming dip is in the end zone. After six scores on 10 red-zone and 10 end-zone targets in 2024, those high-value looks collapsed to seven and four, dragging his touchdowns to two. With Chase and Higgins commanding the bulk of work, Iosivas remains a snap-secure but low-equity bench stash whose weekly value spikes only when an injury opens targets ahead of him.",
+  "keyStats": {"rank":66,"playerId":"10226","playerName":"Andrei Iosivas","position":"WR","team":"CIN","age":25,"season":2025,"games":15,"snapPct":76.2,"routes":537,"routePct":79.8,"targets":58,"targetsPerRouteRun":0.108,"targetSharePct":9.5,"airYardsPerTarget":10.45,"airYardsPerReception":18.36,"airYardsSharePct":12.9,"wopr":0.233,"receptions":33,"redZoneTargets":7,"endZoneTargets":4,"catchPct":56.9,"receivingYards":435,"totalYards":449,"yardsPerReception":13.18,"yardsBeforeCatchPerReception":10.06,"yardsAfterCatchPerReception":3.12,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.81,"receivingTouchdowns":2,"epaPerPlay":0.201,"successRate":50,"contestedCatchRate":null,"fantasyPoints":56.9,"avoidedTackleRate":3,"brokenTackles":1,"drops":5,"catchableTargets":38,"dropPct":8.6,"interceptionsWhenTargeted":2,"fumbles":0,"receptions10Plus":20,"receptions20Plus":7,"receptions30Plus":2,"receptions40Plus":0,"receptions50Plus":0,"longestReception":37},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/andrei-iosivas.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-andrei-iosivas/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "10226",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

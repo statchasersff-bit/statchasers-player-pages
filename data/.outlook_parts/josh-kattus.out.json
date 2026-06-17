@@ -1,0 +1,19 @@
+{
+  "slug": "josh-kattus",
+  "name": "Josh Kattus",
+  "position": "TE",
+  "team": "CIN",
+  "season": 2026,
+  "headline": "Kattus a developmental tight end buried in Cincinnati",
+  "body": "Kattus enters 2026 as a raw, late-roster project out of Kentucky, and the market reflects it: he checks in around TE22 with an expert consensus ranking near TE156 overall, no available projections, and essentially zero presence in fantasy lineups. At 6-foot-4 and 245 pounds he carries the frame teams covet at the position, but there is no meaningful NFL production to point to yet, and the Bengals' depth chart gives him a steep climb for snaps.\n\nFor managers, this is a name to track rather than draft. The schedule offers some early softness, with one of the league's friendlier opening matchups and an easy three-game stretch through Houston, Pittsburgh and Jacksonville, but opportunity has to come first. Until an injury or role change opens the door, Kattus stays a deep-league dynasty stash whose value hinges entirely on carving out a real spot in the rotation.",
+  "keyStats": null,
+  "sources": [
+    {"name": "FantasyPros", "url": "https://www.fantasypros.com/nfl/players/josh-kattus.php", "used": true},
+    {"name": "CBS Sports", "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-josh-kattus/", "used": false},
+    {"name": "Statchasers advanced stats", "used": false}
+  ],
+  "id": "13312",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

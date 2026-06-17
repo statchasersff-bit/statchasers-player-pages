@@ -1,0 +1,19 @@
+{
+  "slug": "zavion-thomas",
+  "name": "Zavion Thomas",
+  "position": "WR",
+  "team": "CHI",
+  "season": 2026,
+  "headline": "Burner Rookie Buried On A Crowded Depth Chart",
+  "body": "The Bears spent the 89th pick on Thomas, betting on track-meet speed rather than college production, and the bet is a gamble. His LSU profile is thin: a target share that sat in the 19th percentile and just 1.52 yards per route run, the kind of efficiency that makes the early selection a head-scratcher. At 5-foot-10 and 22 years old, he lands behind a reshuffled but still busy pass-catching room, and barring injuries ahead of him he has a steep climb toward weekly relevance.\n\nThe one real path is scheme. Ben Johnson reportedly wants a gadget role that mixes in backfield snaps, the same blueprint Green Bay used with Savion Williams. That could manufacture touches his route metrics never would. Still, Year 1 looks limited, and he is rostered in roughly 1% of leagues for good reason. Leave him on the wire and revisit only if his snap count climbs midseason.",
+  "keyStats": null,
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/zavion-thomas.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-zavion-thomas/","used":true},
+    {"name":"Statchasers advanced stats","used":false}
+  ],
+  "id": "13411",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

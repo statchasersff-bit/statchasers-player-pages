@@ -1,0 +1,19 @@
+{
+  "slug": "jahdae-walker",
+  "name": "Jahdae Walker",
+  "position": "WR",
+  "team": "CHI",
+  "season": 2026,
+  "headline": "Tiny Sample, Loud Efficiency: A Caleb Williams Lottery Ticket",
+  "body": "Walker's 2025 was a six-game cameo, but the per-route numbers pop. On just 57 routes and a 9.6% route rate, he posted 1.53 yards per route, a 0.175 target-per-route-run mark, and a sky-high 0.685 EPA per play with a 60% success rate. The volume was minimal -- a 1.9% target share and 0.047 WOPR -- yet he turned 10 looks into 6 grabs, 87 yards, and two scores, including two end-zone targets. That 20.7-point flash on 15.1% of snaps shows real juice when the ball finds him.\n\nThe ceiling depends entirely on snaps. At 6-foot-3 and 23, he profiles as a downfield, red-zone weapon for Caleb Williams, but he's buried in the rotation and undraftable at a 300-overall ADP. Treat him as a deep-league stash: the efficiency is intriguing, but until the route share climbs meaningfully, the production stays a rounding error rather than a roster lock.",
+  "keyStats": {"rank":154,"playerId":"13079","playerName":"Jahdae Walker","position":"WR","team":"CHI","age":23,"season":2025,"games":6,"snapPct":15.1,"routes":57,"routePct":9.6,"targets":10,"targetsPerRouteRun":0.175,"targetSharePct":1.9,"airYardsPerTarget":13,"airYardsPerReception":21.67,"airYardsSharePct":2.6,"wopr":0.047,"receptions":6,"redZoneTargets":2,"endZoneTargets":2,"catchPct":60,"receivingYards":87,"totalYards":87,"yardsPerReception":14.5,"yardsBeforeCatchPerReception":13.17,"yardsAfterCatchPerReception":1.33,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.53,"receivingTouchdowns":2,"epaPerPlay":0.685,"successRate":60,"contestedCatchRate":null,"fantasyPoints":20.7,"avoidedTackleRate":0,"brokenTackles":0,"drops":1,"catchableTargets":7,"dropPct":10,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":5,"receptions20Plus":1,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":25},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/jahdae-walker.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-jahdae-walker/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "13079",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

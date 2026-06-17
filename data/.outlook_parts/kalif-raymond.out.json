@@ -1,0 +1,19 @@
+{
+  "slug": "kalif-raymond",
+  "name": "Kalif Raymond",
+  "position": "WR",
+  "team": "CHI",
+  "season": 2026,
+  "headline": "Efficient depth piece who needs a route to volume",
+  "body": "Raymond's 2025 line tells the story of a high-floor role player rather than a fantasy asset. On just 36.6% of snaps he ran 214 routes, drew 30 targets and a 5.5% target share, and turned them into 24 grabs for 289 yards and a score. The underlying marks stay sharp: a 0.507 EPA per play, a 66.7% success rate, an 80% catch rate, and zero drops, with 1.35 yards per route run. That efficiency is real, but it never scales because the volume isn't there.\n\nNow 31 and on a fresh deal in Chicago, he profiles as a depth receiver buried behind the Bears' top options, with a draft cost deep past WR100 reflecting that. His value remains rooted in special teams and spot snaps. Unless an injury opens meaningful route share, treat him as a name to monitor rather than draft in any standard format.",
+  "keyStats": {"rank":97,"playerId":"3634","playerName":"Kalif Raymond","position":"WR","team":"DET","age":31,"season":2025,"games":15,"snapPct":36.6,"routes":214,"routePct":34.6,"targets":30,"targetsPerRouteRun":0.14,"targetSharePct":5.5,"airYardsPerTarget":5.63,"airYardsPerReception":7.04,"airYardsSharePct":4.5,"wopr":0.114,"receptions":24,"redZoneTargets":2,"endZoneTargets":1,"catchPct":80,"receivingYards":289,"totalYards":308,"yardsPerReception":12.04,"yardsBeforeCatchPerReception":5.5,"yardsAfterCatchPerReception":6.54,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.35,"receivingTouchdowns":1,"epaPerPlay":0.507,"successRate":66.7,"contestedCatchRate":null,"fantasyPoints":42.8,"avoidedTackleRate":4.2,"brokenTackles":1,"drops":0,"catchableTargets":24,"dropPct":0,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":11,"receptions20Plus":4,"receptions30Plus":1,"receptions40Plus":0,"receptions50Plus":0,"longestReception":30},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/kalif-raymond.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-kalif-raymond/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "3634",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

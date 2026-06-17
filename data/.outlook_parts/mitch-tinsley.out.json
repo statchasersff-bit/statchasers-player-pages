@@ -1,0 +1,19 @@
+{
+  "slug": "mitch-tinsley",
+  "name": "Mitch Tinsley",
+  "position": "WR",
+  "team": "CIN",
+  "season": 2026,
+  "headline": "A Deep-Ball Flier With Red-Zone Equity",
+  "body": "Tinsley's 2025 line reads like a true field-stretcher: 14.75 air yards per target and a massive 44.25 air yards per reception fed a 0.11 EPA per play across his 24 looks. The problem was conversion. A 33.3% catch rate and matching 33.3% success rate left him at just 116 yards and 0.79 yards per route run, and his WR140 finish reflects a profile that lived on volatile downfield shots rather than reliable separation. Eight catches over eight games with one drop is thin, even by deep-threat standards.\n\nThe sliver of intrigue is usage near the goal line. Five red-zone targets and one end-zone look turned into two touchdowns and 23.6 fantasy points, so the touchdown equity is real if his snap share climbs from a modest 24.6%. With only a 3.9% target share and a 0.112 WOPR, Tinsley remains a speculative depth piece who needs an opportunity bump to matter in fantasy lineups this season.",
+  "keyStats": {"rank":140,"playerId":"11068","playerName":"Mitchell Tinsley","position":"WR","team":"CIN","age":25,"season":2025,"games":8,"snapPct":24.6,"routes":146,"routePct":21.7,"targets":24,"targetsPerRouteRun":0.164,"targetSharePct":3.9,"airYardsPerTarget":14.75,"airYardsPerReception":44.25,"airYardsSharePct":7.5,"wopr":0.112,"receptions":8,"redZoneTargets":5,"endZoneTargets":1,"catchPct":33.3,"receivingYards":116,"totalYards":116,"yardsPerReception":14.5,"yardsBeforeCatchPerReception":12.5,"yardsAfterCatchPerReception":2,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.79,"receivingTouchdowns":2,"epaPerPlay":0.11,"successRate":33.3,"contestedCatchRate":null,"fantasyPoints":23.6,"avoidedTackleRate":0,"brokenTackles":0,"drops":1,"catchableTargets":9,"dropPct":4.2,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":6,"receptions20Plus":1,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":27},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/mitch-tinsley.php","used":false},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-mitch-tinsley/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11068",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "jake-ferguson",
+  "name": "Jake Ferguson",
+  "position": "TE",
+  "team": "DAL",
+  "season": 2026,
+  "headline": "Ferguson's volume floor is real, but the ceiling is capped",
+  "body": "Ferguson turned a healthy 17 games and a 77.5% route rate into 102 targets, 82 catches, and 8 scores in 2025, his TD output rebounding from a goose egg the year prior. The efficiency, though, tells the cap story: 7.32 yards per reception, just 1.19 yards per route run, and an EPA per play of 0.177 that trailed his 2023 peak of 0.321. A 16.8% target share and 24 red-zone looks anchor the floor, but a 47.1% success rate and microscopic 4.66 air yards per target frame him as a possession piece, not a field-stretcher.\n\nBehind CeeDee Lamb and George Pickens, he stays third in the pecking order, leaning on red-zone work and Dak Prescott's availability. His one collapse came when Prescott missed time. With elite hands (just two drops, 80.4% catch rate) and consistent six-target volume, treat him as a high-end TE2 worth a double-digit-round flier.",
+  "keyStats": {"rank":13,"playerId":"8110","playerName":"Jake Ferguson","position":"TE","team":"DAL","age":26,"season":2025,"games":17,"snapPct":66.7,"routes":505,"routePct":77.5,"targets":102,"targetsPerRouteRun":0.202,"targetSharePct":16.8,"airYardsPerTarget":4.66,"airYardsPerReception":5.79,"airYardsSharePct":9.4,"wopr":0.318,"receptions":82,"redZoneTargets":24,"endZoneTargets":13,"catchPct":80.4,"receivingYards":600,"totalYards":601,"yardsPerReception":7.32,"yardsBeforeCatchPerReception":3.57,"yardsAfterCatchPerReception":3.74,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.19,"receivingTouchdowns":8,"epaPerPlay":0.177,"successRate":47.1,"contestedCatchRate":null,"fantasyPoints":106.1,"avoidedTackleRate":7.3,"brokenTackles":6,"drops":2,"catchableTargets":84,"dropPct":2,"interceptionsWhenTargeted":1,"fumbles":3,"receptions10Plus":23,"receptions20Plus":2,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":26},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/jake-ferguson.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-jake-ferguson/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "8110",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

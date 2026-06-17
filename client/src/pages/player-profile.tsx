@@ -34,7 +34,6 @@ import {
   Info,
   RefreshCcw,
   Clock,
-  ShieldCheck,
   AlertCircle,
   ChevronDown,
   ChevronUp,
@@ -60,8 +59,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AdvancedTab } from "@/components/AdvancedTab";
-import { loadPlayerAdvancedStats } from "@/lib/playerAdvancedStats";
-import type { PlayerAdvancedResult } from "@/lib/playerAdvancedStats";
+import { loadPlayerAdvancedStats, loadPlayerSeasonQualification } from "@/lib/playerAdvancedStats";
+import type { PlayerAdvancedResult, AdvancedQualification } from "@/lib/playerAdvancedStats";
 import { InjuryTab } from "@/components/injury/InjuryTab";
 import { fetchPlayerInjuryHistory, type PlayerInjuryHistory } from "@/components/injury/injuryApi";
 import SearchHero from "@/components/SearchHero";
@@ -81,6 +80,7 @@ type LightPlayer = {
 type RelatedResponse = {
   neighbors: LightPlayer[];
   currentRank: number;
+  currentPpg?: number;
   season: number;
   format: string;
   position: string;
@@ -104,14 +104,13 @@ const POSITION_COLORS: Record<string, string> = {
   DEF: "sc-pos-pill sc-pos-def",
 };
 
-const TAB_KEYS = ["overview", "gamelog", "advanced", "rankings", "injury", "news"] as const;
+const TAB_KEYS = ["overview", "gamelog", "advanced", "injury", "news"] as const;
 type TabKey = typeof TAB_KEYS[number];
 
 const TAB_CONFIG: { key: TabKey; label: string; icon: typeof Activity }[] = [
   { key: "overview", label: "Overview", icon: Activity },
   { key: "gamelog", label: "Game Log", icon: Table },
   { key: "advanced", label: "Advanced Stats", icon: Layers },
-  { key: "rankings", label: "Rankings & Value", icon: Trophy },
   { key: "injury", label: "Injury & Health", icon: HeartPulse },
 ];
 
@@ -152,32 +151,117 @@ function PlayerHeadshot({ playerId, name, team }: { playerId: string; name: stri
   );
 }
 
-function NeighborHeadshot({ playerId, name, teamAbbr }: { playerId: string; name: string; teamAbbr: string }) {
-  const [imgError, setImgError] = useState(false);
-  const url = getHeadshotUrl(playerId);
-  const teamColor = TEAM_PRIMARY_COLORS[teamAbbr] || '#6B7280';
-
-  if (imgError) {
-    return (
-      <div
-        className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800"
-        style={{ border: `2px solid ${teamColor}` }}
-        data-testid={`img-neighbor-${playerId}`}
-      >
-        <User className="w-4 h-4 text-slate-400 dark:text-slate-500" />
-      </div>
-    );
+// Rectangular headshot for a peer-rail card. Falls back to the player's
+// initials over the team-color wash when the CDN has no image.
+function PeerPhoto({ playerId, name }: { playerId: string; name: string }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    const initials = name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase();
+    return <span className="sc-peer-card__initials" data-testid={`img-neighbor-${playerId}`}>{initials}</span>;
   }
-
   return (
     <img
-      src={url}
+      src={getHeadshotUrl(playerId)}
       alt={name}
-      className="flex-shrink-0 w-9 h-9 rounded-full object-cover bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800"
-      style={{ border: `2px solid ${teamColor}` }}
-      onError={() => setImgError(true)}
+      loading="lazy"
+      className="sc-peer-card__img"
+      onError={() => setFailed(true)}
       data-testid={`img-neighbor-${playerId}`}
     />
+  );
+}
+
+type PeerEntry = {
+  id: string; name: string; slug: string; team: string;
+  position: string; posRank: number; ppg: number; isCurrent: boolean;
+};
+
+// "Nearby Positional Peers" — a horizontal card rail of the players ranked
+// closest to the current player, with the current player inserted in true rank
+// order and highlighted ("You Are Here").
+function RankNeighborsRail({ player, related }: { player: Player; related: RelatedResponse }) {
+  const pos = related.position || player.position || '';
+
+  const entries: PeerEntry[] = useMemo(() => {
+    const list: PeerEntry[] = related.neighbors.map((n) => ({
+      id: n.id, name: n.name, slug: n.slug, team: n.team,
+      position: n.position, posRank: n.posRank, ppg: n.ppg, isCurrent: false,
+    }));
+    list.push({
+      id: player.id,
+      name: player.name,
+      slug: player.slug,
+      team: player.seasonTeam || player.team || '',
+      position: pos,
+      posRank: related.currentRank,
+      ppg: related.currentPpg ?? 0,
+      isCurrent: true,
+    });
+    return list.sort((a, b) => a.posRank - b.posRank);
+  }, [related, player, pos]);
+
+  const ranks = entries.map((e) => e.posRank);
+  const currentIndex = entries.findIndex((e) => e.isCurrent);
+
+  // Center the current player's card within the rail on mount — scrolls only
+  // the rail container, never the page.
+  const railRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const rail = railRef.current;
+    const card = rail?.children[currentIndex] as HTMLElement | undefined;
+    if (!rail || !card) return;
+    const railRect = rail.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    rail.scrollLeft += (cardRect.left - railRect.left) - (rail.clientWidth - cardRect.width) / 2;
+  }, [entries, currentIndex]);
+
+  return (
+    <div className="mt-8">
+      <div className="sc-finish2__title-row mb-1">
+        <h2 className="sc-finish2__title" data-testid="text-related-heading">
+          Nearby Positional Peers
+        </h2>
+      </div>
+      <p className="sc-finish2__subtitle mb-4" data-testid="text-related-subtitle">
+        Players ranked closest to {player.name} based on {related.season} {pos} production ({related.format.toUpperCase()}) &middot; {pos}{Math.min(...ranks)}–{pos}{Math.max(...ranks)}
+      </p>
+      <div className="sc-peer-rail" data-testid="peer-rail" ref={railRef}>
+        {entries.map((e) => {
+          const teamColor = TEAM_PRIMARY_COLORS[e.team] || '#6B7280';
+          return (
+            <Link key={e.id} href={`/nfl/players/${e.slug}/`}>
+              <div
+                className={`sc-peer-card${e.isCurrent ? ' sc-peer-card--current' : ''}`}
+                style={{ ['--peer-team' as string]: teamColor } as React.CSSProperties}
+                data-testid={`card-peer-${e.slug}`}
+              >
+                <div className="sc-peer-card__photo">
+                  <PeerPhoto playerId={e.id} name={e.name} />
+                  <span className="sc-peer-card__rank">{e.position}{e.posRank}</span>
+                  {e.isCurrent && <span className="sc-peer-card__here">You Are Here</span>}
+                </div>
+                <div className="sc-peer-card__body">
+                  <p className="sc-peer-card__name">{e.name}</p>
+                  <p className="sc-peer-card__meta">{e.position} &middot; {e.team}</p>
+                  <p className="sc-peer-card__value"><b>{e.ppg.toFixed(1)}</b> PPG</p>
+                </div>
+                {e.team && (
+                  <img
+                    className="sc-peer-card__logo"
+                    src={`https://sleepercdn.com/images/team_logos/nfl/${e.team.toLowerCase()}.png`}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    onError={(ev) => { (ev.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                  />
+                )}
+                <span className="sc-peer-card__cta">View Player</span>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
@@ -935,56 +1019,6 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
     : generateFantasyOutlookSummary(player, stats, format);
   const { strengths, risks } = generateStrengthsAndRisks(player, stats);
 
-  // Bio-driven narrative (Career Snapshot + Play Style). Moved here from the
-  // "Overview 2" tab so the season story sits alongside the outlook summary.
-  const bio: BioData | null = (player as any).bio ?? null;
-  // The "Drafted ..." bullet now lives in the player header, so drop it here.
-  const snapshotBullets = (bio?.snapshot_bullets ?? []).filter(b => !/^Drafted\b/.test(b));
-  const bioCeilingTile = bio?.career_context_tiles?.find(t => t.title === 'Ceiling driver');
-  const bioFloorTile   = bio?.career_context_tiles?.find(t => t.title === 'Floor driver');
-  const bioStyleSubCards = bio?.style ? [
-    {
-      id: 'on-field',
-      label: 'On-field style',
-      icon: Zap,
-      iconColor: '#6366f1',
-      text: bio.style.how_he_wins,
-      tags: bio.style.how_he_wins_tags,
-      tagClass: 'sc-bio__tag',
-      testId: 'bio-how-he-wins',
-    },
-    {
-      id: 'fantasy-translation',
-      label: 'Fantasy translation',
-      icon: Trophy,
-      iconColor: '#F5C01A',
-      text: bio.style.fantasy_translation,
-      tags: bio.style.fantasy_translation_tags,
-      tagClass: 'sc-bio__tag sc-bio__tag--gold',
-      testId: 'bio-fantasy-impact',
-    },
-    {
-      id: 'best-case',
-      label: 'Best-case weekly outcome',
-      icon: TrendingUp,
-      iconColor: '#22c55e',
-      text: bio.style.best_case ?? (bioCeilingTile ? bioCeilingTile.text : null),
-      tags: [] as string[],
-      tagClass: 'sc-bio__tag',
-      testId: 'bio-best-case',
-    },
-    {
-      id: 'floor-driver',
-      label: 'Floor driver',
-      icon: ShieldCheck,
-      iconColor: '#64748b',
-      text: bio.style.floor_driver ?? (bioFloorTile ? bioFloorTile.text : null),
-      tags: [] as string[],
-      tagClass: 'sc-bio__tag',
-      testId: 'bio-floor-driver',
-    },
-  ].filter(c => c.text) : [];
-
   return (
     <div className="sc-overview" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
 
@@ -999,46 +1033,6 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
           ))}
         </div>
       )}
-
-      {bio && bioStyleSubCards.length > 0 ? (
-        <div className="sc-bio">
-
-          {bioStyleSubCards.length > 0 && (
-            <section className="sc-bio__section" data-testid="bio-style">
-              <div className="sc-bio__section-header">
-                <h3>Play Style and Fantasy Translation</h3>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
-                {bioStyleSubCards.map((card) => {
-                  const Icon = card.icon;
-                  return (
-                    <div
-                      key={card.id}
-                      className="sc-bio__style-card"
-                      style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
-                      data-testid={card.testId}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
-                        <Icon className="w-3.5 h-3.5" style={{ color: card.iconColor, flexShrink: 0 }} />
-                        <div className="sc-bio__style-card-label" style={{ marginBottom: 0 }}>{card.label}</div>
-                      </div>
-                      <p className="sc-bio__style-card-text">{card.text}</p>
-                      {card.tags.length > 0 && (
-                        <div className="sc-bio__tags">
-                          {card.tags.map((tag, i) => (
-                            <span key={i} className={card.tagClass} data-testid={`bio-tag-${card.id}-${i}`}>{tag}</span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-          )}
-
-        </div>
-      ) : null}
 
       {(strengths.length > 0 || risks.length > 0) && (
         <div className="sc-overview__section" style={{ padding: '20px' }} data-testid="section-strengths-risks">
@@ -1240,7 +1234,7 @@ function Ov2StackedFinishBar({ pcts, labels }: { pcts: { top: number; mid: numbe
               className={`ov2-stack-seg ${s.cls}`}
               style={{ width: `${w}%` }}
             >
-              {w >= 9 ? `${s.pct.toFixed(0)}%` : ''}
+              {w >= 14 ? `${s.pct.toFixed(0)}%` : ''}
             </div>
           );
         })}
@@ -1694,12 +1688,35 @@ function SeasonDashboard({ stat, entries, position, format, title }: {
   // always reflects the season selected in the tabs above.
   const profileStats = computeGameLogStats(entries, position, format);
 
+  // A few scannable insight badges + an at-a-glance finish breakdown, both
+  // derived from this season's weekly data (skipped for Career Totals, which
+  // has no weekly entries).
+  const pos = (position || 'FLEX').toUpperCase();
+  const badges: { label: string; tone: 'gold' | 'slate' | 'pos' | 'neg' }[] = [];
+  if (profileStats && profileStats.gamesPlayed > 0) {
+    const scored = active.map(e => fpts(e, format));
+    const high = scored.length ? Math.max(...scored) : 0;
+    const cv = profileStats.ppg > 0 ? profileStats.volatility / profileStats.ppg : 2;
+    const ceiling = pos === 'QB' ? 30 : pos === 'TE' ? 20 : 25;
+    if (high >= ceiling) badges.push({ label: 'Elite Ceiling', tone: 'gold' });
+    if (profileStats.pos1Pct >= 50) badges.push({ label: `Weekly ${pos}1`, tone: 'pos' });
+    else if (profileStats.pos1Pct + profileStats.pos2Pct >= 60) badges.push({ label: 'Reliable Starter', tone: 'pos' });
+    if (cv <= 0.45) badges.push({ label: 'High Consistency', tone: 'slate' });
+    else if (profileStats.bustPct >= 30) badges.push({ label: 'Volatile Floor', tone: 'neg' });
+  }
+  const badgesToShow = badges.slice(0, 3);
+
   return (
     <div className="sc-dash" data-testid="season-summary-card">
       <div className="sc-dash__head">
         <div className="sc-dash__titlewrap">
           <h4 className="sc-dash__title">{title}</h4>
           {insight && <p className="sc-dash__insight">{insight}</p>}
+          {badgesToShow.length > 0 && (
+            <div className="sc-dash__badges">
+              {badgesToShow.map(b => <Ov2Badge key={b.label} label={b.label} tone={b.tone} />)}
+            </div>
+          )}
         </div>
         <div className="sc-dash__headline">
           <span className="sc-dash__ppg">{stat.ppg.toFixed(1)}<i>PPG</i></span>
@@ -1716,6 +1733,9 @@ function SeasonDashboard({ stat, entries, position, format, title }: {
       </div>
       {profileStats && profileStats.gamesPlayed > 0 && (
         <div className="sc-dash__profile" data-testid="weekly-finish-profile">
+          <div className="sc-dash__profile-head">
+            <span className="sc-dash__profile-title">Weekly Finish Breakdown</span>
+          </div>
           <Ov2StackedFinishBar pcts={ov2TierPcts(profileStats)} labels={ov2TierLabels(position)} />
         </div>
       )}
@@ -1927,187 +1947,6 @@ function computeTdDependency(activeEntries: GameLogEntry[], position: string | n
   return { pct, label: 'Volume-Backed', tag: 'Volume-backed production', isHigh: false };
 }
 
-function getPositionCvAnchor(position?: string | null): number {
-  if (position === 'QB') return 0.25;
-  if (position === 'RB') return 0.28;
-  if (position === 'TE') return 0.43;
-  return 0.40;
-}
-
-
-function RankingsTab({ player }: { player: Player }) {
-  const dynasty = player.dynasty;
-  const [dynastyFormat, setDynastyFormat] = useState<'1qb' | 'sf'>('1qb');
-
-  if (!dynasty) {
-    return (
-      <div className="space-y-6">
-        <div className="rounded-md border border-dashed border-muted-foreground/25 p-12 text-center">
-          <Trophy className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
-          <p className="text-muted-foreground text-sm font-medium">Dynasty rankings not available for this player</p>
-          <p className="text-muted-foreground/60 text-xs mt-1">This player is not currently ranked in consensus dynasty rankings.</p>
-        </div>
-      </div>
-    );
-  }
-
-  const d = dynastyFormat === 'sf' && dynasty.sf ? { ...dynasty, ...dynasty.sf } : dynasty;
-
-  const tierLabel = `${dynasty.position}${d.positionalTier <= 1 ? '1' : d.positionalTier <= 3 ? '2' : '3+'}`;
-  const tierDesc = d.positionalTier <= 1 ? 'Elite' : d.positionalTier <= 3 ? 'Mid' : d.positionalTier <= 6 ? 'Low-End' : 'Deep';
-  const ageTierColor = dynasty.ageCurveTier === 'Rising' ? 'text-emerald-500' : dynasty.ageCurveTier === 'Prime' ? 'text-blue-500' : dynasty.ageCurveTier === 'Aging' ? 'text-amber-500' : 'text-red-400';
-  const ageTierBg = dynasty.ageCurveTier === 'Rising' ? 'bg-emerald-500/10' : dynasty.ageCurveTier === 'Prime' ? 'bg-blue-500/10' : dynasty.ageCurveTier === 'Aging' ? 'bg-amber-500/10' : 'bg-red-500/10';
-  const valueColor = d.value >= 8000 ? 'text-emerald-500' : d.value >= 6000 ? 'text-blue-500' : d.value >= 4000 ? 'text-foreground' : d.value >= 2000 ? 'text-muted-foreground' : 'text-red-400';
-  const valueLabel = d.value >= 8000 ? 'Elite' : d.value >= 6000 ? 'Premium' : d.value >= 4000 ? 'Solid' : d.value >= 2000 ? 'Roster' : 'Fringe';
-
-  const draftRound = dynasty.draftRound;
-  const draftPick = dynasty.draftPick;
-  const draftYear = dynasty.draftYear;
-  const draftedLine = draftRound && draftPick && draftYear
-    ? `Round ${draftRound} \u2013 Pick ${draftPick} (${draftYear})`
-    : draftRound && draftYear
-    ? `Round ${draftRound} (${draftYear})`
-    : draftRound
-    ? `Round ${draftRound}`
-    : null;
-
-  const draftGrade = !draftRound ? { label: 'Undrafted', color: 'text-muted-foreground', bg: 'bg-muted/50' }
-    : draftRound === 1 && draftPick && draftPick <= 10 ? { label: 'Elite', color: 'text-yellow-500 dark:text-yellow-400', bg: 'bg-yellow-500/10' }
-    : draftRound === 1 ? { label: 'Strong', color: 'text-yellow-500 dark:text-yellow-400', bg: 'bg-yellow-500/10' }
-    : draftRound === 2 ? { label: 'Solid', color: 'text-slate-400 dark:text-slate-300', bg: 'bg-slate-500/10' }
-    : { label: 'Fragile', color: 'text-amber-700 dark:text-amber-600', bg: 'bg-amber-500/10' };
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }} data-testid="rankings-tab">
-      <div className="sc-card" style={{ padding: '28px' }} data-testid="dynasty-market-snapshot">
-          <div className="flex items-center justify-between gap-3 flex-wrap" style={{ marginBottom: '20px' }}>
-            <div className="flex items-center gap-2">
-              <p style={{ fontSize: '13px', fontWeight: 700, color: '#0b3a7a', letterSpacing: '-0.01em' }}>Dynasty Market Snapshot</p>
-            </div>
-            <div className="flex items-center gap-3">
-              {dynasty.sf && (
-                <div className="sc-gamelog__segmented-control" data-testid="toggle-dynasty-format">
-                  <button
-                    onClick={() => setDynastyFormat('1qb')}
-                    className={`sc-gamelog__segment ${dynastyFormat === '1qb' ? 'sc-gamelog__segment--active' : ''}`}
-                    data-testid="button-dynasty-1qb"
-                  >
-                    1QB
-                  </button>
-                  <button
-                    onClick={() => setDynastyFormat('sf')}
-                    className={`sc-gamelog__segment ${dynastyFormat === 'sf' ? 'sc-gamelog__segment--active' : ''}`}
-                    data-testid="button-dynasty-sf"
-                  >
-                    SF
-                  </button>
-                </div>
-              )}
-              <a
-                href={`https://keeptradecut.com/dynasty-rankings/players/${dynasty.ktcSlug}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[10px] text-muted-foreground/50 hover:text-primary transition-colors flex items-center gap-1"
-                data-testid="link-ktc-profile"
-              >
-                KeepTradeCut <ExternalLink className="w-2.5 h-2.5" />
-              </a>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div data-testid="dynasty-overall-rank">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Overall Rank</p>
-              <p className="text-3xl font-bold text-foreground mt-1 tabular-nums">{d.rank}</p>
-              <p className="text-[10px] text-muted-foreground">of 500+</p>
-            </div>
-            <div data-testid="dynasty-positional-rank">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Positional Rank</p>
-              <p className="text-3xl font-bold text-foreground mt-1 tabular-nums">{dynasty.position}{d.positionalRank}</p>
-              <span className="inline-block mt-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-muted text-muted-foreground">Tier {d.positionalTier}</span>
-            </div>
-            <div data-testid="dynasty-age-curve">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Age Curve</p>
-              <span className={`inline-block mt-2 px-2 py-1 rounded-md text-xs font-bold ${ageTierColor} ${ageTierBg}`}>{dynasty.ageCurveTier}</span>
-              <p className="text-[10px] text-muted-foreground tabular-nums mt-1">{dynasty.age.toFixed(1)} yrs</p>
-            </div>
-            <div data-testid="dynasty-value" className="relative">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Dynasty Value</p>
-              <p className={`text-4xl font-extrabold mt-1 tabular-nums tracking-tight ${valueColor}`}>{d.value.toLocaleString()}</p>
-              <span className={`inline-block mt-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold ${valueColor} ${d.value >= 8000 ? 'bg-emerald-500/10' : d.value >= 6000 ? 'bg-blue-500/10' : 'bg-muted/50'}`}>{valueLabel}</span>
-            </div>
-          </div>
-
-          <div className="border-t border-border pt-4">
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-              <div data-testid="dynasty-drafted">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Drafted</p>
-                <p className="text-xs font-semibold text-muted-foreground mt-1">{draftedLine || 'Undrafted'}</p>
-              </div>
-              <div data-testid="dynasty-draft-grade">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Capital Grade</p>
-                <span className={`inline-block mt-1 px-2 py-0.5 rounded text-[11px] font-bold ${draftGrade.color} ${draftGrade.bg}`}>{draftGrade.label}</span>
-              </div>
-              <div data-testid="dynasty-tier">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Dynasty Tier</p>
-                <p className="text-xs font-semibold text-muted-foreground mt-1">{tierDesc} {tierLabel}</p>
-              </div>
-              {d.startupAdp ? (
-                <div data-testid="dynasty-startup-adp">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Startup ADP</p>
-                  <p className="text-xs font-semibold text-muted-foreground mt-1 tabular-nums">{d.startupAdp.toFixed(1)}</p>
-                </div>
-              ) : (
-                <div />
-              )}
-              <div data-testid="dynasty-market-tier">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium">Market Tier</p>
-                <p className={`text-xs font-semibold mt-1 ${valueColor}`}>{valueLabel}</p>
-              </div>
-            </div>
-          </div>
-
-      </div>
-
-      <a
-        href={`https://keeptradecut.com/dynasty-rankings/players/${dynasty.ktcSlug}`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <div className="sc-card hover-elevate" style={{ padding: '20px 28px', cursor: 'pointer' }}>
-            <div className="flex items-center justify-between gap-3 flex-wrap">
-              <div className="flex items-center gap-3 flex-wrap">
-                <div className="p-2 rounded-md" style={{ background: 'rgba(245,192,26,0.1)' }}>
-                  <BarChart3 className="w-4 h-4" style={{ color: '#F5C01A' }} />
-                </div>
-                <div>
-                  <p style={{ fontWeight: 600, color: '#0b3a7a', fontSize: '14px' }}>View Full Dynasty Profile</p>
-                  <p style={{ fontSize: '12px', color: '#94a3b8' }}>Trade calculator, keep/trade/cut data, and more on KeepTradeCut</p>
-                </div>
-              </div>
-              <ExternalLink className="w-4 h-4 flex-shrink-0" style={{ color: '#94a3b8' }} />
-            </div>
-        </div>
-      </a>
-
-      <div className="px-1 pt-2" data-testid="dynasty-disclaimer">
-        <p className="text-[9px] text-muted-foreground/40 leading-relaxed">
-          Dynasty market data referenced from publicly available consensus rankings at{' '}
-          <a
-            href="https://keeptradecut.com/dynasty-rankings"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-muted-foreground/60 underline"
-          >
-            KeepTradeCut
-          </a>
-          . StatChasers is not affiliated with KeepTradeCut. Rankings are crowdsourced and updated periodically.
-        </p>
-      </div>
-    </div>
-  );
-}
-
 type PatriotsNewsItem = {
   title: string;
   url: string;
@@ -2223,23 +2062,6 @@ const SUPPORTED_TEAM_SITES: Record<string, string> = {
   CIN: "Bengals",
   CLE: "Browns",
   PIT: "Steelers",
-};
-
-type BioData = {
-  snapshot_bullets: string[];
-  style: {
-    how_he_wins: string;
-    how_he_wins_tags: string[];
-    fantasy_translation: string;
-    fantasy_translation_tags: string[];
-    best_case?: string;
-    floor_driver?: string;
-  } | null;
-  timeline: { label: string; badge: string; text: string; fantasy_note?: string }[];
-  career_context_tiles: { title: string; text: string }[];
-  narrative_paragraphs: string[];
-  last_updated: string;
-  sources: { label: string; url: string }[];
 };
 
 const BADGE_CONFIG: Record<string, { bg: string; text: string; dot: string; border: string; icon: typeof Activity; fantasyInflection: boolean }> = {
@@ -2733,24 +2555,24 @@ function PlayerProfileSkeleton() {
   );
 }
 
+const SCORING_SHORT: Record<ScoringFormat, string> = { standard: 'STD', half: 'HALF', ppr: 'PPR' };
+
 function ScoringFormatToggle({ format, onChange }: { format: ScoringFormat; onChange: (f: ScoringFormat) => void }) {
   const formats: ScoringFormat[] = ['standard', 'half', 'ppr'];
   return (
-    <div className="sc-scoring" data-testid="scoring-format-toggle">
-      <span className="sc-scoring__label">Scoring</span>
-      <div className="sc-segment" role="group" aria-label="Scoring format">
-        {formats.map((f) => (
-          <button
-            key={f}
-            type="button"
-            className={`sc-segment__btn ${format === f ? 'sc-segment__btn--active' : ''}`}
-            onClick={() => onChange(f)}
-            data-testid={`button-format-${f}`}
-          >
-            {SCORING_LABELS[f]}
-          </button>
-        ))}
-      </div>
+    <div className="sc-segment" role="group" aria-label="Scoring format" data-testid="scoring-format-toggle">
+      {formats.map((f) => (
+        <button
+          key={f}
+          type="button"
+          className={`sc-segment__btn ${format === f ? 'sc-segment__btn--active' : ''}`}
+          onClick={() => onChange(f)}
+          data-testid={`button-format-${f}`}
+        >
+          <span className="sc-seg-full">{SCORING_LABELS[f]}</span>
+          <span className="sc-seg-short">{SCORING_SHORT[f]}</span>
+        </button>
+      ))}
     </div>
   );
 }
@@ -2789,6 +2611,28 @@ export default function PlayerProfile() {
     enabled: activeTab === "advanced" && !!player?.id && !!player?.position && ["QB","RB","WR","TE"].includes(player.position || ""),
     staleTime: 1000 * 60 * 60,
   });
+
+  // Up-front qualification check (runs regardless of the active tab) so we can
+  // decide whether to show the Advanced Stats tab, which seasons to offer, and
+  // whether the "All Seasons" view is available.
+  const { data: advQual } = useQuery<AdvancedQualification>({
+    queryKey: ["/api/advanced-stats/qualification", advPos, player?.id],
+    queryFn: () => loadPlayerSeasonQualification(player!.id, player!.position || ""),
+    enabled: !!player?.id && !!player?.position && ["QB","RB","WR","TE"].includes(player.position || ""),
+    staleTime: 1000 * 60 * 60,
+  });
+  const qualifiedSeasons = advQual?.qualifiedSeasons ?? [];
+  const allSeasonsQualified = advQual?.allQualified ?? false;
+  const showAdvancedTab = qualifiedSeasons.length > 0;
+
+  // Keep the selected advanced season valid: if the player isn't qualified for
+  // the current pick (or for "All Seasons"), fall back to their most recent
+  // qualified season.
+  useEffect(() => {
+    if (!qualifiedSeasons.length) return;
+    const valid = advSeason === "all" ? allSeasonsQualified : qualifiedSeasons.includes(advSeason as number);
+    if (!valid) setAdvSeason(Math.max(...qualifiedSeasons) as AdvSeason);
+  }, [qualifiedSeasons, allSeasonsQualified, advSeason]);
 
   useEffect(() => {
     setActiveTab("overview");
@@ -3033,7 +2877,7 @@ export default function PlayerProfile() {
             style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             data-testid="profile-tabs"
           >
-            {TAB_CONFIG.map(tab => {
+            {TAB_CONFIG.filter(tab => tab.key !== "advanced" || showAdvancedTab).map(tab => {
               const isActive = activeTab === tab.key;
               return (
                 <button
@@ -3106,10 +2950,9 @@ export default function PlayerProfile() {
               pos={player.position || ""}
               season={advSeason}
               onSeasonChange={setAdvSeason}
+              qualifiedSeasons={qualifiedSeasons}
+              allSeasonsQualified={allSeasonsQualified}
             />
-          )}
-          {activeTab === "rankings" && (
-            <RankingsTab player={player} />
           )}
           {activeTab === "injury" && (
             <InjuryTab
@@ -3127,35 +2970,7 @@ export default function PlayerProfile() {
         </div>
 
         {relatedData && relatedData.neighbors && relatedData.neighbors.length > 0 && (
-          <div className="mt-8">
-            <div className="flex items-center gap-2 mb-1 flex-wrap">
-              <h2 className="text-lg font-semibold text-foreground" data-testid="text-related-heading">
-                Rank Neighbors ({player.position})
-              </h2>
-            </div>
-            <p className="text-xs text-muted-foreground mb-4" data-testid="text-related-subtitle">
-              Based on {relatedData.season} {relatedData.format.toUpperCase()} season rank &middot; Showing {player.position}{Math.min(...relatedData.neighbors.map(n => n.posRank))}–{player.position}{Math.max(...relatedData.neighbors.map(n => n.posRank))}
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {relatedData.neighbors.map((rp) => (
-                <Link key={rp.id} href={`/nfl/players/${rp.slug}/`}>
-                  <div className="sc-card hover-elevate" style={{ padding: '12px 16px', cursor: 'pointer', height: '100%' }} data-testid={`card-related-${rp.slug}`}>
-                      <div className="flex items-center gap-3 flex-wrap">
-                        <NeighborHeadshot playerId={rp.id} name={rp.name} teamAbbr={rp.team} />
-                        <div className="flex-1 min-w-0">
-                          <p style={{ fontWeight: 600, fontSize: '14px', color: '#0b3a7a' }} className="truncate">{rp.name}</p>
-                          <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                            <span style={{ fontSize: '10px', fontWeight: 700, color: '#1a4fa0' }}>{rp.position}{rp.posRank}</span>
-                            <span style={{ fontSize: '12px', color: '#94a3b8' }}>&middot;</span>
-                            <span style={{ fontSize: '12px', color: '#94a3b8' }}>{rp.team}</span>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
+          <RankNeighborsRail player={player} related={relatedData} />
         )}
       </main>
 

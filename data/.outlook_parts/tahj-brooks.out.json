@@ -1,0 +1,19 @@
+{
+  "slug": "tahj-brooks",
+  "name": "Tahj Brooks",
+  "position": "RB",
+  "team": "CIN",
+  "season": 2026,
+  "headline": "Buried in Cincinnati's backfield until the workload shifts",
+  "body": "Brooks barely cracked the rotation as a rookie, logging just a 4.5% snap share across 12 games and turning 16 carries into 45 yards at 2.81 a pop. The advanced profile is brutal: a minus-0.672 EPA per play, 1.25 yards after contact per attempt, zero touchdowns, and a 0.3% target share that erases any passing-down floor. A line of 5.4 fantasy points and an RB112 finish tells you everything about his current leverage in the offense.\n\nThe receiving usage simply isn't there, with one catch on two looks and a 0.39 yards-per-route-run mark that won't earn him third-down snaps. A late-season concussion only muddied his standing further. Until an injury ahead of him or a depth-chart shift hands him real volume, he's a deep-stash dart throw at an RB95 valuation and a draft cost near pick 308, not a player worth chasing on draft day.",
+  "keyStats": {"rank":112,"playerId":"12543","playerName":"Tahj Brooks","position":"RB","team":"CIN","age":23,"season":2025,"games":12,"snapPct":4.5,"routes":23,"rushAttempts":16,"redZoneOpportunities":0,"goalLineCarries":0,"targets":2,"receptions":1,"redZoneTargets":0,"endZoneTargets":0,"rushYards":45,"yardsPerCarry":2.81,"rushTouchdowns":0,"targetSharePct":0.3,"receivingYards":9,"yardsPerReception":9,"yardsPerRouteRun":0.39,"receivingTouchdowns":0,"epaPerPlay":-0.672,"fantasyPoints":5.4,"rushes10Plus":0,"rushes20Plus":0,"rushes30Plus":0,"rushes40Plus":0,"rushes50Plus":0,"explosiveRunPct":0,"breakawayRunPct":0,"longestRush":7,"longestRushTouchdown":null,"brokenTackles":1,"rushAttemptsPerBrokenTackle":16,"yardsAfterContactPerAttempt":1.25,"yardsBeforeContactPerAttempt":1.56,"receivingYardsAfterCatch":11,"tackleEludedRate":5.9,"fumbles":0,"tacklesForLoss":0,"tacklesForLossYards":0,"rushAttForNegativeYards":0},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/tahj-brooks.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-tahj-brooks/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "12543",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

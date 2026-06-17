@@ -1,0 +1,19 @@
+{
+  "slug": "blake-whiteheart",
+  "name": "Blake Whiteheart",
+  "position": "TE",
+  "team": "CLE",
+  "season": 2026,
+  "headline": "Whiteheart is a snap-count blocker, not a fantasy bet",
+  "body": "The numbers leave little room for optimism. Across nine games in 2025, Whiteheart ran just 109 routes on an 18% route share, drawing six targets for a 1.1% target share and converting only two of them into four total yards. His -0.621 EPA per play and 0% success rate were among the worst at the position, and a fumble on such limited volume only deepens the concern. The 2024 sample was thinner but cleaner: six grabs for 51 yards and a red-zone touchdown on a 44.4% success rate.\n\nNothing here points to a usable role. With a sub-24% snap rate and essentially zero air-yards involvement, he profiles as a blocking specialist rather than a receiving threat. Cleveland's tight end pecking order keeps him buried, and his depressed ranking reflects it. Leave him on the wire in every format and revisit only if injuries open real route volume ahead of him.",
+  "keyStats": {"rank":117,"playerId":"11201","playerName":"Blake Whiteheart","position":"TE","team":"CLE","age":25,"season":2025,"games":9,"snapPct":23.7,"routes":109,"routePct":18,"targets":6,"targetsPerRouteRun":0.055,"targetSharePct":1.1,"airYardsPerTarget":7.17,"airYardsPerReception":21.5,"airYardsSharePct":1.1,"wopr":0.025,"receptions":2,"redZoneTargets":0,"endZoneTargets":0,"catchPct":33.3,"receivingYards":4,"totalYards":4,"yardsPerReception":2,"yardsBeforeCatchPerReception":1.5,"yardsAfterCatchPerReception":0.5,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.04,"receivingTouchdowns":0,"epaPerPlay":-0.621,"successRate":0,"contestedCatchRate":null,"fantasyPoints":0.4,"avoidedTackleRate":0,"brokenTackles":0,"drops":0,"catchableTargets":2,"dropPct":0,"interceptionsWhenTargeted":0,"fumbles":1,"receptions10Plus":0,"receptions20Plus":0,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":4},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/blake-whiteheart.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-blake-whiteheart/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11201",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

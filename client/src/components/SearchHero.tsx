@@ -2,7 +2,7 @@ import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { Link, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
-import { Search, TrendingUp, Keyboard, Activity } from "lucide-react";
+import { Search, TrendingUp, Keyboard } from "lucide-react";
 
 /**
  * SearchHero — the persistent "Search any player…" header with the Fantasy
@@ -100,7 +100,9 @@ export default function SearchHero({ scoringControl }: { scoringControl?: React.
     if (!indexedData?.byTeam) return [] as IndexedPlayer[];
     const all: IndexedPlayer[] = [];
     for (const teamPositions of Object.values(indexedData.byTeam)) {
-      for (const posPlayers of Object.values(teamPositions)) {
+      for (const [pos, posPlayers] of Object.entries(teamPositions)) {
+        // Search covers skill positions only — exclude kickers and defenses.
+        if (!POSITION_ORDER.includes(pos)) continue;
         all.push(...posPlayers);
       }
     }
@@ -126,6 +128,7 @@ export default function SearchHero({ scoringControl }: { scoringControl?: React.
     const extras = (players || [])
       .filter(
         (p) =>
+          POSITION_ORDER.includes(p.position) &&
           !indexedSlugs.has(p.slug) &&
           (p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q)),
       )
@@ -133,7 +136,13 @@ export default function SearchHero({ scoringControl }: { scoringControl?: React.
     return [...indexedMatches, ...extras];
   }, [indexedFlat, players, search]);
 
-  const totalPlayers = indexedData?.slugs?.length || 0;
+  // Count only the positions we expose as pills (QB/RB/WR/TE) so the total
+  // reconciles with the per-position breakdown. K/DEF stay searchable but are
+  // excluded from this headline count.
+  const totalPlayers = useMemo(
+    () => POSITION_ORDER.reduce((sum, pos) => sum + (posCounts[pos] || 0), 0),
+    [posCounts],
+  );
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -194,10 +203,10 @@ export default function SearchHero({ scoringControl }: { scoringControl?: React.
   return (
     <div className="sc-header" data-testid="hero-section">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="sc-controlbar" ref={searchRef}>
-          {/* Top row — search anchor + summary metric */}
-          <div className="sc-controlbar__top">
-            <div className="sc-controlbar__search relative group">
+        <div className="sc-utilbar" ref={searchRef}>
+          {/* Top row — search owns the full width */}
+          <div className="sc-utilbar__search-row">
+            <div className="sc-utilbar__search relative group">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 sc-search__icon z-10" />
               <Input
                 ref={inputRef}
@@ -266,21 +275,12 @@ export default function SearchHero({ scoringControl }: { scoringControl?: React.
                 </div>
               )}
             </div>
-
-            {totalPlayers > 0 && (
-              <div className="sc-stat-card" data-testid="badge-player-count">
-                <Activity className="w-4 h-4 sc-header__gold-icon" />
-                <div>
-                  <p className="sc-stat-card__number">{totalPlayers}</p>
-                  <p className="sc-stat-card__label">Fantasy Starters</p>
-                </div>
-              </div>
-            )}
           </div>
 
-          {/* Bottom row — position filters + conference toggle (navigate to search) */}
-          <div className="sc-controlbar__bottom">
-            <div className="sc-controlbar__filters">
+          {/* Second row — position filters (left) + conference & scoring (right),
+              one unified filter system. */}
+          <div className="sc-utilbar__row">
+            <div className="sc-utilbar__filters">
               {POSITION_ORDER.map((pos) => (
                 <button
                   key={pos}
@@ -293,9 +293,12 @@ export default function SearchHero({ scoringControl }: { scoringControl?: React.
                   {posCounts[pos] ? <span className="sc-filter-pill__count">{posCounts[pos]}</span> : null}
                 </button>
               ))}
+              {totalPlayers > 0 && (
+                <span className="sc-utilbar__count" data-testid="badge-player-count">{totalPlayers} players</span>
+              )}
             </div>
 
-            <div className="sc-controlbar__bottom-right">
+            <div className="sc-utilbar__group">
               <div className="sc-segment" role="group" aria-label="Conference filter" data-testid="tabs-conference">
                 {(["AFC", "NFC"] as const).map((conf) => (
                   <button

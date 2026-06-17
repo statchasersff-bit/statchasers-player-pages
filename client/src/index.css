@@ -849,21 +849,21 @@
 .sc-header {
   background: transparent;
   border-bottom: none;
-  padding: 16px 0 14px;
+  padding: 16px 0;
 }
 
 /* ===== Premium control bar (player search header) ============================
    One cohesive control shell: search anchor + summary metric on top, position
-   filters + conference toggle below, all aligned as a single system. */
+   filters + conference toggle + scoring below, all aligned as a single system. */
 .sc-controlbar {
   display: flex;
   flex-direction: column;
-  gap: 13px;
+  gap: 14px;
   background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-  border: 1px solid #e5ebf3;
-  border-radius: 22px;
-  padding: 16px 18px;
-  box-shadow: 0 14px 36px rgba(15,23,42,0.045);
+  border: 1px solid #dbe4f0;
+  border-radius: 24px;
+  padding: 20px 24px;
+  box-shadow: 0 18px 44px rgba(15,23,42,0.045);
 }
 .sc-controlbar__top {
   display: flex;
@@ -873,19 +873,22 @@
 .sc-controlbar__search {
   flex: 1 1 auto;
   min-width: 0;
-  max-width: 760px;
+  max-width: none;
 }
 .sc-controlbar .sc-search {
   width: 100%;
-  height: 52px;
+  height: 56px !important;
+  line-height: 56px !important;
   border-radius: 16px !important;
-  font-size: 15px;
+  border-color: #dbe4f0 !important;
+  box-shadow: 0 10px 24px rgba(15,23,42,0.04);
+  font-size: 15px !important;
 }
 .sc-controlbar__bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 14px;
   flex-wrap: wrap;
 }
 .sc-controlbar__filters {
@@ -894,39 +897,47 @@
   gap: 8px;
   flex-wrap: wrap;
 }
-/* Position pills + conference toggle share one height so the row reads as a set. */
+/* Right-side controls (conference + scoring) read as one settings cluster */
+.sc-controlbar__bottom-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+/* Row-2 controls share one height/radius/baseline so they feel like one system */
 .sc-controlbar__filters .sc-filter-pill {
-  height: 38px;
+  height: 40px;
   padding: 0 16px;
 }
-/* Compact summary metric, integrated into the top row. */
+/* Compact metric chip beside the search bar — matches its height, not a tall card */
 .sc-controlbar .sc-stat-card {
   flex: 0 0 auto;
-  min-width: 178px;
-  height: 70px;
-  padding: 0 20px;
-  border: 1px solid #e5ebf3;
+  min-width: 150px;
+  height: 56px;
+  gap: 12px;
+  padding: 0 18px;
+  border: 1px solid #dbe4f0;
   border-radius: 16px;
-  box-shadow: 0 12px 28px rgba(15,23,42,0.06);
+  box-shadow: 0 10px 24px rgba(15,23,42,0.05);
 }
-/* Segmented conference toggle — matches pill height + radius. */
+.sc-controlbar .sc-stat-card .sc-stat-card__number { font-size: 20px; }
 .sc-segment {
   display: inline-flex;
   align-items: center;
   gap: 2px;
   flex: 0 0 auto;
-  height: 38px;
+  height: 40px;
   padding: 3px;
   border-radius: 999px;
-  border: 1px solid rgba(15,23,42,0.12);
-  background: rgba(15,23,42,0.04);
+  border: 1px solid #dbe4f0;
+  background: #fff;
 }
 .sc-segment__btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: 0 18px;
+  padding: 0 16px;
   border: none;
   background: transparent;
   border-radius: 999px;
@@ -939,9 +950,23 @@
 }
 .sc-segment__btn:hover { color: #0f172a; }
 .sc-segment__btn--active {
-  background: #fff;
-  color: #0f172a;
-  box-shadow: 0 2px 6px rgba(15,23,42,0.12);
+  background: linear-gradient(135deg, #F5C01A, #FFD166);
+  color: #08244a;
+  box-shadow: 0 8px 18px rgba(245,192,26,0.25);
+}
+/* Subtle scoring label — integrated into the filter cluster, not a heavy heading */
+.sc-scoring {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+.sc-scoring__label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
 }
 
 @media (max-width: 640px) {
@@ -972,6 +997,86 @@
   .sc-controlbar__filters::-webkit-scrollbar { display: none; }
   .sc-controlbar__filters .sc-filter-pill { flex: 0 0 auto; }
   .sc-segment { align-self: flex-start; }
+}
+
+/* ===== Compact utility bar (player profile header) ==========================
+   A tight toolbar — not a hero. Search owns the top row; position filters,
+   conference and scoring sit on one unified second row. Reuses the shared
+   .sc-search / .sc-filter-pill / .sc-segment building blocks for one
+   consistent control style. */
+.sc-utilbar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  border: 1px solid #dbe4f0;
+  border-radius: 22px;
+  padding: 18px 22px;
+  box-shadow: 0 10px 30px rgba(15,23,42,0.05);
+}
+.sc-utilbar__search-row { display: flex; }
+.sc-utilbar__search { flex: 1 1 auto; min-width: 0; }
+.sc-utilbar .sc-search {
+  width: 100%;
+  height: 54px !important;
+  line-height: 54px !important;
+  border-radius: 14px !important;
+  border-color: #dbe4f0 !important;
+  box-shadow: 0 8px 20px rgba(15,23,42,0.04);
+  font-size: 15px !important;
+}
+.sc-utilbar__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.sc-utilbar__filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.sc-utilbar__group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.sc-utilbar .sc-filter-pill { height: 38px; padding: 0 14px; }
+.sc-utilbar .sc-segment { height: 38px; }
+.sc-utilbar__count {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+.dark .sc-utilbar__count { color: hsl(var(--muted-foreground)); }
+
+.sc-seg-short { display: none; }
+@media (max-width: 820px) {
+  .sc-seg-full { display: none; }
+  .sc-seg-short { display: inline; }
+}
+
+@media (max-width: 640px) {
+  .sc-utilbar { padding: 14px; border-radius: 18px; gap: 12px; }
+  .sc-utilbar .sc-search { height: 50px !important; line-height: 50px !important; }
+  .sc-utilbar__row { flex-direction: column; align-items: stretch; gap: 10px; }
+  .sc-utilbar__filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .sc-utilbar__filters::-webkit-scrollbar { display: none; }
+  .sc-utilbar .sc-filter-pill { flex: 0 0 auto; }
+  .sc-utilbar__group { justify-content: space-between; }
 }
 .sc-header__back-btn {
   color: #64748b;
@@ -1284,7 +1389,7 @@
 
 .sc-board__header {
   background: #fff;
-  padding: 20px 24px 0;
+  padding: 18px 24px 0;
 }
 .dark .sc-board__header {
   background: hsl(var(--background));
@@ -1293,10 +1398,143 @@
   max-width: 1180px;
   margin: 0 auto;
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+/* ===== Team context strip ===== */
+.sc-teamstrip {
+  position: relative;
+  width: 100%;
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 20px;
   flex-wrap: wrap;
+  padding: 18px 22px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(15,23,42,0.08);
+  background:
+    linear-gradient(120deg, color-mix(in srgb, var(--team-color) 14%, transparent) 0%, transparent 55%),
+    #fff;
+  box-shadow: 0 8px 24px rgba(15,23,42,0.06);
+}
+.dark .sc-teamstrip {
+  border-color: hsl(var(--border));
+  background:
+    linear-gradient(120deg, color-mix(in srgb, var(--team-color) 30%, transparent) 0%, transparent 55%),
+    hsl(var(--card));
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+.sc-teamstrip::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--team-color);
+}
+.sc-teamstrip__watermark {
+  position: absolute;
+  right: -18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  opacity: 0.06;
+  pointer-events: none;
+}
+.sc-teamstrip__main {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+.sc-teamstrip__logo {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.sc-teamstrip__id { min-width: 0; }
+.sc-teamstrip__name {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+.dark .sc-teamstrip__name { color: hsl(var(--foreground)); }
+.sc-teamstrip__sub {
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #64748b;
+}
+.dark .sc-teamstrip__sub { color: hsl(var(--muted-foreground)); }
+.sc-teamstrip__board {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 11.5px;
+  color: #F5C01A;
+}
+.sc-teamstrip__dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.55;
+}
+.sc-teamstrip__summary {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.sc-teamstrip__chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+  background: rgba(15,23,42,0.04);
+  border: 1px solid rgba(15,23,42,0.07);
+}
+.dark .sc-teamstrip__chip {
+  color: hsl(var(--foreground));
+  background: hsl(var(--muted));
+  border-color: hsl(var(--border));
+}
+.sc-teamstrip__chip strong {
+  font-size: 14px;
+  font-weight: 900;
+}
+.sc-teamstrip__chip--qb strong { color: var(--pos-qb); }
+.sc-teamstrip__chip--rb strong { color: var(--pos-rb); }
+.sc-teamstrip__chip--wr strong { color: var(--pos-wr); }
+.sc-teamstrip__chip--te strong { color: var(--pos-te); }
+
+@media (max-width: 640px) {
+  .sc-teamstrip { padding: 16px; gap: 14px; }
+  .sc-teamstrip__name { font-size: 21px; }
+  .sc-teamstrip__logo { width: 44px; height: 44px; }
 }
 
 .sc-board__back {
@@ -1373,21 +1611,53 @@
 }
 
 .sc-board__section {
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
 .sc-board__section-title {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-weight: 900;
-  font-size: 13px;
-  letter-spacing: 0.06em;
-  color: #0f172a;
-  text-transform: uppercase;
-  margin: 0 0 10px 0;
+  margin: 0 0 12px 0;
 }
-.dark .sc-board__section-title {
-  color: hsl(var(--foreground));
+.sc-board__section-pos {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: #64748b;
+}
+.sc-board__section-pos--qb { background: var(--pos-qb); }
+.sc-board__section-pos--rb { background: var(--pos-rb); }
+.sc-board__section-pos--wr { background: var(--pos-wr); }
+.sc-board__section-pos--te { background: var(--pos-te); }
+.sc-board__section-count {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.dark .sc-board__section-count { color: hsl(var(--foreground)); }
+.sc-board__section-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+}
+.dark .sc-board__section-role { color: hsl(var(--muted-foreground)); }
+.sc-board__section-roledot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.55;
 }
 .sc-board__section-title::after {
   content: "";
@@ -1497,9 +1767,64 @@
   -webkit-backdrop-filter: blur(6px);
 }
 
+/* Role badge (Starter / Backup / Depth / IR) in the image corner */
+.sc-card__role {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  font-weight: 800;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 999px;
+  color: #fff;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.sc-card__role--starter { background: linear-gradient(135deg, #F5C01A, #FFD166); color: #3a2c00; }
+.sc-card__role--backup  { background: rgba(11,18,32,0.72); }
+.sc-card__role--depth   { background: rgba(100,116,139,0.78); }
+.sc-card__role--ir      { background: rgba(220,38,38,0.82); }
+
 .sc-card__gold {
   height: 3px;
+  background: transparent;
+}
+.sc-card--role-starter .sc-card__gold {
   background: linear-gradient(90deg, #F5C01A, #FFD166);
+}
+
+/* Visual tiers — make who matters obvious at a glance */
+.sc-card--role-starter {
+  border-color: rgba(245,192,26,0.6) !important;
+}
+.sc-directory .sc-card.sc-card--role-starter:hover {
+  border-color: rgba(245,192,26,0.85);
+}
+.sc-card--role-depth { opacity: 0.9; }
+.sc-card--role-ir { opacity: 0.85; }
+.sc-card--role-ir .sc-card__img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(100,116,139,0.35);
+}
+
+.sc-card__rookie {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #0369a1;
+  background: rgba(3,105,161,0.1);
+  padding: 1px 7px;
+  border-radius: 999px;
+}
+.dark .sc-card__rookie {
+  color: #7dd3fc;
+  background: rgba(125,211,252,0.12);
 }
 
 .sc-card__body {
@@ -2954,9 +3279,10 @@
   line-height: 1;
 }
 .sc-finish2__card {
-  /* Share the row evenly; shrink to fit but never grow past the comfortable size. */
-  flex: 1 1 0;
-  min-width: 0;
+  /* Keep a legible minimum width and let the track WRAP to more rows for long
+     careers, rather than shrinking every card to share a single row. */
+  flex: 1 1 116px;
+  min-width: 112px;
   max-width: 148px;
   min-height: 168px;
   display: flex;
@@ -2971,11 +3297,15 @@
   text-align: center;
 }
 
-/* Density tiers — the more seasons, the smaller each card scales so the full
-   timeline stays on one screen. Driven by a class set in SeasonFinishTimeline. */
+/* Density tiers — the more seasons, the tighter the gaps/fonts, but each card
+   keeps a legible minimum width and the track wraps to additional rows so long
+   careers never collapse into tiny, truncated cards. Driven by a class set in
+   SeasonFinishTimeline. */
 .sc-finish2__timeline--compact .sc-finish2__track { gap: 14px; }
 .sc-finish2__timeline--compact .sc-finish2__card {
-  max-width: 124px;
+  flex-basis: 112px;
+  min-width: 108px;
+  max-width: 136px;
   min-height: 156px;
   gap: 6px;
   padding: 16px 10px;
@@ -2984,7 +3314,9 @@
 
 .sc-finish2__timeline--dense .sc-finish2__track { gap: 10px; }
 .sc-finish2__timeline--dense .sc-finish2__card {
-  max-width: 104px;
+  flex-basis: 108px;
+  min-width: 104px;
+  max-width: 124px;
   min-height: 146px;
   gap: 5px;
   padding: 14px 8px;
@@ -2996,7 +3328,9 @@
 
 .sc-finish2__timeline--ultra .sc-finish2__track { gap: 8px; }
 .sc-finish2__timeline--ultra .sc-finish2__card {
-  max-width: 88px;
+  flex-basis: 104px;
+  min-width: 100px;
+  max-width: 116px;
   min-height: 138px;
   gap: 4px;
   padding: 12px 6px;
@@ -3075,6 +3409,184 @@
     max-width: none;
     min-height: 160px;
   }
+}
+
+/* ==========================================================================
+   Nearby Positional Peers — horizontal, snap-scrolling card rail. The current
+   player is inserted in rank order and highlighted ("You Are Here").
+   ========================================================================== */
+.sc-peer-rail {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 6px 2px 14px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+.sc-peer-rail::-webkit-scrollbar { height: 8px; }
+.sc-peer-rail::-webkit-scrollbar-thumb {
+  background: rgba(15,23,42,0.18);
+  border-radius: 999px;
+}
+.sc-peer-card {
+  position: relative;
+  flex: 0 0 auto;
+  width: 160px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  border: 1px solid rgba(15,23,42,0.10);
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(15,23,42,0.05);
+  overflow: hidden;
+  cursor: pointer;
+  scroll-snap-align: center;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.sc-peer-card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--peer-team, #0b3a7a) 45%, transparent);
+  box-shadow: 0 16px 34px rgba(15,23,42,0.16),
+              0 0 0 3px color-mix(in srgb, var(--peer-team, #0b3a7a) 16%, transparent);
+}
+.sc-peer-card--current {
+  border-color: var(--sc-gold, #F5C01A);
+  box-shadow: 0 0 0 2px var(--sc-gold, #F5C01A), 0 8px 22px rgba(245,192,26,0.22);
+}
+.sc-peer-card--current:hover {
+  box-shadow: 0 0 0 2px var(--sc-gold, #F5C01A), 0 16px 34px rgba(245,192,26,0.30);
+}
+.sc-peer-card__photo {
+  position: relative;
+  height: 104px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--peer-team, #F5C01A) 32%, transparent), transparent 72%),
+    linear-gradient(180deg, rgba(15,23,42,0.05), rgba(15,23,42,0));
+}
+.sc-peer-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.25s ease;
+}
+.sc-peer-card:hover .sc-peer-card__img { transform: scale(1.05); }
+.sc-peer-card__initials {
+  font-size: 30px;
+  font-weight: 900;
+  color: color-mix(in srgb, var(--peer-team, #0b3a7a) 55%, #1f2937);
+  letter-spacing: 1px;
+}
+.sc-peer-card__rank {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  color: #fff;
+  background: rgba(15,23,42,0.78);
+  padding: 2px 7px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(15,23,42,0.2);
+}
+.sc-peer-card--current .sc-peer-card__rank {
+  background: linear-gradient(135deg, #F5C01A, #FFD166);
+  color: #1a1407;
+}
+.sc-peer-card__here {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #1a1407;
+  background: linear-gradient(135deg, #F5C01A, #FFD166);
+  padding: 2px 6px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(245,192,26,0.35);
+}
+.sc-peer-card__body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px 12px;
+  flex: 1 1 auto;
+  z-index: 1;
+}
+/* Faint team watermark, bottom-right, behind the text */
+.sc-peer-card__logo {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+}
+.sc-peer-card__name {
+  font-weight: 800;
+  font-size: 13.5px;
+  line-height: 1.2;
+  color: #0b3a7a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sc-peer-card__meta {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.2px;
+}
+.sc-peer-card__value {
+  margin-top: auto;
+  font-size: 12px;
+  color: #475569;
+}
+.sc-peer-card__value b {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.sc-peer-card__cta {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fff;
+  background: color-mix(in srgb, var(--peer-team, #0b3a7a) 88%, #000);
+  padding: 5px 0;
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+.sc-peer-card:hover .sc-peer-card__cta { transform: translateY(0); opacity: 1; }
+.dark .sc-peer-card { background: #0f172a; border-color: rgba(255,255,255,0.10); }
+.dark .sc-peer-card__name { color: #dbe9ff; }
+.dark .sc-peer-card__value b { color: #f1f5f9; }
+.dark .sc-peer-card__value { color: #cbd5e1; }
+
+@media (max-width: 640px) {
+  .sc-peer-card { width: 144px; min-height: 192px; }
+  .sc-peer-card__photo { height: 96px; }
 }
 
 .sc-news-tab {
@@ -3440,10 +3952,10 @@
 
 .ov2-stack-bar {
   display: flex;
-  height: 38px;
-  border-radius: 10px;
+  height: 34px;
+  border-radius: 12px;
   overflow: hidden;
-  border: 1px solid var(--ov2-surface-border);
+  border: 1px solid var(--ov2-surface-border, rgba(11,58,122,0.08));
 }
 .ov2-stack-seg {
   display: flex;
@@ -3461,22 +3973,22 @@
 .ov2-stack-seg--flex { background: linear-gradient(90deg, #475569 0%, #64748b 100%); color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.18); }
 .ov2-stack-seg--bust { background: linear-gradient(90deg, #b91c1c 0%, #ef4444 100%); color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.18); }
 
-.ov2-legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 14px; }
+.ov2-legend { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 10px; }
 .ov2-legend__item {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--ov2-body);
+  gap: 5px;
+  font-size: 11.5px;
+  color: var(--ov2-body, #0b1220);
 }
 .ov2-legend__swatch {
   display: inline-block;
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 3px;
 }
-.ov2-legend__pct { color: var(--ov2-muted); font-weight: 600; }
-.ov2-legend__label { font-weight: 700; color: var(--ov2-heading); }
+.ov2-legend__pct { color: var(--ov2-muted, #64748b); font-weight: 600; }
+.ov2-legend__label { font-weight: 700; color: var(--ov2-heading, #0b1634); }
 .dark .ov2-legend__label { color: #f1f5f9; }
 
 .ov2-trend-row {
@@ -3764,20 +4276,17 @@
   zoom: 0.6;
   display: grid;
   grid-template-columns: 460px minmax(0, 1fr);
-  align-items: center;
+  align-items: end;
   gap: 44px;
-  padding: 20px 8px 34px;
+  padding: 12px 8px 0;
   overflow: hidden;
 }
 .player-photo-card {
   position: relative;
   width: 460px;
-  height: 380px;
-  border-radius: 22px;
+  height: 300px;
   overflow: hidden;
-  border: 1px solid rgba(var(--team-rgb, 11,58,122), 0.45);
-  box-shadow: 0 18px 40px rgba(var(--team-rgb, 11,58,122), 0.14);
-  background: #f8fafc;
+  background: transparent;
   z-index: 1;
 }
 .player-photo-card__logo {
@@ -3797,8 +4306,8 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: top center;
+  object-fit: contain;
+  object-position: bottom center;
   z-index: 1;
 }
 .player-photo-card__fallback {
@@ -3889,9 +4398,9 @@
     justify-items: center;
     text-align: center;
     gap: 18px;
-    padding: 12px 8px 26px;
+    padding: 12px 8px 0;
   }
-  .player-photo-card { width: 300px; height: 220px; border-radius: 18px; }
+  .player-photo-card { width: 300px; height: 200px; }
   .player-identity { max-width: 100%; }
   .player-last-name { font-size: clamp(40px, 13vw, 64px); }
   .player-status { margin-left: auto; margin-right: auto; }
@@ -3923,13 +4432,24 @@
 }
 .scpp-root .sc-glcard__title,
 .sc-glcard__title {
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 700;
   color: var(--sc-blue, #0b3a7a);
   margin: 0;
-  padding: 0;
+  padding: 0 0 10px;
   letter-spacing: -0.01em;
   line-height: 1.2;
+  position: relative;
+}
+.sc-glcard__title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 48px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--sc-gold, #F5C01A), var(--sc-gold-light, #FFD166));
 }
 
 /* Season selector (segmented) */
@@ -3957,7 +4477,7 @@
   transition: all 0.15s ease;
 }
 .sc-slog__seg:hover { color: #0f172a; }
-.sc-slog__seg--active { background: #fff; color: #0b3a7a; box-shadow: 0 2px 6px rgba(15,23,42,0.12); }
+.sc-slog__seg--active { background: linear-gradient(135deg, #F5C01A, #FFD166); color: #fff; box-shadow: 0 2px 8px rgba(245,192,26,0.25); }
 
 /* Body — stacked sections separated by edge-to-edge dividers (no nested cards) */
 .sc-glbody { display: flex; flex-direction: column; }
@@ -3971,23 +4491,36 @@
 .scpp-root .sc-dash__title,
 .sc-dash__title { font-size: 15px; font-weight: 800; color: var(--sc-blue, #0b3a7a); margin: 0; padding: 0; line-height: 1.2; }
 .sc-dash__insight { font-size: 12.5px; color: #64748b; margin: 5px 0 0; line-height: 1.5; max-width: 64ch; }
-.sc-dash__headline { display: inline-flex; align-items: center; gap: 10px; flex-shrink: 0; }
+/* Scannable insight chips under the season story */
+.sc-dash__badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+/* PPG · finish read as one intentional chip in the corner */
+.sc-dash__headline {
+  display: inline-flex; align-items: center; gap: 10px; flex-shrink: 0;
+  background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 8px 14px;
+}
+.dark .sc-dash__headline { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); }
 .sc-dash__ppg { font-size: 20px; font-weight: 900; color: #0f172a; font-variant-numeric: tabular-nums; }
+.dark .sc-dash__ppg { color: #f1f5f9; }
 .sc-dash__ppg i { font-size: 11px; font-weight: 700; font-style: normal; color: #94a3b8; margin-left: 4px; }
 
-/* Inline metric tiles — separated by hairlines, no chunky boxes */
-.sc-dash__metrics { display: flex; flex-wrap: wrap; margin-top: 16px; row-gap: 14px; }
-.sc-dash__metric { display: flex; flex-direction: column; gap: 4px; padding: 0 18px; border-left: 1px solid #eef2f7; }
-.sc-dash__metric:first-child { padding-left: 0; border-left: none; }
+/* Equal-width metric cells — clean columns, no dividers */
+.sc-dash__metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(72px, 1fr)); gap: 14px 4px; margin-top: 18px; }
+.sc-dash__metric { display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center; padding: 0; border: none; }
 .sc-dash__metric-val { font-size: 18px; font-weight: 900; color: #0f172a; font-variant-numeric: tabular-nums; line-height: 1; }
+.dark .sc-dash__metric-val { color: #f1f5f9; }
 .sc-dash__metric-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; }
 
-/* Performance snapshot — subtle dashed divider inside the dashboard */
-.sc-dash__perf { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 18px; padding-top: 16px; border-top: 1px dashed #e2e8f0; }
-.sc-dash__perf-item { display: flex; flex-direction: column; gap: 3px; }
-.sc-dash__perf-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; }
-.sc-dash__perf-val { font-size: 18px; font-weight: 900; color: #0b3a7a; font-variant-numeric: tabular-nums; line-height: 1; }
-.sc-dash__perf-sub { font-size: 11px; color: #94a3b8; }
+/* Weekly finish distribution — separated from the summary, with its own label */
+.sc-dash__profile { margin-top: 18px; padding-top: 16px; border-top: 1px dashed #e2e8f0; }
+.dark .sc-dash__profile { border-top-color: rgba(255,255,255,0.08); }
+.sc-dash__profile-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px 14px; flex-wrap: wrap; margin-bottom: 10px; }
+.sc-dash__profile-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; }
+.sc-dash__profile-summary { font-size: 12px; font-weight: 600; color: #64748b; font-variant-numeric: tabular-nums; }
+
+/* Weekly Finish Profile — stacked tier bar, subtle dashed divider inside dashboard */
+.sc-dash__profile { margin-top: 18px; padding-top: 16px; border-top: 1px dashed #e2e8f0; }
+.sc-dash__profile-title { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 12px; }
+.sc-dash__profile-insight { font-size: 12.5px; color: #64748b; margin: 14px 0 0; line-height: 1.5; }
 
 /* Weekly game log — connected directly under the dashboard (no separate card) */
 .sc-wlog { background: transparent; }
@@ -3998,7 +4531,7 @@
   display: grid;
   align-items: center;
   gap: 12px;
-  padding: 15px 24px;
+  padding: 8px 24px;
   border-bottom: 1px solid rgba(15,23,42,0.05);
   transition: background 0.15s ease, box-shadow 0.15s ease;
 }
@@ -4056,7 +4589,6 @@
 @media (max-width: 720px) {
   .sc-glcard__header { padding: 16px; }
   .sc-dash { padding: 18px 16px; }
-  .sc-dash__perf { grid-template-columns: repeat(2, 1fr); }
   .sc-dash__metrics { gap: 14px 18px; }
   .sc-dash__metric { border-left: none; padding: 0; }
   .sc-wlog__head { display: none; }
@@ -4080,3 +4612,200 @@
   .sc-wlog__wk { grid-column: 1 / -1; }
   .sc-slog__skey { display: none; }
 }
+
+/* ==========================================================================
+   Synced from sc-components.css (WordPress bundle) — these component classes
+   are used by the shared client/src components but were missing here, so they
+   rendered unstyled in the main app. Keep in parity with sc-components.css.
+   ========================================================================== */
+
+/* ----- Player search util bar ----- */
+.sc-utilbar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  border: 1px solid #dbe4f0;
+  border-radius: 22px;
+  padding: 18px 22px;
+  box-shadow: 0 10px 30px rgba(15,23,42,0.05);
+}
+.sc-utilbar__search-row { display: flex; }
+.sc-utilbar__search { flex: 1 1 auto; min-width: 0; }
+.sc-utilbar .sc-search {
+  width: 100%;
+  height: 54px !important;
+  line-height: 54px !important;
+  border-radius: 14px !important;
+  border-color: #dbe4f0 !important;
+  box-shadow: 0 8px 20px rgba(15,23,42,0.04);
+  font-size: 15px !important;
+}
+.sc-utilbar__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.sc-utilbar__filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.sc-utilbar__group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.sc-utilbar .sc-filter-pill { height: 38px; padding: 0 14px; }
+.sc-utilbar .sc-segment { height: 38px; }
+.sc-utilbar__count {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+.dark .sc-utilbar__count { color: hsl(var(--muted-foreground)); }
+
+.sc-seg-short { display: none; }
+@media (max-width: 820px) {
+  .sc-seg-full { display: none; }
+  .sc-seg-short { display: inline; }
+}
+@media (max-width: 640px) {
+  .sc-utilbar { padding: 14px; border-radius: 18px; gap: 12px; }
+  .sc-utilbar .sc-search { height: 50px !important; line-height: 50px !important; }
+  .sc-utilbar__row { flex-direction: column; align-items: stretch; gap: 10px; }
+  .sc-utilbar__filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .sc-utilbar__filters::-webkit-scrollbar { display: none; }
+  .sc-utilbar .sc-filter-pill { flex: 0 0 auto; }
+  .sc-utilbar__group { justify-content: space-between; }
+}
+
+/* ----- Roster board section headers ----- */
+.sc-board__section-pos {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: #64748b;
+}
+.sc-board__section-pos--qb { background: var(--pos-qb); }
+.sc-board__section-pos--rb { background: var(--pos-rb); }
+.sc-board__section-pos--wr { background: var(--pos-wr); }
+.sc-board__section-pos--te { background: var(--pos-te); }
+.sc-board__section-count {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.dark .sc-board__section-count { color: hsl(var(--foreground)); }
+.sc-board__section-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+}
+.dark .sc-board__section-role { color: hsl(var(--muted-foreground)); }
+.sc-board__section-roledot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+/* ----- Player card role badges & visual tiers ----- */
+.sc-card__role {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  font-weight: 800;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 999px;
+  color: #fff;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.sc-card__role--starter { background: linear-gradient(135deg, #F5C01A, #FFD166); color: #3a2c00; }
+.sc-card__role--backup  { background: rgba(11,18,32,0.72); }
+.sc-card__role--depth   { background: rgba(100,116,139,0.78); }
+.sc-card__role--ir      { background: rgba(220,38,38,0.82); }
+.sc-card--role-starter .sc-card__gold {
+  background: linear-gradient(90deg, #F5C01A, #FFD166);
+}
+.sc-card--role-starter {
+  border-color: rgba(245,192,26,0.6) !important;
+}
+.sc-directory .sc-card.sc-card--role-starter:hover {
+  border-color: rgba(245,192,26,0.85);
+}
+.sc-card--role-depth { opacity: 0.9; }
+.sc-card--role-ir .sc-card__img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(100,116,139,0.35);
+}
+.sc-card--role-ir { opacity: 0.85; }
+.sc-card__rookie {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #0369a1;
+  background: rgba(3,105,161,0.1);
+  padding: 1px 7px;
+  border-radius: 999px;
+}
+.dark .sc-card__rookie {
+  color: #7dd3fc;
+  background: rgba(125,211,252,0.12);
+}
+
+/* ----- Overview base custom props + career-stability tag ----- */
+.sc-overview {
+  --sc-gold: #F5C01A;
+  --sc-navy: #0f172a;
+  --sc-navy-80: rgba(15,23,42,0.8);
+}
+.sc-overview__career-stability-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(22,163,74,0.08);
+  color: #16a34a;
+  border: 1px solid rgba(22,163,74,0.15);
+}
+
+/* ----- Dark-mode legend item (Ov2 finish bar) ----- */
+.dark .ov2-legend__item { color: #f1f5f9; }

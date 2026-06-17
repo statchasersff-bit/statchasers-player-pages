@@ -1206,6 +1206,7 @@ export async function registerRoutes(
     res.json({
       neighbors: result,
       currentRank,
+      currentPpg: Math.round(ppgByPlayer[currentIdx].ppg * 10) / 10,
       season: activeSeason,
       format,
       position: player.position,

@@ -1,0 +1,19 @@
+{
+  "slug": "jaydon-blue",
+  "name": "Jaydon Blue",
+  "position": "RB",
+  "team": "DAL",
+  "season": 2026,
+  "headline": "Explosive flashes, but Blue's rookie efficiency was thin",
+  "body": "Blue's rookie tape was a study in contradiction. Across five games he handled just 38 carries on a 25.6% snap share, turning them into 129 yards at a meager 3.39 per pop with one score. The efficiency underneath was alarming: a minus-0.195 EPA per play, only 1.16 yards after contact per attempt, and seven carries swallowed for negative yardage. Yet the burst is real, with a 13.16% explosive-run rate, a 27-yard long, and a breakaway gear most backs his age lack.\n\nThe path forward is opportunity, not talent. He enters camp battling for the clear backup job behind Javonte Williams, and his late-season Week 18 start showed he can shoulder a real load when handed one. At an RB65-ish ADP, he's a cheap dart with standalone upside the moment Williams misses time. Until that backup role is locked, Blue is a speculative bench stash with league-winning handcuff equity.",
+  "keyStats": {"rank":86,"playerId":"12457","playerName":"Jaydon Blue","position":"RB","team":"DAL","age":21,"season":2025,"games":5,"snapPct":25.6,"routes":27,"rushAttempts":38,"redZoneOpportunities":7,"goalLineCarries":1,"targets":1,"receptions":1,"redZoneTargets":0,"endZoneTargets":0,"rushYards":129,"yardsPerCarry":3.39,"rushTouchdowns":1,"targetSharePct":0.2,"receivingYards":5,"yardsPerReception":5,"yardsPerRouteRun":0.19,"receivingTouchdowns":0,"epaPerPlay":-0.195,"fantasyPoints":19.4,"rushes10Plus":5,"rushes20Plus":1,"rushes30Plus":0,"rushes40Plus":0,"rushes50Plus":0,"explosiveRunPct":13.16,"breakawayRunPct":2.63,"longestRush":27,"longestRushTouchdown":14,"brokenTackles":2,"rushAttemptsPerBrokenTackle":19,"yardsAfterContactPerAttempt":1.16,"yardsBeforeContactPerAttempt":2.24,"receivingYardsAfterCatch":10,"tackleEludedRate":5.1,"fumbles":1,"tacklesForLoss":7,"tacklesForLossYards":18,"rushAttForNegativeYards":7},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/jaydon-blue.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-jaydon-blue/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "12457",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

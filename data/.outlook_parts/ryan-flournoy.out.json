@@ -1,0 +1,19 @@
+{
+  "slug": "ryan-flournoy",
+  "name": "Ryan Flournoy",
+  "position": "WR",
+  "team": "DAL",
+  "season": 2026,
+  "headline": "Elite efficiency, but the targets just aren't there yet",
+  "body": "Flournoy's 2025 leap was real where it counts: 0.511 EPA per play and a 57.1% success rate ranked among the most efficient marks for any wideout, a massive jump from his -0.2 EPA rookie season. He turned 56 targets into 40 catches (71.4%), 475 yards, and 4 touchdowns across 15 games, posting a healthy 1.83 yards per route run with 7 red-zone looks. The talent and the per-snap production are undeniable.\n\nThe ceiling is capped by volume, not ability. A 9.2% target share and 44.8% snap rate place him third in line behind CeeDee Lamb and George Pickens, and his biggest outings came when Lamb sat. With a WR66 draft profile, he's a dynasty stash and an injury-contingent bench piece rather than a weekly redraft option. If a spot opens ahead of him, the efficiency suggests he'd run with it.",
+  "keyStats": {"rank":60,"playerId":"11783","playerName":"Ryan Flournoy","position":"WR","team":"DAL","age":25,"season":2025,"games":15,"snapPct":44.8,"routes":259,"routePct":39.7,"targets":56,"targetsPerRouteRun":0.216,"targetSharePct":9.2,"airYardsPerTarget":8.32,"airYardsPerReception":11.65,"airYardsSharePct":9.2,"wopr":0.203,"receptions":40,"redZoneTargets":7,"endZoneTargets":5,"catchPct":71.4,"receivingYards":475,"totalYards":500,"yardsPerReception":11.88,"yardsBeforeCatchPerReception":6.78,"yardsAfterCatchPerReception":5.1,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.83,"receivingTouchdowns":4,"epaPerPlay":0.511,"successRate":57.1,"contestedCatchRate":null,"fantasyPoints":74,"avoidedTackleRate":5,"brokenTackles":2,"drops":2,"catchableTargets":42,"dropPct":3.6,"interceptionsWhenTargeted":1,"fumbles":0,"receptions10Plus":22,"receptions20Plus":5,"receptions30Plus":4,"receptions40Plus":3,"receptions50Plus":0,"longestReception":46},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/ryan-flournoy.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-ryan-flournoy/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11783",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

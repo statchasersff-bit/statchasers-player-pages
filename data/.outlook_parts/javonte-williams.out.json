@@ -1,0 +1,19 @@
+{
+  "slug": "javonte-williams",
+  "name": "Javonte Williams",
+  "position": "RB",
+  "team": "DAL",
+  "season": 2026,
+  "headline": "Williams secures Dallas backfield after career-best Cowboys debut",
+  "body": "Williams reset his value in 2025, rumbling for 1,201 yards on 252 carries at 4.77 per tote with 11 rushing scores across 16 games, good for 207.8 fantasy points and an RB15 finish. The volume was elite: 69% snaps, 66 red-zone opportunities, 20 goal-line carries, plus 35 grabs on 51 targets. He forced 25 broken tackles, gained 2.39 yards after contact, and ripped six runs of 20-plus with a long of 66, a leap from his 3.69 YPC Denver swan song.\n\nHis -0.035 EPA per play still trails the position's best, and the 8.4% target share caps full-PPR appeal, but Dallas stood pat behind him and handed him a new deal. As the locked-in lead back drafted around the third-fourth round turn, Williams profiles as a sturdy RB2 with weekly RB1 ceiling if the early-season touchdown pace holds.",
+  "keyStats": {"rank":15,"playerId":"7588","playerName":"Javonte Williams","position":"RB","team":"DAL","age":25,"season":2025,"games":16,"snapPct":69,"routes":432,"rushAttempts":252,"redZoneOpportunities":66,"goalLineCarries":20,"targets":51,"receptions":35,"redZoneTargets":12,"endZoneTargets":5,"rushYards":1201,"yardsPerCarry":4.77,"rushTouchdowns":11,"targetSharePct":8.4,"receivingYards":137,"yardsPerReception":3.91,"yardsPerRouteRun":0.32,"receivingTouchdowns":2,"epaPerPlay":-0.035,"fantasyPoints":207.8,"rushes10Plus":26,"rushes20Plus":6,"rushes30Plus":3,"rushes40Plus":1,"rushes50Plus":1,"explosiveRunPct":10.32,"breakawayRunPct":5.16,"longestRush":66,"longestRushTouchdown":30,"brokenTackles":25,"rushAttemptsPerBrokenTackle":10.08,"yardsAfterContactPerAttempt":2.39,"yardsBeforeContactPerAttempt":2.38,"receivingYardsAfterCatch":206,"tackleEludedRate":8.7,"fumbles":2,"tacklesForLoss":13,"tacklesForLossYards":27,"rushAttForNegativeYards":13},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/javonte-williams.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-javonte-williams/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "7588",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

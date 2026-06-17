@@ -1,0 +1,19 @@
+{
+  "slug": "cole-kmet",
+  "name": "Cole Kmet",
+  "position": "TE",
+  "team": "CHI",
+  "season": 2026,
+  "headline": "Kmet's Volume Vanished, And It Isn't Coming Back",
+  "body": "The arrow points down, and the route data tells you why. Kmet's 2025 line of 30 catches for 347 yards and 2 scores ranked him just 33rd among tight ends, a steep slide from the 90 targets, 719 yards and TE9 finish he posted in 2023. His target share cratered to 9 percent on a 62.6 route share, and at 0.93 yards per route run he simply isn't earning enough work to matter weekly.\n\nThere are flickers worth noting: 0.257 EPA per play and a 47.9 percent success rate mean he was efficient on the limited looks he saw, and he drew six red-zone targets. But the rookie ahead of him has claimed the lead role, capping the ceiling. Treat Kmet as a touchdown-dependent dart throw and a deep-league streamer only, nothing more until the depth chart shifts.",
+  "keyStats": {"rank":33,"playerId":"6826","playerName":"Cole Kmet","position":"TE","team":"CHI","age":26,"season":2025,"games":16,"snapPct":71.4,"routes":373,"routePct":62.6,"targets":48,"targetsPerRouteRun":0.129,"targetSharePct":9,"airYardsPerTarget":8.77,"airYardsPerReception":14.03,"airYardsSharePct":8.5,"wopr":0.195,"receptions":30,"redZoneTargets":6,"endZoneTargets":2,"catchPct":62.5,"receivingYards":347,"totalYards":347,"yardsPerReception":11.57,"yardsBeforeCatchPerReception":6.6,"yardsAfterCatchPerReception":4.97,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.93,"receivingTouchdowns":2,"epaPerPlay":0.257,"successRate":47.9,"contestedCatchRate":null,"fantasyPoints":48.7,"avoidedTackleRate":6.7,"brokenTackles":2,"drops":2,"catchableTargets":32,"dropPct":4.2,"interceptionsWhenTargeted":1,"fumbles":0,"receptions10Plus":16,"receptions20Plus":5,"receptions30Plus":1,"receptions40Plus":0,"receptions50Plus":0,"longestReception":31},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/cole-kmet.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-cole-kmet/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "6826",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

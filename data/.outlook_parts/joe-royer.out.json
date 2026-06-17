@@ -1,0 +1,19 @@
+{
+  "slug": "joe-royer",
+  "name": "Joe Royer",
+  "position": "TE",
+  "team": "CLE",
+  "season": 2026,
+  "headline": "Royer is a developmental stash, not a redraft target",
+  "body": "Cleveland grabbed Royer 170th overall in the fifth round, and his rookie role reflects that pedigree. He enters camp battling Jack Stoll and Blake Whiteheart for backup snaps behind starter Harold Fannin Jr., so the runway to volume is narrow. A hamstring issue sidelined him through combine and pro-day testing, costing him valuable early reps in a tight end room where the depth chart is already crowded above him.\n\nThe profile is intriguing for the patient. At Cincinnati he hauled in 79 catches working primarily from the slot, ranked fourth in yards after the catch per reception in 2025, and dropped just two passes across his final two seasons. Route diversity and pass protection still need polish. With projections near four points per game and essentially zero roster ownership, treat him as a dynasty taxi-squad flier and leave him alone in redraft.",
+  "keyStats": null,
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/joe-royer.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-joe-royer/","used":true},
+    {"name":"Statchasers advanced stats","used":false}
+  ],
+  "id": "13435",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

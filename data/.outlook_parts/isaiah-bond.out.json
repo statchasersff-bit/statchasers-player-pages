@@ -1,0 +1,19 @@
+{
+  "slug": "isaiah-bond",
+  "name": "Isaiah Bond",
+  "position": "WR",
+  "team": "CLE",
+  "season": 2026,
+  "headline": "Boom-or-bust field-stretcher buried on a crowded depth chart",
+  "body": "Bond's rookie tape reads like a deep-shot specialist still searching for a role. Across 15 games he played just 48.1% of snaps, drew a thin 8.4% target share, and converted only 18 of 44 looks for 338 yards and no scores. The 40.9% catch rate is ugly, but it's a byproduct of usage: his 17.07 air yards per target ranked among the most aggressive in the league, and he posted a 18.78 yard average with a 0.265 WOPR. The efficiency cratered, though, with a negative EPA per play and a 31.8% success rate that landed him at WR82.\n\nThe path forward is narrow. Cleveland spent early draft capital on two rookie receivers, stacking competition in front of a player who never locked down a snap count. His 1.03 yards per route run doesn't force the issue, and there's no clear projection for volume until he earns it. Treat him as a late-round dart with big-play upside, nothing more.",
+  "keyStats": {"rank":82,"playerId":"12503","playerName":"Isaiah Bond","position":"WR","team":"CLE","age":21,"season":2025,"games":15,"snapPct":48.1,"routes":328,"routePct":54,"targets":44,"targetsPerRouteRun":0.134,"targetSharePct":8.4,"airYardsPerTarget":17.07,"airYardsPerReception":41.72,"airYardsSharePct":19.8,"wopr":0.265,"receptions":18,"redZoneTargets":4,"endZoneTargets":3,"catchPct":40.9,"receivingYards":338,"totalYards":367,"yardsPerReception":18.78,"yardsBeforeCatchPerReception":14.39,"yardsAfterCatchPerReception":4.39,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.03,"receivingTouchdowns":0,"epaPerPlay":-0.018,"successRate":31.8,"contestedCatchRate":null,"fantasyPoints":36.7,"avoidedTackleRate":5.6,"brokenTackles":1,"drops":3,"catchableTargets":21,"dropPct":6.8,"interceptionsWhenTargeted":1,"fumbles":0,"receptions10Plus":10,"receptions20Plus":5,"receptions30Plus":4,"receptions40Plus":3,"receptions50Plus":1,"longestReception":52},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/isaiah-bond.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-isaiah-bond/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "12503",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

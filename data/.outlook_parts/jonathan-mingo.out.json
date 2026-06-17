@@ -1,0 +1,19 @@
+{
+  "slug": "jonathan-mingo",
+  "name": "Jonathan Mingo",
+  "position": "WR",
+  "team": "DAL",
+  "season": 2026,
+  "headline": "Mingo's collapse leaves nothing for fantasy to chase",
+  "body": "The arrow points straight down. Mingo's positional finish has cratered from 76th in 2023 to 124th in 2024 to 194th this past season, when his role evaporated to a 20.7% snap share across just five games. He drew five targets total, an 0.8% team share, and converted them into one catch for 25 yards. His -0.84 EPA per play and 20% success rate weren't small-sample noise so much as confirmation of a 2024 that already bottomed out at a 28.6% success rate.\n\nThe context is just as bleak. He sits at the back of a crowded Dallas receiver room with no path to meaningful snaps, and a restructured deal stripping his workout bonus signals how the team values him. He's effectively unrostered league-wide and projects for minimal volume. There is no reason to draft him in any standard format.",
+  "keyStats": {"rank":194,"playerId":"10225","playerName":"Jonathan Mingo","position":"WR","team":"DAL","age":24,"season":2025,"games":5,"snapPct":20.7,"routes":37,"routePct":5.7,"targets":5,"targetsPerRouteRun":0.135,"targetSharePct":0.8,"airYardsPerTarget":19.4,"airYardsPerReception":97,"airYardsSharePct":1.9,"wopr":0.026,"receptions":1,"redZoneTargets":0,"endZoneTargets":0,"catchPct":20,"receivingYards":25,"totalYards":25,"yardsPerReception":25,"yardsBeforeCatchPerReception":21,"yardsAfterCatchPerReception":4,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.68,"receivingTouchdowns":0,"epaPerPlay":-0.839,"successRate":20,"contestedCatchRate":null,"fantasyPoints":2.5,"avoidedTackleRate":0,"brokenTackles":0,"drops":1,"catchableTargets":2,"dropPct":20,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":1,"receptions20Plus":1,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":25},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/jonathan-mingo.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-jonathan-mingo/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "10225",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

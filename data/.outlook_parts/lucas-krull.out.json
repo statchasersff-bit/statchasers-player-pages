@@ -1,0 +1,20 @@
+{
+  "slug": "lucas-krull",
+  "name": "Lucas Krull",
+  "position": "TE",
+  "team": "DEN",
+  "season": 2026,
+  "headline": "Depth Tight End Without A Path To Volume",
+  "body": "Krull's profile screams roster filler. His healthiest stretch came in 2024, when 10 games and 200 routes produced just 23 targets, a 4.2% target share, and 152 yards on 19 catches. The efficiency markers were quietly fine, an 82.6% catch rate, +0.195 EPA per play, a 52.2% success rate, and 0.76 yards per route run, but the volume never scaled. His 2025 was a non-event: two games, four targets, a 0.7% share, and 1.5 fantasy points before disappearing entirely.\n\nNothing about the role suggests a leap. He re-signed in Denver on a one-year deal buried in the tight end room, sitting outside the top 150 in early consensus and rostered in essentially zero leagues. The career arc, one touchdown across three seasons and a peak of 152 yards, caps the ceiling hard. Until injuries above him force snaps, Krull is a deep-dynasty stash and nothing more in redraft."
+,
+  "keyStats": {"rank":106,"playerId":"8249","playerName":"Lucas Krull","position":"TE","team":"DEN","age":27,"season":2025,"games":2,"snapPct":29,"routes":27,"routePct":4.3,"targets":4,"targetsPerRouteRun":0.148,"targetSharePct":0.7,"airYardsPerTarget":5,"airYardsPerReception":10,"airYardsSharePct":0.4,"wopr":0.013,"receptions":2,"redZoneTargets":0,"endZoneTargets":0,"catchPct":50,"receivingYards":15,"totalYards":15,"yardsPerReception":7.5,"yardsBeforeCatchPerReception":5.5,"yardsAfterCatchPerReception":2,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.56,"receivingTouchdowns":0,"epaPerPlay":-0.596,"successRate":50,"contestedCatchRate":null,"fantasyPoints":1.5,"avoidedTackleRate":0,"brokenTackles":0,"drops":0,"catchableTargets":2,"dropPct":0,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":0,"receptions20Plus":0,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":9},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/lucas-krull.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-lucas-krull/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "8249",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

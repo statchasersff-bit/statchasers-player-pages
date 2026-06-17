@@ -86,6 +86,9 @@
   -moz-osx-font-smoothing: grayscale;
   color: hsl(0 0% 9%);
   line-height: 1.5;
+  /* Back-most layer of the embedded tool: keep it plain white so the host
+     page's theme background never shows through behind the content. */
+  background: #ffffff;
 }
 
 .scpp-root *,

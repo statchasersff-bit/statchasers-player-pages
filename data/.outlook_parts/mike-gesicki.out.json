@@ -1,0 +1,20 @@
+{
+  "slug": "mike-gesicki",
+  "name": "Mike Gesicki",
+  "position": "TE",
+  "team": "CIN",
+  "season": 2026,
+  "headline": "Gesicki's 2025 collapse leaves no fantasy floor",
+  "body": "The 2024 version of Gesicki ranked 10th at the position on a 0.292 WOPR, 13.2% target share, and 83 targets that turned into 665 yards. None of that carried over. In 2025 he slid to TE36, drawing just 42 targets across 12 games for a 6.9% target share and a 0.175 target-per-route-run rate, while his route share cratered to 35.7% on a 38.5% snap rate. The 307 yards and two scores read like a backup line because that is what the role became.\n\nThe efficiency markers still flicker, a 0.127 EPA per play and 57.1% success rate, but volume that thin caps the ceiling. Cincinnati funnels everything to Chase, Higgins, and Chase Brown, with Fant and Sample splitting the leftovers behind him. He profiles as a touchdown-dependent dart in TE-premium and deep formats only, and a waiver name everywhere else until the snaps return."
+,
+  "keyStats": {"rank":36,"playerId":"4993","playerName":"Mike Gesicki","position":"TE","team":"CIN","age":29,"season":2025,"games":12,"snapPct":38.5,"routes":240,"routePct":35.7,"targets":42,"targetsPerRouteRun":0.175,"targetSharePct":6.9,"airYardsPerTarget":9.95,"airYardsPerReception":14.93,"airYardsSharePct":8.9,"wopr":0.166,"receptions":28,"redZoneTargets":7,"endZoneTargets":4,"catchPct":66.7,"receivingYards":307,"totalYards":307,"yardsPerReception":10.96,"yardsBeforeCatchPerReception":8.71,"yardsAfterCatchPerReception":2.25,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.28,"receivingTouchdowns":2,"epaPerPlay":0.127,"successRate":57.1,"contestedCatchRate":null,"fantasyPoints":42.7,"avoidedTackleRate":0,"brokenTackles":0,"drops":1,"catchableTargets":29,"dropPct":2.4,"interceptionsWhenTargeted":3,"fumbles":0,"receptions10Plus":16,"receptions20Plus":2,"receptions30Plus":2,"receptions40Plus":0,"receptions50Plus":0,"longestReception":37},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/mike-gesicki.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-mike-gesicki/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "4993",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

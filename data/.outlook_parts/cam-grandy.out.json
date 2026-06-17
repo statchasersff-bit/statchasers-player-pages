@@ -1,0 +1,19 @@
+{
+  "slug": "cam-grandy",
+  "name": "Cam Grandy",
+  "position": "TE",
+  "team": "CIN",
+  "season": 2026,
+  "headline": "Deep-roster Bengals tight end still chasing snaps",
+  "body": "Grandy remains a developmental piece who has yet to crack Cincinnati's rotation. His 2025 sample barely registered: two games, a 9.2% snap share, just five routes run, and two targets turned into two catches for seven yards. A 1.4 yards-per-route-run mark looks tidy, but a minus-0.176 EPA per play, a single fumble, and a 0.7% route share confirm how little he was trusted on the field.\n\nThe lone encouraging note traces to 2024, when 34 routes produced a 0.556 EPA per play, a 60% success rate, and two red-zone looks including an end-zone target. That flash of efficiency is the only reason to monitor him. With negligible roster rates and a tight-end ranking buried outside the top 100, he is a watch-list name, not a draftable asset, until the depth chart opens real opportunity ahead of him.",
+  "keyStats": {"rank":114,"playerId":"12062","playerName":"Cam Grandy","position":"TE","team":"CIN","age":25,"season":2025,"games":2,"snapPct":9.2,"routes":5,"routePct":0.7,"targets":2,"targetsPerRouteRun":0.4,"targetSharePct":0.3,"airYardsPerTarget":-3,"airYardsPerReception":-3,"airYardsSharePct":-0.1,"wopr":0.004,"receptions":2,"redZoneTargets":0,"endZoneTargets":0,"catchPct":100,"receivingYards":7,"totalYards":7,"yardsPerReception":3.5,"yardsBeforeCatchPerReception":-3,"yardsAfterCatchPerReception":6.5,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.4,"receivingTouchdowns":0,"epaPerPlay":-0.176,"successRate":50,"contestedCatchRate":null,"fantasyPoints":0.7,"avoidedTackleRate":0,"brokenTackles":0,"drops":0,"catchableTargets":2,"dropPct":0,"interceptionsWhenTargeted":0,"fumbles":1,"receptions10Plus":0,"receptions20Plus":0,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":6},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/cam-grandy.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-cam-grandy/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "12062",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

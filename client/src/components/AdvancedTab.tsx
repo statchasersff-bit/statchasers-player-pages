@@ -60,7 +60,6 @@ const RANK_CATEGORY_LABEL: Record<"overview" | RankCategory, string> = {
   overview: "Overview", production: "Production", usage: "Usage", efficiency: "Efficiency", advanced: "Advanced",
 };
 
-const AVAILABLE_SEASONS = [2025, 2024, 2023, "all" as const] as const;
 type AdvSeason = 2025 | 2024 | 2023 | "all";
 
 // ── Rank Snapshot ─────────────────────────────────────────────────────────────
@@ -269,12 +268,13 @@ function AdvancedStatSections({ latest, pos, statRanks }: {
 
 // ── Season selector ───────────────────────────────────────────────────────────
 
-function SeasonSelector({ season, onChange }: { season: AdvSeason; onChange: (s: AdvSeason) => void }) {
+function SeasonSelector({ season, onChange, options }: { season: AdvSeason; onChange: (s: AdvSeason) => void; options: AdvSeason[] }) {
+  if (!options.length) return null;
   return (
     <div className="flex items-center gap-2 mb-4">
       <span className="text-xs text-muted-foreground font-semibold">Season:</span>
       <div className="flex gap-1 flex-wrap">
-        {AVAILABLE_SEASONS.map((s) => {
+        {options.map((s) => {
           const isActive = season === s;
           return (
             <button
@@ -304,18 +304,29 @@ export function AdvancedTab({
   pos,
   season,
   onSeasonChange,
+  qualifiedSeasons,
+  allSeasonsQualified,
 }: {
   adv: PlayerAdvancedResult | null;
   advLoading: boolean;
   pos: string;
   season: AdvSeason;
   onSeasonChange: (s: AdvSeason) => void;
+  qualifiedSeasons: number[];
+  allSeasonsQualified: boolean;
 }) {
   const posLabel = pos.toUpperCase();
 
+  // Only offer seasons the player qualifies for, plus "All Seasons" when they
+  // qualify in every season.
+  const seasonOptions: AdvSeason[] = [
+    ...[...qualifiedSeasons].sort((a, b) => b - a).map((s) => s as AdvSeason),
+    ...(allSeasonsQualified ? ["all" as const] : []),
+  ];
+
   return (
     <div className="space-y-4" data-testid="advanced-tab">
-      <SeasonSelector season={season} onChange={onSeasonChange} />
+      <SeasonSelector season={season} onChange={onSeasonChange} options={seasonOptions} />
 
       {advLoading && (
         <Card><SkeletonLines n={6} /></Card>

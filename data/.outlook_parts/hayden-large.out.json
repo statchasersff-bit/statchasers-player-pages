@@ -1,0 +1,19 @@
+{
+  "slug": "hayden-large",
+  "name": "Hayden Large",
+  "position": "TE",
+  "team": "CHI",
+  "season": 2026,
+  "headline": "Bears TE is a watch-list dart, not a draft pick",
+  "body": "Large enters 2026 as a developmental piece in Chicago's tight end room, a 24-year-old Iowa product with the prototypical 6-foot-4, 250-pound build teams covet at the position. The problem is opportunity: he sits near zero percent rostered, carries no established draft consensus, and hasn't earned an expert ranking, which tells you everything about where the staff sees him on the depth chart heading into the season.\n\nThe schedule does him no favors either, with the position drawing one of the league's tougher slates against opposing defenses. Treat Large as a pure speculative stash rather than a startable asset. If an injury opens a path to snaps, his size and frame make him worth a quick look, but until the targets materialize he belongs on the waiver wire in all standard formats. Monitor camp reports before spending anything.",
+  "keyStats": null,
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/hayden-large.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-hayden-large/","used":false},
+    {"name":"Statchasers advanced stats","used":false}
+  ],
+  "id": "13712",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

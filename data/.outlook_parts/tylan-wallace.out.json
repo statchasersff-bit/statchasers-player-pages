@@ -1,0 +1,19 @@
+{
+  "slug": "tylan-wallace",
+  "name": "Tylan Wallace",
+  "position": "WR",
+  "team": "CLE",
+  "season": 2026,
+  "headline": "Special-teams body with a deep-ball lottery ticket attached",
+  "body": "The profile speaks for itself: across 11 games in 2025, Wallace ran just 78 routes, drew 8 targets, and converted a 2% target share into 4 catches for 45 yards and a score. A 16.8% route rate and 0.58 yards per route run confirm a player who barely sees the field on offense, even if his 0.189 EPA per play kept him modestly efficient on tiny volume.\n\nThe ceiling lives in 2024, when 11 grabs turned into 193 yards, a 17.6 yards-per-reception clip, an 84-yard explosive, a 75% success rate, and a sparkling 1.057 EPA per play. That field-stretching upside is real but unreliable. Now in Cleveland after his Baltimore run, he profiles as a return specialist and depth flier rather than a roster lock. With no projectable target volume, he stays off fantasy radars outside the deepest dynasty stashes.",
+  "keyStats": {"rank":180,"playerId":"7595","playerName":"Tylan Wallace","position":"WR","team":"BAL","age":26,"season":2025,"games":11,"snapPct":23.1,"routes":78,"routePct":16.8,"targets":8,"targetsPerRouteRun":0.103,"targetSharePct":2,"airYardsPerTarget":13.38,"airYardsPerReception":26.75,"airYardsSharePct":3.1,"wopr":0.051,"receptions":4,"redZoneTargets":2,"endZoneTargets":1,"catchPct":50,"receivingYards":45,"totalYards":45,"yardsPerReception":11.25,"yardsBeforeCatchPerReception":7,"yardsAfterCatchPerReception":4.25,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.58,"receivingTouchdowns":1,"epaPerPlay":0.189,"successRate":37.5,"contestedCatchRate":null,"fantasyPoints":10.5,"avoidedTackleRate":0,"brokenTackles":0,"drops":0,"catchableTargets":4,"dropPct":0,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":3,"receptions20Plus":0,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":15},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/tylan-wallace.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-tylan-wallace/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "7595",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

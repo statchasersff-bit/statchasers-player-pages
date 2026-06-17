@@ -1,0 +1,19 @@
+{
+  "slug": "bo-nix",
+  "name": "Bo Nix",
+  "position": "QB",
+  "team": "DEN",
+  "season": 2026,
+  "headline": "Volume-Soaked QB1 Floor, Capped Ceiling in Denver",
+  "body": "Nix piled up 612 attempts in 2025, the league lead, yet the efficiency stayed modest: a 0.089 EPA per play, 43.9% success rate, and a minus-1.2 CPOE that placed him eighth among our advanced-stat tracking. He cleared 304.8 fantasy points behind 25 passing scores, 11 picks, and just 11.4% of his throws traveling deep, so the ceiling is propped up by sheer pass count rather than splash plays.\n\nThe rushing layer keeps him steady, 356 yards and five touchdowns on 83 carries, the kind of floor that survives cold passing stretches. He absorbed only 22 sacks behind a 19.1% pressure rate, and a refreshed receiving corps led by Courtland Sutton plus the addition of Jaylen Waddle should sharpen the completion math. Monitor the offseason ankle, but a back-end QB1 finish remains the realistic baseline.",
+  "keyStats": {"rank":8,"playerId":"11563","playerName":"Bo Nix","position":"QB","team":"DEN","age":25,"season":2025,"games":17,"attempts":612,"completions":388,"completionPct":63.4,"passingYards":3931,"yardsPerCatch":6.42,"passingTouchdowns":25,"interceptions":11,"fantasyPoints":304.8,"airYards":4486,"completedAirYards":1838,"completedAirYardsPerCompletion":4.7,"deepAttemptPct":11.4,"epaPerPlay":0.089,"successRate":43.9,"cpoe":-1.2,"throwaways":26,"battedPasses":13,"poorThrows":93,"badThrowPct":15.9,"onTargetPct":77.4,"passesDropped":43,"passes10Plus":154,"passes20Plus":47,"passes30Plus":18,"passes40Plus":7,"passes50Plus":1,"longestPass":52,"rushAttempts":83,"rushYards":356,"rushTouchdowns":5,"redZoneAttempts":90,"scrambleRate":5.2,"yardsPerScramble":8.8,"fumbles":4,"sacks":22,"sackYardsLost":119,"pocketTime":2.4,"timeToThrow":2.86,"blitzes":114,"hurries":61,"knockdowns":45,"pressurePct":19.1},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/bo-nix.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-bo-nix/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11563",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "dj-rogers",
+  "name": "DJ Rogers",
+  "position": "TE",
+  "team": "DAL",
+  "season": 2026,
+  "headline": "Undrafted TCU tight end fighting for Dallas snaps",
+  "body": "Rogers arrives in Dallas as an undrafted rookie out of TCU, where he hauled in 34 catches for 319 yards and a pair of scores in 2025. He profiles as a move tight end whose value lives near the line of scrimmage, with roughly 80 percent of his college targets coming within nine yards. The footwork is polished enough to win on short routes, but the speed, burst, and blocking strength all grade as ordinary, capping the ceiling.\n\nThe depth chart is the real obstacle. Jake Ferguson and Luke Schoonmaker both return ahead of him, leaving Rogers to scrap for reserve reps and special-teams value rather than a defined receiving role. That reality shows up in the ranks: he sits down near TE139 and is essentially unrostered. Treat him as a deep-stash dynasty name who only matters in standard formats if an injury opens the door.",
+  "keyStats": null,
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/dj-rogers.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-dj-rogers/","used":false},
+    {"name":"Statchasers advanced stats","used":false}
+  ],
+  "id": "13355",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

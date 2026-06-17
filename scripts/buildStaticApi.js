@@ -561,7 +561,7 @@ function buildRelated(player, allPlayers, format) {
     const rank = ppgByPlayer.indexOf(n) + 1;
     return { id: n.id, name: p?.name || '', slug: p?.slug || '', team: p?.team || '', position: p?.position || '', posRank: rank, ppg: Math.round(n.ppg * 10) / 10 };
   });
-  return { neighbors, currentRank, season: activeSeason, format, position: player.position };
+  return { neighbors, currentRank, currentPpg: Math.round(ppgByPlayer[currentIdx].ppg * 10) / 10, season: activeSeason, format, position: player.position };
 }
 
 function writeJSON(filePath, data) {

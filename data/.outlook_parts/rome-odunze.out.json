@@ -1,0 +1,19 @@
+{
+  "slug": "rome-odunze",
+  "name": "Rome Odunze",
+  "position": "WR",
+  "team": "CHI",
+  "season": 2026,
+  "headline": "Big-Play Profile, Stalled Catch Rate: Odunze's Bounce-Back Case",
+  "body": "Odunze's 2025 sample is loaded with downfield juice: 13.91 air yards per target, a 25.3% air-yards share, and 0.243 EPA per play across 12 games. He commanded a 16.9% target share and 12 red-zone looks, turning that into six touchdowns and 102.1 fantasy points. The yardage stayed deep too, with 13 catches of 20-plus yards. The hole in the profile is a 48.9% catch rate dragged down by three interceptions on his targets rather than his hands, since he dropped just two of 46 catchable balls.\n\nThat catch-rate dip screams positive regression, especially with another year of Caleb Williams rapport ahead. The counter is volume: a crowded route tree featuring Loveland and Burden caps his ceiling, and his draft cost near the WR29 range bakes that in. Treat him as a touchdown-leveraged WR2 whose efficiency, not target count, drives the payoff.",
+  "keyStats": {"rank":40,"playerId":"11620","playerName":"Rome Odunze","position":"WR","team":"CHI","age":23,"season":2025,"games":12,"snapPct":88.1,"routes":384,"routePct":64.4,"targets":90,"targetsPerRouteRun":0.234,"targetSharePct":16.9,"airYardsPerTarget":13.91,"airYardsPerReception":28.45,"airYardsSharePct":25.3,"wopr":0.431,"receptions":44,"redZoneTargets":12,"endZoneTargets":5,"catchPct":48.9,"receivingYards":661,"totalYards":661,"yardsPerReception":15.02,"yardsBeforeCatchPerReception":10.16,"yardsAfterCatchPerReception":4.86,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.72,"receivingTouchdowns":6,"epaPerPlay":0.243,"successRate":46.7,"contestedCatchRate":null,"fantasyPoints":102.1,"avoidedTackleRate":2.3,"brokenTackles":1,"drops":2,"catchableTargets":46,"dropPct":2.2,"interceptionsWhenTargeted":3,"fumbles":0,"receptions10Plus":34,"receptions20Plus":13,"receptions30Plus":2,"receptions40Plus":0,"receptions50Plus":0,"longestReception":37},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/rome-odunze.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-rome-odunze/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11620",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

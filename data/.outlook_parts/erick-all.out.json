@@ -1,0 +1,19 @@
+{
+  "slug": "erick-all",
+  "name": "Erick All",
+  "position": "TE",
+  "team": "CIN",
+  "season": 2026,
+  "headline": "Promising profile stalled by a second torn ACL",
+  "body": "All's 2024 tape flashed the chops that made Cincinnati's brass excited. Across eight games he caught 20 of 22 looks for a 90.9% catch rate, posted a 50% success rate, and generated 0.239 EPA per play on a 41.9% snap share. His 0.188 targets per route run and 1.35 yards per route run were efficient for a part-time role, even with a tiny 3.5% target share and shallow 3.27 air yards per target. The arrow pointed up.\n\nThat arrow snapped. A second career ACL tear lands him on PUP and likely costs the entire 2026 season, gutting any near-term value. His draft cost has collapsed to roughly TE47, around pick 291, and he sits rostered in almost no leagues. Treat him as a deep dynasty stash on talent alone; in redraft formats there is no reason to spend a pick until he proves the knee and reclaims real snaps.",
+  "keyStats": {"rank":50,"playerId":"11592","playerName":"Erick All","position":"TE","team":"CIN","age":23,"season":2024,"games":8,"snapPct":41.9,"routes":117,"routePct":16.7,"targets":22,"targetsPerRouteRun":0.188,"targetSharePct":3.5,"airYardsPerTarget":3.27,"airYardsPerReception":3.6,"airYardsSharePct":1.6,"wopr":0.063,"receptions":20,"redZoneTargets":2,"endZoneTargets":0,"catchPct":90.9,"receivingYards":158,"totalYards":158,"yardsPerReception":7.9,"yardsBeforeCatchPerReception":3.55,"yardsAfterCatchPerReception":4.35,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.35,"receivingTouchdowns":0,"epaPerPlay":0.239,"successRate":50,"contestedCatchRate":null,"fantasyPoints":15.8,"avoidedTackleRate":5,"brokenTackles":1,"drops":1,"catchableTargets":21,"dropPct":4.5,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":5,"receptions20Plus":1,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":28},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/erick-all.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-erick-all/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11592",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

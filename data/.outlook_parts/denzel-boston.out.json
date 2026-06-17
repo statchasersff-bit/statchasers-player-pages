@@ -1,0 +1,19 @@
+{
+  "slug": "denzel-boston",
+  "name": "Denzel Boston",
+  "position": "WR",
+  "team": "CLE",
+  "season": 2026,
+  "headline": "Big-bodied rookie with a crowded path to targets",
+  "body": "Boston arrives in Cleveland as a Day 2 pick (39th overall) after leading Washington in receiving yards, bringing a 6-foot-4, 215-pound frame, reliable hands and contested-catch chops. The trade-off is athletic: he skipped the 40 at the combine and won't separate with speed, so his game leans on size and ball skills rather than burst. His current draft cost reflects the wait-and-see profile, landing around WR63 and 158th overall.\n\nThe early-season picture is the real obstacle. He's stacked behind Jerry Jeudy and competing with KC Concepcion and Harold Fannin Jr. for a target share that won't be his by default, and Cleveland's shaky quarterback situation caps the ceiling for every pass-catcher. Treat him as a late-round dart in deeper formats and let the snap count earn your trust before he reaches your roster.",
+  "keyStats": null,
+  "sources": [
+    {"name": "FantasyPros", "url": "https://www.fantasypros.com/nfl/players/denzel-boston.php", "used": true},
+    {"name": "CBS Sports", "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-denzel-boston/", "used": true},
+    {"name": "Statchasers advanced stats", "used": false}
+  ],
+  "id": "13346",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

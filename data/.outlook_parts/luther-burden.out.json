@@ -1,0 +1,19 @@
+{
+  "slug": "luther-burden",
+  "name": "Luther Burden",
+  "position": "WR",
+  "team": "CHI",
+  "season": 2026,
+  "headline": "The efficiency is real, the volume isn't yet",
+  "body": "Burden's rookie tape screams breakout the moment you account for the workload. On just 225 routes and a 37.8% route share, he posted a 0.501 EPA per play and a 58.3% success rate -- elite marks that usually belong to entrenched starters, not 21-year-olds buried at 39.7% snaps. He turned 60 targets into 47 catches (78.3% catch rate), 652 yards, and 2.9 yards per route run, flashing real after-catch juice at 7.1 YAC per reception.\n\nThe ceiling case is obvious; the floor is the problem. An 11.3% target share and 0.234 WOPR tell you the volume simply wasn't there, and Rome Odunze plus Colston Loveland complicate any leap in Ben Johnson's offense. If the slot role expands to match the per-route efficiency, Burden is a league-winner. Draft him as the high-variance upside swing he is -- pay a round early or pass.",
+  "keyStats": {"rank":41,"playerId":"12519","playerName":"Luther Burden III","position":"WR","team":"CHI","age":21,"season":2025,"games":15,"snapPct":39.7,"routes":225,"routePct":37.8,"targets":60,"targetsPerRouteRun":0.267,"targetSharePct":11.3,"airYardsPerTarget":7.67,"airYardsPerReception":9.79,"airYardsSharePct":9.3,"wopr":0.234,"receptions":47,"redZoneTargets":4,"endZoneTargets":0,"catchPct":78.3,"receivingYards":652,"totalYards":689,"yardsPerReception":13.87,"yardsBeforeCatchPerReception":6.77,"yardsAfterCatchPerReception":7.11,"yardsAfterContactPerReception":null,"yardsPerRouteRun":2.9,"receivingTouchdowns":2,"epaPerPlay":0.501,"successRate":58.3,"contestedCatchRate":null,"fantasyPoints":80.9,"avoidedTackleRate":2.1,"brokenTackles":1,"drops":4,"catchableTargets":51,"dropPct":6.7,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":28,"receptions20Plus":11,"receptions30Plus":4,"receptions40Plus":2,"receptions50Plus":1,"longestReception":65},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/luther-burden.php","used":false},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-luther-burden/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "12519",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

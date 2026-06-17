@@ -1,0 +1,19 @@
+{
+  "slug": "brenden-bates",
+  "name": "Brenden Bates",
+  "position": "TE",
+  "team": "CLE",
+  "season": 2026,
+  "headline": "Browns' depth tight end with a buried fantasy role",
+  "body": "Bates barely registered in 2025, drawing five targets across five games while logging just a 27% snap share and a 6.9% route rate. The flashes were real but tiny: he caught four of those looks (80% catch rate), posted a 0.61 EPA per play and an 80% success rate, and ran routes at 1.14 yards per route run. With a 0.9% target share, a 0.119 target-per-route-run mark, and zero touchdowns, none of it translated to usable scoring — 4.8 fantasy points all year.\n\nThe arrow points sideways. He returns to Cleveland for another season buried in a crowded tight end room, where his snaps were rotational at best and his 42 routes left no path to volume. Drafted around TE142 in early rankings with no measurable ADP, he is a name to know only in the deepest dynasty formats. Until the depth chart clears, Bates stays off redraft boards entirely.",
+  "keyStats": {"rank":86,"playerId":"12374","playerName":"Brenden Bates","position":"TE","team":"CLE","age":25,"season":2025,"games":5,"snapPct":27,"routes":42,"routePct":6.9,"targets":5,"targetsPerRouteRun":0.119,"targetSharePct":0.9,"airYardsPerTarget":7.8,"airYardsPerReception":9.75,"airYardsSharePct":0.8,"wopr":0.019,"receptions":4,"redZoneTargets":1,"endZoneTargets":1,"catchPct":80,"receivingYards":48,"totalYards":48,"yardsPerReception":12,"yardsBeforeCatchPerReception":9.5,"yardsAfterCatchPerReception":2.5,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.14,"receivingTouchdowns":0,"epaPerPlay":0.61,"successRate":80,"contestedCatchRate":null,"fantasyPoints":4.8,"avoidedTackleRate":0,"brokenTackles":0,"drops":0,"catchableTargets":4,"dropPct":0,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":2,"receptions20Plus":0,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":19},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/brenden-bates.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-brenden-bates/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "12374",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

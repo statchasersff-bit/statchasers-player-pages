@@ -1,0 +1,19 @@
+{
+  "slug": "cedric-tillman",
+  "name": "Cedric Tillman",
+  "position": "WR",
+  "team": "CLE",
+  "season": 2026,
+  "headline": "Deep-field flier whose numbers keep saying no",
+  "body": "Tillman's 2025 line is a flashing warning light: a 7.5% target share, just 0.13 targets per route, and a 0.90 yards-per-route-run mark that ranks him near WR102 in our model. He converted only 53.8% of those looks into catches for 270 yards and two scores across 12 games, with a 0.198 WOPR that screams complementary, not featured. The lone positive is a 0.167 EPA per play, his best in three years, but a 41% success rate undercuts any efficiency case.\n\nThe trajectory hasn't budged either, with his target share parked between 7.4% and 7.7% every season since 2023. A crowded Cleveland room only got tighter after two drafted rookies, capping his snap and air-yards ceiling further. Treat him as a touchdown-dependent dart throw in the deepest formats, nothing more, until a clear path to volume actually opens.",
+  "keyStats": {"rank":102,"playerId":"10444","playerName":"Cedric Tillman","position":"WR","team":"CLE","age":25,"season":2025,"games":12,"snapPct":61.8,"routes":299,"routePct":49.3,"targets":39,"targetsPerRouteRun":0.13,"targetSharePct":7.5,"airYardsPerTarget":11.87,"airYardsPerReception":22.05,"airYardsSharePct":12.2,"wopr":0.198,"receptions":21,"redZoneTargets":4,"endZoneTargets":2,"catchPct":53.8,"receivingYards":270,"totalYards":270,"yardsPerReception":12.86,"yardsBeforeCatchPerReception":9.9,"yardsAfterCatchPerReception":2.95,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.9,"receivingTouchdowns":2,"epaPerPlay":0.167,"successRate":41,"contestedCatchRate":null,"fantasyPoints":39,"avoidedTackleRate":0,"brokenTackles":0,"drops":1,"catchableTargets":22,"dropPct":2.6,"interceptionsWhenTargeted":2,"fumbles":0,"receptions10Plus":9,"receptions20Plus":6,"receptions30Plus":1,"receptions40Plus":1,"receptions50Plus":0,"longestReception":42},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/cedric-tillman.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-cedric-tillman/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "10444",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

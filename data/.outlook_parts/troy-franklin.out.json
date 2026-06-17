@@ -1,0 +1,19 @@
+{
+  "slug": "troy-franklin",
+  "name": "Troy Franklin",
+  "position": "WR",
+  "team": "DEN",
+  "season": 2026,
+  "headline": "Waddle trade buries a quietly efficient breakout",
+  "body": "Franklin's sophomore leap was real: he climbed from WR107 to WR35, posting 65 grabs, 709 yards and six scores on 104 targets across 17 games. The underlying work backed the box score, with a 17.8% target share, a healthy 0.473 WOPR, 1.55 yards per route and a positive 0.064 EPA per play after he sat at minus-0.348 as a rookie. A 45.2% success rate and 12.7 air yards per target show a genuine downfield role, not empty volume.\n\nThe problem is opportunity. Denver's Jaylen Waddle acquisition shoves Franklin behind Courtland Sutton and Waddle into a crowded No. 3 job, where he splits leftover looks with Marvin Mims and Pat Bryant. Projections crater toward 36 catches and 396 yards, making him a late-round dart that only matters if an injury opens snaps. The talent earns a stash; the depth chart caps the ceiling.",
+  "keyStats": {"rank":35,"playerId":"11627","playerName":"Troy Franklin","position":"WR","team":"DEN","age":22,"season":2025,"games":17,"snapPct":59.6,"routes":457,"routePct":72,"targets":104,"targetsPerRouteRun":0.228,"targetSharePct":17.8,"airYardsPerTarget":12.7,"airYardsPerReception":20.32,"airYardsSharePct":29.4,"wopr":0.473,"receptions":65,"redZoneTargets":18,"endZoneTargets":8,"catchPct":62.5,"receivingYards":709,"totalYards":721,"yardsPerReception":10.91,"yardsBeforeCatchPerReception":6.57,"yardsAfterCatchPerReception":4.34,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.55,"receivingTouchdowns":6,"epaPerPlay":0.064,"successRate":45.2,"contestedCatchRate":null,"fantasyPoints":112.1,"avoidedTackleRate":4.6,"brokenTackles":3,"drops":4,"catchableTargets":69,"dropPct":3.8,"interceptionsWhenTargeted":4,"fumbles":1,"receptions10Plus":26,"receptions20Plus":9,"receptions30Plus":4,"receptions40Plus":2,"receptions50Plus":0,"longestReception":48},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/troy-franklin.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-troy-franklin/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11627",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

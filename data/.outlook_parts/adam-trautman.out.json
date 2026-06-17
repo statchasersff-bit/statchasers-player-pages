@@ -1,0 +1,19 @@
+{
+  "slug": "adam-trautman",
+  "name": "Adam Trautman",
+  "position": "TE",
+  "team": "DEN",
+  "season": 2026,
+  "headline": "A blocker first, Trautman stays off fantasy radars",
+  "body": "Trautman's profile screams in-line blocker. He ran only 270 routes on a 42.5% route share in 2025, drawing 23 targets for a 3.9% target share and a tiny 0.085 targets per route run. That funneled into 20 catches for 195 yards and one score, good for just 25.5 fantasy points and a TE51 rank. He was efficient when used (87% catch rate, 65.2% success rate, 0.469 EPA per play), but the volume simply isn't there, and his 0.72 yards per route run confirms it.\n\nNothing in the snapshot suggests a breakout. A fresh three-year extension locks in his blocking role, but Evan Engram owns the receiving work and two rookie tight ends add depth. His target share has actually shrunk from 7.3% in 2023, and red-zone looks dried up to a single trip last year. He's a deep-league afterthought at best.",
+  "keyStats": {"rank":51,"playerId":"6869","playerName":"Adam Trautman","position":"TE","team":"DEN","age":28,"season":2025,"games":13,"snapPct":57.3,"routes":270,"routePct":42.5,"targets":23,"targetsPerRouteRun":0.085,"targetSharePct":3.9,"airYardsPerTarget":4.61,"airYardsPerReception":5.3,"airYardsSharePct":2.4,"wopr":0.076,"receptions":20,"redZoneTargets":1,"endZoneTargets":1,"catchPct":87,"receivingYards":195,"totalYards":195,"yardsPerReception":9.75,"yardsBeforeCatchPerReception":4.55,"yardsAfterCatchPerReception":5.2,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.72,"receivingTouchdowns":1,"epaPerPlay":0.469,"successRate":65.2,"contestedCatchRate":null,"fantasyPoints":25.5,"avoidedTackleRate":15,"brokenTackles":3,"drops":1,"catchableTargets":21,"dropPct":4.3,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":9,"receptions20Plus":3,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":26},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/adam-trautman.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-adam-trautman/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "6869",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

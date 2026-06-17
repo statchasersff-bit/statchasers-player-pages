@@ -1,0 +1,19 @@
+{
+  "slug": "jerry-jeudy",
+  "name": "Jerry Jeudy",
+  "position": "WR",
+  "team": "CLE",
+  "season": 2026,
+  "headline": "Jeudy's Efficiency Cratered, and Cleveland Reloaded",
+  "body": "The volume held but everything around it collapsed. Jeudy still ran 91.6% of routes and commanded a 20.3% target share across 17 games, yet his per-play EPA fell off a cliff to -0.305 with a 35.8% success rate, both among the worst marks at the position. He turned 106 targets into just 50 catches for 602 yards and 2 scores, a 47.2% catch rate dragged down by 10 drops and a YPRR that sank from 1.81 to 1.08. The WR6 finish of 2024 felt like a different player entirely.\n\nThe role isn't safe, either. Cleveland spent early draft capital on two more wideouts, crowding a depth chart that no longer treats Jeudy as the centerpiece. A tweaked hamstring already has him on a cautious camp ramp. With a late-round price tag, he's a deep-league dart throw who needs early production to justify a roster spot.",
+  "keyStats": {"rank":46,"playerId":"6783","playerName":"Jerry Jeudy","position":"WR","team":"CLE","age":26,"season":2025,"games":17,"snapPct":84.5,"routes":556,"routePct":91.6,"targets":106,"targetsPerRouteRun":0.191,"targetSharePct":20.3,"airYardsPerTarget":12.15,"airYardsPerReception":25.76,"airYardsSharePct":34,"wopr":0.543,"receptions":50,"redZoneTargets":9,"endZoneTargets":3,"catchPct":47.2,"receivingYards":602,"totalYards":607,"yardsPerReception":12.04,"yardsBeforeCatchPerReception":8.72,"yardsAfterCatchPerReception":3.32,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.08,"receivingTouchdowns":2,"epaPerPlay":-0.305,"successRate":35.8,"contestedCatchRate":null,"fantasyPoints":70.7,"avoidedTackleRate":0,"brokenTackles":0,"drops":10,"catchableTargets":60,"dropPct":9.4,"interceptionsWhenTargeted":7,"fumbles":1,"receptions10Plus":28,"receptions20Plus":6,"receptions30Plus":3,"receptions40Plus":1,"receptions50Plus":1,"longestReception":60},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/jerry-jeudy.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-jerry-jeudy/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "6783",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

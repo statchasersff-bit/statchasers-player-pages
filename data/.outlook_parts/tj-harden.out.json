@@ -1,0 +1,19 @@
+{
+  "slug": "tj-harden",
+  "name": "TJ Harden",
+  "position": "RB",
+  "team": "CLE",
+  "season": 2026,
+  "headline": "A deep Browns sleeper waiting on opportunity",
+  "body": "Harden enters 2026 as a true under-the-radar name, rostered in essentially zero leagues and buried in expert consensus at RB171 (overall ECR around 543). At just 22 and built at 6-0, 218 out of SMU, the Cleveland back has the frame to handle real volume, but the projections and game logs simply aren't there yet, leaving him a pure depth-chart bet rather than a draftable asset on day one.\n\nThe schedule, at least, would reward a breakout if the touches ever arrive. Cleveland's slate grades out as the eighth-easiest the rest of the way, and the fantasy playoff stretch against New York, Baltimore, and Indianapolis ranks among the friendliest in the league. Treat Harden as a watch-list stash in deeper formats: monitor camp reps and injuries ahead of him, and pounce only once he carves out a defined role.",
+  "keyStats": null,
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/tj-harden.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-tj-harden/","used":false},
+    {"name":"Statchasers advanced stats","used":false}
+  ],
+  "id": "13750",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

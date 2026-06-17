@@ -1,0 +1,19 @@
+{
+  "slug": "jonah-coleman",
+  "name": "Jonah Coleman",
+  "position": "RB",
+  "team": "DEN",
+  "season": 2026,
+  "headline": "Buried Behind Two Backs, But Worth A Late Dart",
+  "body": "Coleman enters his rookie season stuck third on Denver's depth chart, behind J.K. Dobbins and R.J. Harvey in a crowded backfield. As a fourth-round pick at a compact 5-foot-8, 220 pounds, he profiles as a short-yardage and goal-line bruiser more than a feature option, and his draft cost reflects that with an ADP near pick 150. At Washington he piled up 1,811 yards and 25 scores on 349 carries while adding 54 grabs, flashing the contact balance that makes him intriguing if the picture clears.\n\nThe path to relevance runs through Dobbins, whose chronic foot trouble limited him to 10 games a year ago. Should that repeat, or Harvey settle into a passing-down role, Coleman's short-yardage value spikes into flex territory. He's a cheap stash with a clear injury-leverage profile, though a featured workload likely waits until 2027.",
+  "keyStats": null,
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/jonah-coleman.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-jonah-coleman/","used":true},
+    {"name":"Statchasers advanced stats","used":false}
+  ],
+  "id": "13345",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

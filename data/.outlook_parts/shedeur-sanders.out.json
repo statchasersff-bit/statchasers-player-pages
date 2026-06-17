@@ -1,0 +1,19 @@
+{
+  "slug": "shedeur-sanders",
+  "name": "Shedeur Sanders",
+  "position": "QB",
+  "team": "CLE",
+  "season": 2026,
+  "headline": "Efficiency Red Flags Cloud Sanders' Browns Audition",
+  "body": "The 2025 tape is hard to spin. Across eight games Sanders posted a brutal minus-0.232 EPA per play and a 36.7% success rate, with a minus-5 CPOE confirming he completed fewer passes than expectation. He threw 10 picks against just seven scores, completed only 56.6% of his attempts, and averaged a tiny 4.8 air yards per completion while leaning on dink-and-dunk volume. The protection cratered too: a 40.3% pressure rate, 23 sacks and a 3.24-second time to throw that invited the rush.\n\nThere are slivers of upside. He flashed deep, hitting four passes of 50-plus yards and a 66-yard long, and added 169 rushing yards at 9.3 per scramble. Cleveland is still an open competition with Watson, and a new staff plus fresh line and receiver investments could lift the floor. But until the efficiency turns, he is a Superflex-only dart at QB34 ADP, not a one-QB roster piece.",
+  "keyStats": {"rank":35,"playerId":"12524","playerName":"Shedeur Sanders","position":"QB","team":"CLE","age":23,"season":2025,"games":8,"attempts":212,"completions":120,"completionPct":56.6,"passingYards":1400,"yardsPerCatch":6.6,"passingTouchdowns":7,"interceptions":10,"fantasyPoints":84.9,"airYards":1525,"completedAirYards":570,"completedAirYardsPerCompletion":4.8,"deepAttemptPct":11.9,"epaPerPlay":-0.232,"successRate":36.7,"cpoe":-5,"throwaways":18,"battedPasses":7,"poorThrows":35,"badThrowPct":18,"onTargetPct":69.6,"passesDropped":6,"passes10Plus":51,"passes20Plus":17,"passes30Plus":11,"passes40Plus":7,"passes50Plus":4,"longestPass":66,"rushAttempts":21,"rushYards":169,"rushTouchdowns":1,"redZoneAttempts":17,"scrambleRate":7.1,"yardsPerScramble":9.3,"fumbles":2,"sacks":23,"sackYardsLost":164,"pocketTime":2.6,"timeToThrow":3.24,"blitzes":53,"hurries":34,"knockdowns":45,"pressurePct":40.3},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/shedeur-sanders.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-shedeur-sanders/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "12524",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

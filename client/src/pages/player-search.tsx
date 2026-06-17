@@ -51,6 +51,41 @@ const POSITION_COLORS: Record<string, string> = {
   DEF: "sc-pos-pill sc-pos-def",
 };
 
+// Small headshot for autocomplete rows. Falls back to the position placeholder
+// if the player has no image on the Sleeper CDN.
+function AutocompleteAvatar({ playerId, position, team }: { playerId: string; position: string; team: string }) {
+  const [failed, setFailed] = useState(false);
+  const teamLogo = team ? (
+    <img
+      src={`https://sleepercdn.com/images/team_logos/nfl/${team.toLowerCase()}.png`}
+      alt=""
+      loading="lazy"
+      className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 object-contain"
+      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+    />
+  ) : null;
+  if (failed || !playerId) {
+    return (
+      <div className="relative flex-shrink-0 w-8 h-8 rounded-md bg-muted flex items-center justify-center overflow-visible">
+        <span className="text-[10px] font-bold text-muted-foreground">{position || "?"}</span>
+        {teamLogo}
+      </div>
+    );
+  }
+  return (
+    <div className="relative flex-shrink-0 w-8 h-8">
+      <img
+        src={`https://sleepercdn.com/content/nfl/players/thumb/${playerId}.jpg`}
+        alt=""
+        loading="lazy"
+        className="w-full h-full rounded-md bg-muted object-cover object-top"
+        onError={() => setFailed(true)}
+      />
+      {teamLogo}
+    </div>
+  );
+}
+
 const TEAM_COLORS: Record<string, string> = {
   ARI: "#97233F", ATL: "#A71930", BAL: "#241773", BUF: "#00338D",
   CAR: "#0085CA", CHI: "#0B162A", CIN: "#FB4F14", CLE: "#311D00",
@@ -414,7 +449,10 @@ export default function PlayerSearch() {
     if (!indexedData?.byTeam) return [] as IndexedPlayer[];
     const all: IndexedPlayer[] = [];
     for (const teamPositions of Object.values(indexedData.byTeam)) {
-      for (const posPlayers of Object.values(teamPositions)) {
+      for (const [pos, posPlayers] of Object.entries(teamPositions)) {
+        // Search and positional views cover skill positions only — exclude
+        // kickers and defenses.
+        if (!POSITION_ORDER.includes(pos)) continue;
         all.push(...posPlayers);
       }
     }
@@ -438,7 +476,7 @@ export default function PlayerSearch() {
     if (indexedMatches.length >= 4) return indexedMatches;
     const indexedSlugs = new Set(indexedMatches.map(p => p.slug));
     const extras = (players || [])
-      .filter(p => !indexedSlugs.has(p.slug) && (p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q)))
+      .filter(p => POSITION_ORDER.includes(p.position) && !indexedSlugs.has(p.slug) && (p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q)))
       .slice(0, 8 - indexedMatches.length);
     return [...indexedMatches, ...extras];
   }, [indexedFlat, players, search]);
@@ -536,7 +574,13 @@ export default function PlayerSearch() {
     [showAutocomplete, autocompleteResults, activeIndex, navigate]
   );
 
-  const totalPlayers = indexedData?.slugs?.length || 352;
+  // Count only the positions we expose as pills (QB/RB/WR/TE) so the total
+  // reconciles with the per-position breakdown. K/DEF stay searchable but are
+  // excluded from this headline count.
+  const totalPlayers = useMemo(
+    () => POSITION_ORDER.reduce((sum, pos) => sum + (posCounts[pos] || 0), 0),
+    [posCounts],
+  );
 
   const resultNoun = posFilter !== "ALL" ? (POSITION_PLURAL[posFilter] || "Players") : "Players";
   const resultsCapped = filtered.length === 100;
@@ -646,11 +690,7 @@ export default function PlayerSearch() {
                           onClick={() => setShowAutocomplete(false)}
                           data-testid={`autocomplete-item-${player.slug}`}
                         >
-                          <div className="flex-shrink-0 w-8 h-8 rounded-md bg-muted flex items-center justify-center">
-                            <span className="text-[10px] font-bold text-muted-foreground">
-                              {player.position || "?"}
-                            </span>
-                          </div>
+                          <AutocompleteAvatar playerId={player.id} position={player.position || ""} team={player.team || ""} />
                           <div className="flex-1 min-w-0">
                             <span className="font-medium text-sm text-foreground truncate block">
                               {player.name}
@@ -784,7 +824,7 @@ export default function PlayerSearch() {
                   </CardContent>
                 </Card>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
                   {filtered.map((player) => {
                     const pos = player.position || "";
                     const rankLabel = 'rank_label' in player ? (player as IndexedPlayer).rank_label : pos;

@@ -1,0 +1,19 @@
+{
+  "slug": "tee-higgins",
+  "name": "Tee Higgins",
+  "position": "WR",
+  "team": "CIN",
+  "season": 2026,
+  "headline": "Elite efficiency, touchdown machine, locked-in WR1 ceiling",
+  "body": "Higgins keeps producing like a top-tier wideout on a complementary target diet. In 2025 he posted 0.356 EPA per play and a 54.1% success rate across just 15 games, turning 98 targets and a 16.1% target share into 846 yards and 11 touchdowns. The volume sits behind Ja'Marr Chase, but the efficiency is loud: 1.65 yards per route, 27.9% air-yards share, and 15 red-zone looks that fuel his scoring. He drops almost nothing, with two on the year and a 2% drop rate.\n\nThe 2024 line is the dream upside, when 0.526 EPA per play and a 63.3% success rate carried 73 catches in 12 games. As a high-end WR2 with WR1 weeks when Burrow is upright, he's a clean Round 3-4 anchor. The one flag is leaning on touchdowns to mask a modest route-run usage rate; any bump in target share unlocks a real bargain.",
+  "keyStats": {"rank":25,"playerId":"6801","playerName":"Tee Higgins","position":"WR","team":"CIN","age":26,"season":2025,"games":15,"snapPct":80.9,"routes":513,"routePct":76.2,"targets":98,"targetsPerRouteRun":0.191,"targetSharePct":16.1,"airYardsPerTarget":13.41,"airYardsPerReception":22.27,"airYardsSharePct":27.9,"wopr":0.437,"receptions":59,"redZoneTargets":15,"endZoneTargets":7,"catchPct":60.2,"receivingYards":846,"totalYards":846,"yardsPerReception":14.34,"yardsBeforeCatchPerReception":11.53,"yardsAfterCatchPerReception":2.81,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.65,"receivingTouchdowns":11,"epaPerPlay":0.356,"successRate":54.1,"contestedCatchRate":null,"fantasyPoints":152.6,"avoidedTackleRate":8.5,"brokenTackles":5,"drops":2,"catchableTargets":61,"dropPct":2,"interceptionsWhenTargeted":2,"fumbles":0,"receptions10Plus":35,"receptions20Plus":14,"receptions30Plus":5,"receptions40Plus":3,"receptions50Plus":0,"longestReception":44},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/tee-higgins.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-tee-higgins/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "6801",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

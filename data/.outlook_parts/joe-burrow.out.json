@@ -1,0 +1,20 @@
+{
+  "slug": "joe-burrow",
+  "name": "Joe Burrow",
+  "position": "QB",
+  "team": "CIN",
+  "season": 2026,
+  "headline": "Burrow's Elite Efficiency Is Bottled, Just Add Health",
+  "body": "The 2024 tape is the real Burrow: a wire-to-wire QB1 across all 17 games, piling up 372.8 fantasy points on 43 touchdowns against nine picks while posting a 0.159 EPA per play, a 51.1% success rate and a 6.8 CPOE that screamed best-quarterback-alive. A toe injury capped 2025 at eight games, yet even compromised he completed 66.8% of his throws with 17 scores to five interceptions, a 0.114 EPA per play and a still-excellent 4.7 CPOE. The accuracy never wavered.\n\nThat efficiency baseline is why the cratered counting stats lie. A full slate alongside Ja'Marr Chase and Tee Higgins in a fast-tempo, pass-leaning attack restores a top-three QB ceiling, and he profiles as a top-five pick at the position. The toe limited his scrambling to 14 carries; a return to mobility only widens the gap. Healthy, he is a value the moment passers come off the board."
+,
+  "keyStats": {"rank":30,"playerId":"6770","playerName":"Joe Burrow","position":"QB","team":"CIN","age":28,"season":2025,"games":8,"attempts":259,"completions":173,"completionPct":66.8,"passingYards":1809,"yardsPerCatch":6.98,"passingTouchdowns":17,"interceptions":5,"fantasyPoints":134.5,"airYards":1868,"completedAirYards":985,"completedAirYardsPerCompletion":5.7,"deepAttemptPct":10.1,"epaPerPlay":0.114,"successRate":49.3,"cpoe":4.7,"throwaways":11,"battedPasses":5,"poorThrows":28,"badThrowPct":11.3,"onTargetPct":75,"passesDropped":9,"passes10Plus":77,"passes20Plus":22,"passes30Plus":7,"passes40Plus":1,"passes50Plus":0,"longestPass":43,"rushAttempts":14,"rushYards":41,"rushTouchdowns":0,"redZoneAttempts":42,"scrambleRate":3.5,"yardsPerScramble":3.8,"fumbles":0,"sacks":17,"sackYardsLost":113,"pocketTime":2.3,"timeToThrow":2.8,"blitzes":56,"hurries":17,"knockdowns":28,"pressurePct":21.7},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/joe-burrow.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-joe-burrow/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "6770",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

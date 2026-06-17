@@ -1,0 +1,19 @@
+{
+  "slug": "colston-loveland",
+  "name": "Colston Loveland",
+  "position": "TE",
+  "team": "CHI",
+  "season": 2026,
+  "headline": "Loveland's Rookie Spike Points to a TE1 Leap",
+  "body": "The rookie tape was loud. Across 16 games Loveland posted a 0.591 EPA per play and a 59.8% success rate on his targets, elite efficiency for a 21-year-old learning the position. He turned 82 targets into 58 grabs, 713 yards and six scores while running routes on 63% of dropbacks, and his 0.218 targets per route run plus a 15.4% target share signal a player the offense already trusts. He dropped exactly one catchable ball.\n\nThe red-zone usage is what pushes the projection higher: 14 red-zone looks and six end-zone targets at age 21 hint at a scoring floor that climbs with volume. At 1.9 yards per route run he is still rounding out as a downfield weapon, but the late-season target surge and a tightening rapport with Caleb Williams make this an obvious year-two ascent. He profiles as a top-five tight end with genuine top-three upside.",
+  "keyStats": {"rank":9,"playerId":"12517","playerName":"Colston Loveland","position":"TE","team":"CHI","age":21,"season":2025,"games":16,"snapPct":64.5,"routes":376,"routePct":63.1,"targets":82,"targetsPerRouteRun":0.218,"targetSharePct":15.4,"airYardsPerTarget":9.1,"airYardsPerReception":12.86,"airYardsSharePct":15.1,"wopr":0.337,"receptions":58,"redZoneTargets":14,"endZoneTargets":6,"catchPct":70.7,"receivingYards":713,"totalYards":711,"yardsPerReception":12.29,"yardsBeforeCatchPerReception":7.98,"yardsAfterCatchPerReception":4.31,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.9,"receivingTouchdowns":6,"epaPerPlay":0.591,"successRate":59.8,"contestedCatchRate":null,"fantasyPoints":107.1,"avoidedTackleRate":6.9,"brokenTackles":4,"drops":1,"catchableTargets":59,"dropPct":1.2,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":29,"receptions20Plus":10,"receptions30Plus":5,"receptions40Plus":1,"receptions50Plus":1,"longestReception":58},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/colston-loveland.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-colston-loveland/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "12517",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

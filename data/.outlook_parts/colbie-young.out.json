@@ -1,0 +1,19 @@
+{
+  "slug": "colbie-young",
+  "name": "Colbie Young",
+  "position": "WR",
+  "team": "CIN",
+  "season": 2026,
+  "headline": "Stash The Bengals Rookie, But Don't Draft Him Yet",
+  "body": "Cincinnati spent a fourth-round pick (140th overall) on Young, a 6-foot-5, 218-pound rookie out of Georgia who lands in one of the league's most top-heavy receiver rooms. Ja'Marr Chase and Tee Higgins lock down the targets, with Andrei Iosivas, entering a contract year, holding the next snaps. That leaves Young buried, and an ADP near 326 overall reflects it. The projection line is tiny: roughly 3.5 catches, 43 yards and a fraction of a touchdown.\n\nThe path to relevance is real but narrow. The Bengals are thin behind their two stars, so the No. 3 job is genuinely up for grabs. Young's size gives him a red-zone and contested-catch profile worth monitoring if he flashes early. For redraft purposes there's no reason to spend a pick here. In dynasty rookie formats, though, he's a cheap dart throw whose value spikes the moment an opportunity opens.",
+  "keyStats": null,
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/colbie-young.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-colbie-young/","used":true},
+    {"name":"Statchasers advanced stats","used":false}
+  ],
+  "id": "13477",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "ahmani-marshall",
+  "name": "Ahmani Marshall",
+  "position": "RB",
+  "team": "CLE",
+  "season": 2026,
+  "headline": "Reserve/Future Flier Stuck Deep On Cleveland's Bench",
+  "body": "Marshall enters 2026 on the very edge of the roster picture, having inked a reserve/future deal with Cleveland after spending time on the practice squad. The Appalachian State product brings genuine size for the position at 6-foot-1 and 225 pounds, and at 24 he is young enough to develop, but nothing about his current standing suggests a defined role is waiting. He sits behind the established Browns backfield with no clear path to touches as offseason work begins.\n\nThe deep-league ranking near RB210 and essentially zero roster rate tell the story: this is a watch-list name, not a draftable asset. Cleveland's schedule grades out roughly middle-of-the-pack for backs, so opportunity, not matchup, is the only thing holding him back. Monitor camp and preseason for any sign he climbs the depth chart, but until that happens he belongs nowhere near redraft boards.",
+  "keyStats": null,
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/ahmani-marshall.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-ahmani-marshall/","used":false},
+    {"name":"Statchasers advanced stats","used":false}
+  ],
+  "id": "12797",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

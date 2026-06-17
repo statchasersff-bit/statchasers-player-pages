@@ -54,6 +54,16 @@ export interface PlayerAdvancedResult {
   statRanks: Record<string, StatRank>;
 }
 
+// The individual seasons we evaluate for advanced-stats qualification.
+export const ADV_QUAL_SEASONS = [2023, 2024, 2025] as const;
+
+export interface AdvancedQualification {
+  // Subset of ADV_QUAL_SEASONS the player meets the position's usage threshold in.
+  qualifiedSeasons: number[];
+  // True only when the player qualifies in every one of ADV_QUAL_SEASONS.
+  allQualified: boolean;
+}
+
 // ── Rank-card stat definitions per position ───────────────────────────────────
 
 interface RankStatDef {
@@ -294,4 +304,37 @@ export async function loadPlayerAdvancedStats(
   }
 
   return { latest, composites, rankCards, statRanks };
+}
+
+// Determines which of ADV_QUAL_SEASONS a player meets the position usage
+// threshold in. Used to decide whether to show the Advanced Stats tab at all,
+// which season buttons to offer, and whether the "All Seasons" view qualifies.
+export async function loadPlayerSeasonQualification(
+  playerId: string,
+  position: string,
+): Promise<AdvancedQualification> {
+  const pos = position.toLowerCase();
+  if (!['qb', 'rb', 'wr', 'te'].includes(pos)) {
+    return { qualifiedSeasons: [], allQualified: false };
+  }
+
+  const results = await Promise.all(
+    ADV_QUAL_SEASONS.map(async (season) => {
+      try {
+        const res = await fetch(`/api/advanced-stats/${pos}/${season}`);
+        if (!res.ok) return false;
+        const file: { rows: Array<Record<string, unknown>> } = await res.json();
+        const row = file.rows.find(r => String(r.playerId) === String(playerId));
+        return row ? isQualified(row, pos) : false;
+      } catch {
+        return false;
+      }
+    }),
+  );
+
+  const qualifiedSeasons = ADV_QUAL_SEASONS.filter((_, i) => results[i]);
+  return {
+    qualifiedSeasons,
+    allQualified: qualifiedSeasons.length === ADV_QUAL_SEASONS.length,
+  };
 }

@@ -1,0 +1,19 @@
+{
+  "slug": "jarrett-stidham",
+  "name": "Jarrett Stidham",
+  "position": "QB",
+  "team": "DEN",
+  "season": 2026,
+  "headline": "A capable insurance policy waiting behind Bo Nix",
+  "body": "The last meaningful sample tells the story of a steady backup, not a breakout. Across his most recent two-game look, Stidham completed 60.6% of his 66 throws for 496 yards, two scores and one pick, posting essentially neutral production at -0.001 EPA per play and a 41.5% success rate. His -3.7 CPOE and a 19.4% bad-throw rate confirm he hovers below the league line as a passer, with a 23.7% pressure rate and 7 sacks showing the offense around him wobbled in those reps.\n\nThe outlook is purely contingency. He sits behind Bo Nix in Denver and only surfaces if Nix misses time, exactly the path that handed him an AFC title-game start. Carrying no real draft capital and a QB ranking outside the top 55, he is droppable in standard formats and a dart-throw stash only in deep Superflex and two-quarterback builds banking on an injury upstream.",
+  "keyStats": {"rank":51,"playerId":"6136","playerName":"Jarrett Stidham","position":"QB","team":"DEN","age":27,"season":2023,"games":2,"attempts":66,"completions":40,"completionPct":60.6,"passingYards":496,"yardsPerCatch":7.52,"passingTouchdowns":2,"interceptions":1,"fantasyPoints":26.6,"airYards":565,"completedAirYards":null,"completedAirYardsPerCompletion":null,"deepAttemptPct":12.3,"epaPerPlay":-0.001,"successRate":41.5,"cpoe":-3.7,"throwaways":4,"battedPasses":0,"poorThrows":12,"badThrowPct":19.4,"onTargetPct":69.4,"passesDropped":2,"passes10Plus":16,"passes20Plus":8,"passes30Plus":4,"passes40Plus":3,"passes50Plus":1,"longestPass":54,"rushAttempts":9,"rushYards":8,"rushTouchdowns":0,"redZoneAttempts":7,"scrambleRate":null,"yardsPerScramble":null,"fumbles":1,"sacks":7,"sackYardsLost":46,"pocketTime":2.6,"timeToThrow":null,"blitzes":18,"hurries":3,"knockdowns":8,"pressurePct":23.7},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/jarrett-stidham.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-jarrett-stidham/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "6136",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "joe-milton",
+  "name": "Joe Milton",
+  "position": "QB",
+  "team": "DAL",
+  "season": 2026,
+  "headline": "Milton's flashes are real, but the runway isn't",
+  "body": "The arm talent shows up in the data, but the sample is microscopic. Across four Dallas appearances in 2025, Milton threw for 183 yards on 24 attempts with a 62.5% completion rate, one touchdown against two picks, and a -0.05 EPA per play paired with a 44.8% success rate. His 26.1% bad-throw rate flagged the rough edges, though a 1.6 CPOE and five carries for 50 rushing yards hinted at a higher ceiling. The 2024 New England tape was the dream: 22-of-29 for 241 yards, a 92.6% on-target rate, 17.1 CPOE, and 19.2 fantasy points in one start.\n\nThat upside collides with reality in Dallas. Milton is locked in a QB2 fight with Sam Howell behind a healthy Dak Prescott, leaving no clear path to snaps. With an overall ADP near 383 and QB54 positioning, he's a pure deep-dynasty stash, not a 2026 fantasy asset.",
+  "keyStats": {"rank":62,"playerId":"11557","playerName":"Joe Milton III","position":"QB","team":"DAL","age":25,"season":2025,"games":4,"attempts":24,"completions":15,"completionPct":62.5,"passingYards":183,"yardsPerCatch":7.62,"passingTouchdowns":1,"interceptions":2,"fantasyPoints":10.3,"airYards":260,"completedAirYards":105,"completedAirYardsPerCompletion":7,"deepAttemptPct":16.7,"epaPerPlay":-0.05,"successRate":44.8,"cpoe":1.6,"throwaways":1,"battedPasses":1,"poorThrows":6,"badThrowPct":26.1,"onTargetPct":65.2,"passesDropped":0,"passes10Plus":8,"passes20Plus":3,"passes30Plus":2,"passes40Plus":0,"passes50Plus":0,"longestPass":35,"rushAttempts":5,"rushYards":50,"rushTouchdowns":0,"redZoneAttempts":2,"scrambleRate":7.7,"yardsPerScramble":9.5,"fumbles":1,"sacks":0,"sackYardsLost":0,"pocketTime":2.3,"timeToThrow":null,"blitzes":6,"hurries":4,"knockdowns":1,"pressurePct":19.2},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/joe-milton.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-joe-milton/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11557",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

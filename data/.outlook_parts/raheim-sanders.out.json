@@ -1,0 +1,19 @@
+{
+  "slug": "raheim-sanders",
+  "name": "Raheim Sanders",
+  "position": "RB",
+  "team": "CLE",
+  "season": 2026,
+  "headline": "Deep-League Dart Behind Cleveland's Crowded Backfield",
+  "body": "Sanders' rookie tape was a small, inefficient sample: 27 carries for 92 yards (3.41 per pop) and one short touchdown across four games, with a modest 25.8% snap share. The advanced numbers hint at a runner who grinds rather than pops, churning 2.22 yards after contact per attempt against just 1.19 before it, with only one carry of 10-plus and zero breakaways. His 0.067 EPA per play and four targets on a 0.8% target share leave little for fantasy to grab right now, which is how he lands at RB88 in our rankings.\n\nThe path to relevance is purely about opportunity. Quinshon Judkins owns the early-down work, and Dylan Sampson is the other body fighting for the backup role, so Sanders enters camp as a No. 3 with a draft cost near pick 371 and roughly half a percent rostered. He's a handcuff-of-a-handcuff: only worth a deep-league flier, and only if injuries reshuffle the depth chart ahead of him.",
+  "keyStats": {"rank":88,"playerId":"12472","playerName":"Raheim Sanders","position":"RB","team":"CLE","age":23,"season":2025,"games":4,"snapPct":25.8,"routes":21,"rushAttempts":27,"redZoneOpportunities":7,"goalLineCarries":4,"targets":4,"receptions":3,"redZoneTargets":0,"endZoneTargets":0,"rushYards":92,"yardsPerCarry":3.41,"rushTouchdowns":1,"targetSharePct":0.8,"receivingYards":21,"yardsPerReception":7,"yardsPerRouteRun":1,"receivingTouchdowns":0,"epaPerPlay":0.067,"fantasyPoints":17.3,"rushes10Plus":1,"rushes20Plus":0,"rushes30Plus":0,"rushes40Plus":0,"rushes50Plus":0,"explosiveRunPct":3.7,"breakawayRunPct":0,"longestRush":14,"longestRushTouchdown":1,"brokenTackles":0,"rushAttemptsPerBrokenTackle":null,"yardsAfterContactPerAttempt":2.22,"yardsBeforeContactPerAttempt":1.19,"receivingYardsAfterCatch":14,"tackleEludedRate":0,"fumbles":0,"tacklesForLoss":1,"tacklesForLossYards":1,"rushAttForNegativeYards":1},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/raheim-sanders.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-raheim-sanders/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "12472",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

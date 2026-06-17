@@ -1,0 +1,19 @@
+{
+  "slug": "liljordan-humphrey",
+  "name": "Lil'Jordan Humphrey",
+  "position": "WR",
+  "team": "DEN",
+  "season": 2026,
+  "headline": "Deep-roster Bronco with a usage ceiling he can't crack",
+  "body": "The profile hasn't budged. Across seven games in 2025, Humphrey logged just 25 targets and a 5% target share, turning them into 13 catches for 156 yards and a score on a thin 0.95 yards per route run. His 0.317 EPA per play and 48% success rate read fine in isolation, but at a 26% route rate they're a sample, not a role. Even his 2024 high-water mark topped out at an 8.2% target share, so the ranking sitting at 130 among wideouts reflects the opportunity, not bad luck.\n\nDenver brought him back for a familiar depth job, and the room ahead of him is crowded enough that he projects as a special-teams body more than a target earner. He's off the draft board in every format, with an ADP near pick 570 and essentially zero rostership. File him as an injury-contingency name only.",
+  "keyStats": {"rank":130,"playerId":"5938","playerName":"Lil'Jordan Humphrey","position":"WR","team":"DEN","age":27,"season":2025,"games":7,"snapPct":48.4,"routes":165,"routePct":26,"targets":25,"targetsPerRouteRun":0.152,"targetSharePct":5,"airYardsPerTarget":11.08,"airYardsPerReception":21.31,"airYardsSharePct":6.2,"wopr":0.118,"receptions":13,"redZoneTargets":4,"endZoneTargets":3,"catchPct":52,"receivingYards":156,"totalYards":156,"yardsPerReception":12,"yardsBeforeCatchPerReception":9.77,"yardsAfterCatchPerReception":2.23,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.95,"receivingTouchdowns":1,"epaPerPlay":0.317,"successRate":48,"contestedCatchRate":null,"fantasyPoints":21.6,"avoidedTackleRate":0,"brokenTackles":0,"drops":1,"catchableTargets":14,"dropPct":4,"interceptionsWhenTargeted":1,"fumbles":0,"receptions10Plus":5,"receptions20Plus":2,"receptions30Plus":1,"receptions40Plus":0,"receptions50Plus":0,"longestReception":34},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/liljordan-humphrey.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-liljordan-humphrey/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "5938",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

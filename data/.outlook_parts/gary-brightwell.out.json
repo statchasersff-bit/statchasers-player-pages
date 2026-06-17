@@ -1,0 +1,19 @@
+{
+  "slug": "gary-brightwell",
+  "name": "Gary Brightwell",
+  "position": "RB",
+  "team": "CIN",
+  "season": 2026,
+  "headline": "Roster fringe in Cincinnati with no path to touches",
+  "body": "Brightwell's profile is built on the thinnest possible sample. Our last meaningful look came in 2023, when he played just four games and logged only nine carries for 19 yards at a dismal 2.11 per attempt, with an EPA of minus-0.115 per play that screams replacement-level. He flashed marginally as a checkdown outlet, hauling in five of seven targets for 47 yards and a 1.96 yards-per-route-run mark, but a 1.4 percent target share and 6.6 fantasy points underscore how invisible he was. That RB105 finish is the ceiling, not the floor.\n\nNow with the Bengals after bouncing across practice squads, he sits at the very bottom of the depth chart with essentially no draftable value. Ranked outside RB160 and rostered in roughly zero percent of leagues, Brightwell is a special-teams body and emergency depth, not a fantasy asset. Leave him on waivers until injuries force a real conversation.",
+  "keyStats": {"rank":105,"playerId":"7529","playerName":"Gary Brightwell","position":"RB","team":"NYG","age":25,"season":2023,"games":4,"snapPct":8.9,"routes":24,"rushAttempts":9,"redZoneOpportunities":0,"goalLineCarries":0,"targets":7,"receptions":5,"redZoneTargets":0,"endZoneTargets":0,"rushYards":19,"yardsPerCarry":2.11,"rushTouchdowns":0,"targetSharePct":1.4,"receivingYards":47,"yardsPerReception":9.4,"yardsPerRouteRun":1.96,"receivingTouchdowns":0,"epaPerPlay":-0.115,"fantasyPoints":6.6,"rushes10Plus":0,"rushes20Plus":0,"rushes30Plus":0,"rushes40Plus":0,"rushes50Plus":0,"explosiveRunPct":0,"breakawayRunPct":0,"longestRush":5,"longestRushTouchdown":null,"brokenTackles":1,"rushAttemptsPerBrokenTackle":9,"yardsAfterContactPerAttempt":1.33,"yardsBeforeContactPerAttempt":0.78,"receivingYardsAfterCatch":53,"tackleEludedRate":7.1,"fumbles":0,"tacklesForLoss":1,"tacklesForLossYards":1,"rushAttForNegativeYards":1},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/gary-brightwell.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-gary-brightwell/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "7529",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

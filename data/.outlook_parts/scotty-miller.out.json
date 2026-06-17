@@ -1,0 +1,19 @@
+{
+  "slug": "scotty-miller",
+  "name": "Scotty Miller",
+  "position": "WR",
+  "team": "CHI",
+  "season": 2026,
+  "headline": "Deep-threat dart who needs a real role to matter",
+  "body": "Miller arrives in Chicago as a vertical specialist whose recent profile screams fifth option. He logged just five games in 2025 with a 17.3% route share, a 2.7% target share, and a 0.14 targets-per-route-run mark, finishing WR169 on 6.2 fantasy points. The underlying efficiency cratered too: a minus-0.079 EPA per play and 42.9% success rate, with zero red-zone scores on 14 targets. There is no ambiguity here about where he sits on the depth chart.\n\nThe ceiling case rests on the field-stretching flashes. Back in 2023 he turned 16 targets into 161 yards and two touchdowns at 1.35 yards per route run and a 0.537 EPA per play, with a 56-yard long. Those splash plays are real, but his career WOPR has never cleared 0.08. Until snaps climb, Miller is a best-ball dart throw and nothing more in 2026.",
+  "keyStats": {"rank":169,"playerId":"6290","playerName":"Scott Miller","position":"WR","team":"PIT","age":28,"season":2025,"games":5,"snapPct":19.3,"routes":100,"routePct":17.3,"targets":14,"targetsPerRouteRun":0.14,"targetSharePct":2.7,"airYardsPerTarget":5.29,"airYardsPerReception":8.22,"airYardsSharePct":2.3,"wopr":0.056,"receptions":9,"redZoneTargets":2,"endZoneTargets":0,"catchPct":64.3,"receivingYards":62,"totalYards":62,"yardsPerReception":6.89,"yardsBeforeCatchPerReception":3.44,"yardsAfterCatchPerReception":3.44,"yardsAfterContactPerReception":null,"yardsPerRouteRun":0.62,"receivingTouchdowns":0,"epaPerPlay":-0.079,"successRate":42.9,"contestedCatchRate":null,"fantasyPoints":6.2,"avoidedTackleRate":0,"brokenTackles":0,"drops":0,"catchableTargets":9,"dropPct":0,"interceptionsWhenTargeted":0,"fumbles":0,"receptions10Plus":1,"receptions20Plus":0,"receptions30Plus":0,"receptions40Plus":0,"receptions50Plus":0,"longestReception":15},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/scotty-miller.php","used":false},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-scotty-miller/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "6290",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

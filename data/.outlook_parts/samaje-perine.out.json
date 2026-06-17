@@ -1,0 +1,19 @@
+{
+  "slug": "samaje-perine",
+  "name": "Samaje Perine",
+  "position": "RB",
+  "team": "CIN",
+  "season": 2026,
+  "headline": "A Steady Cincinnati Backup Drafted Only as Insurance",
+  "body": "Perine's 2025 line tells the story of a complementary back doing exactly what's asked of him: 84 carries for 382 yards at a tidy 4.55 per rush, plus 17 grabs on 21 targets across 15 games for 60.9 fantasy points. The efficiency held up, but the volume didn't, and a 35.1% snap share with a 3.5% target rate keeps the ceiling low. A minus-0.027 EPA per play and just 1.99 yards after contact per attempt confirm he's a rotational piece, not a feature runner, even with three rushing scores and two 20-plus chunk runs mixed in.\n\nThe role behind Chase Brown caps his standalone value, since most of Perine's appeal lives in third-down work and the chance Brown misses time. He's a late-round handcuff and waiver-wire stash rather than a draft-day priority, with an RB72 market price. Grab him only if you roster Brown or play in deep formats.",
+  "keyStats": {"rank":52,"playerId":"4147","playerName":"Samaje Perine","position":"RB","team":"CIN","age":29,"season":2025,"games":15,"snapPct":35.1,"routes":216,"rushAttempts":84,"redZoneOpportunities":17,"goalLineCarries":4,"targets":21,"receptions":17,"redZoneTargets":1,"endZoneTargets":0,"rushYards":382,"yardsPerCarry":4.55,"rushTouchdowns":3,"targetSharePct":3.5,"receivingYards":87,"yardsPerReception":5.12,"yardsPerRouteRun":0.4,"receivingTouchdowns":0,"epaPerPlay":-0.027,"fantasyPoints":60.9,"rushes10Plus":9,"rushes20Plus":2,"rushes30Plus":1,"rushes40Plus":0,"rushes50Plus":0,"explosiveRunPct":10.71,"breakawayRunPct":2.38,"longestRush":32,"longestRushTouchdown":32,"brokenTackles":4,"rushAttemptsPerBrokenTackle":21,"yardsAfterContactPerAttempt":1.99,"yardsBeforeContactPerAttempt":2.56,"receivingYardsAfterCatch":109,"tackleEludedRate":4,"fumbles":3,"tacklesForLoss":2,"tacklesForLossYards":5,"rushAttForNegativeYards":2},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/samaje-perine.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-samaje-perine/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "4147",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

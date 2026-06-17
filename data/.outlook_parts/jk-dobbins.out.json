@@ -1,0 +1,19 @@
+{
+  "slug": "jk-dobbins",
+  "name": "J.K. Dobbins",
+  "position": "RB",
+  "team": "DEN",
+  "season": 2026,
+  "headline": "Efficient runner, fragile body, touchdown-dependent ceiling",
+  "body": "Dobbins keeps producing yards the moment he touches the ball. Across 10 games in 2025 he ripped off 772 rushing yards on 153 carries at 5.05 per pop, with a 13.7% explosive-run rate and four scores before another foot injury ended his year at RB33. His 2.44 yards after contact per attempt and nine broken tackles show the burst is intact; the problem has never been talent. It has been staying on the field.\n\nThe concern is volume and pass-game floor. A 2.4% target share and 51.1% snap rate point to an early-down, committee role behind a passing-down complement, so his fantasy value leans heavily on finding the end zone. He flashed a near-neutral -0.005 EPA per play on a thin rushing context, and the 2024 line (905 yards, nine TDs, RB24) is the realistic upside. Treat him as a touchdown-reliant RB2 or flex with real injury risk baked in.",
+  "keyStats": {"rank":33,"playerId":"6806","playerName":"J.K. Dobbins","position":"RB","team":"DEN","age":26,"season":2025,"games":10,"snapPct":51.1,"routes":136,"rushAttempts":153,"redZoneOpportunities":20,"goalLineCarries":7,"targets":14,"receptions":11,"redZoneTargets":0,"endZoneTargets":0,"rushYards":772,"yardsPerCarry":5.05,"rushTouchdowns":4,"targetSharePct":2.4,"receivingYards":37,"yardsPerReception":3.36,"yardsPerRouteRun":0.27,"receivingTouchdowns":0,"epaPerPlay":-0.005,"fantasyPoints":104.9,"rushes10Plus":21,"rushes20Plus":5,"rushes30Plus":2,"rushes40Plus":1,"rushes50Plus":0,"explosiveRunPct":13.73,"breakawayRunPct":7.84,"longestRush":41,"longestRushTouchdown":19,"brokenTackles":9,"rushAttemptsPerBrokenTackle":17,"yardsAfterContactPerAttempt":2.44,"yardsBeforeContactPerAttempt":2.6,"receivingYardsAfterCatch":56,"tackleEludedRate":5.5,"fumbles":0,"tacklesForLoss":9,"tacklesForLossYards":17,"rushAttForNegativeYards":9},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/jk-dobbins.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-jk-dobbins/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "6806",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

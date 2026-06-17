@@ -1,0 +1,19 @@
+{
+  "slug": "kendall-milton",
+  "name": "Kendall Milton",
+  "position": "RB",
+  "team": "CIN",
+  "season": 2026,
+  "headline": "Milton waits behind Brown as deep insurance",
+  "body": "There is almost nothing on the ledger yet. Milton logged a single game in 2025, took just two carries for two yards, and never crossed a 6% snap share. A 137th positional rank and 0.2 fantasy points tell the whole story, even if the lone bright spot, a 0.429 EPA per play across that tiny sample, hints at the burst that made the 230-pound Georgia product an intriguing developmental back.\n\nThe path to relevance runs entirely through opportunity, not pedigree. With Chase Brown entrenched as the lead back and Khalil Herbert the likely next man up, Milton sits as a third-string insurance piece carrying no meaningful draft value and a dynasty number outside the top 175. He is a watch-list stash only, worth a roster spot in the deepest formats if an injury ahead of him suddenly cracks the depth chart open.",
+  "keyStats": {"rank":137,"playerId":"11649","playerName":"Kendall Milton","position":"RB","team":"CIN","age":23,"season":2025,"games":1,"snapPct":6,"routes":null,"rushAttempts":2,"redZoneOpportunities":0,"goalLineCarries":0,"targets":0,"receptions":0,"redZoneTargets":null,"endZoneTargets":null,"rushYards":2,"yardsPerCarry":1,"rushTouchdowns":0,"targetSharePct":0,"receivingYards":0,"yardsPerReception":null,"yardsPerRouteRun":null,"receivingTouchdowns":0,"epaPerPlay":0.429,"fantasyPoints":0.2,"rushes10Plus":0,"rushes20Plus":0,"rushes30Plus":0,"rushes40Plus":0,"rushes50Plus":0,"explosiveRunPct":0,"breakawayRunPct":0,"longestRush":2,"longestRushTouchdown":null,"brokenTackles":0,"rushAttemptsPerBrokenTackle":null,"yardsAfterContactPerAttempt":0,"yardsBeforeContactPerAttempt":1,"receivingYardsAfterCatch":0,"tackleEludedRate":0,"fumbles":0,"tacklesForLoss":0,"tacklesForLossYards":0,"rushAttForNegativeYards":0},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/kendall-milton.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-kendall-milton/","used":false},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "11649",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

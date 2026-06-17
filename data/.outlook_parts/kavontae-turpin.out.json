@@ -1,0 +1,19 @@
+{
+  "slug": "kavontae-turpin",
+  "name": "KaVontae Turpin",
+  "position": "WR",
+  "team": "DAL",
+  "season": 2026,
+  "headline": "Big-play juice, but the volume just isn't there",
+  "body": "Turpin's 2025 efficiency pops in isolation: a 0.44 EPA per play, a 52.6 percent success rate and a 15.2-yard average on his 26 grabs, capped by an 86-yard burst. The problem is everything underneath. He ran a route on just 35.9 percent of Dallas dropbacks, drew a 6.3 percent target share and turned 38 looks into only 396 yards and two scores, finishing 70th at the position. His 1.69 yards per route run actually slid backward from 2024's 2.09 as the snaps thinned out.\n\nThat profile screams big-play gadget, not weekly starter. The route count caps his ceiling, and the back-end ECR and triple-digit WR ADP reflect a player buried on the depth chart. Unless the role meaningfully expands, his real fantasy value lives in return-yardage formats, where the field-flipping speed finally translates to points. Leave him on waivers in standard leagues.",
+  "keyStats": {"rank":70,"playerId":"8917","playerName":"KaVontae Turpin","position":"WR","team":"DAL","age":29,"season":2025,"games":15,"snapPct":35.5,"routes":234,"routePct":35.9,"targets":38,"targetsPerRouteRun":0.162,"targetSharePct":6.3,"airYardsPerTarget":8.92,"airYardsPerReception":13.04,"airYardsSharePct":6.7,"wopr":0.141,"receptions":26,"redZoneTargets":5,"endZoneTargets":2,"catchPct":68.4,"receivingYards":396,"totalYards":485,"yardsPerReception":15.23,"yardsBeforeCatchPerReception":7,"yardsAfterCatchPerReception":8.23,"yardsAfterContactPerReception":null,"yardsPerRouteRun":1.69,"receivingTouchdowns":2,"epaPerPlay":0.44,"successRate":52.6,"contestedCatchRate":null,"fantasyPoints":58.5,"avoidedTackleRate":3.8,"brokenTackles":1,"drops":4,"catchableTargets":30,"dropPct":10.5,"interceptionsWhenTargeted":1,"fumbles":1,"receptions10Plus":13,"receptions20Plus":5,"receptions30Plus":3,"receptions40Plus":2,"receptions50Plus":1,"longestReception":86},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/kavontae-turpin.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-kavontae-turpin/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "8917",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

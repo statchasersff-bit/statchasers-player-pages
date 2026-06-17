@@ -1,0 +1,19 @@
+{
+  "slug": "deshaun-watson",
+  "name": "Deshaun Watson",
+  "position": "QB",
+  "team": "CLE",
+  "season": 2026,
+  "headline": "The numbers say bench him until proven otherwise",
+  "body": "The efficiency profile is alarming. Across seven 2024 games Watson posted a brutal minus-0.23 EPA per play and a 34.3% success rate, finishing as QB39 with just five touchdowns against three picks. His 78.7% on-target mark and minus-2.2 CPOE show the accuracy slipped, and a 31.9% pressure rate with 33 sacks meant he never operated cleanly. The 2023 sample was only marginally better: minus-0.09 EPA and a 41.6% success rate over six starts.\n\nThe rushing equity that once propped up his ceiling has evaporated, leaving 148 yards and one score on 31 carries in 2024. He enters camp in an open competition for the starting job, drafted around QB32 in single-QB formats where he carries no standalone value. An upgraded receiving corps offers a faint path back, but until the efficiency stabilizes, he is a Superflex dart at best and nothing more.",
+  "keyStats": {"rank":39,"playerId":"4017","playerName":"Deshaun Watson","position":"QB","team":"CLE","age":28,"season":2024,"games":7,"attempts":216,"completions":137,"completionPct":63.4,"passingYards":1148,"yardsPerCatch":5.31,"passingTouchdowns":5,"interceptions":3,"fantasyPoints":76.7,"airYards":1569,"completedAirYards":564,"completedAirYardsPerCompletion":4.1,"deepAttemptPct":7.6,"epaPerPlay":-0.23,"successRate":34.3,"cpoe":-2.2,"throwaways":5,"battedPasses":5,"poorThrows":34,"badThrowPct":16.1,"onTargetPct":78.7,"passesDropped":20,"passes10Plus":45,"passes20Plus":11,"passes30Plus":2,"passes40Plus":0,"passes50Plus":0,"longestPass":35,"rushAttempts":31,"rushYards":148,"rushTouchdowns":1,"redZoneAttempts":21,"scrambleRate":7.8,"yardsPerScramble":6.3,"fumbles":5,"sacks":33,"sackYardsLost":191,"pocketTime":2.6,"timeToThrow":2.94,"blitzes":72,"hurries":16,"knockdowns":37,"pressurePct":31.9},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/deshaun-watson.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-deshaun-watson/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "4017",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

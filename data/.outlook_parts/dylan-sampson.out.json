@@ -1,0 +1,19 @@
+{
+  "slug": "dylan-sampson",
+  "name": "Dylan Sampson",
+  "position": "RB",
+  "team": "CLE",
+  "season": 2026,
+  "headline": "Sampson's receiving spark is the late-round PPR play",
+  "body": "The rookie tape screams pass-catcher. Across 15 games on just a 26.5% snap rate, Sampson turned 40 targets into 33 catches and a 1.82 yards per route run mark that ranked among the best at the position, all while drawing a 7.7% target share. The ground game lagged badly: 65 carries netted 2.69 yards a pop with zero rushing scores, a minus-0.095 EPA per play, and only 1.54 yards after contact, leaving him at RB54 on 54.6 fantasy points.\n\nAt 20, the path to volume runs through the backfield's health. With Jerome Ford gone, the third-down job is open, and Sampson already worked first-team reps while Quinshon Judkins rehabs a leg injury. Going around RB52 with an RB50 consensus rank, he's a sensible late-round dart in PPR, with real handcuff upside if Judkins misses time.",
+  "keyStats": {"rank":54,"playerId":"12469","playerName":"Dylan Sampson","position":"RB","team":"CLE","age":20,"season":2025,"games":15,"snapPct":26.5,"routes":149,"rushAttempts":65,"redZoneOpportunities":13,"goalLineCarries":0,"targets":40,"receptions":33,"redZoneTargets":6,"endZoneTargets":2,"rushYards":175,"yardsPerCarry":2.69,"rushTouchdowns":0,"targetSharePct":7.7,"receivingYards":271,"yardsPerReception":8.21,"yardsPerRouteRun":1.82,"receivingTouchdowns":2,"epaPerPlay":-0.095,"fantasyPoints":54.6,"rushes10Plus":3,"rushes20Plus":1,"rushes30Plus":0,"rushes40Plus":0,"rushes50Plus":0,"explosiveRunPct":4.62,"breakawayRunPct":3.08,"longestRush":26,"longestRushTouchdown":null,"brokenTackles":6,"rushAttemptsPerBrokenTackle":10.83,"yardsAfterContactPerAttempt":1.54,"yardsBeforeContactPerAttempt":1.15,"receivingYardsAfterCatch":318,"tackleEludedRate":6.1,"fumbles":1,"tacklesForLoss":12,"tacklesForLossYards":31,"rushAttForNegativeYards":12},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/dylan-sampson.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-dylan-sampson/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "12469",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

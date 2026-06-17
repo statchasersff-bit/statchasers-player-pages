@@ -1,0 +1,19 @@
+{
+  "slug": "kyle-monangai",
+  "name": "Kyle Monangai",
+  "position": "RB",
+  "team": "CHI",
+  "season": 2026,
+  "headline": "Monangai's Goal-Line Role Makes Him a Premium Swift Handcuff",
+  "body": "Monangai's rookie line was quietly efficient: 169 carries for 783 yards at 4.63 per pop, five scores, and an RB26 finish worth 128.7 fantasy points across 17 games. He cleared 4 yards per carry while operating on just 40.9 percent of snaps, with 39 red-zone opportunities and 10 goal-line totes signaling Chicago already trusts him near the stripe. The -0.029 EPA per play and modest 1.64 yards after contact temper the ceiling, but an 8.88 percent explosive-run rate shows the burst is real.\n\nThe passing-game work stays thin, with 30 targets, a 5.6 percent target share, and a 0.67 YPRR that won't fuel PPR weeks on its own. That keeps him behind D'Andre Swift as a complementary early-down piece and back-end flex. The appeal is leverage: if Swift misses time, Monangai's proven goal-line volume hands you weekly RB1/2 upside, making him a draft-and-stash worth a mid-round dart.",
+  "keyStats": {"rank":26,"playerId":"12534","playerName":"Kyle Monangai","position":"RB","team":"CHI","age":23,"season":2025,"games":17,"snapPct":40.9,"routes":244,"rushAttempts":169,"redZoneOpportunities":39,"goalLineCarries":10,"targets":30,"receptions":18,"redZoneTargets":3,"endZoneTargets":1,"rushYards":783,"yardsPerCarry":4.63,"rushTouchdowns":5,"targetSharePct":5.6,"receivingYards":164,"yardsPerReception":9.11,"yardsPerRouteRun":0.67,"receivingTouchdowns":0,"epaPerPlay":-0.029,"fantasyPoints":128.7,"rushes10Plus":15,"rushes20Plus":3,"rushes30Plus":2,"rushes40Plus":0,"rushes50Plus":0,"explosiveRunPct":8.88,"breakawayRunPct":4.14,"longestRush":39,"longestRushTouchdown":8,"brokenTackles":4,"rushAttemptsPerBrokenTackle":42.25,"yardsAfterContactPerAttempt":1.64,"yardsBeforeContactPerAttempt":2.99,"receivingYardsAfterCatch":162,"tackleEludedRate":2.1,"fumbles":0,"tacklesForLoss":17,"tacklesForLossYards":41,"rushAttForNegativeYards":17},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/kyle-monangai.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-kyle-monangai/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "12534",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

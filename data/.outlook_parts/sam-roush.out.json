@@ -1,0 +1,19 @@
+{
+  "slug": "sam-roush",
+  "name": "Sam Roush",
+  "position": "TE",
+  "team": "CHI",
+  "season": 2026,
+  "headline": "Roush stuck third on Chicago's tight end ladder",
+  "body": "A third-round pick out of Stanford, Roush lands in Chicago with the build of a classic in-line Y (6-5, 267) and a combine workout that flashed real size-and-speed upside. The problem is the room ahead of him: Colston Loveland and Cole Kmet own the meaningful snaps, leaving Roush as a developmental piece whose early reps come mostly in heavy 12 and 13 personnel under Ben Johnson. His college profile leans blocker, with limited separation speed and modest yards after the catch.\n\nThe draft market reflects all of it. He's drifting near pick 343 overall and barely cracks the top 55 at the position, essentially undraftable in standard formats. A hard early-season schedule does him no favors. Treat 2026 as a redshirt year and a deep-dynasty stash at best, not a contributor you actively roster in seasonal leagues.",
+  "keyStats": null,
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/sam-roush.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-sam-roush/","used":true},
+    {"name":"Statchasers advanced stats","used":false}
+  ],
+  "id": "13322",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

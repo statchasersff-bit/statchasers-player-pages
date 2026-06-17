@@ -1,0 +1,19 @@
+{
+  "slug": "joe-flacco",
+  "name": "Joe Flacco",
+  "position": "QB",
+  "team": "CIN",
+  "season": 2026,
+  "headline": "Insurance Only: Flacco's Value Lives And Dies With Burrow",
+  "body": "Flacco's 2025 line tells the story of a stopgap, not a fantasy asset: 13 games, a QB24 finish on 146.7 points, 15 touchdowns against 10 picks, and a 60.3% completion rate. The underlying marks were uglier still, a minus-0.1 EPA per play, a 41.1% success rate, and a minus-2.8 CPOE that flagged accuracy slipping below replacement level. At 416 attempts he leaned heavily on a short, dink-and-dunk profile, with completed air yards of just 5.7 per catch and only a 10.8% deep-attempt rate.\n\nNow entering his age-41 season back in Cincinnati, he sits firmly behind Joe Burrow with no standalone path to snaps. Leave him undrafted; an ADP near 299 confirms the market agrees. The lone case is contingency: when Flacco started six games here he was on a roughly 4,600-yard, 37-touchdown pace, so handcuff him only if Burrow's availability turns shaky.",
+  "keyStats": {"rank":24,"playerId":"19","playerName":"Joe Flacco","position":"QB","team":"CIN","age":40,"season":2025,"games":13,"attempts":416,"completions":251,"completionPct":60.3,"passingYards":2479,"yardsPerCatch":5.96,"passingTouchdowns":15,"interceptions":10,"fantasyPoints":146.7,"airYards":3047,"completedAirYards":901,"completedAirYardsPerCompletion":5.7,"deepAttemptPct":10.8,"epaPerPlay":-0.1,"successRate":41.1,"cpoe":-2.8,"throwaways":15,"battedPasses":5,"poorThrows":37,"badThrowPct":15.5,"onTargetPct":74.4,"passesDropped":11,"passes10Plus":97,"passes20Plus":25,"passes30Plus":7,"passes40Plus":2,"passes50Plus":0,"longestPass":44,"rushAttempts":21,"rushYards":35,"rushTouchdowns":1,"redZoneAttempts":49,"scrambleRate":0.5,"yardsPerScramble":9,"fumbles":3,"sacks":18,"sackYardsLost":118,"pocketTime":2.1,"timeToThrow":2.73,"blitzes":46,"hurries":19,"knockdowns":17,"pressurePct":16.9},
+  "sources": [
+    {"name":"FantasyPros","url":"https://www.fantasypros.com/nfl/players/joe-flacco.php","used":true},
+    {"name":"CBS Sports","url":"https://www.cbssports.com/fantasy/football/news/2026-outlook-joe-flacco/","used":true},
+    {"name":"Statchasers advanced stats","used":true}
+  ],
+  "id": "19",
+  "generatedAt": "2026-06-16",
+  "model": "claude-opus-4-8",
+  "edited": false
+}
