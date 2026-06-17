@@ -1025,6 +1025,9 @@
 .scpp-root .sc-segment__btn {
   background: transparent;
   border-radius: 999px;
+  /* Restore the horizontal padding the `.scpp-root button` reset (0,1,1) zeroes
+     out — without this the toggle labels (Standard/Half-PPR/PPR) jam together. */
+  padding: 0 16px;
 }
 .scpp-root .sc-segment__btn--active {
   background: linear-gradient(135deg, #F5C01A, #FFD166);
