@@ -13,6 +13,21 @@
   border-color: hsl(var(--border));
 }
 
+/* The WP build has no @tailwind base, so the host theme's (Divi) h1-h6
+   typography bleeds into our section titles — e.g. "Nearby Positional Peers"
+   and "Season-End Finishes" (which use <h2>/<h3>) render in Divi's heading
+   font instead of the tool's Inter. Force headings to inherit the tool font.
+   Only font-family is reset (no component class sets it), so this can't fight
+   the per-title size/weight/color rules. */
+.scpp-root h1,
+.scpp-root h2,
+.scpp-root h3,
+.scpp-root h4,
+.scpp-root h5,
+.scpp-root h6 {
+  font-family: inherit;
+}
+
 .scpp-root button {
   padding: 0;
   margin: 0;
