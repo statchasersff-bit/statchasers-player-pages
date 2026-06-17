@@ -84,6 +84,16 @@ function sc_handle_admin_actions() {
             add_settings_error( 'statchasers', 'supplemental_error', 'Some supplemental files failed. Check error log.', 'warning' );
         }
     }
+
+    if ( isset( $_POST['sc_refresh_outlook_2026'] ) ) {
+        if ( ! check_admin_referer( 'sc_admin_nonce', 'sc_nonce' ) ) return;
+        $result = function_exists( 'sc_fetch_and_save_fantasy_outlook_2026' ) ? sc_fetch_and_save_fantasy_outlook_2026() : false;
+        if ( $result ) {
+            add_settings_error( 'statchasers', 'outlook_2026_success', '2026 Fantasy Outlook refreshed successfully!', 'success' );
+        } else {
+            add_settings_error( 'statchasers', 'outlook_2026_error', 'Failed to refresh 2026 Fantasy Outlook. Check error log.', 'error' );
+        }
+    }
 }
 
 function sc_auto_create_container_pages() {
@@ -408,14 +418,14 @@ function sc_render_admin_page() {
         <!-- Supplemental Data -->
         <div class="card" style="max-width: 700px; padding: 20px; margin-top: 20px;">
             <h2>Supplemental Data</h2>
-            <p style="color: #666;">Bios, dynasty rankings, game scores, and bye weeks are downloaded from GitHub Pages once and served locally. No Replit server required.</p>
+            <p style="color: #666;">Bios, dynasty rankings, game scores, and bye weeks are downloaded from GitHub Pages and served locally. No Replit server required.</p>
             <?php
             $supp_last_fetch = get_option( 'sc_supplemental_last_fetch', 'Never' );
             $files_to_check  = [];
-            if ( function_exists( 'sc_get_bios_path' ) )        $files_to_check['Bios']           = sc_get_bios_path();
-            if ( function_exists( 'sc_get_dynasty_path' ) )     $files_to_check['Dynasty Rankings']= sc_get_dynasty_path();
-            if ( function_exists( 'sc_get_game_scores_path' ) ) $files_to_check['Game Scores']    = sc_get_game_scores_path();
-            if ( function_exists( 'sc_get_bye_weeks_path' ) )   $files_to_check['Bye Weeks']      = sc_get_bye_weeks_path();
+            if ( function_exists( 'sc_get_bios_path' ) )        $files_to_check['Bios']            = sc_get_bios_path();
+            if ( function_exists( 'sc_get_dynasty_path' ) )     $files_to_check['Dynasty Rankings'] = sc_get_dynasty_path();
+            if ( function_exists( 'sc_get_game_scores_path' ) ) $files_to_check['Game Scores']     = sc_get_game_scores_path();
+            if ( function_exists( 'sc_get_bye_weeks_path' ) )   $files_to_check['Bye Weeks']       = sc_get_bye_weeks_path();
             ?>
             <table class="form-table">
                 <tr>
@@ -440,7 +450,44 @@ function sc_render_admin_page() {
                 <?php wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' ); ?>
                 <p>
                     <input type="submit" name="sc_fetch_supplemental" class="button button-primary" value="Fetch Supplemental Data" />
-                    <span class="description" style="margin-left: 8px;">Downloads bios, dynasty, game scores, bye weeks from GitHub Pages.</span>
+                    <span class="description" style="margin-left: 8px;">Downloads bios, dynasty, game scores, bye weeks. Does <strong>not</strong> touch the 2026 Outlook.</span>
+                </p>
+            </form>
+        </div>
+
+        <!-- 2026 Fantasy Outlook -->
+        <div class="card" style="max-width: 700px; padding: 20px; margin-top: 20px;">
+            <h2>2026 Fantasy Outlook <span style="font-size:12px;color:#d63638;font-weight:normal;">(Protected)</span></h2>
+            <p style="color: #666;">
+                The 2026 Fantasy Outlook is <strong>never overwritten</strong> by "Fetch Supplemental Data".
+                Use the button below only when you intentionally want to push a new version of <code>fantasy_outlook_2026.json</code>.
+            </p>
+            <?php
+            $outlook_path       = function_exists( 'sc_get_fantasy_outlook_2026_path' ) ? sc_get_fantasy_outlook_2026_path() : '';
+            $outlook_last_fetch = get_option( 'sc_outlook_2026_last_fetch', 'Never' );
+            ?>
+            <table class="form-table">
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        <?php if ( $outlook_path && file_exists( $outlook_path ) ) : ?>
+                            <span style="color:green;">&#10003; Cached</span>
+                            <small style="color:#999; margin-left:8px;"><?php echo esc_html( size_format( filesize( $outlook_path ) ) ); ?></small>
+                        <?php else : ?>
+                            <span style="color:#d63638;">Not present &mdash; player profiles will show no 2026 outlook section.</span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Last Refreshed</th>
+                    <td><strong><?php echo esc_html( $outlook_last_fetch ); ?></strong></td>
+                </tr>
+            </table>
+            <form method="post" onsubmit="return confirm('This will overwrite the local 2026 Fantasy Outlook data. Continue?');">
+                <?php wp_nonce_field( 'sc_admin_nonce', 'sc_nonce' ); ?>
+                <p>
+                    <input type="submit" name="sc_refresh_outlook_2026" class="button button-secondary" value="Refresh 2026 Fantasy Outlook" />
+                    <span class="description" style="margin-left: 8px;">Copies from bundled plugin data/ or downloads from GitHub Pages.</span>
                 </p>
             </form>
         </div>

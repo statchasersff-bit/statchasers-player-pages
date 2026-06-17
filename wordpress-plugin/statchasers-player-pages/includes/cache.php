@@ -767,18 +767,23 @@ function sc_extract_player_stats( $s, $position ) {
 /**
  * Download supplemental data (bye_weeks, game_scores, bios, dynasty) from
  * GitHub Pages and save locally. This only needs to run periodically.
+ *
+ * NOTE: fantasy_outlook_2026.json is intentionally excluded from this routine
+ * refresh to prevent hand-crafted outlook data from being overwritten. Use
+ * sc_fetch_and_save_fantasy_outlook_2026() to explicitly update it.
  */
 function sc_fetch_and_save_supplemental_data() {
     sc_ensure_sc_dir();
 
     $plugin_data_dir = plugin_dir_path( dirname( __FILE__ ) ) . 'data/';
 
+    /* 2026 Fantasy Outlook is NOT included here — it is protected from
+     * routine overwrites. Use the dedicated admin action to refresh it. */
     $files = [
         'bye_weeks.json'        => sc_get_bye_weeks_path(),
         'game_scores.json'      => sc_get_game_scores_path(),
         'bios.json'             => sc_get_bios_path(),
         'dynasty_rankings.json' => sc_get_dynasty_path(),
-        'fantasy_outlook_2026.json' => sc_get_fantasy_outlook_2026_path(),
     ];
 
     $ok = true;
@@ -826,4 +831,45 @@ function sc_fetch_and_save_supplemental_data() {
         update_option( 'sc_gamescores_last_fetch', current_time( 'mysql' ) );
     }
     return $ok;
+}
+
+/**
+ * Explicitly fetch and overwrite the 2026 Fantasy Outlook data.
+ * This is kept separate so routine supplemental refreshes never clobber it.
+ * Tries the bundled plugin data/ dir first, then GitHub Pages.
+ */
+function sc_fetch_and_save_fantasy_outlook_2026() {
+    sc_ensure_sc_dir();
+
+    $local_path      = sc_get_fantasy_outlook_2026_path();
+    $plugin_data_dir = plugin_dir_path( dirname( __FILE__ ) ) . 'data/';
+    $bundled         = $plugin_data_dir . 'fantasy_outlook_2026.json';
+
+    if ( file_exists( $bundled ) ) {
+        $copied = copy( $bundled, $local_path );
+        if ( $copied ) {
+            update_option( 'sc_outlook_2026_last_fetch', current_time( 'mysql' ) );
+            return true;
+        }
+        error_log( 'StatChasers: Failed to copy bundled fantasy_outlook_2026.json' );
+        return false;
+    }
+
+    $remote_urls = [
+        'https://raw.githubusercontent.com/statchasersff-bit/statchasers-player-pages/main/data/fantasy_outlook_2026.json',
+        'https://statchasersff-bit.github.io/statchasers-player-pages/data/fantasy_outlook_2026.json',
+    ];
+
+    foreach ( $remote_urls as $url ) {
+        $res = wp_remote_get( $url, [ 'timeout' => 30 ] );
+        if ( is_wp_error( $res ) || wp_remote_retrieve_response_code( $res ) !== 200 ) continue;
+        $body = wp_remote_retrieve_body( $res );
+        if ( empty( $body ) || json_decode( $body ) === null ) continue;
+        file_put_contents( $local_path, $body );
+        update_option( 'sc_outlook_2026_last_fetch', current_time( 'mysql' ) );
+        return true;
+    }
+
+    error_log( 'StatChasers: Could not obtain fantasy_outlook_2026.json from any source.' );
+    return false;
 }

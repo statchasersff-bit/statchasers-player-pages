@@ -3632,19 +3632,23 @@
 .dark .player-meta-line  { color: #cbd5e1; }
 .dark .player-draft-line { color: #94a3b8; }
 
-@media (max-width: 768px) {
-  .player-hero {
-    grid-template-columns: 1fr;
-    justify-items: start;
-    text-align: left;
-    gap: 18px;
-    padding: 12px 8px 0;
-  }
-  .player-photo-card { width: 300px; height: 200px; }
-  .player-identity { max-width: 100%; }
-  .player-last-name { font-size: clamp(40px, 13vw, 64px); }
-  .player-status { margin-left: 0; margin-right: auto; }
-  .team-watermark { display: none; }
+/* The player profile header intentionally keeps its desktop layout at every
+   breakpoint — headshot beside the identity text, team watermark visible. The
+   hero is zoomed (zoom: 0.6) and the name uses a clamp() font, so it scales
+   down with the viewport without restructuring into a centered stack.
+
+   On narrower viewports we shrink the whole hero further via `zoom` rather than
+   reflowing it. The grid tracks are sized in pre-zoom pixels, so a smaller zoom
+   leaves more room for the identity column and keeps the headshot from being
+   clipped by the hero's `overflow: hidden`. */
+@media (max-width: 600px) {
+  /* Shift the headshot left (drop the left padding) and pull the identity text
+     in closer (tighter gap) so the name column gets more room and stops being
+     clipped by the hero's overflow. */
+  .player-hero { zoom: 0.5; gap: 28px; padding-left: 0; }
+}
+@media (max-width: 420px) {
+  .player-hero { zoom: 0.4; gap: 18px; }
 }
 
 /* ===== Season Log (Game Log tab) =========================================
