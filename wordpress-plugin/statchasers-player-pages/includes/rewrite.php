@@ -123,9 +123,34 @@ function sc_parse_request( $wp ) {
 }
 
 
+/* ─── Divi / page-builder guard ─── */
+
+/**
+ * True when the request is the Divi front-end Visual Builder, backend builder,
+ * or a builder preview. In those contexts the plugin must NOT hijack the main
+ * query or replace the_content, otherwise the builder shows the injected tool
+ * markup instead of the real, editable page — so you can't add modules (e.g. a
+ * page header) above the tool.
+ */
+function sc_is_builder_request() {
+    if ( isset( $_GET['et_fb'] ) || isset( $_GET['et_bfb'] ) || isset( $_GET['et_pb_preview'] ) ) {
+        return true;
+    }
+    if ( function_exists( 'et_core_is_fb_enabled' ) && et_core_is_fb_enabled() ) {
+        return true;
+    }
+    return false;
+}
+
+
 /* ─── Route Detection Helper ─── */
 
 function sc_detect_route() {
+    // Stand down inside any page builder so Divi can edit the container page.
+    if ( sc_is_builder_request() ) {
+        return null;
+    }
+
     $slug     = get_query_var( 'sc_player_slug', '' );
     $is_index = get_query_var( 'sc_players_index', '' );
 
@@ -265,10 +290,14 @@ function sc_inject_content( $content ) {
     }
     $debug .= ' -->';
 
+    // Append the tool AFTER the page's own content (rather than replacing it),
+    // so Divi modules added to the container page — e.g. a page header — render
+    // above the tool. The container page content is empty by default, so this
+    // is a no-op until you add modules in Divi.
     if ( $route === 'index' ) {
         ob_start();
         include SC_PLUGIN_DIR . 'templates/index.php';
-        return $deploy_marker . $debug . "\n" . ob_get_clean();
+        return $content . $deploy_marker . $debug . "\n" . ob_get_clean();
     }
 
     if ( $route === 'player' && $slug ) {
@@ -278,7 +307,7 @@ function sc_inject_content( $content ) {
         }
         ob_start();
         include SC_PLUGIN_DIR . 'templates/player.php';
-        return $deploy_marker . $debug . "\n" . ob_get_clean();
+        return $content . $deploy_marker . $debug . "\n" . ob_get_clean();
     }
 
     return $content;
