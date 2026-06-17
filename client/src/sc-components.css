@@ -1,3 +1,18 @@
+/* Tailwind-style reset for the embedded tool. MUST come before the component
+   rules below: it sets `border-width: 0` on everything, and since it shares the
+   same specificity (0,1,0) as the component border rules, whichever is emitted
+   later wins. Keeping it first lets each `.sc-*` component's `border: 1px solid`
+   win — otherwise every pill/segment/card outline gets silently zeroed. (This
+   mirrors the main app's index.css, where @tailwind base comes first.) */
+.scpp-root *,
+.scpp-root *::before,
+.scpp-root *::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: hsl(var(--border));
+}
+
 .scpp-root button {
   padding: 0;
   margin: 0;

@@ -91,15 +91,10 @@
   background: #ffffff;
 }
 
-.scpp-root *,
-.scpp-root *::before,
-.scpp-root *::after {
-  box-sizing: border-box;
-  border-width: 0;
-  border-style: solid;
-  border-color: hsl(var(--border));
-}
-
+/* NOTE: the `.scpp-root *` border/box-sizing reset was moved to the TOP of
+   sc-components.css so it precedes the component border rules. Emitting it here
+   (after the @import) put it after every .sc-* border and silently zeroed all
+   the pill/segment/card outlines. Do not re-add it here. */
 .scpp-root button,
 .scpp-root input,
 .scpp-root select,
