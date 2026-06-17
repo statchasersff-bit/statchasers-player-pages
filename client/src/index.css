@@ -4323,6 +4323,9 @@
   position: relative;
   z-index: 2;
   max-width: 640px;
+  /* The hero grid bottom-aligns its columns (align-items: end). Center this
+     text block against the headshot instead so it isn't anchored low. */
+  align-self: center;
 }
 .player-first-name {
   margin: 0;

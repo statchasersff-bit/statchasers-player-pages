@@ -1,0 +1,30 @@
+{
+  "slug": "tanner-koziol",
+  "name": "Tanner Koziol",
+  "position": "TE",
+  "team": "JAX",
+  "season": 2026,
+  "headline": "Pass-catching rookie tight end behind Jacksonville's incumbents",
+  "body": "Koziol arrives in Jacksonville as a rookie tight end with no NFL snaps to evaluate, which is why our advanced database is empty for him. A productive small-school and Group of Five receiving tight end, he profiles as a move-piece pass-catcher rather than an in-line blocker, the type of player who needs a defined route role to matter for fantasy. With zero professional usage on record, any 2026 projection rests entirely on training-camp reps and depth-chart movement.\n\nThe Jaguars already roster veteran tight-end options ahead of him, and rookie tight ends almost never produce startable fantasy lines, the position's notoriously steep learning curve buries even high-pedigree prospects. Without meaningful draft capital or an established target path, Koziol is a name to monitor in deep dynasty tight-end-premium formats only. For 2026 redraft, he is an undraftable waiver-wire flyer until he earns a role.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/tanner-koziol.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-tanner-koziol/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13408",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

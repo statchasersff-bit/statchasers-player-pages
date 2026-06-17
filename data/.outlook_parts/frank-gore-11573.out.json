@@ -1,0 +1,30 @@
+{
+  "slug": "frank-gore-11573",
+  "name": "Frank Gore",
+  "position": "RB",
+  "team": "BUF",
+  "season": 2026,
+  "headline": "Legacy name, fourth on Buffalo running back ladder",
+  "body": "This is Frank Gore Jr., not the Hall of Fame father, and he arrives in Buffalo with no NFL advanced stats to his name. The depth chart is the whole story: he sits fourth among Bills running backs behind James Cook, change-of-pace back Ty Johnson and 2024 draftee Ray Davis. That is a hard ceiling in a backfield where Cook commands the early-down and goal-line work and Johnson owns the passing-down role.\n\nWithout a single carry of measurable production to project from, Gore is purely a camp-body and practice-squad-caliber flier whose only path to touches runs through multiple injuries ahead of him. The compact, elusive running style that made him productive in college does not translate to fantasy relevance behind this trio. He is undraftable in redraft and barely a name to file away in the deepest dynasty formats. Leave him on the wire.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/frank-gore-11573.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-frank-gore-11573/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "11573",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

@@ -1,0 +1,30 @@
+{
+  "slug": "robert-henry",
+  "name": "Robert Henry",
+  "position": "RB",
+  "team": "WAS",
+  "season": 2026,
+  "headline": "Deep Washington backfield flier with no measurable role",
+  "body": "Henry profiles as a fringe depth back in Washington carrying no NFL advanced stats, no recorded draft capital, and no presence in the top five of the Commanders' running back room. That room is stacked ahead of him: Jacory Croskey-Merritt leads it, with Rachaad White, Kaytron Allen, Jeremy McNichols, and Jerome Ford all slotted before him. With no career carries, targets, or snap data to evaluate, there is simply no statistical foundation for a projection, and his most likely 2026 outcome is a practice-squad or end-of-bench assignment.\n\nIn an offense built around Jayden Daniels' rushing and a committee of established backs, there is no realistic standalone path to touches barring a cascade of injuries. He holds no redraft value and minimal dynasty appeal beyond a speculative camp-body watch. The verdict is straightforward: waiver-wire material at best, and not worth a roster spot in any standard format until he earns a defined role.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/robert-henry.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-robert-henry/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13418",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

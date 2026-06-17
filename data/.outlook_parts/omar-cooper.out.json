@@ -1,0 +1,30 @@
+{
+  "slug": "omar-cooper",
+  "name": "Omar Cooper",
+  "position": "WR",
+  "team": "NYJ",
+  "season": 2026,
+  "headline": "Rookie WR1 on paper, deep dynasty flier only",
+  "body": "Cooper enters 2026 with no NFL advanced stats and no recorded draft data, signaling a rookie or undrafted free agent profile rather than a proven contributor. The intriguing wrinkle is that the Jets' depth chart currently lists him atop a thin receiver group, ahead of Isaiah Williams and Caullin Lacy. That nominal positioning likely reflects a wide-open, low-pedigree room more than any established role, and should be read with heavy skepticism until camp reps and target trends confirm it.\n\nFor redraft, an unproven receiver in an unsettled offense with no statistical track record is not a draftable asset; preseason snaps and target share will dictate whether he is even rosterable by Week 1. The realistic verdict is a watch-list name: monitor whether that depth-chart slot holds through August and whether the quarterback play supports any volume. He is a deep-dynasty flier and waiver-wire monitor for 2026, not a player to spend redraft capital on.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/omar-cooper.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-omar-cooper/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13276",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

@@ -1,0 +1,30 @@
+{
+  "slug": "ty-simpson",
+  "name": "Ty Simpson",
+  "position": "QB",
+  "team": "LAR",
+  "season": 2026,
+  "headline": "Rookie QB stashed behind Stafford, no 2026 value",
+  "body": "Simpson arrives in Los Angeles as a developmental rookie with no NFL snaps and therefore no advanced profile to lean on. The depth chart is unambiguous: he sits QB2 behind Matthew Stafford, with Stetson Bennett and Matthew Caldwell rounding out the room. That makes him a clipboard-holder for a contending offense with no realistic path to meaningful 2026 reps unless Stafford, who remains the entrenched starter, suffers an injury that opens the door.\n\nFor redraft, that translates to zero standalone value, he should go undrafted in every standard and most superflex formats. The intrigue is purely long-term: Stafford is in the twilight of his career, and an apprenticeship under Sean McVay carries developmental upside for a dynasty stash. Managers in deep dynasty or rookie-pick leagues can speculate on him as a future-asset lottery ticket, but for 2026 he is a waiver-wire name with no weekly relevance and belongs nowhere on a redraft roster.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/ty-simpson.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-ty-simpson/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13275",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

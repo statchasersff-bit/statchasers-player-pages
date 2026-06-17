@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import { Search, TrendingUp, Keyboard } from "lucide-react";
+import { trimRosterToFantasyRelevant } from "@/lib/fantasyRoster";
 
 /**
  * SearchHero — the persistent "Search any player…" header with the Fantasy
@@ -89,11 +90,11 @@ export default function SearchHero({ scoringControl }: { scoringControl?: React.
   const listRef = useRef<HTMLDivElement>(null);
   const [, navigate] = useLocation();
 
-  const { data: players } = useQuery<LightPlayer[]>({
-    queryKey: ["/api/players"],
-  });
-  const { data: indexedData } = useQuery<IndexedData>({
+  const { data: indexedData } = useQuery<IndexedData, Error, IndexedData>({
     queryKey: ["/api/indexed-players"],
+    // Drop each team's bench (deep-roster overflow) so only fantasy-relevant
+    // players are searchable.
+    select: (raw) => ({ slugs: raw.slugs, byTeam: trimRosterToFantasyRelevant(raw.byTeam || {}) }),
   });
 
   const indexedFlat = useMemo(() => {
@@ -120,21 +121,11 @@ export default function SearchHero({ scoringControl }: { scoringControl?: React.
   const autocompleteResults = useMemo(() => {
     if (!search.trim()) return [];
     const q = search.toLowerCase().trim();
-    const indexedMatches = indexedFlat
-      .filter((p) => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q))
+    // Search is restricted to the fantasy-relevant indexed set only.
+    return indexedFlat
+      .filter((p) => p.name.toLowerCase().includes(q))
       .slice(0, 8);
-    if (indexedMatches.length >= 4) return indexedMatches;
-    const indexedSlugs = new Set(indexedMatches.map((p) => p.slug));
-    const extras = (players || [])
-      .filter(
-        (p) =>
-          POSITION_ORDER.includes(p.position) &&
-          !indexedSlugs.has(p.slug) &&
-          (p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q)),
-      )
-      .slice(0, 8 - indexedMatches.length);
-    return [...indexedMatches, ...extras];
-  }, [indexedFlat, players, search]);
+  }, [indexedFlat, search]);
 
   // Count only the positions we expose as pills (QB/RB/WR/TE) so the total
   // reconciles with the per-position breakdown. K/DEF stay searchable but are
@@ -211,7 +202,7 @@ export default function SearchHero({ scoringControl }: { scoringControl?: React.
               <Input
                 ref={inputRef}
                 type="search"
-                placeholder="Search any player, team, or position..."
+                placeholder="Search any player..."
                 value={search}
                 onChange={(e) => {
                   setSearch(e.target.value);

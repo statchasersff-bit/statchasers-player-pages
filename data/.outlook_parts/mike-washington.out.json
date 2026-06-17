@@ -1,0 +1,30 @@
+{
+  "slug": "mike-washington",
+  "name": "Mike Washington",
+  "position": "RB",
+  "team": "LV",
+  "season": 2026,
+  "headline": "Undrafted Raider stuck behind Jeanty's bell-cow workload",
+  "body": "Washington enters 2026 with no NFL advanced-stat profile and no draft pedigree in our data, an undrafted back trying to win a roster spot in Las Vegas. The depth chart lists him as the RB2 behind first-round workhorse Ashton Jeanty, but that ordering is fragile, with Dylan Laube, Chris Collier and Roman Hemby all chasing the same change-of-pace and special-teams snaps. Jeanty is built for a near-three-down role, leaving little projectable touch volume for anyone behind him.\n\nWith zero career rushing or receiving data to lean on, the redraft verdict is simple. Washington has no standalone path to relevance while Jeanty stays healthy, and even a Jeanty absence would trigger a committee scramble rather than an automatic handoff of the lead role. He is a camp-body flier whose only 2026 value is contingency-based. Leave him on the waiver wire in all formats and revisit only if he flashes in the preseason or climbs to a clear handcuff spot.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/mike-washington.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-mike-washington/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13305",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

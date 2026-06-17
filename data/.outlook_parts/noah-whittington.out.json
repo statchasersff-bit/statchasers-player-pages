@@ -1,0 +1,30 @@
+{
+  "slug": "noah-whittington",
+  "name": "Noah Whittington",
+  "position": "RB",
+  "team": "HOU",
+  "season": 2026,
+  "headline": "Undrafted Texans RB4 buried with no path",
+  "body": "Whittington enters 2026 as a fringe roster piece with no advanced-stats footprint to speak of, which itself tells the story: he has not earned meaningful NFL touches. Houston's depth chart slots him fourth at running back, sitting behind feature back David Montgomery, rookie-class change-of-pace Woody Marks, and Jawhar Jordan. With essentially no draft capital and a backfield already three-deep ahead of him, there is no realistic standalone role to project for redraft purposes.\n\nHis only path to relevance is a multi-injury cascade ahead of him, and even then he would compete with Jordan for scraps rather than inherit a workload. There is no receiving carve-out, no goal-line equity, and no projectable volume to bank on. For 2026 he is a non-factor in standard and PPR leagues alike, a camp body and special-teams contributor at most. Leave him on the waiver wire and only monitor if Houston's backfield is hit by injuries late in the summer.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/noah-whittington.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-noah-whittington/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13437",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

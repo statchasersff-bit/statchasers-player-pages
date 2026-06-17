@@ -1,0 +1,30 @@
+{
+  "slug": "quentin-moore",
+  "name": "Quentin Moore",
+  "position": "TE",
+  "team": "WAS",
+  "season": 2026,
+  "headline": "Deep Commanders tight end with no fantasy path",
+  "body": "Moore is a roster-fringe tight end with no advanced-stat history and no established NFL role to project from. In Washington he is buried behind Chig Okonkwo as the primary pass-catcher, blocking specialist John Bates, and 2024 draft pick Ben Sinnott, a stack that leaves Moore essentially off the fantasy radar with negligible projected routes in any meaningful personnel grouping.\n\nWith no draft pedigree on record and zero measurable production, there is no redraft or dynasty case to build. His realistic 2026 ceiling is special-teams and emergency-tight-end duty, which carries no startable value in fantasy formats. Leave him on the waiver wire and revisit only if multiple injuries clear the room and camp reports surface an unexpected role bump; until then he is a clear waiver-wire name.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/quentin-moore.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-quentin-moore/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13870",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

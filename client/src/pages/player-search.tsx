@@ -16,6 +16,7 @@ import {
   ChevronRight,
   Zap,
 } from "lucide-react";
+import { POS_DISPLAY_LIMITS, trimRosterToFantasyRelevant } from "@/lib/fantasyRoster";
 
 type LightPlayer = {
   id: string;
@@ -144,9 +145,6 @@ const POSITION_PLURAL: Record<string, string> = {
 };
 
 
-const POS_DISPLAY_LIMITS: Record<string, number> = {
-  QB: 2, RB: 4, WR: 6, TE: 3,
-};
 
 // "AFC East" style label for a team, derived from the division map.
 function getTeamDivision(team: string): string {
@@ -280,7 +278,6 @@ function TeamBoard({
   onBack: () => void;
 }) {
   const [, navigate] = useLocation();
-  const [showBench, setShowBench] = useState(false);
   const teamColor = TEAM_COLORS[team] || "#666";
   const teamNick = TEAM_FULL_NAMES[team] || team;
   const teamCity = TEAM_CITY[team] || "";
@@ -289,20 +286,18 @@ function TeamBoard({
 
   const sections = useMemo(() => {
     return POSITION_ORDER.map(pos => {
-      const players = positions[pos] || [];
-      const limit = POS_DISPLAY_LIMITS[pos] || 1;
-      const starters = players.slice(0, limit);
-      const bench = players.slice(limit);
+      // `positions` is already trimmed to the fantasy-relevant depth limits, so
+      // every player here is a starter — there is no bench overflow.
+      const starters = positions[pos] || [];
       const roleCounts = starters.reduce((acc, p) => {
         const r = deriveRole(p, p.rank_label);
         acc[r] = (acc[r] || 0) + 1;
         return acc;
       }, {} as Record<RosterRole, number>);
-      return { pos, starters, bench, roleCounts };
+      return { pos, starters, roleCounts };
     });
   }, [positions]);
 
-  const totalBench = sections.reduce((s, sec) => s + sec.bench.length, 0);
   const totalRelevant = sections.reduce((s, sec) => s + sec.starters.length, 0);
 
   return (
@@ -379,37 +374,6 @@ function TeamBoard({
             </div>
           )
         ))}
-
-        {totalBench > 0 && (
-          <div className="sc-bench" data-testid="bench-section">
-            <button
-              type="button"
-              className="sc-bench__toggle"
-              onClick={() => setShowBench(!showBench)}
-              data-testid="button-toggle-bench"
-            >
-              <ChevronRight className={`sc-bench__toggle-icon ${showBench ? 'sc-bench__toggle-icon--open' : ''}`} />
-              <span>{showBench ? 'Hide Full Roster' : 'Show Full Roster'}</span>
-              <span className="sc-bench__count">{totalBench}</span>
-            </button>
-
-            {showBench && (
-              <div className="sc-bench__cards" data-testid="bench-list">
-                {sections.map(({ pos, bench }) =>
-                  bench.map((player) => (
-                    <PlayerCard
-                      key={player.slug}
-                      player={player}
-                      pos={pos}
-                      depthLabel={player.rank_label}
-                      onClick={() => navigate(`/nfl/players/${player.slug}/`)}
-                    />
-                  ))
-                )}
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );
@@ -435,12 +399,11 @@ export default function PlayerSearch() {
   const heroRef = useRef<HTMLDivElement>(null);
   const [, navigate] = useLocation();
 
-  const { data: players, isLoading: playersLoading } = useQuery<LightPlayer[]>({
-    queryKey: ["/api/players"],
-  });
-
-  const { data: indexedData, isLoading: indexedLoading } = useQuery<IndexedData>({
+  const { data: indexedData, isLoading: indexedLoading } = useQuery<IndexedData, Error, IndexedData>({
     queryKey: ["/api/indexed-players"],
+    // Drop each team's bench (deep-roster overflow) so only fantasy-relevant
+    // players surface anywhere on this page.
+    select: (raw) => ({ slugs: raw.slugs, byTeam: trimRosterToFantasyRelevant(raw.byTeam || {}) }),
   });
 
   const isSearching = search.trim().length > 0 || posFilter !== "ALL";
@@ -470,16 +433,11 @@ export default function PlayerSearch() {
   const autocompleteResults = useMemo(() => {
     if (!search.trim()) return [];
     const q = search.toLowerCase().trim();
-    const indexedMatches = indexedFlat
+    // Search is restricted to the fantasy-relevant indexed set only.
+    return indexedFlat
       .filter(p => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q))
       .slice(0, 8);
-    if (indexedMatches.length >= 4) return indexedMatches;
-    const indexedSlugs = new Set(indexedMatches.map(p => p.slug));
-    const extras = (players || [])
-      .filter(p => POSITION_ORDER.includes(p.position) && !indexedSlugs.has(p.slug) && (p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q)))
-      .slice(0, 8 - indexedMatches.length);
-    return [...indexedMatches, ...extras];
-  }, [indexedFlat, players, search]);
+  }, [indexedFlat, search]);
 
   const filtered = useMemo(() => {
     let result: (IndexedPlayer | LightPlayer)[] = indexedFlat;

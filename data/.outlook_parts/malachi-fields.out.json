@@ -1,0 +1,30 @@
+{
+  "slug": "malachi-fields",
+  "name": "Malachi Fields",
+  "position": "WR",
+  "team": "NYG",
+  "season": 2026,
+  "headline": "Big-bodied Giants rookie stashed behind Nabers",
+  "body": "Fields joins the Giants as a developmental outside receiver with no NFL advanced stats yet, and the depth chart is the key data point. He projects as the No. 2 on the left side behind star Malik Nabers, but the broader room is crowded with Darius Slayton, Darnell Mooney, slot work going to Calvin Austin, plus veterans Odell Beckham and Jalin Hyatt competing for snaps. Tight ends Isaiah Likely and Theo Johnson further compress the target tree in a Jaxson Dart-led offense.\n\nThe size profile gives Fields a contested-catch and red-zone path if he climbs the depth chart, but Nabers commands a massive target share that caps everyone behind him. With no production to model, he is a role- and upside-based dynasty stash rather than a 2026 contributor. Monitor camp for any sign he leapfrogs the veterans, but in redraft he is a waiver-wire name only, worth a bench spot solely in the deepest leagues.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/malachi-fields.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-malachi-fields/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13285",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

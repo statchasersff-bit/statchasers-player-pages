@@ -1,0 +1,30 @@
+{
+  "slug": "myles-montgomery",
+  "name": "Myles Montgomery",
+  "position": "RB",
+  "team": "NE",
+  "season": 2026,
+  "headline": "Deep New England back blocked by a crowded room",
+  "body": "Montgomery arrives in New England without any NFL advanced stats and no draft pedigree in our records, marking him an undrafted long shot. The Patriots' backfield is already full, with Rhamondre Stevenson and second-year burner TreVeyon Henderson set to handle the early-down and passing-game splits, plus Lan Larison and Jam Miller chasing the leftover work. That depth gives a name like Montgomery essentially no projectable touches in 2026.\n\nWith no rushing or receiving data to anchor an outlook, the verdict comes down to the depth chart, and it is unforgiving. Montgomery is competing for a practice-squad designation more than a meaningful role, and even multiple injuries ahead of him would likely elevate established options first. There is no redraft path and only faint dynasty appeal contingent on a strong camp. For now he is a clear waiver-wire player in all formats, worth a look only if the preseason reveals real burst.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/myles-montgomery.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-myles-montgomery/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13964",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

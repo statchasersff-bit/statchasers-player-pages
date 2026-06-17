@@ -1,0 +1,30 @@
+{
+  "slug": "miles-kitselman",
+  "name": "Miles Kitselman",
+  "position": "TE",
+  "team": "DET",
+  "season": 2026,
+  "headline": "Buried Lions tight end behind LaPorta's entrenched role",
+  "body": "Kitselman is a developmental Detroit tight end with no NFL advanced stats and no draft capital recorded in our data, signaling an undrafted addition fighting for a roster spot. The Lions' tight-end room is among the league's most crowded, headlined by Sam LaPorta with Brock Wright, Tyler Conklin and Zach Horton layered ahead of any depth piece. That stack of established names leaves no realistic snap or target pathway for a fringe prospect in 2026.\n\nWithout any production history to evaluate, the analysis rests on role, and it points one direction. LaPorta commands the receiving work while Wright handles in-line blocking, so even injury attrition would likely promote a veteran before a project. Kitselman profiles as a practice-squad candidate rather than a fantasy contributor. There is no redraft case and barely a dynasty one; he is a deep-league name to file away, but for now he belongs on the waiver wire in every format.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/miles-kitselman.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-miles-kitselman/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13431",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

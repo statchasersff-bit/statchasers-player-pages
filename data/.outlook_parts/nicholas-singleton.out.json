@@ -1,0 +1,30 @@
+{
+  "slug": "nicholas-singleton",
+  "name": "Nicholas Singleton",
+  "position": "RB",
+  "team": "TEN",
+  "season": 2026,
+  "headline": "Explosive rookie back stuck behind crowded Titans committee",
+  "body": "Singleton brings a genuine athletic pedigree to Tennessee after a productive Penn State career built on home-run speed and receiving chops, the kind of profile that flashes flex upside if the door opens. The problem in 2026 is the depth chart: he sits third in the backfield behind Tony Pollard and Tyjae Spears, who already split early-down and passing-down work. With no NFL advanced stats yet, his case rests on talent and draft pedigree rather than an established role.\n\nThe path to relevance is injury-dependent. Pollard has carried heavy workloads and Spears has missed time before, so one absence could vault Singleton into a real touch share, and his pass-catching skill means he would not be a pure early-down plodder. For now he is a bench stash with upside, not a draftable contributor. Treat him as a late-round dart in deeper formats and a strong dynasty stash given the age and pedigree, but do not bank on weekly production behind two veterans.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/nicholas-singleton.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-nicholas-singleton/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13288",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

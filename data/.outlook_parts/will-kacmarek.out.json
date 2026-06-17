@@ -1,0 +1,30 @@
+{
+  "slug": "will-kacmarek",
+  "name": "Will Kacmarek",
+  "position": "TE",
+  "team": "MIA",
+  "season": 2026,
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/will-kacmarek.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-will-kacmarek/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13434",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false,
+  "headline": "Third-string Dolphins tight end with no fantasy path",
+  "body": "Kacmarek enters 2026 as a developmental tight end with no NFL production on record and no advanced-stats footprint to evaluate. Miami’s depth chart tells the story: he sits third behind Greg Dulcich and Ben Sims, with Seydou Traore and Cole Turner crowding the room behind him. A team rarely funnels meaningful target volume to a TE3, and there is nothing in his profile—no documented draft capital, no logged college breakout—that suggests a leap up the order is imminent.\n\nFor redraft purposes this is an easy call. With Dulcich and Sims ahead of him and a passing game that already spreads its tight end work thin, Kacmarek projects for the handful of snaps that come with blocking duty and emergency depth, not the routes that generate fantasy points. He is not rosterable in any standard format and is, at best, a deep-dynasty name to file away if a camp injury reshuffles the order. The verdict: waiver-wire fodder, leave him undrafted."
+}

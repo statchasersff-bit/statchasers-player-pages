@@ -1,0 +1,30 @@
+{
+  "slug": "patrick-gurd",
+  "name": "Patrick Gurd",
+  "position": "TE",
+  "team": "LV",
+  "season": 2026,
+  "headline": "Undrafted Raiders tight end stuck behind Bowers wall",
+  "body": "Gurd profiles as a deep depth piece with no fantasy footprint and no advanced-stat history to lean on. He sits behind one of the league's most lopsided tight-end rooms in Las Vegas, where Brock Bowers is a target-hog centerpiece, Michael Mayer is the established TE2, and Ian Thomas offers veteran insurance. That stacks Gurd at or near the bottom of the depth chart with effectively zero projected routes in three-receiver sets.\n\nWith no draft capital on record and no measurable NFL production, there is no realistic redraft or even near-term dynasty case here. His path to relevance requires multiple injuries ahead of him plus a role expansion that nothing in his resume yet supports. For all 2026 formats, this is a clear waiver-wire name to leave alone unless training-camp reports show a surprising special-teams-to-offense climb.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/patrick-gurd.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-patrick-gurd/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13913",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

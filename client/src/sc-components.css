@@ -3562,6 +3562,9 @@
   position: relative;
   z-index: 2;
   max-width: 640px;
+  /* The hero grid bottom-aligns its columns (align-items: end). Center this
+     text block against the headshot instead so it isn't anchored low. */
+  align-self: center;
 }
 .player-first-name {
   margin: 0;
@@ -3930,6 +3933,32 @@
 .sc-finish2__timeline--ultra .sc-finish2__card-season { font-size: 10px; letter-spacing: 0.02em; }
 .sc-finish2__timeline--ultra .sc-finish2__card-ppg { font-size: 11px; }
 .sc-finish2__timeline--ultra .sc-finish2__status { font-size: 9px; padding: 2px 6px; }
+
+/* Synced from index.css — without this fallback the WordPress bundle let the
+   year cards spill outside the section card on narrow views, since the cards
+   can't shrink below their min-width. On mobile there isn't room to
+   shrink-to-fit and stay readable, so fall back to horizontal scrolling with a
+   fixed card width regardless of count. */
+@media (max-width: 640px) {
+  .sc-finish2 { padding: 18px; }
+  .sc-finish2__timeline {
+    justify-content: flex-start;
+    margin-top: 28px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .sc-finish2__track {
+    justify-content: flex-start;
+    width: auto;
+    margin: 0;
+  }
+  .sc-finish2__timeline .sc-finish2__card {
+    flex: 0 0 auto;
+    width: 135px;
+    max-width: none;
+    min-height: 160px;
+  }
+}
 
 /* ==========================================================================
    Nearby Positional Peers — horizontal, snap-scrolling card rail. The current

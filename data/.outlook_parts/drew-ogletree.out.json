@@ -1,0 +1,30 @@
+{
+  "slug": "drew-ogletree",
+  "name": "Drew Ogletree",
+  "position": "TE",
+  "team": "IND",
+  "season": 2026,
+  "headline": "Blocking tight end stuck behind Tyler Warren breakout",
+  "body": "Ogletree is a 2022 sixth-round pick (192 overall, Youngstown State) who has never been more than a complementary, blocking-first tight end. His career peaked at a meager 3.0 points per game in 2023 and cratered to roughly 0.8 per game in 2025, and his fantasy value has always been TD-dependent rather than volume-driven. He has been durable, averaging 14.7 games over the last three seasons, but durability without targets does not move the needle.\n\nThe 2026 situation is bleaker still: the Colts drafted Tyler Warren to be a focal-point tight end, with Mo Alie-Cox also ahead of Ogletree on the depth chart, leaving him third on the TE ladder. Daniel Jones spreading the ball to Josh Downs, Alec Pierce and Jonathan Taylor leaves almost nothing for a part-time blocker. Ogletree is a deep-league streaming dart at best on a rare red-zone week, and a clear waiver-wire hold in all standard formats.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/drew-ogletree.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-drew-ogletree/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "8489",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

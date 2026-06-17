@@ -1,0 +1,30 @@
+{
+  "slug": "rj-maryland",
+  "name": "RJ Maryland",
+  "position": "TE",
+  "team": "GB",
+  "season": 2026,
+  "headline": "Undrafted Packers tight end stuck behind a crowded room",
+  "body": "Maryland enters 2026 as an undrafted depth tight end in Green Bay with no NFL advanced-stat footprint to lean on, which tells you everything about his current standing. The Packers' room is jammed at the top: Tucker Kraft is the entrenched starter, 2023 second-rounder Luke Musgrave sits second, and Josh Whyle adds a third option ahead of him, leaving Maryland fourth or fifth on the depth chart and off the fantasy radar entirely. With zero career routes, targets, or snaps logged, there is no production baseline to project.\n\nThe realistic path to relevance is a special-teams or blocking role first, with receiving usage only if multiple injuries hit ahead of him. That is not a profile worth a roster spot in any redraft format, and even in deep tight-end-premium dynasty leagues he is a name-to-watch rather than a stash. For 2026, leave him on the waiver wire and revisit only if camp reports flag a surprise climb up the depth chart.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/rj-maryland.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-rj-maryland/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13430",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

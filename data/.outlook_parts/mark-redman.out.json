@@ -1,0 +1,30 @@
+{
+  "slug": "mark-redman",
+  "name": "Mark Redman",
+  "position": "TE",
+  "team": "LAR",
+  "season": 2026,
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/mark-redman.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-mark-redman/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13013",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false,
+  "headline": "Deep Rams tight end with no fantasy pulse",
+  "body": "Redman profiles as a roster-fringe tight end with no meaningful NFL production on record and no advanced-stat footprint to evaluate. He sits buried on the Los Angeles depth chart behind an established room, currently listed as a secondary option among multiple bodies that includes veterans Colby Parkinson and Tyler Higbee plus drafted youngster Terrance Ferguson. With that many ahead of him, snaps would only come through a cascade of injuries.\n\nThere is simply no path to fantasy targets here in 2026. The tight end position already concentrates volume among a tiny handful of starters, and a player this far down the chart on a run-leaning Sean McVay offense will not see the route volume needed to matter even in deep two-TE formats. Treat him as a non-factor for redraft and a name to ignore in all but the deepest dynasty taxi situations until he climbs the depth chart or changes teams."
+}

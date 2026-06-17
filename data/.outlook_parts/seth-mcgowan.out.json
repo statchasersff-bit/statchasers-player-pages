@@ -1,0 +1,30 @@
+{
+  "slug": "seth-mcgowan",
+  "name": "Seth McGowan",
+  "position": "RB",
+  "team": "IND",
+  "season": 2026,
+  "headline": "Deep Colts backup stuck behind Taylor and Giddens",
+  "body": "McGowan enters 2026 without recorded draft capital and no NFL advanced-stat profile, slotting in as Indianapolis's RB3 behind workhorse Jonathan Taylor and 2025 draftee DJ Giddens. That is a difficult ladder to climb: Taylor is an entrenched bell-cow, and Giddens carries the higher draft pedigree and developmental priority for the backup role. McGowan's path to even spot duty would require multiple injuries ahead of him, and there is no defined change-of-pace or passing-down carve-out to bank on.\n\nWith no usage data to anchor a projection, his fantasy case is purely contingent and remote. The Colts' offense can support a productive runner, but that value is concentrated in Taylor, with Giddens next in line for any spillover. For redraft purposes McGowan is an undraftable name to leave on the wire, and even in deep dynasty he is no better than a speculative end-of-bench stash pending a training-camp surge or an injury cascade.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/seth-mcgowan.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-seth-mcgowan/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13424",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

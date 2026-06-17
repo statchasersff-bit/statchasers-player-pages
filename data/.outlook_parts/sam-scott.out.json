@@ -1,0 +1,30 @@
+{
+  "slug": "sam-scott",
+  "name": "Sam Scott",
+  "position": "RB",
+  "team": "NYJ",
+  "season": 2026,
+  "headline": "Undrafted Jets back buried with no NFL track record",
+  "body": "Scott profiles as a camp-body addition for the Jets with no draft capital on record and no advanced-stat footprint to date. He sits at the very bottom of a crowded backfield headlined by Breece Hall, with Braelon Allen, Isaiah Davis, and Kene Nwangwu all ahead of him for early-down, third-down, and return work. There is simply no defined role here, and the depth ahead is younger and more established, leaving practice-squad survival as the most realistic 2026 outcome.\n\nWith zero NFL carries, targets, or snaps to ground a projection, any fantasy case is pure speculation tied to a string of injuries opening a door he would still have to win. Even then, the Jets would likely lean on the proven options before a roster long shot. For all redraft and most dynasty formats, Scott is a clear waiver-wire name to ignore until he shows something tangible in preseason. Do not roster him.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/sam-scott.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-sam-scott/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13873",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

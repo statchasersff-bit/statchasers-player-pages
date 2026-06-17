@@ -880,43 +880,6 @@ function generateFantasyOutlookSummary(player: PlayerWithSeasons, stats: ReturnT
   return [p1, transition, p2, p3].filter(Boolean);
 }
 
-function generateStrengthsAndRisks(player: PlayerWithSeasons, stats: ReturnType<typeof computeGameLogStats>): { strengths: string[]; risks: string[] } {
-  if (!stats || stats.gamesPlayed === 0) return { strengths: [], risks: [] };
-  const pos = player.position || '';
-  const topRate = stats.pos1Pct + stats.pos2Pct;
-  const cvRatio = stats.ppg > 0 ? stats.volatility / stats.ppg : 2;
-  const ppgDelta = stats.ppg > 0 ? ((stats.last4Ppg - stats.ppg) / stats.ppg) * 100 : 0;
-  const cp = player.careerProfile;
-
-  const strengths: string[] = [];
-  const risks: string[] = [];
-
-  if (topRate >= 60) strengths.push(`Finishes in startable range ${topRate.toFixed(0)}% of weeks`);
-  if (stats.pos1Pct >= 40) strengths.push(`Top-tier finish rate of ${stats.pos1Pct.toFixed(0)}% creates ceiling upside`);
-  if (stats.bustPct < 20) strengths.push('Reliable weekly floor with minimal bust risk');
-  if (cvRatio < 0.5) strengths.push('Consistent scoring with low week-to-week variance');
-  if (cp && cp.durabilityPct >= 85) strengths.push(`Strong availability, appearing in ${cp.durabilityPct.toFixed(0)}% of possible games`);
-  if (ppgDelta > 8) strengths.push('Trending upward heading into the offseason');
-  if (pos === 'QB' && stats.ppg >= 22) strengths.push('Dual-threat ability protects scoring floor each week');
-  if (pos === 'RB') {
-    const rec = player.careerSeasonStats?.[0]?.receptions ?? 0;
-    if (rec >= 50) strengths.push('Receiving role adds PPR value on top of rushing work');
-  }
-  if (strengths.length < 3) strengths.push(`Established ${pos} role with meaningful snap share`);
-
-  if (cvRatio >= 0.7) risks.push('High week-to-week variance makes lineup decisions difficult');
-  if (stats.bustPct >= 30) risks.push(`Bust rate of ${stats.bustPct.toFixed(0)}% is a real concern for floor-sensitive formats`);
-  if (ppgDelta < -12) risks.push('Late-season scoring decline raises questions about role consistency');
-  if (stats.pos1Pct < 25) risks.push('Limited ceiling weeks reduce upside in tournaments and daily formats');
-  if (cp && cp.durabilityPct < 80) risks.push(`Availability concerns, playing just ${cp.durabilityPct.toFixed(0)}% of games in career`);
-  if (pos === 'WR' || pos === 'TE') risks.push('Production tied to target volume and quarterback efficiency');
-  if (risks.length < 3) risks.push('Scheme or usage changes could shift value meaningfully');
-
-  return { strengths: strengths.slice(0, 5), risks: risks.slice(0, 5) };
-}
-
-
-
 function generateRoleStabilityRisk(
   player: PlayerWithSeasons,
   stability: number,
@@ -1017,7 +980,6 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
   const outlookParas = storedOutlook
     ? storedOutlook.body.split(/\n\n+/).map(p => p.trim()).filter(Boolean)
     : generateFantasyOutlookSummary(player, stats, format);
-  const { strengths, risks } = generateStrengthsAndRisks(player, stats);
 
   return (
     <div className="sc-overview" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
@@ -1031,36 +993,6 @@ function OverviewTab({ player, entries, format = 'ppr' }: { player: PlayerWithSe
           {outlookParas.map((p, i) => (
             <p key={i} style={{ fontSize: '14px', lineHeight: '1.75', color: 'var(--sc-body, #475569)', marginBottom: i < outlookParas.length - 1 ? '12px' : 0 }}>{p}</p>
           ))}
-        </div>
-      )}
-
-      {(strengths.length > 0 || risks.length > 0) && (
-        <div className="sc-overview__section" style={{ padding: '20px' }} data-testid="section-strengths-risks">
-          <SectionHeader title="Fantasy Strengths and Risk Factors" subtitle="Key production drivers and downside factors heading into 2026." />
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-            <div>
-              <p style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#16a34a', marginBottom: '10px' }}>Strengths</p>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {strengths.map((s, i) => (
-                  <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13px', color: 'var(--foreground)', lineHeight: '1.5' }}>
-                    <span style={{ color: '#16a34a', fontWeight: 700, marginTop: '1px', flexShrink: 0 }}>+</span>
-                    {s}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <p style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#ef4444', marginBottom: '10px' }}>Risk Factors</p>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {risks.map((r, i) => (
-                  <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13px', color: 'var(--foreground)', lineHeight: '1.5' }}>
-                    <span style={{ color: '#ef4444', fontWeight: 700, marginTop: '1px', flexShrink: 0 }}>-</span>
-                    {r}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
         </div>
       )}
 
@@ -1490,14 +1422,13 @@ function ordinalSuffix(n: number): string {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
-// Premium tiered weekly finish badge: T1 gold, T2 blue, T3 orange, bust red.
+// Premium tiered weekly finish badge: shows the actual positional finish
+// (e.g. QB13, QB26) colored by tier — T1 gold, T2 blue, T3 orange, bust red.
 function weeklyFinishBadge(rank: number | null | undefined, position: string | null): { label: string; cls: string } | null {
   if (!rank) return null;
   const pos = (position || 'FLEX').toUpperCase();
-  if (rank <= 12) return { label: `${pos}1`, cls: 'sc-finb--t1' };
-  if (rank <= 24) return { label: `${pos}2`, cls: 'sc-finb--t2' };
-  if (rank <= 36) return { label: `${pos}3`, cls: 'sc-finb--t3' };
-  return { label: 'Bust', cls: 'sc-finb--bust' };
+  const cls = rank <= 12 ? 'sc-finb--t1' : rank <= 24 ? 'sc-finb--t2' : rank <= 36 ? 'sc-finb--t3' : 'sc-finb--bust';
+  return { label: `${pos}${rank}`, cls };
 }
 
 function seasonFinishBadge(rank: number | null | undefined, position: string | null): { label: string; cls: string } | null {
@@ -2842,19 +2773,6 @@ export default function PlayerProfile() {
                 <p className="player-draft-line" data-testid="text-player-drafted">{headerDraftedLine}</p>
               )}
 
-              <div data-testid="text-player-status">
-                {player.injury_status ? (
-                  <span className="player-status player-status--warn">
-                    <span className="player-status-dot" style={{ background: '#f59e0b' }} />
-                    {player.injury_status}
-                  </span>
-                ) : (
-                  <span className="player-status player-status--active">
-                    <span className="player-status-dot" style={{ background: '#10b981' }} />
-                    {player.status || 'Active'}
-                  </span>
-                )}
-              </div>
             </div>
 
             {player.team && (

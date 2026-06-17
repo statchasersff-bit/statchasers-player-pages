@@ -1,0 +1,30 @@
+{
+  "slug": "nate-boerkircher",
+  "name": "Nate Boerkircher",
+  "position": "TE",
+  "team": "JAX",
+  "season": 2026,
+  "headline": "Undrafted Jaguars TE2 buried with no path",
+  "body": "Boerkircher enters 2026 as a pure depth piece in Jacksonville, sitting second on the tight end chart behind Brenton Strange with no draft capital to push that order. As an undrafted rookie tight end he carries the standard developmental profile: blocking-first usage, special-teams reps, and the occasional two-tight-end snap rather than any designed target role. In an offense funneling targets to Strange and the wide receiver corps in Trevor Lawrence`s passing game, the volume simply is not there for a backup to matter.\n\nThere are no NFL advanced stats to lean on, and nothing in his situation projects standalone fantasy value. The realistic 2026 ceiling is a handful of snaps and maybe a red-zone surprise if Strange misses time. For redraft purposes he is a clear waiver-wire name to ignore, and even in deep dynasty TE-premium leagues he is only worth a roster spot if his camp blocking reputation earns a bigger early-down role. Leave him on the wire.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/nate-boerkircher.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-nate-boerkircher/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13299",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

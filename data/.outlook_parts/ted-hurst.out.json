@@ -1,0 +1,30 @@
+{
+  "slug": "ted-hurst",
+  "name": "Ted Hurst",
+  "position": "WR",
+  "team": "TB",
+  "season": 2026,
+  "headline": "Undrafted depth WR with no clear path to targets",
+  "body": "Ted Hurst III enters 2026 as a deep reserve on the Tampa Bay roster, carrying no NFL advanced-stat profile and no recorded draft capital, the classic signature of an undrafted long shot fighting for a roster spot. The depth chart tells the story: he sits as the number-two left wide receiver behind Emeka Egbuka, with established names ahead of him across the formation. That places him well outside the rotation that actually commands targets in Tampa Bay passing game.\n\nWith no measurable production to lean on, his fantasy case rests entirely on training-camp standout reps and special-teams value earning him helmet status, neither of which translates to weekly scoring. Barring a string of injuries that thrusts him into real snaps, there is no startable role here in any format. For 2026 redraft and even dynasty, Hurst is a pure waiver-wire watch-list name, not a player to roster until he demonstrates a defined offensive role.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/ted-hurst.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-ted-hurst/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13317",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

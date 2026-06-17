@@ -1,0 +1,30 @@
+{
+  "slug": "oscar-delp",
+  "name": "Oscar Delp",
+  "position": "TE",
+  "team": "NO",
+  "season": 2026,
+  "headline": "Buried Saints TE3 with no redraft path",
+  "body": "Delp arrives without NFL advanced stats or recorded draft data, marking him as a rookie-tier prospect rather than a producer. New Orleans' depth chart slots him third at tight end, behind Juwan Johnson and Noah Fant, with Moliki Matavao also in the room. That positioning leaves no projectable target volume in an offense that already concentrates its tight-end work near the top of the group. Without college grounding or any usage trend to anchor a forecast, his 2026 outlook is purely speculative.\n\nFor redraft purposes, a third-string tight end with no statistical track record and limited route opportunity is not rosterable in standard leagues. His path to relevance requires injuries ahead of him plus a quarterback situation willing to feed the position, neither of which is bankable. The realistic verdict is a deep-dynasty stash and watch-list name: monitor camp reps and any move up the depth chart, but leave him on the waiver wire for 2026.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/oscar-delp.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-oscar-delp/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13319",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

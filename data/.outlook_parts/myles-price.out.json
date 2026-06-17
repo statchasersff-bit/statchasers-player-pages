@@ -1,0 +1,30 @@
+{
+  "slug": "myles-price",
+  "name": "Myles Price",
+  "position": "WR",
+  "team": "MIN",
+  "season": 2026,
+  "headline": "Speedy slot dart buried behind Jefferson and Jennings",
+  "body": "Price is a 2025 rookie out of Indiana with no NFL advanced stats logged yet, having drawn 0.0 PPG across a five-game cameo last season. His best traits are speed and slot quickness, but the path to volume in Minnesota is choked off: he sits as the SWR2 behind Jauan Jennings inside, in an offense funneling targets to Justin Jefferson and Jordan Addison. That alignment leaves him fourth or fifth in the pecking order for meaningful looks.\n\nWith no measurable production to build on, the projection leans on role and pedigree, and both temper expectations. Even a Jennings injury would only nudge Price into a rotational slot job rather than a featured one, capping his ceiling at sporadic deep shots and gadget touches. He carries some dynasty appeal as a cheap speed lottery ticket if the Vikings expand his snaps, but for 2026 redraft purposes there is nothing to start. He is a waiver-wire name and a watch-list stash, not a draftable asset in standard formats.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/myles-price.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-myles-price/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13075",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

@@ -1,0 +1,30 @@
+{
+  "slug": "kenny-fletcher",
+  "name": "Kenny Fletcher",
+  "position": "TE",
+  "team": "TB",
+  "season": 2026,
+  "headline": "Sixth tight end in a crowded Buccaneers room",
+  "body": "Fletcher enters Tampa Bay with no NFL advanced stats and a developmental profile, buried at the bottom of a deep tight end room. Cade Otton owns the starting job, with Payne Durham, Ko Kieft, Bauer Sharp and Devin Culp all ahead on the depth chart, leaving Fletcher as essentially the sixth option at the position. In a Baker Mayfield offense that already spreads targets across Mike Evans, Emeka Egbuka, Chris Godwin and Otton, there is simply no target volume left to claim.\n\nWith zero measurable production to project from, Fletcher is a camp-body and practice-squad candidate whose path to relevance would require a string of injuries plus a special-teams contribution to stick on the roster. He carries no redraft value and only the faintest deep-dynasty speculation as a name to monitor. For 2026, he belongs on the waiver wire in every format, with no realistic route to weekly fantasy usefulness.",
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/kenny-fletcher.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-kenny-fletcher/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13957",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false
+}

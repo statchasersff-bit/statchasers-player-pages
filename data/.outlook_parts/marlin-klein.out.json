@@ -1,0 +1,30 @@
+{
+  "slug": "marlin-klein",
+  "name": "Marlin Klein",
+  "position": "TE",
+  "team": "HOU",
+  "season": 2026,
+  "keyStats": null,
+  "sources": [
+    {
+      "name": "FantasyPros",
+      "url": "https://www.fantasypros.com/nfl/players/marlin-klein.php",
+      "used": true
+    },
+    {
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/fantasy/football/news/2026-outlook-marlin-klein/",
+      "used": true
+    },
+    {
+      "name": "Statchasers advanced stats",
+      "used": false
+    }
+  ],
+  "id": "13307",
+  "generatedAt": "2026-06-17",
+  "model": "claude-opus-4-8",
+  "edited": false,
+  "headline": "Developmental Texans tight end years from relevance",
+  "body": "Klein arrives as a raw developmental tight end with no NFL advanced stats to assess and a depth-chart spot that says everything: he is the No. 3 option in Houston behind veteran starter Dalton Schultz and blocking-specialist Foster Moreau, with Cade Stover also in the mix. That is a crowded room with an entrenched lead man who soaks up the receiving work, leaving Klein with virtually no projectable target volume in 2026.\n\nWith Schultz handling the pass-catching duties and the rest of the room rotating, there is no standalone fantasy case to make. Rookie and second-year tight ends rarely produce regardless of opportunity, and Klein would need an injury to Schultz simply to see the field consistently. He is purely a dynasty-taxi flier on athletic upside and nothing more; for 2026 redraft he is off the board entirely. Revisit only if he flashes in camp or the depth chart thins ahead of him."
+}
