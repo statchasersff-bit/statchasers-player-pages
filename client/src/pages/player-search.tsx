@@ -600,7 +600,7 @@ export default function PlayerSearch() {
                 <Input
                   ref={inputRef}
                   type="search"
-                  placeholder="Search any player, team, or position..."
+                  placeholder="Search any player..."
                   value={search}
                   onChange={(e) => {
                     setSearch(e.target.value);
@@ -733,7 +733,7 @@ export default function PlayerSearch() {
         </div>
       </div>
 
-      <main className={selectedTeam ? '' : 'max-w-7xl mx-auto px-4 py-8'}>
+      <main className={selectedTeam ? '' : 'max-w-7xl mx-auto px-8 sm:px-10 py-8'}>
         {isSearching ? (
           indexedLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
