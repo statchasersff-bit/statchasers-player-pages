@@ -28,6 +28,41 @@
   font-family: inherit;
 }
 
+/* ── Full host-theme insulation ───────────────────────────────────────────
+   The WP build omits @tailwind base, so the host theme (Divi) imposes its own
+   element defaults (heading sizes, list bullets, link colours, margins, table
+   borders…) on the embedded tool. Re-create that preflight baseline, scoped
+   with :where(.scpp-root) so it (a) never leaks out to the host page and
+   (b) carries ZERO specificity — meaning the tool's own component classes
+   always win over it, just like Tailwind preflight in the standalone app.
+   This is what makes the tool render the same on WordPress as standalone. */
+:where(.scpp-root) h1, :where(.scpp-root) h2, :where(.scpp-root) h3,
+:where(.scpp-root) h4, :where(.scpp-root) h5, :where(.scpp-root) h6 {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+:where(.scpp-root) h1, :where(.scpp-root) h2, :where(.scpp-root) h3,
+:where(.scpp-root) h4, :where(.scpp-root) h5, :where(.scpp-root) h6,
+:where(.scpp-root) p, :where(.scpp-root) figure, :where(.scpp-root) blockquote,
+:where(.scpp-root) dl, :where(.scpp-root) dd, :where(.scpp-root) pre {
+  margin: 0;
+}
+:where(.scpp-root) ul, :where(.scpp-root) ol, :where(.scpp-root) menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+:where(.scpp-root) a { color: inherit; text-decoration: inherit; }
+:where(.scpp-root) b, :where(.scpp-root) strong { font-weight: bolder; }
+:where(.scpp-root) small { font-size: 80%; }
+:where(.scpp-root) sub, :where(.scpp-root) sup { font-size: 75%; line-height: 0; }
+:where(.scpp-root) table { border-collapse: collapse; border-color: inherit; text-indent: 0; }
+:where(.scpp-root) hr { height: 0; color: inherit; border-top-width: 1px; }
+:where(.scpp-root) blockquote, :where(.scpp-root) q { quotes: none; }
+:where(.scpp-root) fieldset { margin: 0; padding: 0; }
+:where(.scpp-root) legend { padding: 0; }
+
 .scpp-root button {
   padding: 0;
   margin: 0;
