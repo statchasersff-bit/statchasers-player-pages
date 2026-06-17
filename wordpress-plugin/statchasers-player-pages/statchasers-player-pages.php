@@ -3,7 +3,7 @@
  * Plugin Name: StatChasers Player Pages
  * Plugin URI:  https://statchasers.com
  * Description: Programmatic SEO-friendly NFL player pages powered by the Sleeper API. Adds /nfl/players/ directory and /nfl/players/{slug}/ profile pages using your theme's header/footer.
- * Version:     0.6.9
+ * Version:     0.6.10
  * Author:      StatChasers
  * Author URI:  https://statchasers.com
  * License:     GPL-2.0+
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'SC_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'SC_VERSION', '0.6.9' );
+define( 'SC_VERSION', '0.6.10' );
 define( 'SC_CRON_HOOK', 'sc_daily_player_refresh' );
 
 require_once SC_PLUGIN_DIR . 'includes/cache.php';
@@ -163,6 +163,40 @@ add_filter('script_loader_tag', function ($tag, $handle) {
 
     return $tag;
 }, 9999, 2);
+
+/**
+ * WP Rocket compatibility.
+ *
+ * Our CSS/JS are already built/minified, and our active-state classes
+ * (e.g. .sc-segment__btn--active, .sc-filter-pill--active) are toggled by
+ * React at RUNTIME — they aren't in the page's static HTML. WP Rocket's
+ * Combine/Minify can serve a stale merged file, and "Remove Unused CSS"
+ * (RUCSS) strips selectors it can't find in the HTML, which removes our
+ * active-pill styling and leaves toggles looking like plain text.
+ *
+ * Exclude our assets from optimization and safelist our class namespace so
+ * the real, version-busted files always load intact. All no-ops without
+ * WP Rocket installed.
+ */
+add_filter( 'rocket_exclude_css', function ( $excluded ) {
+    $excluded[] = 'wp-content/plugins/statchasers-player-pages/assets/players.css';
+    return $excluded;
+} );
+add_filter( 'rocket_exclude_js', function ( $excluded ) {
+    $excluded[] = 'wp-content/plugins/statchasers-player-pages/assets/players.js';
+    return $excluded;
+} );
+add_filter( 'rocket_rucss_safelist', function ( $safelist ) {
+    foreach ( array( 'scpp-root', 'sc-filter-pill', 'sc-segment', 'sc-finish2', 'sc-peer', 'sc-pill' ) as $keep ) {
+        $safelist[] = $keep;
+    }
+    return $safelist;
+} );
+/* Don't let WP Rocket delay-execute our module script (breaks the React mount). */
+add_filter( 'rocket_delay_js_exclusions', function ( $excluded ) {
+    $excluded[] = 'statchasers-player-pages/assets/players.js';
+    return $excluded;
+} );
 
 add_action( 'admin_notices', function() {
     if ( ! current_user_can( 'manage_options' ) ) return;
