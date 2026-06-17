@@ -424,17 +424,28 @@ function sc_ensure_sc_dir() {
     return $sc_dir;
 }
 
+/**
+ * Bundled game-log dir shipped inside the plugin. Used as a fallback so the
+ * tool works out-of-the-box (e.g. the Nearby Positional Peers rail and weekly
+ * logs) without waiting on the live Sleeper fetch that populates wp-uploads.
+ * Mirrors how advanced_stats are read straight from the plugin dir.
+ */
+function sc_get_bundled_game_log_dir() {
+    return plugin_dir_path( dirname( __FILE__ ) ) . 'data/game_logs';
+}
+
 function sc_get_available_seasons() {
     static $cache = null;
     if ( $cache !== null ) return $cache;
-    $dir = sc_get_game_log_dir();
-    if ( ! is_dir( $dir ) ) { $cache = []; return $cache; }
-    $files   = glob( $dir . '/*.json' );
     $seasons = [];
-    foreach ( $files as $f ) {
-        $name = basename( $f, '.json' );
-        if ( is_numeric( $name ) ) $seasons[] = (int) $name;
+    foreach ( [ sc_get_game_log_dir(), sc_get_bundled_game_log_dir() ] as $dir ) {
+        if ( ! is_dir( $dir ) ) continue;
+        foreach ( glob( $dir . '/*.json' ) as $f ) {
+            $name = basename( $f, '.json' );
+            if ( is_numeric( $name ) ) $seasons[ (int) $name ] = true;
+        }
     }
+    $seasons = array_keys( $seasons );
     rsort( $seasons );
     $cache = $seasons;
     return $cache;
@@ -443,11 +454,19 @@ function sc_get_available_seasons() {
 function sc_load_game_logs( $season ) {
     static $cache = [];
     if ( isset( $cache[ $season ] ) ) return $cache[ $season ];
-    $file = sc_get_game_log_dir() . '/' . $season . '.json';
-    if ( ! file_exists( $file ) ) { $cache[ $season ] = []; return []; }
-    $data = json_decode( file_get_contents( $file ), true );
-    $cache[ $season ] = is_array( $data ) ? $data : [];
-    return $cache[ $season ];
+    // Prefer the freshly-fetched copy in wp-uploads; fall back to the bundled
+    // plugin copy. An empty/invalid uploads file must not shadow the bundle.
+    foreach ( [ sc_get_game_log_dir(), sc_get_bundled_game_log_dir() ] as $dir ) {
+        $file = $dir . '/' . $season . '.json';
+        if ( ! file_exists( $file ) ) continue;
+        $data = json_decode( file_get_contents( $file ), true );
+        if ( is_array( $data ) && ! empty( $data ) ) {
+            $cache[ $season ] = $data;
+            return $data;
+        }
+    }
+    $cache[ $season ] = [];
+    return [];
 }
 
 function sc_get_season_max_week( $season ) {
