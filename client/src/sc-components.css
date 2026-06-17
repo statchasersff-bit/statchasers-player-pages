@@ -989,6 +989,34 @@
   color: #08244a;
 }
 
+/* WordPress build only: the `.scpp-root button` reset (specificity 0,1,1)
+   outranks the plain `.sc-filter-pill` / `.sc-segment__btn` rules (0,1,0) and
+   strips their border, background, radius, and shadow — so filter pills render
+   as borderless plain text and the active pill loses its gold highlight.
+   Re-assert the look scoped under `.scpp-root` (0,2,0) so it wins the cascade.
+   Mirrors the existing `.scpp-root .sc-finish2__seg` treatment. */
+.scpp-root .sc-filter-pill {
+  border: 1px solid rgba(15,23,42,0.12);
+  background: #fff;
+  border-radius: 999px;
+  color: #0f172a;
+}
+.scpp-root .sc-filter-pill--active {
+  border-color: #F5C01A;
+  background: linear-gradient(135deg, #F5C01A, #FFD166);
+  color: #08244a;
+  box-shadow: 0 8px 18px rgba(245,192,26,0.25);
+}
+.scpp-root .sc-segment__btn {
+  background: transparent;
+  border-radius: 999px;
+}
+.scpp-root .sc-segment__btn--active {
+  background: linear-gradient(135deg, #F5C01A, #FFD166);
+  color: #08244a;
+  box-shadow: 0 8px 18px rgba(245,192,26,0.25);
+}
+
 /* Intentional clear-filters control — a quiet ghost pill that matches pill height. */
 .sc-clear-btn {
   display: inline-flex;
