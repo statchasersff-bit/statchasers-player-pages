@@ -72,6 +72,35 @@ function mapApiUrl(url: string): string {
     if (newsMatch) {
       return "data:application/json,[]";
     }
+
+    const injuriesMatch = pathname.match(/^\/api\/players\/([^/]+)\/injuries\/?$/);
+    if (injuriesMatch) {
+      const slug = injuriesMatch[1];
+      const name = params.get("name") || "";
+      return `${REST_BASE}/player/${encodeURIComponent(slug)}/injuries?name=${encodeURIComponent(name)}`;
+    }
+
+    const advStatsMatch = pathname.match(/^\/api\/advanced-stats\/([a-zA-Z]+)\/([a-zA-Z0-9]+)\/?$/);
+    if (advStatsMatch) {
+      return `${REST_BASE}/advanced-stats/${advStatsMatch[1].toLowerCase()}/${advStatsMatch[2].toLowerCase()}`;
+    }
+
+    const productionMatch = pathname.match(/^\/api\/players\/([^/]+)\/production\/?$/);
+    if (productionMatch) {
+      const id = productionMatch[1];
+      const scoring = params.get("scoring") || "ppr";
+      return `${REST_BASE}/player/${encodeURIComponent(id)}/production?scoring=${encodeURIComponent(scoring)}`;
+    }
+
+    const teamInjuryMatch = pathname === "/api/team/injury" || pathname === "/api/team/injury/";
+    if (teamInjuryMatch) {
+      const team = params.get("team") || "";
+      const playerName = params.get("player_name") || "";
+      const weekLabel = params.get("week_label") || "";
+      let apiUrl = `${REST_BASE}/team/injury?team=${encodeURIComponent(team)}&player_name=${encodeURIComponent(playerName)}`;
+      if (weekLabel) apiUrl += `&week_label=${encodeURIComponent(weekLabel)}`;
+      return apiUrl;
+    }
   } catch {}
 
   return url;
@@ -131,7 +160,11 @@ const queryClient = new QueryClient({
 });
 
 const useWPLocation = (): [string, (to: string) => void] => {
-  const path = window.location.pathname + window.location.search;
+  // Match routes on the pathname only — including the query string here breaks
+  // wouter's matcher (e.g. "/nfl/players?pos=WR" would match no route and render
+  // a blank page). Pages that need query params read window.location.search
+  // directly. Navigation is a full reload, so the real URL keeps the query.
+  const path = window.location.pathname;
   return [path, (to: string) => { window.location.href = to; }];
 };
 

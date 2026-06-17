@@ -3,7 +3,7 @@
  * Plugin Name: StatChasers Player Pages
  * Plugin URI:  https://statchasers.com
  * Description: Programmatic SEO-friendly NFL player pages powered by the Sleeper API. Adds /nfl/players/ directory and /nfl/players/{slug}/ profile pages using your theme's header/footer.
- * Version:     0.6.3
+ * Version:     0.6.6
  * Author:      StatChasers
  * Author URI:  https://statchasers.com
  * License:     GPL-2.0+
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'SC_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'SC_VERSION', '0.6.3' );
+define( 'SC_VERSION', '0.6.6' );
 define( 'SC_CRON_HOOK', 'sc_daily_player_refresh' );
 
 require_once SC_PLUGIN_DIR . 'includes/cache.php';
@@ -48,6 +48,24 @@ function sc_deactivate() {
 }
 
 add_action( SC_CRON_HOOK, 'sc_refresh_players_data' );
+
+/**
+ * Re-seed bundled data into wp-uploads whenever the plugin version changes.
+ *
+ * Supplemental data (bye weeks, game scores, bios, dynasty) and the 2026
+ * outlook are served from wp-uploads and were previously only seeded on
+ * activation or via manual admin buttons — so uploading a new plugin build
+ * left that data stale (e.g. the 2026 outlook showed the old copy). This runs
+ * the copy once per version bump. (Advanced stats, injuries and production are
+ * read straight from the bundled plugin dir, so they always track the zip.)
+ */
+add_action( 'init', 'sc_maybe_reseed_bundled_data' );
+function sc_maybe_reseed_bundled_data() {
+    if ( get_option( 'sc_seeded_version' ) === SC_VERSION ) return;
+    if ( function_exists( 'sc_fetch_and_save_supplemental_data' ) ) sc_fetch_and_save_supplemental_data();
+    if ( function_exists( 'sc_fetch_and_save_fantasy_outlook_2026' ) ) sc_fetch_and_save_fantasy_outlook_2026();
+    update_option( 'sc_seeded_version', SC_VERSION );
+}
 
 /**
  * Fetch a remote JSON file with transient caching. Returns parsed array or null.

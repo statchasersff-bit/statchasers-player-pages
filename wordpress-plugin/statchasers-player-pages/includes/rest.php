@@ -60,6 +60,53 @@ function sc_register_rest_routes() {
             'season' => [ 'required' => false, 'sanitize_callback' => 'absint', 'default' => 0 ],
         ],
     ]);
+
+    /* Advanced stats (static, bundled per position+season) */
+    register_rest_route( 'statchasers/v1', '/advanced-stats/(?P<pos>[a-z]+)/(?P<season>[a-z0-9]+)', [
+        'methods'             => 'GET',
+        'callback'            => 'sc_rest_advanced_stats',
+        'permission_callback' => '__return_true',
+        'args' => [
+            'pos'    => [ 'required' => true, 'sanitize_callback' => 'sanitize_key' ],
+            'season' => [ 'required' => true, 'sanitize_callback' => 'sanitize_key' ],
+        ],
+    ]);
+
+    /* Player production by season (static snapshot) — drives the Season-End
+       Finishes timeline. Path segment is the Sleeper player id. */
+    register_rest_route( 'statchasers/v1', '/player/(?P<id>[a-z0-9\-]+)/production', [
+        'methods'             => 'GET',
+        'callback'            => 'sc_rest_player_production',
+        'permission_callback' => '__return_true',
+        'args' => [
+            'id'      => [ 'required' => true, 'sanitize_callback' => 'sanitize_text_field' ],
+            'scoring' => [ 'required' => false, 'sanitize_callback' => 'sanitize_key', 'default' => 'ppr' ],
+        ],
+    ]);
+
+    /* Player injury & health history (static snapshot). The path segment is the
+       Sleeper player id (numeric), matching the Express /api/players/:id/injuries. */
+    register_rest_route( 'statchasers/v1', '/player/(?P<id>[a-z0-9\-]+)/injuries', [
+        'methods'             => 'GET',
+        'callback'            => 'sc_rest_player_injuries',
+        'permission_callback' => '__return_true',
+        'args' => [
+            'id'   => [ 'required' => true, 'sanitize_callback' => 'sanitize_text_field' ],
+            'name' => [ 'required' => false, 'sanitize_callback' => 'sanitize_text_field', 'default' => '' ],
+        ],
+    ]);
+
+    /* Team injury report card (static snapshot) */
+    register_rest_route( 'statchasers/v1', '/team/injury', [
+        'methods'             => 'GET',
+        'callback'            => 'sc_rest_team_injury',
+        'permission_callback' => '__return_true',
+        'args' => [
+            'team'        => [ 'required' => false, 'sanitize_callback' => 'sanitize_text_field', 'default' => '' ],
+            'player_name' => [ 'required' => false, 'sanitize_callback' => 'sanitize_text_field', 'default' => '' ],
+            'week_label'  => [ 'required' => false, 'sanitize_callback' => 'sanitize_text_field', 'default' => '' ],
+        ],
+    ]);
 }
 
 /* ------------------------------------------------------------------
@@ -283,5 +330,135 @@ function sc_rest_player_related( $request ) {
         'season'      => $season,
         'format'      => $format,
         'position'    => $position,
+    ], 200 );
+}
+
+/* ------------------------------------------------------------------
+ * Advanced stats — static, bundled per position+season.
+ * Mirrors Express GET /api/advanced-stats/:pos/:season (raw file body).
+ * ------------------------------------------------------------------ */
+function sc_rest_advanced_stats( $request ) {
+    $pos    = strtolower( (string) $request->get_param( 'pos' ) );
+    $season = strtolower( (string) $request->get_param( 'season' ) );
+
+    if ( ! in_array( $pos, [ 'qb', 'rb', 'wr', 'te' ], true ) ) {
+        return new WP_REST_Response( [ 'error' => 'invalid_position' ], 400 );
+    }
+    if ( $season !== 'all' && ! preg_match( '/^20\d{2}$/', $season ) ) {
+        return new WP_REST_Response( [ 'error' => 'invalid_season' ], 400 );
+    }
+
+    $path = plugin_dir_path( dirname( __FILE__ ) ) . 'data/advanced_stats/' . $pos . '_' . $season . '.json';
+    if ( ! file_exists( $path ) ) {
+        return new WP_REST_Response( [ 'error' => 'not_found' ], 404 );
+    }
+    $data = json_decode( file_get_contents( $path ), true );
+    if ( $data === null ) {
+        return new WP_REST_Response( [ 'error' => 'read_failed' ], 500 );
+    }
+    return new WP_REST_Response( $data, 200 );
+}
+
+/* ------------------------------------------------------------------
+ * Player production by season — static snapshot keyed by Sleeper id. Each
+ * season carries std/half/ppr finish data, so one snapshot serves every
+ * scoring. Mirrors Express GET /api/players/:id/production.
+ * ------------------------------------------------------------------ */
+function sc_load_player_production() {
+    static $cache = null;
+    if ( $cache !== null ) return $cache;
+    $path = plugin_dir_path( dirname( __FILE__ ) ) . 'data/player_production.json';
+    if ( ! file_exists( $path ) ) { $cache = []; return $cache; }
+    $data  = json_decode( file_get_contents( $path ), true );
+    $cache = is_array( $data ) ? $data : [];
+    return $cache;
+}
+
+function sc_rest_player_production( $request ) {
+    $id      = (string) $request->get_param( 'id' );
+    $scoring = (string) $request->get_param( 'scoring' );
+    if ( ! in_array( $scoring, [ 'std', 'half', 'ppr' ], true ) ) $scoring = 'ppr';
+    $all = sc_load_player_production();
+    $seasons = ( $id !== '' && isset( $all[ $id ] ) ) ? $all[ $id ] : [];
+    return new WP_REST_Response( [ 'playerId' => $id, 'scoring' => $scoring, 'seasons' => $seasons ], 200 );
+}
+
+/* ------------------------------------------------------------------
+ * Player injury & health history — static snapshot keyed by Sleeper id.
+ * Mirrors Express GET /api/players/:id/injuries → { playerId, injuries }.
+ * ------------------------------------------------------------------ */
+function sc_load_player_injuries() {
+    static $cache = null;
+    if ( $cache !== null ) return $cache;
+    $path = plugin_dir_path( dirname( __FILE__ ) ) . 'data/player_injuries.json';
+    if ( ! file_exists( $path ) ) { $cache = []; return $cache; }
+    $data  = json_decode( file_get_contents( $path ), true );
+    $cache = is_array( $data ) ? $data : [];
+    return $cache;
+}
+
+function sc_rest_player_injuries( $request ) {
+    $id  = (string) $request->get_param( 'id' );
+    $all = sc_load_player_injuries();
+    $injuries = ( $id !== '' && isset( $all[ $id ] ) ) ? $all[ $id ] : null;
+    return new WP_REST_Response( [ 'playerId' => $id, 'injuries' => $injuries ], 200 );
+}
+
+/* ------------------------------------------------------------------
+ * Team injury report card — static snapshot. The build step precomputes the
+ * full per-player response (including the blurb) keyed by team → normalized
+ * name, so PHP only normalizes the requested name and looks it up.
+ * Mirrors Express GET /api/team/injury.
+ * ------------------------------------------------------------------ */
+function sc_load_team_injuries() {
+    static $cache = null;
+    if ( $cache !== null ) return $cache;
+    $path = plugin_dir_path( dirname( __FILE__ ) ) . 'data/team_injuries.json';
+    if ( ! file_exists( $path ) ) { $cache = []; return $cache; }
+    $data  = json_decode( file_get_contents( $path ), true );
+    $cache = is_array( $data ) ? $data : [];
+    return $cache;
+}
+
+/* Mirrors normName() in routes.ts */
+function sc_norm_name( $name ) {
+    $n = strtolower( (string) $name );
+    $n = str_replace( [ '.', "'", "\u{2019}", "\u{2018}" ], '', $n );
+    $n = preg_replace( '/\s+(jr|sr|ii|iii|iv|v)\b/', '', $n );
+    $n = preg_replace( '/\s+/', ' ', $n );
+    return trim( $n );
+}
+
+function sc_rest_team_injury( $request ) {
+    $team        = strtoupper( trim( (string) $request->get_param( 'team' ) ) );
+    $player_name = trim( (string) $request->get_param( 'player_name' ) );
+
+    if ( $player_name === '' ) return new WP_REST_Response( [ 'error' => 'player_name is required' ], 400 );
+    if ( $team === '' ) return new WP_REST_Response( [ 'error' => 'team is required' ], 400 );
+
+    $all  = sc_load_team_injuries();
+    $teamData = isset( $all[ $team ] ) ? $all[ $team ] : null;
+    $norm = sc_norm_name( $player_name );
+
+    if ( $teamData && isset( $teamData['players'] ) && isset( $teamData['players'][ $norm ] ) ) {
+        return new WP_REST_Response( $teamData['players'][ $norm ], 200 );
+    }
+
+    /* Not found on the report — mirror the Express not-found payload. */
+    $source     = $teamData && isset( $teamData['source'] ) ? $teamData['source'] : null;
+    $source_url = $teamData && isset( $teamData['source_url'] ) ? $teamData['source_url'] : null;
+    $report_label = $teamData && isset( $teamData['report_label'] ) ? $teamData['report_label'] : '';
+    $report_updated_at = $teamData && isset( $teamData['report_updated_at'] ) ? $teamData['report_updated_at'] : null;
+
+    return new WP_REST_Response( [
+        'found'             => false,
+        'player_name'       => $player_name,
+        'team'              => $team,
+        'blurb'             => 'No injury designation listed for ' . $player_name . ' on the latest report.',
+        'source'            => $source,
+        'source_url'        => $source_url,
+        'report_label'      => $report_label,
+        'report_updated_at' => $report_updated_at,
+        'fetched_at'        => null,
     ], 200 );
 }
