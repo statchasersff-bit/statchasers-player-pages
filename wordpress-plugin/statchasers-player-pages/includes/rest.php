@@ -295,7 +295,10 @@ function sc_rest_player_related( $request ) {
             if ( count( $played ) < 4 ) continue;
             $total = 0;
             foreach ( $played as $e ) $total += sc_get_entry_points( isset( $e['stats'] ) ? $e['stats'] : [], $format );
-            $list[] = [ 'id' => $pid, 'ppg' => $total / count( $played ), 'gp' => count( $played ), 'total' => $total ];
+            // Cast to string: PHP turns numeric JSON object keys into ints, but
+            // player ids elsewhere are strings — the strict === checks below
+            // (and against $player['id']) fail unless both sides are strings.
+            $list[] = [ 'id' => (string) $pid, 'ppg' => $total / count( $played ), 'gp' => count( $played ), 'total' => $total ];
         }
 
         usort( $list, function( $a, $b ) {
@@ -346,6 +349,7 @@ function sc_rest_player_related( $request ) {
     return new WP_REST_Response( [
         'neighbors'   => array_values( $result ),
         'currentRank' => $current_idx + 1,
+        'currentPpg'  => round( $ppg_by_player[ $current_idx ]['ppg'] * 10 ) / 10,
         'season'      => $season,
         'format'      => $format,
         'position'    => $position,
